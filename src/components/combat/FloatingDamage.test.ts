@@ -101,6 +101,43 @@ describe('resolveSpriteFloat', () => {
     expect(float).toEqual({ amount: 6, kind: 'heal' });
   });
 
+  it('a graze floats its own kind with the chip amount, never plain damage', () => {
+    const grazeEvent = playerHit({
+      id: 12,
+      attackerKind: 'monster',
+      attackerName: 'Blood-Fiend',
+      targetName: 'Brick',
+      hit: false,
+      graze: true,
+      damageDealt: 10,
+    });
+    const float = resolveSpriteFloat({
+      lastAttack: grazeEvent,
+      self: { kind: 'player' },
+      hpDelta: 10,
+      isNewAttack: true,
+    });
+    expect(float).toEqual({ amount: 10, kind: 'graze' });
+  });
+
+  it('an immune-negated graze (no damage dealt) floats nothing — the whiff MISS handles it', () => {
+    const grazeEvent = playerHit({
+      id: 13,
+      attackerKind: 'monster',
+      targetName: 'Brick',
+      hit: false,
+      graze: true,
+      damageDealt: undefined,
+    });
+    const float = resolveSpriteFloat({
+      lastAttack: grazeEvent,
+      self: { kind: 'player' },
+      hpDelta: 0,
+      isNewAttack: true,
+    });
+    expect(float).toBeNull();
+  });
+
   it('a player-target sprite reads monster attacks, not the player\'s own swings', () => {
     const self: FloatSelf = { kind: 'player' };
     // Player swinging at a goblin must not float on the player sprite.

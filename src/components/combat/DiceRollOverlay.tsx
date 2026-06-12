@@ -15,6 +15,8 @@ interface DiceRollOverlayProps {
   targetAC: number;
   hit: boolean;
   crit: boolean;
+  /** Elite/boss near-miss that still chipped — verdict reads GRAZE, not MISS. */
+  graze?: boolean;
   onDismiss: () => void;
 }
 
@@ -33,6 +35,7 @@ export function DiceRollOverlay({
   targetAC,
   hit,
   crit,
+  graze,
   onDismiss,
 }: DiceRollOverlayProps) {
   const { t } = useT();
@@ -71,6 +74,8 @@ export function DiceRollOverlay({
       // monster hits play the pained `player_hurt`, the player's land as `hit_thud`.
       if (crit) playSfx('crit_hit');
       else if (hit) playSfx(attackerKind === 'monster' ? 'player_hurt' : 'hit_thud');
+      // A graze connects for real damage — it sounds like a blow, not a whiff.
+      else if (graze) playSfx(attackerKind === 'monster' ? 'player_hurt' : 'hit_thud');
       else playSfx('miss_whiff');
     }, t(330));
 
@@ -86,12 +91,18 @@ export function DiceRollOverlay({
       clearTimeout(revealTimer);
       clearTimeout(dismissTimer);
     };
-  }, [rollNatural, onDismiss, speed, hit, crit, attackerKind]);
+  }, [rollNatural, onDismiss, speed, hit, crit, graze, attackerKind]);
 
-  const resultLabel = crit ? t('combat.dice.crit') : hit ? t('combat.dice.hit') : t('combat.dice.miss');
+  const resultLabel = crit
+    ? t('combat.dice.crit')
+    : hit
+      ? t('combat.dice.hit')
+      : graze
+        ? t('combat.dice.graze')
+        : t('combat.dice.miss');
   const resultClass = crit
     ? 'text-[var(--color-dmg-crit)]'
-    : hit
+    : hit || graze
       ? 'text-[var(--color-status-poison)]'
       : 'text-[var(--color-text-muted)]';
 

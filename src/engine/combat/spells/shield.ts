@@ -1,5 +1,6 @@
 import type { Character } from '../../../types/character';
 import type { CombatState } from '../../../types/combat';
+import { effectiveAC } from '../../character/effectiveAC';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchResources } from '../types';
 import {
@@ -53,11 +54,15 @@ export interface ShieldReactionTrigger {
  * Mirrors the Uncanny Dodge pattern (PR #70): no UI picker, reactionUsed flag
  * resets at turn start. Crits (nat 20) bypass Shield by RAW — Shield only
  * raises AC; a nat 20 hits regardless.
+ *
+ * Takes the RAW AC: the +5 lands on raw armour and is then compressed by the
+ * monster-side softcap (effectiveAC), so the would-it-miss check and the
+ * logged values match exactly what the rest of the round will resolve at.
  */
 export function tryShieldReaction(
   character: Readonly<Character>,
   state: CombatState,
-  ac: number,
+  rawAc: number,
   attackTotal: number,
 ): ShieldReactionTrigger | null {
   if (character.classId !== 'wizard') return null;
@@ -68,7 +73,8 @@ export function tryShieldReaction(
   // Clutch only: a healthy wizard eats the glancing blow (feels threatened);
   // Shield is reserved for when HP actually matters.
   if (character.hp.current > character.hp.max * SHIELD_REACTION_HP) return null;
-  const newAc = ac + SHIELD_AC_BONUS;
+  const ac = effectiveAC(rawAc);
+  const newAc = effectiveAC(rawAc + SHIELD_AC_BONUS);
   if (attackTotal >= newAc) return null;
 
   let nextCharacter: Character = consumeSlot(character, 1);

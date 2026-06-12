@@ -5,7 +5,7 @@ import { useT } from '../../i18n/useT';
 export interface FloatingDamageItem {
   id: number;
   amount: number;
-  kind: 'damage' | 'heal' | 'miss' | 'crit' | 'block' | 'landed' | 'resisted';
+  kind: 'damage' | 'heal' | 'miss' | 'crit' | 'block' | 'landed' | 'resisted' | 'graze';
   /** Element of the blow (fire/cold/...) — tints the number. Physical/absent = default. */
   damageType?: string;
 }
@@ -80,6 +80,17 @@ export function resolveSpriteFloat(args: {
     (lastAttack.damageDealt ?? 0) > 0
   ) {
     return { amount: lastAttack.damageDealt!, kind: lastAttack.crit ? 'crit' : 'damage' };
+  }
+  // A graze carries hit=false but real chip damage — float it as its own
+  // smaller kind so a near-miss reads as a near-miss, not a landed blow.
+  if (
+    isNewAttack &&
+    lastAttack &&
+    lastAttack.graze === true &&
+    attackAimedAt(lastAttack, self) &&
+    (lastAttack.damageDealt ?? 0) > 0
+  ) {
+    return { amount: lastAttack.damageDealt!, kind: 'graze' };
   }
   if (hpDelta > 0) return { amount: hpDelta, kind: 'damage' };
   if (hpDelta < 0) return { amount: -hpDelta, kind: 'heal' };
@@ -163,6 +174,17 @@ const KIND_STYLE: Record<
     size: 'text-[34px]',
     glow: 'rgba(0,0,0,0)',
   },
+  // A grazing near-miss — real damage, but a glancing one: clearly smaller
+  // and duller than a landed hit, with the word attached so it never reads
+  // as a full blow.
+  graze: {
+    color: 'text-[#d9a96b]',
+    prefix: '−',
+    suffix: '',
+    animation: 'animate-damage-float',
+    size: 'text-[30px]',
+    glow: 'rgba(217,169,107,0.35)',
+  },
 };
 
 /**
@@ -200,7 +222,9 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
           ? t('combat.float.resisted')
           : item.kind === 'block'
             ? `${item.amount}${t('combat.float.blocked')}`
-            : `${style.prefix}${item.amount}${style.suffix}`;
+            : item.kind === 'graze'
+              ? `${style.prefix}${item.amount}${t('combat.float.graze')}`
+              : `${style.prefix}${item.amount}${style.suffix}`;
 
   // Spread numbers slightly so back-to-back hits don't perfectly overlap.
   const offsetX = ((item.id % 5) - 2) * 14;

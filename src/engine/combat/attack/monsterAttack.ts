@@ -21,6 +21,7 @@ import type {
 } from '../../../schemas/monster';
 import type { ConditionName } from '../../../types/conditions';
 import { computeAC, isRaging, characterHasMechanic } from '../../character/derived';
+import { effectiveAC } from '../../character/effectiveAC';
 import { wearsHeavierThanLight, rageBrokenByArmor } from '../../character/equip';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterAffixMods } from '../../items/affixMods';
@@ -67,6 +68,16 @@ import type { AttackContext } from './playerAttack';
 // it, imposing disadvantage. Fades at level 5 when the real Uncanny Dodge (a
 // damage halve) comes online — see attack/damage.ts (UNCANNY_DODGE_LEVEL = 5).
 const NIMBLE_DODGE_MAX_LEVEL = 4;
+
+// Graze — an elite or boss presses close enough that a near-miss still draws
+// blood: a miss inside this band under the effective AC connects for a
+// fraction of the swing's weapon damage, with NONE of the riders (no
+// life-drain, no conditions, no on-hit extras). Rank-and-file foes, adds and
+// summons (rank-less by spawn) never graze, so the early game and the mage
+// matchup stay clean misses. Both numbers are tuning knobs, provisional until
+// the post-merge sims.
+const GRAZE_MISS_BAND = 2;
+const GRAZE_DAMAGE_FRACTION = 0.5;
 
 /** Rogue Opportunist (L12): a foe that swings and misses opens itself to a
  *  reaction Sneak-Attack jab — half the rogue's Sneak dice (a conservative
@@ -628,6 +639,80 @@ function tickActingMonsterFear(state: CombatState, attackerId: string): CombatSt
 }
 
 /**
+ * The raw strength of a monster blow before the player's own mitigation:
+ * damage dice + the action's flat modifier + battle-rage + the dungeon-twist
+ * surcharge + phase enrage, scaled by the ascension damage multiplier, minus
+ * the monster's own `weakened` self-debuff (floored at 1). Shared by the
+ * full-hit and graze branches so their arithmetic can never drift — a graze
+ * takes its fraction of THIS number.
+ */
+function monsterBlowDamage(
+  instance: MonsterInstance,
+  raging: boolean,
+  diceTotal: number,
+  flatModifier: number,
+): { raw: number; rageBonus: number; twistBonus: number; phaseBonus: number } {
+  const rageBonus = raging ? 2 : 0;
+  // Dungeon-twist flat surcharge (ascension difficulty rides damageMult below).
+  const twistBonus = instance.bonusDamage ?? 0;
+  // boss-framework: flat enrage damage granted by an entered HP phase.
+  const phaseBonus = instance.phaseDamageBonus ?? 0;
+  // Ascension difficulty: a percentage on the whole landed blow, so it scales
+  // with the enemy's own damage and bites hardest in the endgame chapters.
+  const damageMult = instance.damageMult ?? 1;
+  // Wither (8th wizard) leaves a monster 'weakened' — a flat cut to its OWN
+  // outgoing damage (the one self-debuff the monster turn reads against
+  // itself). A landed hit still grazes for at least 1.
+  const selfWeakened = instance.conditions
+    .filter((c) => c.name === 'weakened')
+    .reduce((sum, c) => sum + (c.level ?? DEFAULT_WEAKENED_AMOUNT), 0);
+  const rawBlow = diceTotal + flatModifier + rageBonus + twistBonus + phaseBonus;
+  const rawBeforeWeaken = damageMult !== 1 ? Math.round(rawBlow * damageMult) : rawBlow;
+  const raw = selfWeakened > 0 ? Math.max(1, rawBeforeWeaken - selfWeakened) : rawBeforeWeaken;
+  return { raw, rageBonus, twistBonus, phaseBonus };
+}
+
+/**
+ * The player's own mitigation of a monster blow: poison immunity zeroes it; a
+ * racial resist, Rage's physical halving, Bear-totem's elemental halving, or an
+ * armour resist affix halves it (resistance never stacks — 5e). Shared by the
+ * full-hit and graze branches: monotonicity (a graze never outdamages the hit
+ * the same roll would have landed) holds because both pass this same gate.
+ */
+function mitigatePlayerDamage(
+  character: Readonly<Character>,
+  damageType: MonsterAttack['damageType'],
+  raw: number,
+): { total: number; immune: boolean; resisted: boolean; rageOnly: boolean } {
+  const quirkMods = characterQuirkMods(character);
+  const immune =
+    damageType === 'poison' &&
+    (quirkMods.poisonImmune === true || character.poisonImmuneEncounter === true);
+  const race = getRace(character.raceId);
+  const raceResists = race.damageResistances?.includes(damageType) ?? false;
+  // Barbarian Rage halves physical damage (bludgeoning / piercing / slashing).
+  const physical =
+    damageType === 'bludgeoning' || damageType === 'piercing' || damageType === 'slashing';
+  // Heavy armour smothers Rage — plate gives no physical-damage halving
+  // (defense-in-depth alongside the equip-time break and the entry guard).
+  const rageResists = isRaging(character) && physical && !rageBrokenByArmor(character);
+  // Totem (Bear) Aspect of the Bear (L10): while raging, fire/cold/lightning are
+  // halved alongside the physical. Heavy armour smothers the fury here too.
+  const elemental =
+    damageType === 'fire' || damageType === 'cold' || damageType === 'lightning';
+  const bearResists =
+    isRaging(character) &&
+    elemental &&
+    !rageBrokenByArmor(character) &&
+    characterHasMechanic(character, 'aspect-of-the-bear');
+  // Armour resist affix (Salamander / Frostward): halve a matching type.
+  const affixResists = characterAffixMods(character).resists.includes(damageType);
+  const resisted = !immune && (raceResists || rageResists || bearResists || affixResists);
+  const total = immune ? 0 : resisted ? Math.floor(raw / 2) : raw;
+  return { total, immune, resisted, rageOnly: rageResists && !raceResists };
+}
+
+/**
  * Resolve ONE monster attack against the player. Does NOT mark the action used
  * or evaluate combat end — the caller (monsterAttack / monsterMultiattack)
  * centralizes that so a multiattack only spends one action and ends combat once.
@@ -678,7 +763,12 @@ function resolveSingleAttack(
   const condMods = playerConditionMods(nextCharacter);
   const playerVulnerable = playerParalyzed || condMods.grantsAttackerAdvantage;
 
-  const ac = computeAC(nextCharacter);
+  const rawAc = computeAC(nextCharacter);
+  // Past the softcap, plate turns aside less than it promises: the monster's
+  // dice roll against the COMPRESSED value (see effectiveAC), and every line
+  // below logs that number — the log never prints an AC the dice didn't use.
+  // The sheet and HUD keep showing raw.
+  const ac = effectiveAC(rawAc);
   // Advantage/disadvantage sources net per 5e cancellation: any advantage plus
   // any disadvantage is a straight roll. Advantage comes from a vulnerable
   // player (paralyzed / blinded / restrained) or a Barbarian fighting
@@ -722,6 +812,18 @@ function resolveSingleAttack(
   const crit = toHit.rolls[0] === 20;
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
+  // Graze eligibility, fixed at the roll: an elite/boss attacker whose total
+  // landed inside the band just under the effective AC. The total-below-AC
+  // check also keeps resource-negated hits clean — Shield, Cutting Words and a
+  // shattered mirror image flip `hit` only on rolls that BEAT the AC, and the
+  // player paid for a miss, not a half-blow. A natural 1 stays a clean whiff.
+  const grazes =
+    !hit &&
+    !toHit.natural1 &&
+    (attacker.instance.rank === 'elite' || attacker.instance.rank === 'boss') &&
+    toHit.total < ac &&
+    toHit.total >= ac - GRAZE_MISS_BAND;
+
   const advantageNote =
     attackAdvantage === 'advantage'
       ? playerParalyzed
@@ -752,7 +854,7 @@ function resolveSingleAttack(
       mod: `${effectiveAttackBonus >= 0 ? '+' : ''}${effectiveAttackBonus}`,
       total: toHit.total,
       ac,
-      result: `— ${crit ? t('combat.f.resCrit') : hit ? t('combat.f.resHit') : t('combat.f.resMiss')}`,
+      result: `— ${crit ? t('combat.f.resCrit') : hit ? t('combat.f.resHit') : grazes ? t('combat.f.resMissGraze') : t('combat.f.resMiss')}`,
       adv: `${advantageNote}${dirgeNote}`,
     }),
   });
@@ -769,9 +871,11 @@ function resolveSingleAttack(
   }
 
   // Shield reaction (wizard): a non-crit hit that Shield would flip to a miss
-  // burns a level-1 slot + reaction. Crits bypass Shield.
+  // burns a level-1 slot + reaction. Crits bypass Shield. Takes the RAW AC —
+  // the +5 lands before compression, so the would-it-miss check is honest
+  // about what the shielded guard actually resolves at.
   if (hit && !crit) {
-    const triggered = tryShieldReaction(nextCharacter, workingState, ac, toHit.total);
+    const triggered = tryShieldReaction(nextCharacter, workingState, rawAc, toHit.total);
     if (triggered) {
       workingState = triggered.state;
       nextCharacter = triggered.character;
@@ -841,6 +945,7 @@ function resolveSingleAttack(
     targetAC: ac,
     hit,
     crit,
+    ...(grazes ? { graze: true } : {}),
     damageType: action.damageType,
   };
 
@@ -857,59 +962,14 @@ function resolveSingleAttack(
       die: damageExpr.die,
       modifier: 0,
     });
-    const rageBonus = raging ? 2 : 0;
-    // Dungeon-twist flat surcharge (ascension difficulty rides damageMult below).
-    const twistBonus = attacker.instance.bonusDamage ?? 0;
-    // boss-framework: flat enrage damage granted by an entered HP phase.
-    const phaseBonus = attacker.instance.phaseDamageBonus ?? 0;
-    // Ascension difficulty: a percentage on the whole landed blow, so it scales
-    // with the enemy's own damage and bites hardest in the endgame chapters.
-    const damageMult = attacker.instance.damageMult ?? 1;
-    // Wither (8th wizard) leaves a monster 'weakened' — a flat cut to its OWN
-    // outgoing damage (the one self-debuff the monster turn reads against
-    // itself). A landed hit still grazes for at least 1.
-    const selfWeakened = attacker.instance.conditions
-      .filter((c) => c.name === 'weakened')
-      .reduce((sum, c) => sum + (c.level ?? DEFAULT_WEAKENED_AMOUNT), 0);
-    const rawBlow = damageRoll.total + damageExpr.modifier + rageBonus + twistBonus + phaseBonus;
-    const rawBeforeWeaken = damageMult !== 1 ? Math.round(rawBlow * damageMult) : rawBlow;
-    const rawDamage =
-      selfWeakened > 0 ? Math.max(1, rawBeforeWeaken - selfWeakened) : rawBeforeWeaken;
-
-    const quirkMods = characterQuirkMods(nextCharacter);
-    const immune =
-      action.damageType === 'poison' &&
-      (quirkMods.poisonImmune === true || nextCharacter.poisonImmuneEncounter === true);
-    const race = getRace(nextCharacter.raceId);
-    const raceResists = race.damageResistances?.includes(action.damageType) ?? false;
-    // Barbarian Rage halves physical damage (bludgeoning / piercing / slashing).
-    // Resistance doesn't stack (5e), so rage and a racial resist both just halve.
-    const physical =
-      action.damageType === 'bludgeoning' ||
-      action.damageType === 'piercing' ||
-      action.damageType === 'slashing';
-    // Heavy armour smothers Rage — plate gives no physical-damage halving
-    // (defense-in-depth alongside the equip-time break and the entry guard).
-    const rageResists = isRaging(nextCharacter) && physical && !rageBrokenByArmor(nextCharacter);
-    // Totem (Bear) Aspect of the Bear (L10): while raging, fire/cold/lightning are
-    // halved alongside the physical. Heavy armour smothers the fury here too.
-    const elemental =
-      action.damageType === 'fire' ||
-      action.damageType === 'cold' ||
-      action.damageType === 'lightning';
-    const bearResists =
-      isRaging(nextCharacter) &&
-      elemental &&
-      !rageBrokenByArmor(nextCharacter) &&
-      characterHasMechanic(nextCharacter, 'aspect-of-the-bear');
-    // Armour resist affix (Salamander / Frostward): halve a matching type.
-    const affixResists = characterAffixMods(nextCharacter).resists.includes(action.damageType);
-    const resisted = !immune && (raceResists || rageResists || bearResists || affixResists);
-    const totalDamage = immune
-      ? 0
-      : resisted
-        ? Math.floor(rawDamage / 2)
-        : rawDamage;
+    const blow = monsterBlowDamage(
+      attacker.instance,
+      raging,
+      damageRoll.total,
+      damageExpr.modifier,
+    );
+    const mitigated = mitigatePlayerDamage(nextCharacter, action.damageType, blow.raw);
+    const totalDamage = mitigated.total;
 
     const damaged = applyDamage(nextState, 'player', totalDamage, nextCharacter);
     nextState = damaged.state;
@@ -929,15 +989,15 @@ function resolveSingleAttack(
           : `- ${Math.abs(damageExpr.modifier)} ${t('combat.part.bonus')}`,
       );
     }
-    if (rageBonus > 0) breakdown.push(`+ ${rageBonus} ${t('combat.part.rage')}`);
-    if (twistBonus > 0) breakdown.push(`+ ${twistBonus} ${t('combat.part.ascension')}`);
-    if (phaseBonus > 0) breakdown.push(`+ ${phaseBonus} ${t('combat.part.phase')}`);
-    const resistSuffix = resisted
-      ? rageResists && !raceResists
+    if (blow.rageBonus > 0) breakdown.push(`+ ${blow.rageBonus} ${t('combat.part.rage')}`);
+    if (blow.twistBonus > 0) breakdown.push(`+ ${blow.twistBonus} ${t('combat.part.ascension')}`);
+    if (blow.phaseBonus > 0) breakdown.push(`+ ${blow.phaseBonus} ${t('combat.part.phase')}`);
+    const resistSuffix = mitigated.resisted
+      ? mitigated.rageOnly
         ? t('combat.log.resistRagePhysical')
         : t('combat.log.resistType', { type: dmgWord })
       : '';
-    const damageLine = immune
+    const damageLine = mitigated.immune
       ? t('combat.log.monsterImmune', { name: nextCharacter.name, type: dmgWord })
       : t('combat.log.monsterDamage', {
           dmg: totalDamage,
@@ -978,6 +1038,55 @@ function resolveSingleAttack(
         }
       }
     }
+  } else if (grazes) {
+    // Graze: the near-miss still bites for a fraction of the swing's weapon
+    // damage — same raw-blow arithmetic and same player-side mitigation as a
+    // landed hit (so a graze can never outdamage the hit that roll would have
+    // been), then the graze fraction, floored, never less than 1. Riders never
+    // apply: no life-drain, no conditions, nothing beyond the blow itself.
+    const damageExpr = parseDiceExpression(action.damage);
+    const damageRoll = roller.roll({
+      count: damageExpr.count,
+      die: damageExpr.die,
+      modifier: 0,
+    });
+    const blow = monsterBlowDamage(
+      attacker.instance,
+      raging,
+      damageRoll.total,
+      damageExpr.modifier,
+    );
+    const mitigated = mitigatePlayerDamage(nextCharacter, action.damageType, blow.raw);
+    const grazeDamage = mitigated.immune
+      ? 0
+      : Math.max(1, Math.floor(mitigated.total * GRAZE_DAMAGE_FRACTION));
+    const dmgWord = t(`combat.dmg.${action.damageType}`);
+
+    if (grazeDamage > 0) {
+      const damaged = applyDamage(nextState, 'player', grazeDamage, nextCharacter);
+      nextState = damaged.state;
+      nextCharacter = damaged.character;
+      if (nextState.lastAttack && nextState.lastAttack.id === attackEvent.id) {
+        nextState = {
+          ...nextState,
+          lastAttack: { ...nextState.lastAttack, damageDealt: grazeDamage },
+        };
+      }
+      nextState = appendLog(nextState, {
+        id: nextLogId(nextState),
+        kind: 'damage',
+        source: 'enemy',
+        text: t('combat.log.monsterGraze', { dmg: grazeDamage, type: dmgWord }),
+      });
+    } else {
+      // An immune body shrugs even the graze — same negation line as a hit.
+      nextState = appendLog(nextState, {
+        id: nextLogId(nextState),
+        kind: 'damage',
+        source: 'enemy',
+        text: t('combat.log.monsterImmune', { name: nextCharacter.name, type: dmgWord }),
+      });
+    }
   }
 
   // Rogue Opportunist (L12): a foe that swung and MISSED leaves itself open —
@@ -985,9 +1094,11 @@ function resolveSingleAttack(
   // dedicated per-round flag (not the reaction), so Uncanny Dodge can still
   // answer a landed hit the same round, and it's separate from the once-per-turn
   // main-hand Sneak. A clean miss is the opening; on a hit the rogue is too busy
-  // taking the blow to counter.
+  // taking the blow to counter. A graze still counts as the opening (the swing
+  // missed) — but only a rogue still standing after its chip can answer.
   if (
     !hit &&
+    nextCharacter.hp.current > 0 &&
     nextCharacter.classId === 'rogue' &&
     characterHasMechanic(nextCharacter, 'opportunist') &&
     nextCharacter.opportunistUsedThisRound !== true
