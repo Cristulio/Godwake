@@ -385,6 +385,22 @@ export const SHAPE_CHANGE: Spell = SpellSchema.parse({
   effectKey: 'shape-change',
 });
 
+// Provisional dice in the description below — the end-of-campaign sim batch
+// owns the final numbers (see POWER_WORD_KILL_* constants in the handler).
+export const POWER_WORD_KILL: Spell = SpellSchema.parse({
+  id: 'power-word-kill',
+  book: 'wizard',
+  name: 'Power Word: Kill',
+  level: 9,
+  school: 'enchantment',
+  range: '60 ft',
+  target: 'single',
+  damageType: 'necrotic',
+  description:
+    'You speak the one syllable death answers to. A foe that fails a Constitution save is unsaid — dead where it stands, however strong its frame, even the crowned champions among them. One that holds itself together still takes 10d12 necrotic. The masters of the deep places alone cannot be unmade by a single word: the Word tears 14d12 from one whose will buckles, 7d12 from one whose will holds.',
+  effectKey: 'power-word-kill',
+});
+
 // --- Druid: the nature book (Silvanus's craft). A curated set spanning every
 // slot tier so no slot the climb opens is left dead. Each maps onto an EXISTING
 // spell-effect handler (no new engine kinds) — the flavor is the Druid's, the
@@ -825,6 +841,7 @@ const ALL_SPELLS: Spell[] = [
   UNMAKE,
   TIME_STOP,
   SHAPE_CHANGE,
+  POWER_WORD_KILL,
   // Druid book.
   PRODUCE_FLAME,
   THORNLASH,

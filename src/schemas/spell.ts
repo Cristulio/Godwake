@@ -60,6 +60,7 @@ export const SpellEffectKeySchema = z.enum([
   'unmake', // 9: remake-the-enemy (capstone)
   'time-stop', // 9: three free player turns, enemies frozen (capstone)
   'shape-change', // 9: become a dragon — temp HP wall + triple claw (capstone)
+  'power-word-kill', // 9: save-or-die — normals/elites die on a failed CON save; bosses never die, only bleed (capstone)
   // --- Druid signature workings — mechanics the arcane book lacks. ---
   'regrowth', // 2: self heal-over-time (the Druid's only sustain)
   'entangle', // 2: AoE root — every enemy saves or loses its next turn

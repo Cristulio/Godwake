@@ -221,7 +221,11 @@ export function availableWizardSpellsForLearn(
  */
 const SIM_SPELL_PRIORITY: readonly string[] = [
   // 9th-level capstones first — a reachable slot here is the deepest pick.
+  // Unmake stays the sim's auto-pick (guaranteed damage reads better in bot
+  // hands than a save-or-die); Power Word: Kill ranks next so a wizard that
+  // already knows Unmake (future scroll paths) picks the word over a buff.
   'unmake',
+  'power-word-kill',
   'apotheosis',
   'time-stop',
   'shape-change',

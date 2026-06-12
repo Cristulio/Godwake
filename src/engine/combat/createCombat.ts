@@ -179,6 +179,14 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     : isElite
       ? ELITE_LEGENDARY_RESISTANCES
       : 0;
+  // The primary's rank, stamped immutably for rank-gated effects (Power Word:
+  // Kill). The LR pool above can't serve: it decrements as it absorbs control,
+  // so a boss that burned its pool would stop reading as a boss.
+  const primaryRank: 'boss' | 'elite' | undefined = isBoss
+    ? 'boss'
+    : isElite
+      ? 'elite'
+      : undefined;
   // Ascension dungeon twist for this room (Asc >= 4 only). Resolved up-front so
   // its knobs feed the spawn (Bloodscent enemy damage) and the combat state
   // (Cursed Ground chip, Gloom first-strike, Sealed Wards, Quickening order).
@@ -213,6 +221,7 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
         ...(twistDamageBonus > 0 ? { bonusDamage: twistDamageBonus } : {}),
         ...(damageMult !== 1 ? { damageMult } : {}),
         ...(legendaryResistances > 0 ? { legendaryResistances } : {}),
+        ...(primaryRank && idx === 0 ? { rank: primaryRank } : {}),
         ...(bossExtraPhase && idx === 0 ? { bossExtraPhaseArmed: true } : {}),
       },
     };
