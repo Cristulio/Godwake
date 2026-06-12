@@ -99,7 +99,12 @@ import type { ClassId as SchemaClassId } from '../src/schemas/ids';
 import type { RoomSpec } from '../src/types/delve';
 
 type ClassId = 'fighter' | 'rogue' | 'wizard' | 'barbarian' | 'ranger' | 'druid' | 'monk' | 'bard' | 'paladin';
-const CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk', 'bard', 'paladin'];
+const ALL_CLASSES: ClassId[] = ['fighter', 'rogue', 'wizard', 'barbarian', 'ranger', 'druid', 'monk', 'bard', 'paladin'];
+// CLASSES=bard (comma list) re-spots a subset; per-(class,soulIndex) seeding
+// makes a subset run identical to its rows in the full field.
+const CLASSES: ClassId[] = process.env.CLASSES
+  ? (process.env.CLASSES.split(',').filter((c): c is ClassId => (ALL_CLASSES as string[]).includes(c)))
+  : ALL_CLASSES;
 
 const SOULS_PER_CLASS = Number(process.env.SOULS_PER_CLASS ?? 150);
 const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);

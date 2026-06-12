@@ -22,7 +22,36 @@ try {
     eager: true,
   });
 } catch {
+  // node/tsx (sims, probes): no Vite transform — read the locale JSON off disk
+  // so t() yields real strings (sim log instrumentation greps them; a raw-key
+  // log line silently zeroes any text-read metric). getBuiltinModule keeps the
+  // module graph free of node imports, so the app bundle is untouched.
   modules = {};
+  const proc = (globalThis as { process?: { getBuiltinModule?: (id: string) => unknown } })
+    .process;
+  const fs = proc?.getBuiltinModule?.('node:fs') as
+    | undefined
+    | {
+        readdirSync: (p: URL) => string[];
+        readFileSync: (p: URL, enc: 'utf8') => string;
+      };
+  if (fs) {
+    const base = new URL('./locales/', import.meta.url);
+    for (const lang of fs.readdirSync(base)) {
+      let files: string[];
+      try {
+        files = fs.readdirSync(new URL(`${lang}/`, base));
+      } catch {
+        continue; // not a directory
+      }
+      for (const f of files) {
+        if (!f.endsWith('.json')) continue;
+        modules[`./locales/${lang}/${f}`] = {
+          default: JSON.parse(fs.readFileSync(new URL(`${lang}/${f}`, base), 'utf8')) as NamespaceData,
+        };
+      }
+    }
+  }
 }
 
 const registry: Registry = {};
