@@ -24,7 +24,11 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
   const ascensionLevel = delve.ascensionLevel ?? 0;
   const ascension = getAscensionLevel(ascensionLevel);
   // Single source of truth — exactly what finishDelve will bank.
-  const renown = character ? computeDelveRenown(delve, character) : null;
+  // A settled delve carries its exact payout (death settles with the DYING
+  // soul's marks; recomputing here with the reborn soul would understate it).
+  const renown =
+    delve.renownSettledBreakdown ??
+    (character ? computeDelveRenown(delve, character) : null);
   const renownEarned = renown?.total ?? 0;
   // A clear at the current highest rung opens the next (see unlockNextAscension).
   // ascensionUnlocked hasn't incremented yet — finishDelve runs on Return.
