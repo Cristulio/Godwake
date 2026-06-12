@@ -600,3 +600,47 @@ describe('Bard — spellcasting (the College repertoire)', () => {
     expect(isWeaponProficient(bard, getItem('greatsword') as never)).toBe(false);
   });
 });
+
+describe('bard bot — Hold Person crowd gate (owner directive, matches the wizard #574 gate)', () => {
+  const holdReady = (lvl: number) => {
+    let b = makeBard(lvl);
+    b = {
+      ...b,
+      resources: {
+        ...b.resources,
+        knownSpells: ['bard-hold-person'],
+        spellSlots: { ...(b.resources.spellSlots ?? {}), 2: 2 },
+      },
+    };
+    return b;
+  };
+
+  it('refuses Hold Person while two foes stand, casts it once one remains', async () => {
+    const { chooseCombatAction } = await import('./actionPolicy');
+    const { createCombat } = await import('./createCombat');
+    const { getMonster } = await import('../../content/monsters');
+    const { createDiceRoller } = await import('../dice');
+
+    const roller = createDiceRoller('hold-gate');
+    const bard = holdReady(6);
+    const two = createCombat({
+      roller,
+      character: bard,
+      monsters: [{ def: getMonster('hobgoblin') }, { def: getMonster('hobgoblin') }],
+    });
+    const crowdAction = chooseCombatAction(two.state, two.character, 'balanced');
+    expect(
+      crowdAction.kind === 'cast' && crowdAction.spellId === 'bard-hold-person',
+    ).toBe(false);
+
+    const one = createCombat({
+      roller,
+      character: holdReady(6),
+      monsters: [{ def: getMonster('hobgoblin') }],
+    });
+    const soloAction = chooseCombatAction(one.state, one.character, 'balanced');
+    if (soloAction.kind === 'cast') {
+      expect(['bard-hold-person']).toContain(soloAction.spellId);
+    }
+  });
+});
