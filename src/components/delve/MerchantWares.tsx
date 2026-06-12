@@ -9,7 +9,7 @@ import { itemEquipNote, equipDenialReason, equippedRefsForItemSlot } from '../..
 import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { ItemTooltip } from '../inventory/ItemTooltip';
-import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel } from '../inventory/itemDisplay';
+import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel, twoHandedPremiumLine } from '../inventory/itemDisplay';
 import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
 
@@ -131,6 +131,11 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
               ◆ {localizedAffixEffect(id)}
             </div>
           ))}
+          {twoHandedPremiumLine(base, rolled) && (
+            <div className="text-[var(--color-accent-amber)] text-[11px] italic leading-snug">
+              ◆ {twoHandedPremiumLine(base, rolled)}
+            </div>
+          )}
         </div>
         {warning && (
           <div className="text-[var(--color-accent-amber)] text-[10px] leading-snug mt-1">

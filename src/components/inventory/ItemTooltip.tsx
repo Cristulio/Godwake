@@ -11,6 +11,7 @@ import {
   dndRarityLabel,
   localizedDamageType,
   weaponPropertyLabel,
+  twoHandedPremiumLine,
 } from './itemDisplay';
 import { useT } from '../../i18n/useT';
 
@@ -96,6 +97,11 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
               </div>
             );
           })}
+          {twoHandedPremiumLine(item, rolled) && (
+            <div className="text-[10px] leading-snug text-[var(--color-accent-amber)]">
+              ◆ {twoHandedPremiumLine(item, rolled)}
+            </div>
+          )}
         </div>
       )}
 

@@ -15,6 +15,12 @@ export {
   rolledItemCost,
 } from './rollItem';
 export {
+  TWO_HANDED_AFFIX_SCALE,
+  isTwoHandedPremiumBase,
+  affixScaleForRef,
+  scaleAffixMagnitude,
+} from './twoHandedPremium';
+export {
   type DropSource,
   dropSourceForRoom,
   rollGearDrop,

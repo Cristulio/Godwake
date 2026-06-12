@@ -1,9 +1,10 @@
-import type { Item, ItemRef } from '../../schemas/item';
+import type { Item, ItemRef, RolledItem } from '../../schemas/item';
 import type { GearRarity } from '../../schemas/item';
 import type { Rarity } from '../../schemas/ids';
 import { t, getLocalized } from '../../i18n';
 import { getItem, getAffix } from '../../content/items';
 import { affixDominance } from '../../engine/items/rollItem';
+import { isTwoHandedPremiumBase, TWO_HANDED_AFFIX_SCALE } from '../../engine/items/twoHandedPremium';
 
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -115,6 +116,19 @@ export function baseStatLine(item: Item): string {
     case 'accessory':
       return slotLabel(item.accessorySlot);
   }
+}
+
+/**
+ * The two-handed premium disclosure under a true two-hander's affix list. The
+ * affix effect lines print their one-hand numbers (static copy), so the item
+ * states its amplification once. Null off-premium or with nothing to amplify.
+ */
+export function twoHandedPremiumLine(item: Item, rolled?: RolledItem): string | null {
+  if (!rolled || rolled.affixes.length === 0) return null;
+  if (!isTwoHandedPremiumBase(item)) return null;
+  return t('screens.itemDisplay.twoHandedPremium', {
+    pct: Math.round((TWO_HANDED_AFFIX_SCALE - 1) * 100),
+  });
 }
 
 /**

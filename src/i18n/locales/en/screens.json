@@ -192,6 +192,7 @@
     "twoH": "2h",
     "oneHanded": "One-handed",
     "twoHanded": "Two-handed",
+    "twoHandedPremium": "Two-handed heft — its enchantments run {pct}% hotter.",
     "versatileHands": "Versatile ({dice} two-handed)",
     "acShield": "+{n} AC shield",
     "robeNoAc": "robe · no AC",

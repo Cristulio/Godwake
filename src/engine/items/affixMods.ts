@@ -4,6 +4,7 @@ import type { DamageType } from '../../types/damage';
 import { getAffix } from '../../content/items';
 import { EQUIP_SLOTS } from '../character/equip';
 import { equippedSetMods } from './setGear';
+import { affixScaleForRef, scaleAffixMagnitude } from './twoHandedPremium';
 
 /**
  * Aggregated affix effect across a set of equipped items. Numeric channels sum
@@ -82,27 +83,31 @@ export function equippedAffixIds(character: Character): string[] {
   return ids;
 }
 
-/** Fold one effect payload (an affix's or a legendary's) into the accumulator. */
-function applyAffixModifiers(acc: AffixMods, m: AffixModifiers): void {
-  acc.acBonus += m.acBonus ?? 0;
-  acc.acBonusWhileFull += m.acBonusWhileFull ?? 0;
-  acc.acBonusWhileBloodied += m.acBonusWhileBloodied ?? 0;
-  acc.attackBonus += m.attackBonus ?? 0;
-  acc.damageBonus += m.damageBonus ?? 0;
-  acc.critRangeBonus += m.critRangeBonus ?? 0;
-  acc.bleedDamage += m.bleedDamage ?? 0;
-  acc.lifestealPct += m.lifestealPct ?? 0;
-  acc.spellLifestealPct += m.spellLifestealPct ?? 0;
-  acc.regenPerTurn += m.regenPerTurn ?? 0;
-  acc.tempHpPerCombat += m.tempHpPerCombat ?? 0;
-  acc.spellDcBonus += m.spellDcBonus ?? 0;
-  acc.spellDamageBonus += m.spellDamageBonus ?? 0;
-  acc.spellAttackBonus += m.spellAttackBonus ?? 0;
-  acc.bonusSpellSlotsL1 += m.bonusSpellSlotsL1 ?? 0;
-  acc.rageDamageBonus += m.rageDamageBonus ?? 0;
-  acc.markDamageBonus += m.markDamageBonus ?? 0;
-  acc.sneakDamageBonus += m.sneakDamageBonus ?? 0;
-  acc.followupDamageBonus += m.followupDamageBonus ?? 0;
+/**
+ * Fold one effect payload (an affix's or a legendary's) into the accumulator.
+ * `scale` > 1 is the two-handed premium: every numeric magnitude scales (ceil,
+ * min +1); resists are binary and pass through unscaled.
+ */
+function applyAffixModifiers(acc: AffixMods, m: AffixModifiers, scale = 1): void {
+  acc.acBonus += scaleAffixMagnitude(m.acBonus ?? 0, scale);
+  acc.acBonusWhileFull += scaleAffixMagnitude(m.acBonusWhileFull ?? 0, scale);
+  acc.acBonusWhileBloodied += scaleAffixMagnitude(m.acBonusWhileBloodied ?? 0, scale);
+  acc.attackBonus += scaleAffixMagnitude(m.attackBonus ?? 0, scale);
+  acc.damageBonus += scaleAffixMagnitude(m.damageBonus ?? 0, scale);
+  acc.critRangeBonus += scaleAffixMagnitude(m.critRangeBonus ?? 0, scale);
+  acc.bleedDamage += scaleAffixMagnitude(m.bleedDamage ?? 0, scale);
+  acc.lifestealPct += scaleAffixMagnitude(m.lifestealPct ?? 0, scale);
+  acc.spellLifestealPct += scaleAffixMagnitude(m.spellLifestealPct ?? 0, scale);
+  acc.regenPerTurn += scaleAffixMagnitude(m.regenPerTurn ?? 0, scale);
+  acc.tempHpPerCombat += scaleAffixMagnitude(m.tempHpPerCombat ?? 0, scale);
+  acc.spellDcBonus += scaleAffixMagnitude(m.spellDcBonus ?? 0, scale);
+  acc.spellDamageBonus += scaleAffixMagnitude(m.spellDamageBonus ?? 0, scale);
+  acc.spellAttackBonus += scaleAffixMagnitude(m.spellAttackBonus ?? 0, scale);
+  acc.bonusSpellSlotsL1 += scaleAffixMagnitude(m.bonusSpellSlotsL1 ?? 0, scale);
+  acc.rageDamageBonus += scaleAffixMagnitude(m.rageDamageBonus ?? 0, scale);
+  acc.markDamageBonus += scaleAffixMagnitude(m.markDamageBonus ?? 0, scale);
+  acc.sneakDamageBonus += scaleAffixMagnitude(m.sneakDamageBonus ?? 0, scale);
+  acc.followupDamageBonus += scaleAffixMagnitude(m.followupDamageBonus ?? 0, scale);
   if (m.resist && !acc.resists.includes(m.resist)) acc.resists.push(m.resist);
 }
 
@@ -126,9 +131,28 @@ export function aggregateAffixMods(affixIds: string[]): AffixMods {
  * effect payloads of the hub-equipped legendary relics (`legendaryEffects`, baked
  * on by metaStore.applyRelicLoadout). Legendaries are effect-only, so they
  * ride the very same channels as gear affixes with no extra plumbing.
+ *
+ * Aggregation is per-slot so each item's affixes read at ITS scale: a true
+ * two-hander's roll runs hotter (twoHandedPremium) while the rest of the kit —
+ * and the legendary/set payloads below — stay at face value.
  */
 export function characterAffixMods(character: Character): AffixMods {
-  const acc = aggregateAffixMods(equippedAffixIds(character));
+  const acc = emptyAffixMods();
+  for (const slot of EQUIP_SLOTS) {
+    const ref = character.equipped[slot];
+    const ids = affixIdsForRef(ref);
+    if (ids.length === 0) continue;
+    const scale = affixScaleForRef(ref);
+    for (const id of ids) {
+      let affix;
+      try {
+        affix = getAffix(id);
+      } catch {
+        continue;
+      }
+      applyAffixModifiers(acc, affix.modifiers, scale);
+    }
+  }
   for (const m of character.legendaryEffects ?? []) {
     applyAffixModifiers(acc, m);
   }
