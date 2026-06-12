@@ -141,6 +141,13 @@ export const PALADIN: Class = ClassSchema.parse({
       name: 'Oath of the Radiant',
       description:
         'The caster lean — a Paladin whose smites burn brightest and whose faith answers in searing light. Best with Charisma gear (spell-DC affixes, a caster off-hand) to drive its bigger smites and its binding word. Lighter on the weapon, heavier on the holy fire.',
+      bottomLine: {
+        archetype: 'Caster',
+        levers: [
+          'Every Divine Smite burns +1d8 hotter.',
+          'L10: +2d8 — two dice hotter than any other oath.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -167,6 +174,14 @@ export const PALADIN: Class = ClassSchema.parse({
       name: 'Oath of the Bulwark',
       description:
         'The martial lean — a Paladin who plants itself at the front and refuses to fall. Best with weapon and tank gear: its aura girds it with temporary hit points each fight, and its smites answer every crit free. The self-buffing wall the oath was built to be.',
+      bottomLine: {
+        archetype: 'Tank',
+        levers: [
+          'Start every fight wrapped in 4 + level temporary HP.',
+          'Every crit you land triggers a free Divine Smite.',
+          'L10: the wrap deepens to 6 + level, and every blow against you is shaved by 3.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {

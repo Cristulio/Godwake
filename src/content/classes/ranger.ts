@@ -151,6 +151,13 @@ export const RANGER: Class = ClassSchema.parse({
       name: 'Hunter — Colossus Slayer',
       description:
         'You learn the killing of larger quarry: finish what the mark begins. Best with single-target, high-crit gear that piles damage onto one wounded foe.',
+      bottomLine: {
+        archetype: 'Striker',
+        levers: [
+          'Once per turn, a hit on a wounded foe bites an extra 1d8.',
+          'L10: the wound deepens — 2d8.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -177,6 +184,13 @@ export const RANGER: Class = ClassSchema.parse({
       name: 'Hunter — Horde Breaker',
       description:
         'You learn to loose against a tide, not a single throat. Best with flat-damage and on-hit affix gear that pays out twice when your shot carries on.',
+      bottomLine: {
+        archetype: 'Cleaver',
+        levers: [
+          'Once per turn, your hit carries into a second enemy — weapon dice + your flat bonuses.',
+          'L10: it carries into up to two further foes.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -203,6 +217,13 @@ export const RANGER: Class = ClassSchema.parse({
       name: 'Hunter — Giant Killer',
       description:
         'You hunt the things that tower over lesser prey. Best with a boss-killer build geared for the elite and the named monster.',
+      bottomLine: {
+        archetype: 'Boss-Killer',
+        levers: [
+          'Every hit on an elite or boss bites an extra 1d10.',
+          'L10: 2d10 — the named monster bleeds twice as fast.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {

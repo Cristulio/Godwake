@@ -32,10 +32,24 @@ export const ClassFeatureSchema = z.object({
   mechanicKey: z.string().optional(),
 });
 
+/**
+ * The school's mechanical summary, rendered loud on the archetype chooser so
+ * the flavor-first descriptions stay flavorful. `archetype` is a one-word
+ * playstyle tag (the EN word doubles as the accent-color key in the chooser);
+ * `levers` are short plain-language bullets of what actually changes, numbers
+ * included. Both localize through the es/classes.json subclass row as flat
+ * fields: `archetype`, `lever0`..`lever3`.
+ */
+export const SubclassBottomLineSchema = z.object({
+  archetype: z.string().min(1),
+  levers: z.array(z.string().min(1)).min(2).max(4),
+});
+
 export const SubclassSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
+  bottomLine: SubclassBottomLineSchema,
   /** Map of character-level -> features gained that level. */
   featuresByLevel: z.record(z.string(), z.array(ClassFeatureSchema)),
 });
@@ -76,6 +90,7 @@ export const ClassSchema = z.object({
 export type WeaponProficiency = z.infer<typeof WeaponProficiencySchema>;
 export type ArmorProficiency = z.infer<typeof ArmorProficiencySchema>;
 export type ClassFeature = z.infer<typeof ClassFeatureSchema>;
+export type SubclassBottomLine = z.infer<typeof SubclassBottomLineSchema>;
 export type Subclass = z.infer<typeof SubclassSchema>;
 export type ClassPreset = z.infer<typeof ClassPresetSchema>;
 export type Class = z.infer<typeof ClassSchema>;

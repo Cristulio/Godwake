@@ -155,6 +155,14 @@ export const BARD: Class = ClassSchema.parse({
       name: 'College of Lore',
       description:
         'The true caster — a bard whose music amplifies the working. Best with caster gear (the War Lute, a spell-focus orb, spell-DC affixes); the playing Song hardens every curse and sharpens every nuke, and Cutting Words keeps the squishy support standing.',
+      bottomLine: {
+        archetype: 'Caster',
+        levers: [
+          'While your Song plays (it always plays): spell save DC +1, every spell +2 damage, growing to +5.',
+          'Cutting Words: spend an Inspiration die to subtract it from an enemy hit.',
+          'L10: TWO Songs at once, +1 Inspiration die.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -188,6 +196,14 @@ export const BARD: Class = ClassSchema.parse({
       name: 'College of Valor',
       description:
         'The true martial — a bard who fights in the front rank and lets the music drive the blade. Best with weapon gear (a rapier or finer martial arm, medium armour); every swing under a playing Song carries the song die, the war-song girds you round on round, and you swing twice from L6.',
+      bottomLine: {
+        archetype: 'Striker',
+        levers: [
+          'Medium armour, shields, and the full martial weapon rack.',
+          'Every weapon hit adds the song die (d6, growing to d12) — and the song pulses fresh temporary HP each round.',
+          'L6: attack twice per Attack action.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {

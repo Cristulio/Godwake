@@ -185,6 +185,14 @@ export const DRUID: Class = ClassSchema.parse({
       name: 'Circle of the Moon',
       description:
         'The Circle that walks into the fight wearing the beast. Best with a build that leans on Wild Shape — a sturdier form, a second change each combat, and the heavier Dire Claws.',
+      bottomLine: {
+        archetype: 'Shapeshifter',
+        levers: [
+          'Wild Shape twice per combat instead of once.',
+          'The beast carries 8 + 3 per level temporary HP, not the circle-less 4 + 2.',
+          'Dire Claws — a heavier strike ladder (1d10, then 2d6, then 2d8).',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {

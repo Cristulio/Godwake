@@ -183,6 +183,13 @@ export const FIGHTER: Class = ClassSchema.parse({
       name: 'Champion',
       description:
         'Raw physical power honed to deadly perfection. Best with crit-range and big-die weapon gear that turns a widened crit window into reliable spikes.',
+      bottomLine: {
+        archetype: 'Striker',
+        levers: [
+          'Crits land on 19–20.',
+          'L10: crits land on 18–20.',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {
@@ -209,6 +216,14 @@ export const FIGHTER: Class = ClassSchema.parse({
       name: 'Battle Master',
       description:
         'A student of maneuvers who opens fights with a measured, crippling strike. Best with on-hit and effect gear that compounds the wounds you start.',
+      bottomLine: {
+        archetype: 'Two-Blades',
+        levers: [
+          'Once per combat, your first hit adds your weapon dice + a bleed (3 damage a turn, 3 turns).',
+          'A light blade may ride the shield hand — every Attack is followed by an off-hand swing.',
+          'L10: +1 Resolve, recovered every round early in the fight.',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {
@@ -242,6 +257,13 @@ export const FIGHTER: Class = ClassSchema.parse({
       name: 'Defender',
       description:
         'A bulwark who braces for the first blow of every fight. Best with high-HP, tank gear that deepens the cushion he walks in with.',
+      bottomLine: {
+        archetype: 'Tank',
+        levers: [
+          'Start every combat with 3 + level temporary HP.',
+          'L10: the first drop below half HP grants temporary HP equal to your level.',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {

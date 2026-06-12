@@ -71,7 +71,12 @@ describe('es/classes.json completeness', () => {
       for (const f of feats) expected[`${c.id}.${f.id}`] = ['name', 'description'];
     }
     for (const sub of c.subclasses) {
-      expected[`${c.id}.${sub.id}`] = ['name', 'description'];
+      expected[`${c.id}.${sub.id}`] = [
+        'name',
+        'description',
+        'archetype',
+        ...sub.bottomLine.levers.map((_, i) => `lever${i}`),
+      ];
       for (const feats of Object.values(sub.featuresByLevel)) {
         for (const f of feats) expected[`${c.id}.${sub.id}.${f.id}`] = ['name', 'description'];
       }

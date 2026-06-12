@@ -175,6 +175,14 @@ export const MONK: Class = ClassSchema.parse({
       name: 'Way of the Open Hand',
       description:
         'The pure striker’s tradition — every flurry can knock the wind from a foe. Best with a build that leans into the deluge of unarmed blows.',
+      bottomLine: {
+        archetype: 'Striker',
+        levers: [
+          'While a Flurry pours out, every unarmed strike hits +2 harder (L10: +4).',
+          'L6: once per fight, steady with temporary HP equal to your level.',
+          'L10: Stunning Strike arms for 2 Ki, down from 3.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -210,6 +218,13 @@ export const MONK: Class = ClassSchema.parse({
       name: 'Way of Shadow',
       description:
         'The shadow tradition — the first blow of a fight is always a killing one. Best with a build that wants its opener to land hardest.',
+      bottomLine: {
+        archetype: 'Ambusher',
+        levers: [
+          'The first unarmed strike of every fight lands with advantage, +3 damage.',
+          'L10: the opener drives +6 home instead.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
