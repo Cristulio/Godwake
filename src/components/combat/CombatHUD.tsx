@@ -3,6 +3,7 @@ import type { Character } from '../../types/character';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import type { CombatState } from '../../types/combat';
 import { computeAC, critRange, characterHasMechanic } from '../../engine/character/derived';
+import { effectiveAC, AC_SOFTCAP } from '../../engine/character/effectiveAC';
 import {
   rogueCunningActionMax,
   wizardSpellSlotsForLevel,
@@ -439,7 +440,11 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
             <span className="flex items-center gap-2.5">
               <span
                 className="tabular-nums text-[var(--color-text-secondary)]"
-                title={t('combat.hud.acTitle')}
+                title={
+                  ac > AC_SOFTCAP
+                    ? t('combat.hud.acTitleSeam', { eff: effectiveAC(ac) })
+                    : t('combat.hud.acTitle')
+                }
               >
                 {t('combat.hud.ac')} {ac}
               </span>

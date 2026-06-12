@@ -215,6 +215,12 @@ export interface AttackEvent {
   targetAC: number;
   hit: boolean;
   crit: boolean;
+  /**
+   * True when an elite/boss swing missed by a hair (inside the graze band
+   * under the effective AC) and still connected for a fraction of its weapon
+   * damage. `hit` stays false; `damageDealt` carries the graze chip.
+   */
+  graze?: boolean;
   /** Damage actually applied to the target after immunities/resistances. Optional so legacy rehydrates work. */
   damageDealt?: number;
   /** Damage type, when applicable. */

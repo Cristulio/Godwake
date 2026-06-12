@@ -828,6 +828,7 @@ export function CombatScreen({
               targetAC={state.lastAttack.targetAC}
               hit={state.lastAttack.hit}
               crit={state.lastAttack.crit}
+              graze={state.lastAttack.graze === true}
               onDismiss={() => setOverlayActive(false)}
             />
           ) : (

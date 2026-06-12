@@ -228,6 +228,7 @@
     "imagesRemainMany": " quedan {n} imágenes.",
     "noImagesRemain": " No quedan imágenes.",
     "monsterDamage": "Daño: {dmg} de {type} ({breakdown}){resist}.",
+    "monsterGraze": "Roce: {dmg} de {type} — el golpe pasa rozando la guardia.",
     "monsterImmune": "Daño anulado: {name} es inmune a {type}.",
     "resistRagePhysical": " (furia — físico reducido a la mitad)",
     "resistType": " (resistencia a {type}, reducido a la mitad)",
@@ -425,12 +426,14 @@
     "crit": "¡CRÍTICO!",
     "hit": "IMPACTO",
     "miss": "FALLO",
+    "graze": "ROCE",
     "rolling": "tirando…",
     "vsAc": "vs CA {ac}"
   },
   "float": {
     "miss": "FALLO",
     "blocked": " bloqueado",
+    "graze": " roce",
     "landed": "PRENDE",
     "resisted": "RESISTE"
   },
@@ -450,6 +453,7 @@
     "hpTitle": "Puntos de golpe",
     "hpTitleTemp": "Puntos de golpe (+{n} temp)",
     "acTitle": "Clase de Armadura",
+    "acTitleSeam": "Clase de Armadura. Pasado veinte las junturas se notan — los golpes más graves miden esta guardia más cerca de {eff}.",
     "vitals": "Vitales",
     "crit": "Crít",
     "critPill": "CRÍT {range}",

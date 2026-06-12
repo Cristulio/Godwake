@@ -228,6 +228,7 @@
     "imagesRemainMany": " {n} images remain.",
     "noImagesRemain": " No images remain.",
     "monsterDamage": "Damage: {dmg} {type} ({breakdown}){resist}.",
+    "monsterGraze": "Graze: {dmg} {type} — the blow skims through the guard.",
     "monsterImmune": "Damage negated: {name} is immune to {type}.",
     "resistRagePhysical": " (rage — physical halved)",
     "resistType": " ({type} resistance, halved)",
@@ -425,12 +426,14 @@
     "crit": "CRIT!",
     "hit": "HIT",
     "miss": "MISS",
+    "graze": "GRAZE",
     "rolling": "rolling…",
     "vsAc": "vs AC {ac}"
   },
   "float": {
     "miss": "MISS",
     "blocked": " blocked",
+    "graze": " graze",
     "landed": "LANDED",
     "resisted": "RESISTED"
   },
@@ -450,6 +453,7 @@
     "hpTitle": "Hit points",
     "hpTitleTemp": "Hit points (+{n} temp)",
     "acTitle": "Armor Class",
+    "acTitleSeam": "Armor Class. Past twenty the seams begin to tell — the heaviest blows reckon this guard nearer {eff}.",
     "vitals": "Vitals",
     "crit": "Crit",
     "critPill": "CRIT {range}",
