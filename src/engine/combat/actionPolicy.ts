@@ -1307,7 +1307,10 @@ function chooseBardAction(
     ) {
       return { kind: 'cast', spellId: 'power-word-bind', targetId: threat.id };
     }
-    if (knows(character, 'bard-hold-person') && slotsAt(character, 2) > 0) {
+    // Hold Person only when the field is down to ONE foe — the same owner
+    // directive the wizard's copy carries (#574): paralyzing one of a crowd
+    // wastes the action's tempo. The boss-grade Bind above keeps its HP gate.
+    if (knows(character, 'bard-hold-person') && slotsAt(character, 2) > 0 && enemyCount === 1) {
       return { kind: 'cast', spellId: 'bard-hold-person', targetId: threat.id };
     }
   }
