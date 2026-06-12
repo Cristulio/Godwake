@@ -1484,15 +1484,18 @@ function choosePaladinAction(
 ): PlannedAction | null {
   const beefy = highestHpTarget(live);
 
-  // Control: a binding word on the scariest foe — worth it on a lone boss too (its
-  // whole turn vanishes while we work it down), not just a crowd.
+  // Control: a binding word on the scariest foe — but ONLY when the field is
+  // down to ONE (the owner's Hold-Person directive, #574/#586: locking one of
+  // a crowd wastes the action while the pack mauls on). A lone boss still
+  // qualifies — that's the fight it shines in.
   if (
     threat &&
     !isMonsterParalyzed(threat) &&
     knows(character, 'compel') &&
     slotsAt(character, 2) > 0 &&
     monsterThreat(threat) >= profile.holdPersonThreat &&
-    threat.instance.hp.current > HOLD_PERSON_MIN_HP
+    threat.instance.hp.current > HOLD_PERSON_MIN_HP &&
+    live.length === 1
   ) {
     return { kind: 'cast', spellId: 'compel', targetId: threat.id };
   }
