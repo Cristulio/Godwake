@@ -190,6 +190,7 @@
     "damageLine": "Damage: {headline} ({breakdown}){note}.",
     "damageHeadlineOne": "{total} {type}",
     "lifesteal": "{name} drains {amount} HP from the wound.",
+    "spellLifesteal": "{name} drinks {amount} HP back through the working.",
     "mendKindled": "{name} feels the wound mend — regen kindled ({n} HP/turn × 3).",
     "bleedBegin": "{target} begins to bleed ({n}/turn).",
     "envenom": "{target} is envenomed — the wound festers ({n}/turn).",

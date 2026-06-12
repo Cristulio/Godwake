@@ -2,6 +2,7 @@ import type { AbilityName, AbilityScores } from '../../types/abilities';
 import { abilityModifier } from '../../types/abilities';
 import type { Character } from '../../types/character';
 import type { Armor } from '../../schemas/item';
+import { FULL_CASTER_CLASS_IDS } from '../../schemas/ids';
 import { getRace } from '../../content/races';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
@@ -169,10 +170,12 @@ export function ragedHealAmount(character: Character, amount: number): number {
 /**
  * Classes that cast off the shared full-caster spell engine — the same slot
  * ladder, prepared/known kit, and DC/attack scaling. The Wizard casts on
- * Intelligence; the Druid on Wisdom (see {@link spellcastingAbility}).
+ * Intelligence; the Druid on Wisdom (see {@link spellcastingAbility}). The
+ * list itself lives in schemas/ids (FULL_CASTER_CLASS_IDS) so the content
+ * offer pools read the same source.
  */
 export function isFullCaster(classId: Character['classId']): boolean {
-  return classId === 'wizard' || classId === 'druid' || classId === 'bard';
+  return (FULL_CASTER_CLASS_IDS as readonly string[]).includes(classId);
 }
 
 /** A half-caster that spends spell slots off a shallower ladder than the full

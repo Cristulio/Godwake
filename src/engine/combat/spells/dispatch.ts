@@ -1,6 +1,9 @@
 import { getSpell } from '../../../content/spells';
-import { markPlayerLog } from '../log';
-import { type CastResult, type CastSpellContext, canCastSpell } from './helpers';
+import { appendLog, markPlayerLog } from '../log';
+import { characterAffixMods } from '../../items/affixMods';
+import { t } from '../../../i18n';
+import type { CombatState } from '../../../types/combat';
+import { type CastResult, type CastSpellContext, canCastSpell, nextLogId } from './helpers';
 import { castFireBolt } from './fireBolt';
 import { castMagicMissile } from './magicMissile';
 import { castBurningHands } from './burningHands';
@@ -40,14 +43,64 @@ import { castViciousMockery } from './viciousMockery';
  * Cast a known spell. Stamps every roll/damage line the cast produced as the
  * player's own (markPlayerLog) so the combat log renders the hero's spell hits
  * and the damage they deal dominant over the enemy's lines — the choke point
- * that covers every spell at once, the new ones included.
+ * that covers every spell at once, the new ones included. The same choke point
+ * applies the Soulthirst spell vamp, so no handler carries heal plumbing.
  */
 export function castSpell(ctx: CastSpellContext): CastResult {
   const beforeLog = new Set(ctx.state.log);
+  const hpBefore = monsterHpById(ctx.state);
   const result = runCast(ctx);
-  return result.cast
-    ? { ...result, state: markPlayerLog(result.state, beforeLog) }
-    : result;
+  if (!result.cast) return result;
+  const drunk = applySpellLifesteal(result, hpBefore);
+  return { ...drunk, state: markPlayerLog(drunk.state, beforeLog) };
+}
+
+/** Live monster HP keyed by combatant id — the pre-cast baseline the vamp diff reads. */
+function monsterHpById(state: CombatState): Map<string, number> {
+  const hp = new Map<string, number>();
+  for (const c of state.combatants) {
+    if (c.kind === 'monster') hp.set(c.id, Math.max(0, c.instance.hp.current));
+  }
+  return hp;
+}
+
+/**
+ * Soulthirst (spellLifestealPct gear): heal the caster for a fraction of the
+ * damage the cast dealt, min 1 whenever any landed, capped at max HP — the
+ * spell-side mirror of the Vampiric weapon drink in playerAttack. "Dealt" is
+ * the summed HP the pre-cast monsters lost (AOE included; a monster the cast
+ * summoned or that left the field can only shrink its own term to zero, never
+ * pollute the sum). Life Drain's inherent half-damage heal raises the CASTER's
+ * HP, not a monster's, so it stacks on top untouched.
+ */
+function applySpellLifesteal(result: CastResult, hpBefore: Map<string, number>): CastResult {
+  const pct = characterAffixMods(result.character).spellLifestealPct;
+  if (pct <= 0) return result;
+  const { character } = result;
+  if (character.hp.current >= character.hp.max) return result;
+
+  let dealt = 0;
+  const after = monsterHpById(result.state);
+  for (const [id, before] of hpBefore) {
+    dealt += Math.max(0, before - (after.get(id) ?? 0));
+  }
+  if (dealt <= 0) return result;
+
+  const healed = Math.max(1, Math.floor((dealt * pct) / 100));
+  const hpNow = Math.min(character.hp.max, character.hp.current + healed);
+  const state = appendLog(result.state, {
+    id: nextLogId(result.state),
+    kind: 'system',
+    text: t('combat.log.spellLifesteal', {
+      name: character.name,
+      amount: hpNow - character.hp.current,
+    }),
+  });
+  return {
+    state,
+    character: { ...character, hp: { ...character.hp, current: hpNow } },
+    cast: true,
+  };
 }
 
 /**

@@ -21,6 +21,7 @@ export interface AffixMods {
   critRangeBonus: number;
   bleedDamage: number;
   lifestealPct: number;
+  spellLifestealPct: number;
   regenPerTurn: number;
   tempHpPerCombat: number;
   spellDcBonus: number;
@@ -44,6 +45,7 @@ function emptyAffixMods(): AffixMods {
     critRangeBonus: 0,
     bleedDamage: 0,
     lifestealPct: 0,
+    spellLifestealPct: 0,
     regenPerTurn: 0,
     tempHpPerCombat: 0,
     spellDcBonus: 0,
@@ -90,6 +92,7 @@ function applyAffixModifiers(acc: AffixMods, m: AffixModifiers): void {
   acc.critRangeBonus += m.critRangeBonus ?? 0;
   acc.bleedDamage += m.bleedDamage ?? 0;
   acc.lifestealPct += m.lifestealPct ?? 0;
+  acc.spellLifestealPct += m.spellLifestealPct ?? 0;
   acc.regenPerTurn += m.regenPerTurn ?? 0;
   acc.tempHpPerCombat += m.tempHpPerCombat ?? 0;
   acc.spellDcBonus += m.spellDcBonus ?? 0;

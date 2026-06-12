@@ -177,7 +177,11 @@
     "skipRoll": "Saltar la tirada",
     "dcBadge": "{skill} CD {dc} · {bonus}",
     "checkTitle": "Prueba de {skill} ({ability}) — tu bonificador {bonus}{proficient}",
-    "proficientSuffix": ", competente"
+    "proficientSuffix": ", competente",
+    "eff": {
+      "attackRun": "+{n} al ataque con arma (resto de la incursión)",
+      "spellAttackRun": "+{n} al ataque de conjuro (resto de la incursión)"
+    }
   },
   "wares": {
     "restores": "Restaura {dice} PG.",

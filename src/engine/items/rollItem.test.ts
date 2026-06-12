@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createDiceRoller } from '../dice';
 import { getItem } from '../../content/items';
+import type { Armor, Weapon } from '../../schemas/item';
 import {
   rollItem,
   eligibleAffixes,
@@ -84,16 +85,63 @@ describe('eligibleAffixes — class gating', () => {
     expect(eligibleAffixes('weapon', 'fighter').map((a) => a.id)).toContain('relentless');
   });
 
-  it('gates caster affixes to the wizard', () => {
+  it('gates caster affixes to the casters', () => {
+    // Utility pair (DC / slots) stays wizard-wide, accessories included; the
+    // spell-offense trio is caster-gear-only, so accessories never carry it.
     const wizardAccessory = eligibleAffixes('accessory', 'wizard').map((a) => a.id);
-    expect(wizardAccessory).toEqual(
-      expect.arrayContaining(['arcane', 'archmage', 'lucid', 'runic']),
-    );
-    // No other class rolls them — Diablo-style off-class drops only.
+    expect(wizardAccessory).toEqual(expect.arrayContaining(['arcane', 'runic']));
+    expect(wizardAccessory).not.toContain('archmage');
+    expect(wizardAccessory).not.toContain('lucid');
+    expect(wizardAccessory).not.toContain('soulthirst');
+    // No martial class rolls any of them — Diablo-style off-class drops only.
     for (const classId of ['fighter', 'rogue', 'barbarian', 'ranger'] as const) {
       const ids = eligibleAffixes('accessory', classId).map((a) => a.id);
       expect(ids).not.toContain('arcane');
       expect(ids).not.toContain('runic');
+    }
+  });
+
+  it('gates the spell-offense trio to caster bases — never ordinary arms', () => {
+    const lute = getItem('war-lute') as Weapon;
+    const dagger = getItem('dagger') as Weapon;
+    const orb = getItem('crystal-orb') as Armor;
+    const robe = getItem('silk-robe') as Armor;
+    const plate = getItem('plate-armor') as Armor;
+
+    // The bard's War Lute (casterWeapon) carries the trio; an ordinary arm never does.
+    const onLute = eligibleAffixes('weapon', 'bard', lute).map((a) => a.id);
+    expect(onLute).toEqual(expect.arrayContaining(['archmage', 'lucid', 'soulthirst']));
+    const onDagger = eligibleAffixes('weapon', 'bard', dagger).map((a) => a.id);
+    expect(onDagger).not.toContain('archmage');
+    expect(onDagger).not.toContain('lucid');
+    expect(onDagger).not.toContain('soulthirst');
+
+    // Orbs and robes carry it; real armour never does.
+    for (const classId of ['wizard', 'druid', 'bard'] as const) {
+      expect(eligibleAffixes('armor', classId, orb).map((a) => a.id)).toContain('soulthirst');
+    }
+    expect(eligibleAffixes('armor', 'wizard', robe).map((a) => a.id)).toContain('soulthirst');
+    expect(eligibleAffixes('armor', 'fighter', plate).map((a) => a.id)).not.toContain(
+      'soulthirst',
+    );
+
+    // Martial classGate seals the kind-level view too.
+    for (const classId of ['fighter', 'rogue', 'barbarian', 'ranger', 'monk', 'paladin'] as const) {
+      expect(eligibleAffixes('weapon', classId).map((a) => a.id)).not.toContain('soulthirst');
+    }
+  });
+
+  it('never rolls soulthirst onto an ordinary weapon, even at purple', () => {
+    const roller = createDiceRoller('soulthirst-pool-seed');
+    for (let i = 0; i < 60; i++) {
+      const ref = rollItem(roller, { rarity: 'purple', classId: 'bard', kind: 'weapon' });
+      if (ref.rolled?.affixes.includes('soulthirst')) {
+        expect(ref.itemId).toBe('war-lute');
+      }
+    }
+    for (let i = 0; i < 60; i++) {
+      const ref = rollItem(roller, { rarity: 'purple', classId: 'fighter', kind: 'weapon' });
+      expect(ref.rolled?.affixes ?? []).not.toContain('soulthirst');
     }
   });
 

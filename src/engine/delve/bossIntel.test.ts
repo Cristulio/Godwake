@@ -217,6 +217,20 @@ describe('boss intel — buff definitions', () => {
   it('returns null for an unknown boss', () => {
     expect(bossIntelBuffFor('not-a-boss', 'weak-spot')).toBeNull();
   });
+
+  it('weak-spot swaps to the braced save for every full caster, stays the strike otherwise', () => {
+    for (const classId of ['wizard', 'druid', 'bard'] as const) {
+      const buff = bossIntelBuffFor('duergar-ilyich', 'weak-spot', classId);
+      expect(buff!.bracedSave).toBe(true);
+      expect(buff!.firstStrikeAdvantage).toBe(false);
+      expect(buff!.description).toContain('saving throw');
+    }
+    for (const classId of ['fighter', 'monk', 'paladin'] as const) {
+      const buff = bossIntelBuffFor('duergar-ilyich', 'weak-spot', classId);
+      expect(buff!.firstStrikeAdvantage).toBe(true);
+      expect(buff!.bracedSave).toBe(false);
+    }
+  });
 });
 
 describe('boss intel — applied at the boss fight (createCombat)', () => {

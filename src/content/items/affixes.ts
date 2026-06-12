@@ -1,4 +1,5 @@
 import { AffixSchema, type Affix } from '../../schemas/item';
+import { FULL_CASTER_CLASS_IDS } from '../../schemas/ids';
 
 /**
  * The Wave-1 starter affix pool. An affix is an EFFECT (modeled like a blessing
@@ -142,11 +143,17 @@ const PRISTINE: Affix = AffixSchema.parse({
   modifiers: { acBonusWhileFull: 1 },
 });
 
-// --- Caster-flavoured affixes (Wizard) --------------------------------------
-// These ride the wizard's gear: simple weapons (staff/dagger), accessories, and
-// robes (the body-slot caster gear — `armor` kind, wizard-gated). Class-gated so
-// a fighter never rolls a spell-DC staff or sees a robe (off-class drops,
-// Diablo-style).
+// --- Caster-flavoured affixes -----------------------------------------------
+// The utility pair (ARCANE spell-DC / RUNIC slots) rides any of the wizard's
+// gear: simple weapons (staff/dagger), accessories, and robes (the body-slot
+// caster gear — `armor` kind, wizard-gated). Class-gated so a fighter never
+// rolls a spell-DC staff or sees a robe (off-class drops, Diablo-style).
+//
+// The spell-OFFENSE trio (ARCHMAGE spell damage / LUCID spell attack /
+// SOULTHIRST spell vamp) gates harder, all three the same way: full casters
+// only (wizard/druid/bard) AND caster bases only (`casterGearOnly` — the War
+// Lute, orbs, robes). Never on ordinary arms, and never wizard-locked away
+// from the druid's or bard's orb.
 
 const ARCANE: Affix = AffixSchema.parse({
   id: 'arcane',
@@ -161,8 +168,9 @@ const ARCHMAGE: Affix = AffixSchema.parse({
   id: 'archmage',
   namePart: { kind: 'suffix', word: 'of the Archmage' },
   effect: '+2 spell damage.',
-  appliesTo: ['weapon', 'armor', 'accessory'],
-  classGate: ['wizard'],
+  appliesTo: ['weapon', 'armor'],
+  classGate: [...FULL_CASTER_CLASS_IDS],
+  casterGearOnly: true,
   modifiers: { spellDamageBonus: 2 },
 });
 
@@ -170,9 +178,24 @@ const LUCID: Affix = AffixSchema.parse({
   id: 'lucid',
   namePart: { kind: 'suffix', word: 'of Lucidity' },
   effect: '+1 to spell attack rolls.',
-  appliesTo: ['weapon', 'armor', 'accessory'],
-  classGate: ['wizard'],
+  appliesTo: ['weapon', 'armor'],
+  classGate: [...FULL_CASTER_CLASS_IDS],
+  casterGearOnly: true,
   modifiers: { spellAttackBonus: 1 },
+});
+
+// The spell-side Vampiric: every cast drinks a sliver of the damage it dealt.
+// The % is PROVISIONAL (spells hit harder and wider than weapon swings, so it
+// sits under Vampiric's 5%); the heal itself applies once per cast in the
+// castSpell dispatch seam.
+const SOULTHIRST: Affix = AffixSchema.parse({
+  id: 'soulthirst',
+  namePart: { kind: 'prefix', word: 'Soulthirst' },
+  effect: 'Spells heal you for 4% of the damage they deal.',
+  appliesTo: ['weapon', 'armor'],
+  classGate: [...FULL_CASTER_CLASS_IDS],
+  casterGearOnly: true,
+  modifiers: { spellLifestealPct: 4 },
 });
 
 const RUNIC: Affix = AffixSchema.parse({
@@ -310,6 +333,7 @@ export const ALL_AFFIXES: Affix[] = [
   ARCANE,
   ARCHMAGE,
   LUCID,
+  SOULTHIRST,
   RUNIC,
   FURIOUS,
   QUARRY,

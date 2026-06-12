@@ -227,6 +227,13 @@ export const AffixModifiersSchema = z
     spellDamageBonus: z.number().optional(),
     /** Caster (Wizard): flat bonus to spell attack rolls. */
     spellAttackBonus: z.number().optional(),
+    /**
+     * Caster: heal the caster for this percent (0-100) of the total damage a
+     * cast deals (AOE summed; min 1 whenever any damage lands, capped at max
+     * HP) — the spell-side mirror of `lifestealPct`. Applied once per cast in
+     * the castSpell dispatch seam, never per handler.
+     */
+    spellLifestealPct: z.number().optional(),
     /** Caster (Wizard): extra level-1 spell slots, added when the well refills. */
     bonusSpellSlotsL1: z.number().optional(),
     /** Class-flavoured (Barbarian): extra melee damage while Rage burns. */
@@ -260,6 +267,13 @@ export const AffixSchema = z.object({
    * rolls a rage blade.
    */
   classGate: z.array(ClassIdSchema).optional(),
+  /**
+   * Rolls only onto CASTER bases: a `casterWeapon` weapon (the War Lute), an
+   * orb, or a robe — never onto ordinary arms or armour. The spell-offense
+   * affixes (spell damage / spell attack / spell vamp) carry this so a
+   * "Soulthirst Greataxe" can't exist; `appliesTo` still bounds the kinds.
+   */
+  casterGearOnly: z.boolean().optional(),
   modifiers: AffixModifiersSchema,
 });
 export type Affix = z.infer<typeof AffixSchema>;

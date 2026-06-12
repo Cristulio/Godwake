@@ -265,6 +265,36 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.delveAttackBonus).toBe(2);
   });
 
+  it('apply_attack_bonus_run: every full caster gets the SPELL attack bonus instead', () => {
+    for (const classId of ['wizard', 'druid', 'bard'] as const) {
+      const char = makeChar({ classId });
+      const r = applyEventOutcome(
+        char,
+        outcome({ effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }] }),
+        createDiceRoller(1),
+      );
+      expect(r.character.delveSpellAttackBonus ?? 0).toBe(2);
+      expect(r.character.delveAttackBonus ?? 0).toBe(0);
+      const eff = r.effectsApplied.find((e) => e.kind === 'apply_attack_bonus_run');
+      expect(eff?.detail).toContain('spell attack');
+    }
+  });
+
+  it('apply_attack_bonus_run: martials and the half-caster paladin keep the weapon side', () => {
+    for (const classId of ['fighter', 'monk', 'paladin'] as const) {
+      const char = makeChar({ classId });
+      const r = applyEventOutcome(
+        char,
+        outcome({ effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }] }),
+        createDiceRoller(1),
+      );
+      expect(r.character.delveAttackBonus ?? 0).toBe(1);
+      expect(r.character.delveSpellAttackBonus ?? 0).toBe(0);
+      const eff = r.effectsApplied.find((e) => e.kind === 'apply_attack_bonus_run');
+      expect(eff?.detail).toContain('weapon attack');
+    }
+  });
+
   it('grant_item: adds the named item to inventory unequipped', () => {
     const char = makeChar({ inventory: [] });
     const r = applyEventOutcome(

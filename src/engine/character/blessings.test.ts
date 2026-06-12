@@ -547,13 +547,22 @@ describe('caster blessing pool — variety expansion', () => {
     const universalOnly = listBlessings().filter(
       (b) => !b.classRelevance || b.classRelevance.length === 0,
     ).length;
-    for (const classId of ['wizard', 'druid'] as const) {
+    for (const classId of ['wizard', 'druid', 'bard'] as const) {
       const pool = blessingsForClass(classId);
       // Was 16 (universal-only) before this lane. The deeper pool is the fix
       // for casters cycling a tiny set fast and feeling repetitive.
       expect(pool.length).toBeGreaterThanOrEqual(25);
       expect(pool.length).toBeGreaterThan(universalOnly);
     }
+  });
+
+  it('the bard rides the caster pool: spell levers in, weapon-keyed cards out', () => {
+    const pool = blessingsForClass('bard');
+    const ids = pool.map((b) => b.id);
+    expect(ids).toEqual(expect.arrayContaining(['mystras-acuity', 'mystras-surge', 'mystras-precision']));
+    // Weapon-keyed cards stay off the bard's offers (dead in a casting hand).
+    expect(ids).not.toContain('tymoras-coin');
+    expect(ids).not.toContain('selunes-veil');
   });
 
   it('martials never see a caster blessing on their offer pool', async () => {
