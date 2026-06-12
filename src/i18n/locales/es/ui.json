@@ -161,7 +161,8 @@
     "deepens": "El mundo se ahonda. La Ascensión {n} se te abre — un camino más duro, y más rico. La Arboleda se agita con ello.",
     "groveReturns": "La arboleda te devolverá a la vida. Tu alma recuerda lo que tu carne ha olvidado.",
     "returnToTown": "Volver a Wakeford",
-    "wakeAtGrove": "Despertar en la Arboleda"
+    "wakeAtGrove": "Despertar en la Arboleda",
+    "renownLedger": "{mobs} enemigos caídos · {bosses} jefes rotos · {rooms} salas recorridas — peso {base} × {mult} del alma"
   },
   "level": {
     "soulTempers": "El alma se templa",

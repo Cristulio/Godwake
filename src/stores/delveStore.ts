@@ -138,6 +138,12 @@ export interface RenownBreakdown {
   multiplier: number;
   /** Final renown banked: floor(base × multiplier). */
   total: number;
+  /** The run ledger behind `base`, for the summary's arithmetic line. */
+  mobsKilled: number;
+  bossesKilled: number;
+  roomsReached: number;
+  soulMarkMult: number;
+  ascensionMult: number;
 }
 
 /**
@@ -162,10 +168,22 @@ export function computeDelveRenown(delve: DelveState, character: Character): Ren
     RENOWN_PER_CHAPTER_BOSS * bossesKilled +
     RENOWN_PER_ROOM_REACHED * roomsReached;
   // Soul-mark and ascension reward multipliers compose MULTIPLICATIVELY.
-  const multiplier =
-    renownSoulMarkMultiplier(character) *
-    getAscensionLevel(delve.ascensionLevel ?? 0).renownMult;
-  return { base, multiplier, total: Math.floor(base * multiplier) };
+  const soulMarkMult = renownSoulMarkMultiplier(character);
+  const ascensionMult = getAscensionLevel(delve.ascensionLevel ?? 0).renownMult;
+  const multiplier = soulMarkMult * ascensionMult;
+  return {
+    base,
+    multiplier,
+    total: Math.floor(base * multiplier),
+    // The run ledger, surfaced so the summary can SHOW the arithmetic — a
+    // wiped or under-counted ledger is then visible at a glance (owner's
+    // 204-renown Maevra run was undiagnosable from the bare total).
+    mobsKilled,
+    bossesKilled,
+    roomsReached,
+    soulMarkMult,
+    ascensionMult,
+  };
 }
 
 /** Renown threshold that reveals the Druid Grove on the hub. */
