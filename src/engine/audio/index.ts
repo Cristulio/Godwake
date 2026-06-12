@@ -122,6 +122,16 @@ export function pickCombatMusic(
 export function swingSfxForWeapon(weapon: Weapon): SfxId {
   if (weapon.properties.includes('ammunition')) return 'swing_whoosh_bow';
   if (weapon.damageType === 'bludgeoning') return 'swing_whoosh_blunt';
+  // Shapeshift claws — no claw-tear SFX exists yet; the blade whoosh is the
+  // closest read for a rending swipe. Without this branch the light beast
+  // tiers would fall into the light+finesse case and flick like metal daggers.
+  if (
+    weapon.id === 'dragon-claws' ||
+    weapon.id.startsWith('beast-claws') ||
+    weapon.id.startsWith('dire-claws')
+  ) {
+    return 'swing_whoosh_blade';
+  }
   if (
     weapon.id === 'dagger' ||
     (weapon.properties.includes('light') &&

@@ -8,8 +8,9 @@ import { useEffect } from 'react';
  * switch for the weapon kinds: slash / pierce / bludgeon / arrow, plus the
  * per-weapon-TYPE identities (axe-chop / crush / spear-thrust / dagger-flick /
  * bow-shot / caster-bonk), the monk's bare-hand language (unarmed /
- * unarmed-flurry / ki-charge) and the control-landing signatures (stun-burst /
- * knockdown-burst). They self-clean via `onDone`.
+ * unarmed-flurry / ki-charge), the control-landing signatures (stun-burst /
+ * knockdown-burst) and the shapeshift claw rakes (claw-rake / dragon-rake).
+ * They self-clean via `onDone`.
  */
 
 interface Anchor {
@@ -1057,6 +1058,123 @@ export function CasterBonkEffect({ origin, target, onDone }: WeaponEffectProps) 
           }}
         />
       ))}
+    </div>
+  );
+}
+
+// ---------- Claws: the rending rake ----------
+
+// The wound palette — raw rends, deliberately apart from the slash's steel
+// amber and the monk's jade: deep blood-dark tails into a white-hot tear edge.
+const REND_DARK = '#7e1f1a';
+const REND_MID = '#d84a42';
+const REND_HOT = '#ff8d7a';
+const REND_EDGE = '#fff1e8';
+
+/** Shapeshift natural weapons: three parallel ragged tear-lines rip steeply
+ *  across the target a heartbeat apart — rend, not steel. Distinct from the
+ *  sword slash in angle (52° rake vs the shallow crescent), count (three
+ *  staggered gashes) and texture (torn red wounds, no metal gleam). The dragon
+ *  variant (`heavy`) is the same language grown to sword-length talons:
+ *  1.35× scale, thicker tears, and a gouge flash where the rake bites. */
+export function ClawRakeEffect({ origin, target, onDone, heavy }: WeaponEffectProps & { heavy?: boolean }) {
+  useDoneTimer(heavy ? 600 : 520, onDone);
+  const dir = attackDir(origin, target);
+  // Middle gash leads and reaches furthest, like the longest finger of a paw.
+  const gashes = [
+    { off: -19, lead: -4, scale: 0.86, delay: 0 },
+    { off: 0, lead: 6, scale: 1, delay: 60 },
+    { off: 19, lead: -4, scale: 0.9, delay: 120 },
+  ];
+  return (
+    <div className="absolute" style={{ left: target.x, top: target.y, width: 0, height: 0 }}>
+      {/* Gouge flash under the rake — the dragon's bite depth */}
+      {heavy && (
+        <div className="absolute animate-pierce-burst" style={{ left: 0, top: 0, width: 0, height: 0, animationDelay: '90ms', opacity: 0 }}>
+          <svg
+            width="120"
+            height="120"
+            viewBox="-60 -60 120 120"
+            style={{ position: 'absolute', left: -60, top: -60, overflow: 'visible' }}
+          >
+            <defs>
+              <radialGradient id="claw-gouge" cx="0.5" cy="0.5" r="0.5">
+                <stop offset="0%" stopColor={REND_EDGE} stopOpacity="0.9" />
+                <stop offset="50%" stopColor={REND_HOT} stopOpacity="0.55" />
+                <stop offset="100%" stopColor={REND_DARK} stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="0" cy="0" r="44" fill="url(#claw-gouge)" />
+          </svg>
+        </div>
+      )}
+      {/* Outer wrapper owns the static rake angle + dragon scale; each gash
+          whips along the rotated axis inside it (transform-nesting rule). */}
+      <div
+        className="absolute"
+        style={{ left: 0, top: 0, width: 0, height: 0, transform: `rotate(${52 * dir}deg) scale(${heavy ? 1.35 : 1})` }}
+      >
+        {gashes.map((g, i) => (
+          <div key={i} className="absolute" style={{ left: g.lead, top: g.off, width: 0, height: 0, transform: `scale(${g.scale})` }}>
+            <div
+              className="absolute animate-claw-rip"
+              style={
+                {
+                  left: 0,
+                  top: 0,
+                  width: 0,
+                  height: 0,
+                  animationDelay: `${g.delay}ms`,
+                  opacity: 0,
+                  ['--rip-from' as string]: `${-46 * dir}px`,
+                } as React.CSSProperties
+              }
+            >
+              <svg
+                width="136"
+                height="26"
+                viewBox="-68 -13 136 26"
+                style={{ position: 'absolute', left: -68, top: -13, overflow: 'visible', transform: `scaleX(${dir})`, filter: `drop-shadow(0 0 ${heavy ? 6 : 4}px rgba(216,74,66,0.75))` }}
+              >
+                <defs>
+                  <linearGradient id={`claw-tear-${i}`} x1="0" y1="0.5" x2="1" y2="0.5">
+                    <stop offset="0%" stopColor={REND_DARK} stopOpacity="0" />
+                    <stop offset="40%" stopColor={REND_MID} stopOpacity="0.85" />
+                    <stop offset="78%" stopColor={REND_HOT} stopOpacity="0.95" />
+                    <stop offset="100%" stopColor={REND_EDGE} stopOpacity="1" />
+                  </linearGradient>
+                </defs>
+                {/* Ragged tear body — smooth cutting edge above, torn underside */}
+                <path
+                  d="M -64 0 Q -10 -5 42 -3 L 60 0 L 42 3 L 30 6.5 L 17 3.5 L 4 7 L -12 3.5 L -28 5.5 L -46 2.5 Z"
+                  fill={`url(#claw-tear-${i})`}
+                />
+                {/* White-hot claw point at the lead */}
+                <path d="M 44 -2 L 62 0 L 44 2 Z" fill="#ffffff" opacity="0.95" />
+              </svg>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Rend flecks sprayed off the wound, downward with the rake */}
+      {(heavy ? [56, 78, 98, 118] : [62, 84, 108]).map((deg, i) => {
+        const rad = (deg * Math.PI) / 180;
+        const dist = (heavy ? 36 : 30) + i * 7;
+        return (
+          <div
+            key={i}
+            className="absolute w-2 h-2 rounded-[1px] animate-spark"
+            style={{
+              left: 0,
+              top: 0,
+              background: i % 2 ? '#ffd9c9' : REND_MID,
+              boxShadow: `0 0 6px rgba(216,74,66,0.85)`,
+              ['--spark-dest' as string]: `translate(${Math.cos(rad) * dist * dir}px, ${Math.sin(rad) * dist}px)`,
+              animationDelay: `${110 + i * 36}ms`,
+            }}
+          />
+        );
+      })}
     </div>
   );
 }
