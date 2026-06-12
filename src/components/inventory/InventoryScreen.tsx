@@ -6,6 +6,7 @@ import { getItem } from '../../content/items';
 import { computeAC, critRange } from '../../engine/character/derived';
 import {
   slotForItem,
+  canDualWield,
   canEquip,
   equipDenialReason,
   equippedInventoryIndices,
@@ -235,7 +236,11 @@ export function InventoryScreen() {
                 >
                   <div className="font-display text-[var(--color-accent-amber)] text-[9px] uppercase tracking-widest mb-2 flex items-center gap-1">
                     <span className="text-[var(--color-accent-gold)]">◆</span>
-                    {t(`screens.inventory.slot.${slot}`)}
+                    {t(
+                      slot === 'offHand' && canDualWield(character)
+                        ? 'screens.inventory.slot.offHandDual'
+                        : `screens.inventory.slot.${slot}`,
+                    )}
                   </div>
                   {item && ref ? (
                     <div
@@ -269,7 +274,13 @@ export function InventoryScreen() {
                       <div className="w-14 h-14 border border-dashed border-[var(--color-border-dim)] flex items-center justify-center text-[var(--color-text-muted)] text-2xl">
                         ◇
                       </div>
-                      <div className="text-[var(--color-text-dim)] text-[10px] italic font-mono leading-snug">{t(`screens.inventory.slotHint.${slot}`)}</div>
+                      <div className="text-[var(--color-text-dim)] text-[10px] italic font-mono leading-snug">
+                        {t(
+                          slot === 'offHand' && canDualWield(character)
+                            ? 'screens.inventory.slotHint.offHandDual'
+                            : `screens.inventory.slotHint.${slot}`,
+                        )}
+                      </div>
                     </div>
                   )}
                   {hoverSlot === slot && item && !isDragging && (

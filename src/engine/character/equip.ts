@@ -74,6 +74,13 @@ export function equippedRefsForItemSlot(
       (r): r is ItemRef => r != null,
     );
   }
+  // A dual-wielder weighing a light weapon could seat it in either hand —
+  // compare against both (the off-hand entry may be the shield it displaces).
+  if (slot === 'mainHand' && canOffHandWeapon(character, itemId)) {
+    return [character.equipped.mainHand, character.equipped.offHand].filter(
+      (r): r is ItemRef => r != null,
+    );
+  }
   const worn = character.equipped[slot];
   return worn ? [worn] : [];
 }
@@ -90,6 +97,41 @@ function isTwoHanded(itemId: string): boolean {
   const item = getItem(itemId);
   if (item.kind !== 'weapon') return false;
   return item.properties.includes('two-handed');
+}
+
+/**
+ * Whether the character fights in the two-weapon style: the `dual-wielder`
+ * mechanic granted by the schools that teach it (Berserker, Battle Master,
+ * Thief). Gates every dual-wield rule — equip routing, the off-hand swing,
+ * the bot's gear valuation — so every other class/school is untouched.
+ */
+export function canDualWield(character: Character): boolean {
+  return characterHasMechanic(character, 'dual-wielder');
+}
+
+/**
+ * A weapon the off-hand can carry: `light` and one-handed. The slot trade is
+ * the cost — it sits where a shield would (shield XOR off-hand weapon), and a
+ * two-handed main-hand leaves no hand to carry it.
+ */
+export function isOffHandWeapon(item: Item): boolean {
+  return (
+    item.kind === 'weapon' &&
+    item.properties.includes('light') &&
+    !item.properties.includes('two-handed')
+  );
+}
+
+/** True when {@link character} may seat this specific item in the off-hand slot. */
+export function canOffHandWeapon(character: Character, itemId: string): boolean {
+  return canDualWield(character) && isOffHandWeapon(getItem(itemId));
+}
+
+/** The off-hand slot's ref when it holds a WEAPON (dual wielding); else null. */
+export function offHandWeaponRef(character: Character): ItemRef | null {
+  const ref = character.equipped.offHand;
+  if (!ref) return null;
+  return getItem(ref.itemId).kind === 'weapon' ? ref : null;
 }
 
 /**
@@ -376,7 +418,21 @@ export function equipItem(character: Character, inventoryIdx: number): Character
 
   const equipped: EquipmentSlots = { ...character.equipped };
 
-  if (slot === 'mainHand') {
+  // Dual-wielder tap routing: a light weapon fills an EMPTY off-hand when the
+  // main hand already holds a one-handed weapon — the natural second pick-up.
+  // A worn shield is never displaced implicitly; trading it for a blade is an
+  // explicit drop on the off-hand slot (equipItemToSlot).
+  const dualOffHandFill =
+    slot === 'mainHand' &&
+    !equipped.offHand &&
+    equipped.mainHand != null &&
+    !isTwoHanded(equipped.mainHand.itemId) &&
+    getItem(equipped.mainHand.itemId).kind === 'weapon' &&
+    canOffHandWeapon(character, ref.itemId);
+
+  if (dualOffHandFill) {
+    equipped.offHand = ref;
+  } else if (slot === 'mainHand') {
     equipped.mainHand = ref;
     if (isTwoHanded(ref.itemId)) {
       equipped.offHand = null;
@@ -410,10 +466,12 @@ export function equipItem(character: Character, inventoryIdx: number): Character
  * Equip the item at `inventoryIdx` aimed at a specific slot — the drag-drop
  * entry point. A ring honours the exact band it was dropped on, so ring1 and
  * ring2 stay independent (the playtest bug was a 2nd-ring drop overwriting the
- * 1st). Every other item AUTO-ROUTES to its natural slot, so dropping a helm
- * onto the boots well still equips the helm — the player needn't hit the exact
- * slot. Non-ring cases fall through to `equipItem` for its two-handed clearing
- * and first-free defaults.
+ * 1st). A dual-wielder's light weapon honours an off-hand drop — replacing a
+ * worn shield outright (the explicit trade) and unequipping a two-handed
+ * main-hand exactly as a shield drop would. Every other item AUTO-ROUTES to
+ * its natural slot, so dropping a helm onto the boots well still equips the
+ * helm — the player needn't hit the exact slot. Those cases fall through to
+ * `equipItem` for its two-handed clearing and first-free defaults.
  */
 export function equipItemToSlot(
   character: Character,
@@ -427,7 +485,26 @@ export function equipItemToSlot(
     item.kind === 'accessory' &&
     item.accessorySlot === 'ring' &&
     (targetSlot === 'ring1' || targetSlot === 'ring2');
-  if (!ringToBand) return equipItem(character, inventoryIdx);
+  const weaponToOffHand =
+    targetSlot === 'offHand' && canOffHandWeapon(character, ref.itemId);
+  if (!ringToBand && !weaponToOffHand) return equipItem(character, inventoryIdx);
+
+  if (weaponToOffHand) {
+    // Same gates equipItem applies to any weapon pick-up.
+    if (item.kind !== 'weapon' || !isWeaponProficient(character, item)) return character;
+    const setPiece = getSetPiece(ref.itemId);
+    if (setPiece?.classGate && setPiece.classGate !== character.classId) return character;
+    const req = weaponStatRequirement(item);
+    if (req && (effectiveAbilityScores(character)[req.ability] ?? 0) < req.value) {
+      return character;
+    }
+    const equipped: EquipmentSlots = { ...character.equipped };
+    if (equipped.mainHand && isTwoHanded(equipped.mainHand.itemId)) {
+      equipped.mainHand = null;
+    }
+    equipped.offHand = ref;
+    return { ...character, equipped };
+  }
 
   const equipped: EquipmentSlots = { ...character.equipped, [targetSlot]: ref };
   return { ...character, equipped };

@@ -186,6 +186,13 @@ export const BARBARIAN: Class = ClassSchema.parse({
               'While you are raging, every melee hit lands an extra 1d6. Rewards lifesteal and on-hit gear: the more you swing, the more the fury pays back.',
             mechanicKey: 'frenzy',
           },
+          {
+            id: 'twin-fury',
+            name: 'Twin Fury',
+            description:
+              'A shield would only slow the storm — your off-hand carries a second light weapon instead. Each turn your first strike drags the off-hand blade through behind it: its own attack roll, its own die, no ability bonus behind the steel and half its gear’s edge. The Rage doesn’t count hands — its fury rides both blades.',
+            mechanicKey: 'dual-wielder',
+          },
         ],
         '10': [
           {

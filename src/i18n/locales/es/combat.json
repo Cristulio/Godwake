@@ -186,6 +186,7 @@
     "attackRoll": "{name} {verb} a {target} con {weapon}. d20{mod} = {total} vs CA {ac} {result}.",
     "verbAttacks": "ataca",
     "verbFires": "dispara a",
+    "offhandRoll": "La mano izquierda de {name} remata — {weapon} contra {target}. d20{mod} = {total} vs CA {ac} {result}.",
     "reroll": "{source} — repetición. d20{mod} = {total} vs CA {ac} {result}.",
     "damageLine": "Daño: {headline} ({breakdown}){note}.",
     "damageHeadlineOne": "{total} de {type}",
