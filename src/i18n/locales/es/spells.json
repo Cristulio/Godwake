@@ -165,7 +165,7 @@
   },
   "vicious-mockery": {
     "name": "Burla Cruel",
-    "description": "Una sarta de insultos mordaces y certeros se clava en un objetivo: d4 psíquico + tu modificador de Carisma, la pulla afilándose conforme creces. Con una salvación de Sabiduría fallida el blanco queda desconcertado y tira su próximo golpe a lo loco (desventaja). Una salvación superada aún recibe la mitad. Un truco de control: lo que importa es el desconcierto, no el aguijón."
+    "description": "Una sarta de insultos mordaces y certeros se clava en un objetivo: d4s psíquicos + tu modificador de Carisma, ganando un dado conforme la campaña se ahonda (2d4 a nivel 5, 3d4 a nivel 11, 4d4 a nivel 17), y la Canción que suena añade su propio dado a la pulla. Con una salvación de Sabiduría fallida el blanco queda desconcertado y tira su próximo golpe a lo loco (desventaja). Una salvación superada aún recibe la mitad. El insulto nunca desperdicia un turno."
   },
   "dissonant-whispers": {
     "name": "Susurros Disonantes",

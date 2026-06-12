@@ -1,5 +1,5 @@
 import { Button } from '../ui/Button';
-import type { Character } from '../../types/character';
+import type { BardSongId, Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { isPlayerTurn } from '../../engine/combat';
 import { maxAttacksPerAction } from '../../engine/combat/attack/playerAttack';
@@ -18,7 +18,7 @@ import {
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
 import { stunningStrikeKiCost, monkKitActive } from '../../engine/combat/monk';
-import { bardInspirationDieSize, bardInspirationLeft, spendsInspirationOnDamage } from '../../engine/combat/bard';
+import { bardActiveSongs, bardInspirationLeft, bardKnownSongs } from '../../engine/combat/bard';
 import { isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from '../../engine/combat/paladin';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
 import { useT } from '../../i18n/useT';
@@ -37,7 +37,7 @@ interface ActionBarProps {
   onFlurry: () => void;
   onPatientDefense: () => void;
   onStunningStrike: () => void;
-  onBardicInspiration: () => void;
+  onBardSong: (songId: BardSongId) => void;
   onLayOnHands: () => void;
   onDivineSmite: () => void;
   onHuntersMark: () => void;
@@ -61,7 +61,7 @@ export function ActionBar({
   onFlurry,
   onPatientDefense,
   onStunningStrike,
-  onBardicInspiration,
+  onBardSong,
   onLayOnHands,
   onDivineSmite,
   onHuntersMark,
@@ -264,23 +264,19 @@ export function ActionBar({
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
 
-  // Bard Bardic Inspiration: a bonus-action spend that banks an inspiration die
-  // onto the next attack roll (core / Lore) or weapon damage (Valor). One at a
-  // time — disabled while a die is already banked, out of dice, or the bonus
-  // action is spent.
+  // Bard Battle Songs: one is always playing — the whole known book renders as
+  // buttons, the playing tune lit, the rest a switch away (bonus action + one
+  // inspiration die).
   const isBard = character.classId === 'bard';
-  const hasBardicInspiration = isBard && characterHasMechanic(character, 'bardic-inspiration');
+  const songBook = isBard ? bardKnownSongs(character) : [];
+  const activeSongs = bardActiveSongs(character);
   const inspirationDice = bardInspirationLeft(character);
-  const inspirationBanked = character.inspirationActive === true;
-  const canBardicInspiration =
+  const canSwitchSong =
     playersTurn &&
     active &&
-    hasBardicInspiration &&
     inspirationDice > 0 &&
-    !inspirationBanked &&
     !character.actionEconomy.bonusActionUsed &&
     !midMultiattack;
-  const inspirationToDamage = spendsInspirationOnDamage(character);
 
   // Paladin Lay on Hands: a bonus-action spend that pours a chunk of the renewable
   // pool into the Paladin's own wounds. Disabled at full HP, out of pool, or once
@@ -560,24 +556,28 @@ export function ActionBar({
           </Button>
         )}
 
-        {hasBardicInspiration && (
-          <Button
-            variant={canBardicInspiration ? 'primary' : 'secondary'}
-            onClick={onBardicInspiration}
-            data-tutorial="abilities"
-            disabled={!canBardicInspiration}
-            title={
-              inspirationToDamage
-                ? t('combat.bar.inspirationValor', { die: bardInspirationDieSize(character) })
-                : t('combat.bar.inspirationLore', { die: bardInspirationDieSize(character) })
-            }
-            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
-          >
-            {inspirationBanked
-              ? t('ui.combat.inspirationOn', { die: bardInspirationDieSize(character) })
-              : t('ui.combat.inspiration', { n: inspirationDice })}
-          </Button>
-        )}
+        {songBook.map((songId) => {
+          const playing = activeSongs.includes(songId);
+          return (
+            <Button
+              key={songId}
+              variant={playing ? 'primary' : 'secondary'}
+              onClick={() => onBardSong(songId)}
+              data-tutorial={songId === songBook[0] ? 'abilities' : undefined}
+              disabled={playing || !canSwitchSong}
+              title={
+                playing
+                  ? t('combat.bar.songPlaying', { desc: t(`combat.songs.${songId}.desc`) })
+                  : t('combat.bar.songSwitch', { desc: t(`combat.songs.${songId}.desc`) })
+              }
+              className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+            >
+              {playing
+                ? t('ui.combat.songOn', { song: t(`combat.songs.${songId}.short`) })
+                : t('ui.combat.song', { song: t(`combat.songs.${songId}.short`) })}
+            </Button>
+          );
+        })}
 
         {hasWildShape && (
           <Button

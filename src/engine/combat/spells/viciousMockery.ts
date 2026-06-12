@@ -6,7 +6,8 @@ import { getSpell } from '../../../content/spells';
 import { getMonster } from '../../../content/monsters';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
-import { scaleSpellDamage } from './scaling';
+import { enhancementOf } from '../../items/affixMods';
+import { bardInspirationDieSize, bardSongPlaying, bardViciousMockeryDice } from '../bard';
 import {
   type CastResult,
   type CastSpellContext,
@@ -25,10 +26,13 @@ import { t, getLocalized } from '../../../i18n';
  * Vicious Mockery — the Bard's signature cantrip. A string of withering insult
  * lances psychic damage into one target and, on a failed Wisdom save, leaves it
  * RATTLED: frightened for one round, so its next blow is thrown wild
- * (disadvantage). It is a CONTROL cantrip, not a damage one — a small d4 base
- * (vs Fire Bolt's d10) so the rattle is the point and the chip stays under the
- * wizard's damage cantrip. A made save still takes half the barb but shrugs off
- * the sting. No slot — at will, the Bard's soft-control opener.
+ * (disadvantage). It is a CONTROL cantrip first — the d4 identity keeps the chip
+ * under Fire Bolt — but it grows like a real cantrip at the standard breakpoints
+ * (1d4 → 2d4 at L5 → 3d4 at L11 → 4d4 at L17; the dice ARE the level scaling,
+ * replacing the multiplicative cantrip curve), and the playing song sharpens it:
+ * any active Song adds a roll of the song die to the barb. A made save still
+ * takes half but shrugs off the sting. No slot — at will, the insult that never
+ * feels like a wasted turn.
  */
 export function castViciousMockery(ctx: CastSpellContext): CastResult {
   const { character, state, roller } = ctx;
@@ -47,10 +51,18 @@ export function castViciousMockery(ctx: CastSpellContext): CastResult {
   const save = roller.d20(resoluteWill ? 'advantage' : 'normal', wisMod);
   const saved = save.total >= dc;
 
-  const damageRoll = roller.roll({ count: 1, die: 4, modifier: 0 });
-  const scaledDice = scaleSpellDamage(damageRoll.total, nextCharacter, 0);
+  const damageRoll = roller.roll({
+    count: bardViciousMockeryDice(nextCharacter.level),
+    die: 4,
+    modifier: 0,
+  });
+  // The song sharpens the insult: any playing Song adds a roll of the song die.
+  const songSharpen = bardSongPlaying(nextCharacter)
+    ? roller.roll({ count: 1, die: bardInspirationDieSize(nextCharacter), modifier: 0 }).total
+    : 0;
   const bonus = spellDamageBonus(nextCharacter) + spellcastingMod(nextCharacter);
-  const fullDamage = scaledDice + bonus;
+  const fullDamage =
+    damageRoll.total + songSharpen + bonus + enhancementOf(nextCharacter.equipped.mainHand);
   const dealt = saved ? Math.floor(fullDamage / 2) : fullDamage;
 
   const logs: CombatLogEntry[] = [

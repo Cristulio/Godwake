@@ -83,7 +83,7 @@
     "mark": "mark ({dice})",
     "colossus": "colossus ({dice})",
     "vowReroll": "Vow reroll +{n}",
-    "inspiration": "inspiration"
+    "song": "song"
   },
   "cond": {
     "name": {
@@ -325,13 +325,18 @@
     "readyBuff": "{name} readies the {label}{gird}.",
     "openingVolley": "{name} looses an opening volley before the enemy can close.",
     "combatBegins": "Combat begins.",
-    "bardicInspiration": "{name} draws breath and steels the next blow — a d{die} of inspiration banked.",
     "layOnHands": "{name} lays on hands and the light knits {amount} HP shut.",
     "divineSmiteArm": "{name} raises a Divine Smite — the next blow will burn.",
     "cuttingWords": "{name} cuts the blow short with a withering word (−{n}) — it goes wide.",
     "viciousMockeryCast": "{name} hurls {spell} at {target}. WIS save{resolute}: {mod} = {total} vs DC {dc} — {result}.",
     "viciousMockeryDamage": "{target} takes {dealt} psychic{halved}.",
-    "viciousMockeryRattle": "{target} is left rattled — its next blow goes wild."
+    "viciousMockeryRattle": "{target} is left rattled — its next blow goes wild.",
+    "songStrikeUp": "♪ {name} turns the music — {song} rings out.",
+    "songOpening": "♪ {song} is already on {name}'s lips as the fight begins.",
+    "songSpitePulse": "The Song of Spite gnaws — every foe takes {n} psychic.",
+    "songSteelDull": "♪ The Song of Steel dulls the blow (−{n}).",
+    "songWarTempHp": "♪ The war-song girds {name} — {n} temporary HP.",
+    "dirgeDrag": ", dragged by the Dirge (−{n})"
   },
   "screen": {
     "encounter": "Encounter",
@@ -526,11 +531,6 @@
     "tempHpLevel": "+{n} temp HP (level {level})",
     "acBane": "+{n} AC ({banes} soul-mark{s})",
     "soulMarkPlural": "s",
-    "inspiration": "Inspiration (d{die})",
-    "inspirationReady": "A Bardic Inspiration die to spend on your own rolls. The well refills as each fight begins.",
-    "inspirationSpent": "Spent — refills next fight.",
-    "inspirationBanked": "A die is banked onto your next attack roll (or weapon damage, for Valor).",
-    "inspirationBankedPill": "d{die} ready",
     "layOnHands": "Lay on Hands",
     "layOnHandsPool": "{n}/{max} HP",
     "layOnHandsTitle": "Your renewable pool of healing grace. Spend a chunk as a bonus action to mend your own wounds; it refills each fight.",
@@ -538,7 +538,13 @@
     "smiteArmed": "Armed",
     "smiteIdle": "Idle",
     "smiteArmedTitle": "A smite is armed — your next weapon hit spends your cheapest spell slot for radiant damage. Slots are the fuel: they return when you rest.",
-    "smiteIdleTitle": "Arm a smite to sear your next weapon hit with a spell slot's radiance. Fuel = your spell slots (shown above); resting refills them."
+    "smiteIdleTitle": "Arm a smite to sear your next weapon hit with a spell slot's radiance. Fuel = your spell slots (shown above); resting refills them.",
+    "songWell": "The Song (d{die})",
+    "songWellReady": "An inspiration die — the well that turns the music and cuts the blows. Refills as each fight begins.",
+    "songWellSpent": "Spent — refills next fight.",
+    "nowPlaying": "♪ {song}",
+    "songSilent": "silent",
+    "songSilentTitle": "No song is playing."
   },
   "bar": {
     "secondWind": "Bonus action: heal 1d10 + your level. Once per combat.",
@@ -562,9 +568,31 @@
     "wildShapeEmpty": "No Wild Shape changes left this combat — they refresh next fight.",
     "wildShape": "Bonus action: shed the body for a beast's shape — gain its vitality as temporary HP and rend with claws for several rounds. Once or twice per combat.",
     "spells": "Action: pick a prepared spell.",
-    "inspirationLore": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next attack roll — the lift that lands the blow.",
-    "inspirationValor": "Bonus action: bank a Bardic Inspiration die (d{die}) onto your next weapon hit's DAMAGE (Combat Inspiration).",
     "layOnHands": "Bonus action: pour a chunk of your renewable Lay on Hands pool into your own wounds. Refills each fight.",
-    "divineSmite": "Free: arm a Divine Smite — your next weapon hit spends your cheapest spell slot to sear the target with radiant damage."
+    "divineSmite": "Free: arm a Divine Smite — your next weapon hit spends your cheapest spell slot to sear the target with radiant damage.",
+    "songPlaying": "Now playing. {desc}",
+    "songSwitch": "Bonus action + 1 inspiration die: turn the music. {desc}"
+  },
+  "songs": {
+    "song-of-spite": {
+      "name": "Song of Spite",
+      "short": "Spite",
+      "desc": "A jeering air — every foe takes psychic damage at each pulse of the music."
+    },
+    "song-of-steel": {
+      "name": "Song of Steel",
+      "short": "Steel",
+      "desc": "A fortifying march — every blow that lands on you is dulled while it plays."
+    },
+    "leaden-dirge": {
+      "name": "the Leaden Dirge",
+      "short": "Dirge",
+      "desc": "A grave-slow drag — enemy attack rolls swing heavy and late while it plays."
+    },
+    "quickstep-reel": {
+      "name": "the Quickstep Reel",
+      "short": "Reel",
+      "desc": "A whirling reel — your first strike each round comes quickened, rolling with advantage."
+    }
   }
 }

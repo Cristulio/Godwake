@@ -1,6 +1,6 @@
 import type { DiceRoller } from '../dice';
 import type { DieSize } from '../../types/dice';
-import type { Character } from '../../types/character';
+import type { BardSongId, Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
 import { characterHasMechanic, effectiveAbilityScores } from '../character/derived';
@@ -20,11 +20,12 @@ export function isBard(character: Readonly<Character>): boolean {
 }
 
 /**
- * The Bardic Inspiration die size at the Bard's current level. Grows on the same
- * cadence as the Monk's Martial Arts die — d6 → d8 (L5) → d10 (L10) → d12 (L15)
- * — so every banked die bites harder as the soul deepens. Read both when the die
- * is rolled onto an attack/damage (playerAttack) and when Cutting Words spends it
- * defensively (monsterAttack). Zero for a non-Bard.
+ * The Bardic Inspiration die size at the Bard's current level — the SONG die.
+ * Grows on the same cadence as the Monk's Martial Arts die — d6 → d8 (L5) →
+ * d10 (L10) → d12 (L15) — so the music itself deepens as the soul does. Read
+ * wherever a song's magnitude scales (the pulse tables below), rolled raw when
+ * a Valor war-song rides a weapon hit or a playing song sharpens Vicious
+ * Mockery, and spent defensively by Cutting Words. Zero for a non-Bard.
  */
 export function bardInspirationDieSize(character: Readonly<Character>): DieSize {
   const lvl = character.level;
@@ -36,11 +37,12 @@ export function bardInspirationDieSize(character: Readonly<Character>): DieSize 
 
 /**
  * Max Bardic Inspiration dice the Bard holds — the pool refreshed each encounter
- * (createCombat). The base is the Charisma modifier (min 1, so a fresh Bard never
- * walks in empty); the chosen college's L10 beat (Lore Peerless Skill / Valor
- * Combat Superiority) deepens it by one, and the L20 capstone (Peerless
- * Performer) by two more. Zero for a non-Bard or one that hasn't learned the
- * inspiration kit yet.
+ * (createCombat). This is the FUEL of the music: starting or switching a song
+ * mid-fight spends one, and Lore's Cutting Words reaction sings off blows from
+ * the same well. The base is the Charisma modifier (min 1, so a fresh Bard never
+ * walks in mute); the chosen college's L10 beat (Lore's Duet / Valor Battle
+ * Magic) deepens it by one, and the L20 capstone (Peerless Performer) by two
+ * more. Zero for a non-Bard or one that hasn't learned the song kit yet.
  */
 export function bardInspirationMax(character: Readonly<Character>): number {
   if (!isBard(character) || !characterHasMechanic(character as Character, 'bardic-inspiration')) {
@@ -49,7 +51,7 @@ export function bardInspirationMax(character: Readonly<Character>): number {
   const chaMod = abilityModifier(effectiveAbilityScores(character as Character).cha);
   const base = Math.max(1, chaMod);
   const collegeDeepening =
-    characterHasMechanic(character as Character, 'peerless-skill') ||
+    characterHasMechanic(character as Character, 'the-duet') ||
     characterHasMechanic(character as Character, 'combat-superiority')
       ? 1
       : 0;
@@ -62,10 +64,131 @@ export function bardInspirationLeft(character: Readonly<Character>): number {
   return character.resources.inspirationDiceRemaining ?? 0;
 }
 
-/** A Valor bard spends its inspiration die on weapon DAMAGE (Combat Inspiration)
- *  rather than the attack roll — the martial fork of the core self-buff. */
-export function spendsInspirationOnDamage(character: Readonly<Character>): boolean {
-  return characterHasMechanic(character as Character, 'combat-inspiration');
+// ---- The Song engine --------------------------------------------------------
+//
+// The bard is never not performing: from L1 exactly one Song is always playing,
+// a battlefield aura that pulses on its own at the start of every player turn
+// (applyBardSongPulse in turn.ts — the same tick where rage/regen/DOTs live).
+// The opening song is free (the music never stopped between fights); switching
+// mid-fight is a bonus action + one inspiration die. ALL magnitudes below are
+// PROVISIONAL, keyed to the song-die tier so they grow with the existing level
+// axis — the end-of-campaign sim batch owns the final values.
+
+/**
+ * Shared song magnitude by die tier — Spite's pulse damage, Steel's flat
+ * reduction, the Valor war-song's temp-HP pulse, and Lore's spell-damage amp
+ * all read this one knob. PROVISIONAL.
+ */
+const SONG_POWER_BY_DIE: Record<number, number> = { 6: 2, 8: 3, 10: 4, 12: 5 };
+
+/** The Leaden Dirge's drag on enemy attack rolls, by die tier. PROVISIONAL. */
+const DIRGE_PENALTY_BY_DIE: Record<number, number> = { 6: 2, 8: 2, 10: 3, 12: 3 };
+
+/** The shared tier magnitude at the bard's current die. */
+export function bardSongPower(character: Readonly<Character>): number {
+  return SONG_POWER_BY_DIE[bardInspirationDieSize(character)] ?? 2;
+}
+
+/** Every song the bard has learned, in book order. Spite and Steel open at L1
+ *  with the song engine itself; the Dirge and the Reel ride their own
+ *  level-gated class features. */
+export function bardKnownSongs(character: Readonly<Character>): BardSongId[] {
+  if (!isBard(character) || !characterHasMechanic(character as Character, 'bardic-inspiration')) {
+    return [];
+  }
+  const songs: BardSongId[] = ['song-of-spite', 'song-of-steel'];
+  if (characterHasMechanic(character as Character, 'leaden-dirge')) songs.push('leaden-dirge');
+  if (characterHasMechanic(character as Character, 'quickstep-reel')) songs.push('quickstep-reel');
+  return songs;
+}
+
+/** The songs currently playing (unknown ids filtered — a stale save never
+ *  resurrects a song the soul doesn't know). */
+export function bardActiveSongs(character: Readonly<Character>): BardSongId[] {
+  const known = bardKnownSongs(character);
+  return (character.activeSongIds ?? []).filter((s) => known.includes(s));
+}
+
+/** How many songs can play at once — one, or two under the Lore college's L10
+ *  Duet (the music deepens). */
+export function bardMaxActiveSongs(character: Readonly<Character>): number {
+  return characterHasMechanic(character as Character, 'the-duet') ? 2 : 1;
+}
+
+/** True while any music plays — the gate for every "while the song plays" rider. */
+export function bardSongPlaying(character: Readonly<Character>): boolean {
+  return bardActiveSongs(character).length > 0;
+}
+
+/** Song of Steel: flat incoming-damage reduction while the march plays. Read in
+ *  applyDamage beside the Paladin's Unbreakable Aura. */
+export function bardSteelReduction(character: Readonly<Character>): number {
+  return bardActiveSongs(character).includes('song-of-steel') ? bardSongPower(character) : 0;
+}
+
+/** Song of Spite: psychic damage every living enemy takes at each pulse. */
+export function bardSpitePulseDamage(character: Readonly<Character>): number {
+  return bardActiveSongs(character).includes('song-of-spite') ? bardSongPower(character) : 0;
+}
+
+/** The Leaden Dirge: the drag on enemy attack rolls while it plays. Read in
+ *  monsterAttack's roll. */
+export function bardDirgePenalty(character: Readonly<Character>): number {
+  return bardActiveSongs(character).includes('leaden-dirge')
+    ? (DIRGE_PENALTY_BY_DIE[bardInspirationDieSize(character)] ?? 2)
+    : 0;
+}
+
+/** The Quickstep Reel: true when the pulse should hand the bard advantage on
+ *  its next strike (the first swing each round rolls quickened). */
+export function bardReelActive(character: Readonly<Character>): boolean {
+  return bardActiveSongs(character).includes('quickstep-reel');
+}
+
+/**
+ * College of Valor — the War-Song (L3): while ANY music plays, every weapon hit
+ * automatically carries the song die as bonus damage (no banking — the war-skald
+ * turns whatever is playing to war). Returns the die size to roll on the hit, or
+ * 0 when silent / not a war-singer.
+ */
+export function bardWarSongDie(character: Readonly<Character>): DieSize | 0 {
+  if (!characterHasMechanic(character as Character, 'war-song')) return 0;
+  return bardSongPlaying(character) ? bardInspirationDieSize(character) : 0;
+}
+
+/** College of Valor — the war-song's temp-HP pulse (the front-line staying
+ *  power). Granted at each pulse while music plays; temp HP takes the larger
+ *  pool, never stacks. */
+export function bardWarSongTempHp(character: Readonly<Character>): number {
+  if (!characterHasMechanic(character as Character, 'war-song')) return 0;
+  return bardSongPlaying(character) ? bardSongPower(character) : 0;
+}
+
+/** College of Lore — Resonant Lore (L3): flat spell-damage amp while the music
+ *  plays. Folded into spellDamageBonus so every working reads it. */
+export function bardLoreAmpDamage(character: Readonly<Character>): number {
+  if (!characterHasMechanic(character as Character, 'resonant-lore')) return 0;
+  return bardSongPlaying(character) ? bardSongPower(character) : 0;
+}
+
+/** College of Lore — Resonant Lore (L3): +1 spell save DC while the music
+ *  plays. Folded into spellSaveDC. */
+export function bardLoreAmpDc(character: Readonly<Character>): number {
+  if (!characterHasMechanic(character as Character, 'resonant-lore')) return 0;
+  return bardSongPlaying(character) ? 1 : 0;
+}
+
+/**
+ * Vicious Mockery's dice count at the standard cantrip breakpoints —
+ * 1d4 → 2d4 (L5) → 3d4 (L11) → 4d4 (L17). The dice ARE the level scaling (VM
+ * does not also ride the multiplicative cantrip curve), so the insult grows
+ * like a real cantrip across the campaign.
+ */
+export function bardViciousMockeryDice(level: number): number {
+  if (level >= 17) return 4;
+  if (level >= 11) return 3;
+  if (level >= 5) return 2;
+  return 1;
 }
 
 export interface BardContext {
@@ -74,22 +197,27 @@ export interface BardContext {
 }
 
 /**
- * Bardic Inspiration. Bonus action, 1 die: bank an inspiration die onto the
- * Bard's next own roll. A core or Lore bard applies it to the next ATTACK ROLL
- * (helping the War Lute / a finesse blade land); a Valor bard with Combat
- * Inspiration applies it to the next weapon HIT's damage instead. The die is
- * rolled when it lands (playerAttack); here it is only armed. One die at a time —
- * a banked die must be spent before another can be raised.
+ * Strike up (or switch to) a Song — bonus action + one inspiration die. The new
+ * song starts playing at once: its passive (Steel's dulling, the Dirge's drag)
+ * applies immediately, and it joins the pulse at the next turn tick. Under the
+ * Lore Duet a second song ADDS until both slots ring; at capacity the oldest
+ * tune yields. Refused (state unchanged) when the song is unknown or already
+ * playing, the bonus action is spent, or the well is dry.
  */
-export function useBardicInspiration(ctx: BardContext): CombatActionResult {
+export function startBardSong(ctx: BardContext, songId: BardSongId): CombatActionResult {
   const { character, state } = ctx;
   if (!isBard(character)) return combatResult(state, character);
-  if (!characterHasMechanic(character, 'bardic-inspiration')) return combatResult(state, character);
-  if (character.inspirationActive === true) return combatResult(state, character);
+  if (!bardKnownSongs(character).includes(songId)) return combatResult(state, character);
+  const active = bardActiveSongs(character);
+  if (active.includes(songId)) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
   if (bardInspirationLeft(character) <= 0) return combatResult(state, character);
 
-  let nextCharacter: Character = { ...character, inspirationActive: true };
+  const max = bardMaxActiveSongs(character);
+  const nextSongs =
+    active.length < max ? [...active, songId] : [...active.slice(1), songId];
+
+  let nextCharacter: Character = { ...character, activeSongIds: nextSongs };
   nextCharacter = patchResources(nextCharacter, {
     inspirationDiceRemaining: bardInspirationLeft(character) - 1,
   });
@@ -98,12 +226,12 @@ export function useBardicInspiration(ctx: BardContext): CombatActionResult {
   const log: CombatLogEntry = {
     id: state.log.length + 1,
     kind: 'narration',
-    text: t('combat.log.bardicInspiration', {
+    text: t('combat.log.songStrikeUp', {
       name: nextCharacter.name,
-      die: bardInspirationDieSize(nextCharacter),
+      song: t(`combat.songs.${songId}.name`),
     }),
   };
-  return combatResult(attachCombatVfx(appendLog(state, log), 'reckless', 'player'), nextCharacter);
+  return combatResult(attachCombatVfx(appendLog(state, log), 'song-pulse', 'player'), nextCharacter);
 }
 
 /**

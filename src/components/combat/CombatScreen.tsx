@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type { Character } from '../../types/character';
+import type { BardSongId, Character } from '../../types/character';
 import type { CombatState } from '../../types/combat';
 import { useGameStore } from '../../stores/gameStore';
 import { useSettingsStore } from '../../stores/settingsStore';
@@ -23,7 +23,7 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
-  useBardicInspiration,
+  startBardSong,
   useLayOnHands,
   useDivineSmite,
   useWildShape,
@@ -636,9 +636,9 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
-  function handleBardicInspiration() {
+  function handleBardSong(songId: BardSongId) {
     cancelTargeting();
-    const result = useBardicInspiration({ character, state });
+    const result = startBardSong({ character, state }, songId);
     setCharacter(result.character);
     setCombat(result.state);
   }
@@ -896,7 +896,7 @@ export function CombatScreen({
             onFlurry={handleFlurry}
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}
-            onBardicInspiration={handleBardicInspiration}
+            onBardSong={handleBardSong}
             onLayOnHands={handleLayOnHands}
             onDivineSmite={handleDivineSmite}
             onHuntersMark={handleHuntersMarkClick}

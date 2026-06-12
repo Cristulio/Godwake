@@ -1,6 +1,6 @@
 import type { DiceRoller } from '../dice';
 import { parseDiceExpression } from '../dice';
-import type { Character, SpellSlotLevel } from '../../types/character';
+import type { BardSongId, Character, SpellSlotLevel } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
 import { getSpell } from '../../content/spells';
@@ -49,7 +49,16 @@ import {
   monkFightsUnarmed,
   monkKitActive,
 } from './monk';
-import { useBardicInspiration, bardInspirationLeft, spendsInspirationOnDamage } from './bard';
+import {
+  bardActiveSongs,
+  bardInspirationDieSize,
+  bardInspirationLeft,
+  bardKnownSongs,
+  bardMaxActiveSongs,
+  bardSongPlaying,
+  bardViciousMockeryDice,
+  startBardSong,
+} from './bard';
 import { useLayOnHands, useDivineSmite, isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from './paladin';
 
 /**
@@ -75,7 +84,7 @@ export type PlannedAction =
   | { kind: 'flurry-of-blows' }
   | { kind: 'patient-defense' }
   | { kind: 'stunning-strike' }
-  | { kind: 'bardic-inspiration' }
+  | { kind: 'bard-song'; songId: BardSongId }
   | { kind: 'lay-on-hands' }
   | { kind: 'divine-smite' }
   | { kind: 'end-turn' };
@@ -574,10 +583,10 @@ export function chooseCombatAction(
 
     // Bard: spend the bonus action on tempo. A sung Healing Word knits wounds
     // over the next turns when hurt (the bard's own sustain) and still leaves the
-    // main action for a working or a swing. Otherwise a Valor bard banks an
-    // inspiration die onto the coming weapon hit (Combat Inspiration → damage);
-    // a Lore bard holds its dice for Cutting Words (the auto reaction in
-    // monsterAttack), so it never pre-spends them here.
+    // main action for a working or a swing. Otherwise keep the RIGHT Song up:
+    // Steel when crowded or hurt (the blows need dulling), Spite otherwise (the
+    // always-on chip). A Lore bard holds its last die for Cutting Words — the
+    // music already playing is never worth going mute on the guard for.
     if (isBard) {
       if (
         hpPct <= profile.wizardDrainHp &&
@@ -587,16 +596,8 @@ export function chooseCombatAction(
       ) {
         return { kind: 'cast', spellId: 'healing-word' };
       }
-      if (
-        spendsInspirationOnDamage(character) &&
-        characterHasMechanic(character, 'bardic-inspiration') &&
-        character.inspirationActive !== true &&
-        bardInspirationLeft(character) > 0 &&
-        primary &&
-        character.equipped.mainHand
-      ) {
-        return { kind: 'bardic-inspiration' };
-      }
+      const songSwap = chooseBardSongSwap(character, live, hpPct, profile);
+      if (songSwap) return songSwap;
     }
 
     // Paladin: Lay on Hands — pour the renewable per-fight pool into our own
@@ -1228,14 +1229,53 @@ function aoeWastedAny(live: MonsterCombatant[], spellId: string): boolean {
 }
 
 function viciousMockeryFullAvg(character: Character): number {
-  return 5.5 * spellDamageMultiplier(character, 0) + spellcastingMod(character);
+  // Breakpoint dice (Nd4 avg 2.5 each) + the song-die sharpen (a song is always
+  // playing) + the CHA rider — mirrors castViciousMockery's formula.
+  const songAvg = bardSongPlaying(character) ? (bardInspirationDieSize(character) + 1) / 2 : 0;
+  return 2.5 * bardViciousMockeryDice(character.level) + songAvg + spellcastingMod(character);
+}
+
+/**
+ * Bard song upkeep (bonus action): keep the RIGHT Song playing. Steel when the
+ * room is crowded (3+) or the bard is genuinely hurt — the dulling march is the
+ * "mobs destroy me" answer — Spite otherwise (the always-on chip). Under the
+ * Lore Duet the swap fills the free second slot with the complementary tune
+ * instead of dropping one. A Lore bard with Cutting Words keeps its LAST die
+ * for the guard reaction (the music already playing beats going broke), and
+ * createCombat's free opening song means silence never actually happens.
+ */
+function chooseBardSongSwap(
+  character: Character,
+  live: MonsterCombatant[],
+  hpPct: number,
+  profile: ArchetypeProfile,
+): PlannedAction | null {
+  const known = bardKnownSongs(character);
+  if (known.length === 0) return null;
+  const dice = bardInspirationLeft(character);
+  if (dice <= 0) return null;
+  if (characterHasMechanic(character, 'cutting-words') && dice <= 1) return null;
+
+  const wantsSteel = live.length >= 3 || hpPct <= profile.wizardDefensiveHp;
+  const desired: BardSongId = wantsSteel ? 'song-of-steel' : 'song-of-spite';
+  const active = bardActiveSongs(character);
+  if (!active.includes(desired)) return { kind: 'bard-song', songId: desired };
+
+  // The moment's song already rings. Under the Duet, layer the complement so
+  // both auras play (steel under spite, spite under steel).
+  if (active.length < bardMaxActiveSongs(character)) {
+    const complement: BardSongId =
+      desired === 'song-of-steel' ? 'song-of-spite' : 'song-of-steel';
+    if (!active.includes(complement)) return { kind: 'bard-song', songId: complement };
+  }
+  return null;
 }
 
 /**
  * Bard spell selection — the Charisma support's main-action picker. Both colleges
  * deny a dangerous foe a turn (Power Word: Bind / Hold Person) and reach for the
  * self-buff capstone on a true boss. A VALOR bard then returns null to swing
- * (Extra Attack + Combat Inspiration is its damage); a LORE / core bard assembles
+ * (Extra Attack + the automatic War-Song die is its damage); a LORE / core bard assembles
  * burst from the book — a focused nuke on a beefy single, Shatter's fork on a
  * pair, the auto-hit Dissonant Whispers to finish a low target — down to the
  * at-will Vicious Mockery (chip + a rattling debuff). Returns null to fall through
@@ -1250,7 +1290,7 @@ function chooseBardAction(
 ): PlannedAction | null {
   const enemyCount = live.length;
   const beefy = highestHpTarget(live);
-  const isValor = spendsInspirationOnDamage(character);
+  const isValor = characterHasMechanic(character, 'war-song');
 
   // Control: deny the scariest live foe its turn — a true boss eats the 7th-level
   // hard lock (Power Word: Bind), a lesser dangerous foe the cheaper Hold Person.
@@ -1285,7 +1325,7 @@ function chooseBardAction(
   }
 
   // Valor leans martial — once control / the capstone are handled it just swings
-  // (Combat Inspiration rides the hit). Lore / core assemble the book below.
+  // (the War-Song die rides every hit). Lore / core assemble the book below.
   if (isValor) return null;
 
   // AoE when the room is crowded — Thunderwave is the bard's one pack-clear, the
@@ -1505,8 +1545,8 @@ export function applyPlannedAction(
       const r = useStunningStrike({ character, state });
       return { state: r.state, character: r.character };
     }
-    case 'bardic-inspiration': {
-      const r = useBardicInspiration({ character, state });
+    case 'bard-song': {
+      const r = startBardSong({ character, state }, action.songId);
       return { state: r.state, character: r.character };
     }
     case 'lay-on-hands': {

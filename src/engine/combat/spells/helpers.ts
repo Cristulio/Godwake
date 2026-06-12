@@ -20,6 +20,7 @@ import { characterCampBoonMods } from '../../character/campBoons';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterAffixMods } from '../../items/affixMods';
 import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
+import { bardLoreAmpDamage, bardLoreAmpDc } from '../bard';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
 import { attachCombatVfx } from '../vfx';
@@ -67,9 +68,10 @@ export function spellSaveDC(character: Readonly<Character>): number {
   // (the Radiant oath's control beat) keys off CHA, so it earns the same focus.
   const classBonus =
     isFullCaster(character.classId) || character.classId === 'paladin' ? 1 : 0;
-  // Bard College of Lore — Lore Savant: a deeper grasp of the lyric craft hardens
-  // every save-or-suck working by one more, the caster lean of the Lore fork.
-  const loreBonus = characterHasMechanic(character as Character, 'lore-savant') ? 1 : 0;
+  // Bard College of Lore — Resonant Lore: while the music plays (and the bard is
+  // never not performing), every save-or-suck working bites one harder — the
+  // caster lean of the Lore fork, now carried by the song.
+  const loreBonus = bardLoreAmpDc(character);
   const boonBonus = characterCampBoonMods(character).spellDcBonus ?? 0;
   const blessingBonus = characterBlessingMods(character).spellDcBonus ?? 0;
   return (
@@ -107,6 +109,9 @@ export function spellDamageBonus(character: Readonly<Character>): number {
     blessingBonus +
     ascendantBonus +
     empoweredEvocationBonus(character) +
+    // Bard College of Lore — Resonant Lore: the playing song amplifies every
+    // working's damage (scales with the song-die tier).
+    bardLoreAmpDamage(character) +
     characterAffixMods(character).spellDamageBonus
   );
 }

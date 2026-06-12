@@ -49,7 +49,7 @@ import {
   selectMonsterIntent,
 } from './monsterIntent';
 import { tryShieldReaction } from '../spells/shield';
-import { tryCuttingWords } from '../bard';
+import { bardDirgePenalty, tryCuttingWords } from '../bard';
 import { MIRROR_IMAGE_SEE_THROUGH_DC } from '../spells/mirrorImage';
 import {
   combatResult,
@@ -713,7 +713,12 @@ function resolveSingleAttack(
         : hasDisadvantage
           ? 'disadvantage'
           : 'normal';
-  const toHit = roller.d20(attackAdvantage, action.attackBonus);
+  // Bard — the Leaden Dirge: while the slowing march plays, every enemy blade
+  // drags through it (a flat cut to the attack roll). Folded into the bonus so
+  // the logged total and the dice overlay both show the dragged roll.
+  const dirgePenalty = bardDirgePenalty(nextCharacter);
+  const effectiveAttackBonus = action.attackBonus - dirgePenalty;
+  const toHit = roller.d20(attackAdvantage, effectiveAttackBonus);
   const crit = toHit.rolls[0] === 20;
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
@@ -735,6 +740,7 @@ function resolveSingleAttack(
                 ? t('combat.log.disFrightened')
                 : t('combat.log.disNimble')
         : '';
+  const dirgeNote = dirgePenalty > 0 ? t('combat.log.dirgeDrag', { n: dirgePenalty }) : '';
   workingState = appendLog(workingState, {
     id: nextLogId(workingState),
     kind: 'roll',
@@ -743,11 +749,11 @@ function resolveSingleAttack(
       name: attacker.instance.displayName,
       target: nextCharacter.name,
       action: getLocalizedMonsterActionName(attacker.instance.defId, action.name),
-      mod: `${action.attackBonus >= 0 ? '+' : ''}${action.attackBonus}`,
+      mod: `${effectiveAttackBonus >= 0 ? '+' : ''}${effectiveAttackBonus}`,
       total: toHit.total,
       ac,
       result: `— ${crit ? t('combat.f.resCrit') : hit ? t('combat.f.resHit') : t('combat.f.resMiss')}`,
-      adv: advantageNote,
+      adv: `${advantageNote}${dirgeNote}`,
     }),
   });
 
@@ -829,7 +835,7 @@ function resolveSingleAttack(
     attackerId,
     attackerDefId: attacker.instance.defId,
     weaponName: getLocalizedMonsterActionName(attacker.instance.defId, action.name),
-    attackBonus: action.attackBonus,
+    attackBonus: effectiveAttackBonus,
     natural: toHit.rolls[0],
     total: toHit.total,
     targetAC: ac,
