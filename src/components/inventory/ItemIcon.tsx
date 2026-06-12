@@ -219,7 +219,9 @@ function armorGlyph(id: string, category: 'light' | 'medium' | 'heavy' | 'shield
 
 function consumableGlyph(id: string, effect: 'heal' | 'buff' | 'utility') {
   const liquidColor = effect === 'heal' ? blood : effect === 'buff' ? accent : poison;
-  const isGreater = id.includes('greater');
+  // The dearer rungs read as the fuller bottle.
+  const isGreater =
+    id.includes('greater') || id.includes('superior') || id.includes('vigor');
   return (
     <g fill="none" stroke={stroke} strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round">
       <rect x="13" y="4" width="6" height="3" />

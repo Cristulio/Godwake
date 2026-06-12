@@ -177,6 +177,22 @@
     "name": "Poción de Vitalidad",
     "description": "Un tónico de oro pálido que huele a cobre batido y humo de pipa. Sana despacio —un primer calor tenue al bajar, y luego la sangre sigue cerrándose por su cuenta en los instantes que siguen mientras el brebaje se asienta hondo. Sorbido, no apurado de golpe —una acción adicional."
   },
+  "potion-of-superior-healing": {
+    "name": "Poción de Curación Superior",
+    "description": "Un pesado frasco de cristal, de un rojo tan oscuro que se bebe la luz. Restaura la mitad de tus puntos de golpe máximos, por mucho que hayas crecido. De un solo trago ardiente —una acción adicional."
+  },
+  "potion-of-vigor": {
+    "name": "Poción de Vigor",
+    "description": "Carmesí vetado de oro que zumba contra el vidrio como un aliento contenido. Restaura la mitad de tus puntos de golpe máximos y te ciñe más allá de lo entero —un cuarto más como vigor temporal. La respuesta de las profundidades cuando la oscuridad se cierra. Un trago —una acción adicional."
+  },
+  "elixir-of-iron": {
+    "name": "Elixir de Hierro",
+    "description": "Metal gris suspendido en aceite, frío hasta el fondo. Tu piel toma el temple del hierro forjado: cada golpe que aterrice este combate cae 3 más leve. Tragado en un latido —una acción adicional."
+  },
+  "oil-of-sharpness": {
+    "name": "Aceite de Afilar",
+    "description": "Un aceite negro y fino que perla sobre el filo sin llegar nunca a caer. Trabajado a lo largo del arma empuñada, muerde más certero y más hondo —+2 al impacto y +2 de daño durante el resto de este combate. Aplicado en una pasada experta —una acción adicional."
+  },
   "iron-ring": {
     "name": "Anillo de Hierro"
   },

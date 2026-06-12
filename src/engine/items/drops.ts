@@ -1,5 +1,6 @@
 import type { DiceRoller } from '../dice';
 import type { GearRarity } from '../../schemas/item';
+import { ALL_CONSUMABLES, consumableIdsForChapter } from '../../content/items/consumables';
 
 /**
  * Loot source = the combat-room clear. Drops are intentionally LOW chance ("from
@@ -99,6 +100,50 @@ export function rollSetPieceDrop(roller: DiceRoller, roomKind: string): boolean 
   const source = dropSourceForRoom(roomKind);
   if (!source) return false;
   return roller.roll('1d100').total <= SET_PIECE_DROP_CHANCE[source];
+}
+
+/**
+ * Chance (percent) a cleared room also coughs up a healing draught — a separate,
+ * rarer channel than gear so found potions supplement the shop sink, never
+ * replace it. PROVISIONAL seeds for the economy sim pass.
+ */
+const POTION_DROP_CHANCE: Record<DropSource, number> = {
+  combat: 8,
+  elite: 20,
+  boss: 30,
+};
+
+/**
+ * Roll whether a cleared room drops a healing draught, and which rung. The pool
+ * is the HEAL side of the consumable ladder legal at the run's current chapter
+ * (CONSUMABLE_MIN_CHAPTER — the same gate the shop stock reads), so found
+ * potions tier with depth exactly as bought ones do. Within the pool, weights
+ * climb linearly toward the deepest rung (rung i of n weighs i+1), so a deep
+ * clear usually pays in the potions worth carrying there. Buff consumables
+ * (Elixir of Iron, Oil of Sharpness) never drop — they stay a pure gold sink.
+ * Returns the consumable id or null. Deterministic.
+ */
+export function rollPotionDrop(
+  roller: DiceRoller,
+  roomKind: string,
+  chapter = 1,
+): string | null {
+  const source = dropSourceForRoom(roomKind);
+  if (!source) return null;
+  if (roller.roll('1d100').total > POTION_DROP_CHANCE[source]) return null;
+  const heals = new Set(
+    ALL_CONSUMABLES.filter((c) => c.effect === 'heal').map((c) => c.id),
+  );
+  // consumableIdsForChapter sorts cheapest-first, so index order IS rung order.
+  const pool = consumableIdsForChapter(chapter).filter((id) => heals.has(id));
+  if (pool.length === 0) return null;
+  const total = (pool.length * (pool.length + 1)) / 2;
+  let roll = ((roller.roll('1d100').total - 1) % total) + 1;
+  for (let i = 0; i < pool.length; i++) {
+    if (roll <= i + 1) return pool[i];
+    roll -= i + 1;
+  }
+  return pool[pool.length - 1];
 }
 
 function pickWeightedRarity(roller: DiceRoller, table: Array<[GearRarity, number]>): GearRarity {

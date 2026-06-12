@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { consumableStockForTier, rollGearStock, sellValue, tierForChapter } from './shopStock';
+import { consumableStockForChapter, rollGearStock, sellValue, tierForChapter } from './shopStock';
+import { CONSUMABLE_MIN_CHAPTER } from '../../content/items/consumables';
 import { getItem } from '../../content/items';
 import { classWeaponProficient, classArmorProficient } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items';
@@ -20,33 +21,65 @@ const RARITY_RANK: Record<GearRarity, number> = {
  * rolled gear. Both halves must stay obtainable (no orphaned consumable ids, no
  * class-illegal rolled bases) and scale with depth.
  */
-describe('consumableStockForTier', () => {
+describe('consumableStockForChapter', () => {
   it('every stocked id resolves through getItem and is a consumable (no orphans)', () => {
-    for (const tier of [1, 2, 3, null] as const) {
-      for (const id of consumableStockForTier(tier)) {
+    for (const chapter of [1, 3, 8, 11, 14, undefined] as const) {
+      for (const id of consumableStockForChapter(chapter)) {
         expect(() => getItem(id)).not.toThrow();
         expect(getItem(id).kind).toBe('consumable');
       }
     }
   });
 
-  it('stock grows with depth — deeper camps strictly add draughts, cumulatively', () => {
-    const t1 = consumableStockForTier(1);
-    const t2 = consumableStockForTier(2);
-    const t3 = consumableStockForTier(3);
-    expect(t2.length).toBeGreaterThan(t1.length);
-    expect(t3.length).toBeGreaterThan(t2.length);
-    expect(t1.every((id) => t2.includes(id))).toBe(true);
-    expect(t2.every((id) => t3.includes(id))).toBe(true);
+  it('stock grows with depth — deeper chapters strictly add draughts, cumulatively', () => {
+    let prev: string[] = [];
+    for (let chapter = 1; chapter <= 14; chapter++) {
+      const cur = consumableStockForChapter(chapter);
+      expect(prev.every((id) => cur.includes(id))).toBe(true);
+      prev = cur;
+    }
+    expect(consumableStockForChapter(14).length).toBeGreaterThan(
+      consumableStockForChapter(1).length,
+    );
   });
 
-  it('null tier (defensive) falls back to the tier-1 floor', () => {
-    expect(consumableStockForTier(null)).toEqual(consumableStockForTier(1));
+  it('every consumable enters stock exactly at its CONSUMABLE_MIN_CHAPTER gate', () => {
+    for (const [id, minChapter] of Object.entries(CONSUMABLE_MIN_CHAPTER)) {
+      if (minChapter > 1) {
+        expect(consumableStockForChapter(minChapter - 1)).not.toContain(id);
+      }
+      expect(consumableStockForChapter(minChapter)).toContain(id);
+    }
   });
 
-  it('deeper camps carry the dearest draught — the gold sink', () => {
+  it('the deep ladder gates: Superior/Elixir/Oil at Ch8+, Vigor at Ch11+', () => {
+    const ch7 = consumableStockForChapter(7);
+    expect(ch7).not.toContain('potion-of-superior-healing');
+    expect(ch7).not.toContain('elixir-of-iron');
+    expect(ch7).not.toContain('oil-of-sharpness');
+    const ch8 = consumableStockForChapter(8);
+    expect(ch8).toContain('potion-of-superior-healing');
+    expect(ch8).toContain('elixir-of-iron');
+    expect(ch8).toContain('oil-of-sharpness');
+    expect(ch8).not.toContain('potion-of-vigor');
+    expect(consumableStockForChapter(11)).toContain('potion-of-vigor');
+  });
+
+  it('antitoxin keeps its always-stocked placement (owner decision pending — one line in CONSUMABLE_MIN_CHAPTER)', () => {
+    for (let chapter = 1; chapter <= 14; chapter++) {
+      expect(consumableStockForChapter(chapter)).toContain('antitoxin');
+    }
+  });
+
+  it('undefined chapter (defensive) falls back to the chapter-1 floor', () => {
+    expect(consumableStockForChapter(undefined)).toEqual(consumableStockForChapter(1));
+  });
+
+  it('deeper chapters carry the dearest draught — the gold sink', () => {
     const maxCost = (ids: string[]) => Math.max(...ids.map((id) => getItem(id).cost));
-    expect(maxCost(consumableStockForTier(3))).toBeGreaterThan(maxCost(consumableStockForTier(1)));
+    expect(maxCost(consumableStockForChapter(11))).toBeGreaterThan(
+      maxCost(consumableStockForChapter(1)),
+    );
   });
 });
 

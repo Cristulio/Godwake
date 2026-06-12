@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createDiceRoller } from '../dice';
-import { dropSourceForRoom, rollGearDrop } from './drops';
+import { dropSourceForRoom, rollGearDrop, rollPotionDrop } from './drops';
 
 describe('dropSourceForRoom', () => {
   it('maps combat room kinds and ignores the rest', () => {
@@ -84,5 +84,53 @@ describe('rollGearDrop', () => {
         if (r) expect(['white', 'green']).toContain(r);
       }
     }
+  });
+});
+
+describe('rollPotionDrop', () => {
+  function dropsOver(roomKind: string, chapter: number, n = 800): string[] {
+    const out: string[] = [];
+    for (let i = 0; i < n; i++) {
+      const id = rollPotionDrop(createDiceRoller(`pot-${roomKind}-${chapter}-${i}`), roomKind, chapter);
+      if (id) out.push(id);
+    }
+    return out;
+  }
+
+  it('never drops from a non-combat room', () => {
+    for (let i = 0; i < 20; i++) {
+      expect(rollPotionDrop(createDiceRoller(`pr-${i}`), 'rest', 9)).toBeNull();
+      expect(rollPotionDrop(createDiceRoller(`ps-${i}`), 'shop', 9)).toBeNull();
+    }
+  });
+
+  it('only drops healing draughts the chapter already stocks — the CONSUMABLE_MIN_CHAPTER gate', () => {
+    // Ch1: the basic potion only (no Greater before its gate, no buffs ever).
+    expect(new Set(dropsOver('boss', 1))).toEqual(new Set(['potion-of-healing']));
+    // Ch7: mid rungs reachable, deep rungs still gated.
+    const ch7 = new Set(dropsOver('boss', 7));
+    expect(ch7.has('potion-of-superior-healing')).toBe(false);
+    expect(ch7.has('potion-of-vigor')).toBe(false);
+    // Ch11+: the full heal ladder is in the pool.
+    const ch11 = new Set(dropsOver('boss', 11, 2000));
+    expect(ch11.has('potion-of-superior-healing')).toBe(true);
+    expect(ch11.has('potion-of-vigor')).toBe(true);
+  });
+
+  it('never drops the buff consumables — Elixir of Iron / Oil of Sharpness stay a pure gold sink', () => {
+    const all = dropsOver('boss', 14, 2000);
+    expect(all).not.toContain('elixir-of-iron');
+    expect(all).not.toContain('oil-of-sharpness');
+  });
+
+  it('drops more often from a boss than from a mob', () => {
+    expect(dropsOver('boss', 6).length).toBeGreaterThan(dropsOver('combat', 6).length);
+  });
+
+  it('weights climb toward the deepest rung — a Ch11 drop is usually a deep draught', () => {
+    const drops = dropsOver('boss', 11, 2000);
+    const basic = drops.filter((id) => id === 'potion-of-healing').length;
+    const vigor = drops.filter((id) => id === 'potion-of-vigor').length;
+    expect(vigor).toBeGreaterThan(basic);
   });
 });

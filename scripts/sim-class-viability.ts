@@ -81,7 +81,8 @@ import { computeAC } from '../src/engine/character/derived';
 import { equipItem, slotForItem } from '../src/engine/character/equip';
 import { monkFightsUnarmed } from '../src/engine/combat/monk';
 import { characterAffixMods } from '../src/engine/items/affixMods';
-import { rollGearDrop, rollLegendaryDrop } from '../src/engine/items/drops';
+import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
+import { buyShopConsumables } from '../src/engine/character/shopPolicy';
 import { rollItem } from '../src/engine/items/rollItem';
 import { rollRoomGoldDrops } from '../src/engine/combat/goldDrop';
 import {
@@ -418,6 +419,12 @@ function resolveCombatLoot(
     const ref = rollItem(roller, { rarity: dropRarity, classId: c.classId });
     c = tryEquipDrop(c, ref);
   }
+  // Healing-draught side channel — rung pool tiers with the room's chapter,
+  // mirroring delveStore.resolveRoomVictory.
+  const potionId = rollPotionDrop(roller, room.kind, room.chapter ?? 1);
+  if (potionId) {
+    c = { ...c, inventory: [...c.inventory, { itemId: potionId }] };
+  }
   if (rollLegendaryDrop(roller, room.kind)) {
     const banked = bankRandomLegendary(roller, c.classId, [...ownedLegendaries, ...newLegendaries]);
     if (banked) newLegendaries.push(banked);
@@ -456,15 +463,9 @@ function visitShop(
     }
   }
 
-  const potion = getItem('potion-of-healing');
-  let safety = 0;
-  while (gold >= potion.cost && safety < 6) {
-    c = { ...c, inventory: [...c.inventory, { itemId: 'potion-of-healing' }] };
-    gold -= potion.cost;
-    safety += 1;
-  }
-
-  c = { ...c, goldInPocket: gold };
+  // Tier-aware consumable buys (shared engine policy): the dearest legal heal
+  // rungs first, then one Elixir of Iron / Oil of Sharpness at depth.
+  c = buyShopConsumables({ ...c, goldInPocket: gold }, room.chapter);
   return { character: c, newLegendaries };
 }
 

@@ -76,6 +76,7 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
                       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-2">
                         {item.actionCost === 'bonus' ? t('combat.itemPicker.bonusAction') : t('combat.itemPicker.action')}
                         {item.healDice && ` · ${t('combat.itemPicker.heal', { dice: item.healDice })}`}
+                        {item.healPercent && ` · ${t('combat.itemPicker.healPct', { pct: item.healPercent })}`}
                       </div>
                     </div>
                   </div>

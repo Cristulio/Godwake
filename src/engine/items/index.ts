@@ -18,6 +18,7 @@ export {
   type DropSource,
   dropSourceForRoom,
   rollGearDrop,
+  rollPotionDrop,
   rollLegendaryDrop,
   rollSetPieceDrop,
   maxRolledRarityForChapter,

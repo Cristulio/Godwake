@@ -1,6 +1,7 @@
 import type { GearRarity, ItemRef } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import type { CampBoonTier } from '../../content/campBoons';
+import { consumableIdsForChapter } from '../../content/items/consumables';
 import { getClass } from '../../content/classes';
 import { createDiceRoller } from '../../engine/dice';
 import {
@@ -21,22 +22,19 @@ import { ascensionAscendantLoot } from '../../engine/delve/ascension';
  * depth; the big rotating pool is Wave 2.
  */
 
-/** Fixed consumable stock by depth (cumulative — a deeper merchant carries
- * everything the shallower one did, plus more). Arms are rolled, not listed
- * here. */
-const CONSUMABLE_BASE = ['potion-of-healing', 'antitoxin'];
-const CONSUMABLE_TIER_2 = ['potion-of-greater-healing'];
-const CONSUMABLE_TIER_3 = ['potion-of-heroism']; // "Potion of Vitality" — the dearest draught
-
-export function consumableStockForTier(tier: CampBoonTier | null): string[] {
-  const t = tier ?? 1;
-  const ids = [...CONSUMABLE_BASE];
-  if (t >= 2) ids.push(...CONSUMABLE_TIER_2);
-  if (t >= 3) ids.push(...CONSUMABLE_TIER_3);
-  return ids;
+/**
+ * Fixed consumable stock by CHAPTER depth (cumulative — a deeper merchant
+ * carries everything the shallower one did, plus more). The gate is
+ * CONSUMABLE_MIN_CHAPTER (content/items/consumables.ts) — re-stocking any
+ * draught is one line there. Arms are rolled, not listed here.
+ */
+export function consumableStockForChapter(chapter: number | undefined): string[] {
+  return consumableIdsForChapter(chapter ?? 1);
 }
 
-/** Deeper chapters carry the pricier wares — maps a chapter to a stock tier. */
+/** Deeper chapters carry the pricier wares — maps a chapter to a stock tier.
+ * Still the SIM scripts' depth knob for the rolled-gear rack; consumables now
+ * gate on the raw chapter (consumableStockForChapter). */
 export function tierForChapter(chapter: number | undefined): CampBoonTier {
   if (!chapter || chapter <= 1) return 1;
   if (chapter === 2) return 2;

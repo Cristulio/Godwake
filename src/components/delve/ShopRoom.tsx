@@ -9,11 +9,10 @@ import { playMusic, playSfx, stopMusic } from '../../engine/audio';
 import { equippedInventoryIndices } from '../../engine/character/equip';
 import { isSetPieceRef } from '../../engine/items';
 import {
-  consumableStockForTier,
+  consumableStockForChapter,
   rollGearStock,
   rollLegendaryOffer,
   sellValue,
-  tierForChapter,
   type GearStock,
 } from './shopStock';
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow, SellWareRow } from './MerchantWares';
@@ -59,17 +58,16 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   const purchasedKeys = useGameStore((s) => s.purchasedShopKeys[room.id]);
   const isBought = (key: string) => purchasedKeys?.includes(key) ?? false;
 
-  const tier = tierForChapter(room.chapter);
   const classId = character?.classId;
   const ascensionLevel = useGameStore((s) => s.delve?.ascensionLevel ?? 0);
-
-  // Draughts & charms only from the fixed stock — the arms rack is rolled below.
-  const consumables = useMemo(
-    () => consumableStockForTier(tier).map(getItem).filter((it) => it.kind === 'consumable'),
-    [tier],
-  );
-
   const chapter = room.chapter ?? 1;
+
+  // Draughts & charms only from the fixed chapter-gated stock — the arms rack
+  // is rolled below.
+  const consumables = useMemo(
+    () => consumableStockForChapter(chapter).map(getItem).filter((it) => it.kind === 'consumable'),
+    [chapter],
+  );
   const gear = useMemo<GearStock[]>(
     () =>
       classId

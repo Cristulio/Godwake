@@ -83,7 +83,8 @@
     "mark": "marca ({dice})",
     "colossus": "coloso ({dice})",
     "vowReroll": "Repetida del Voto +{n}",
-    "song": "canción"
+    "song": "canción",
+    "oil": "aceite"
   },
   "cond": {
     "name": {
@@ -168,8 +169,12 @@
     "wildShape": "{name} muda el cuerpo por la forma de una bestia — {temp} PG temporales y garras desnudas, hasta que la forma se agote o se desvanezca.",
     "useItem": "{name} usa {item}.",
     "useItemHeal": " Tira {dice} = {roll} → +{healed} PG.",
+    "useItemHealPct": " El brebaje cierra el {pct}% del cuerpo → +{healed} PG.",
+    "useItemTempHp": " El vigor ciñe más allá de lo entero — {n} PG temporales.",
     "useItemVitality": " Una vitalidad lenta se asienta — unos {perTurn} PG al inicio de cada uno de los próximos {turns} turnos.",
     "useItemAntitoxin": " El frasco se vacía frío — el veneno resbalará hasta que la sala quede en silencio.",
+    "useItemIron": " La piel toma el temple del hierro — cada golpe de este combate cae {n} más leve.",
+    "useItemOil": " El filo bebe el aceite negro — +{hit} al impacto, +{dmg} de daño hasta que la sala quede en silencio.",
     "wardHold": "Las guardas resisten — {name} se sacude el golpe ({label}).",
     "wardPartial": "Protegido — {name} recibe solo {eff} de {amount} ({label}).",
     "disengage": "{name} se retuerce con el golpe — {reduction} de daño evitado.",
@@ -335,6 +340,7 @@
     "songOpening": "♪ {song} ya está en los labios de {name} cuando empieza la lucha.",
     "songSpitePulse": "La Canción del Desdén roe — cada enemigo sufre {n} de daño psíquico.",
     "songSteelDull": "♪ La Canción del Acero amortigua el golpe (−{n}).",
+    "elixirIronDull": "La piel templada en hierro embota el golpe (−{n}).",
     "songWarTempHp": "♪ El canto de guerra protege a {name} — {n} PG temporales.",
     "dirgeDrag": ", arrastrado por la Endecha (−{n})"
   },
@@ -388,7 +394,8 @@
     "cancel": "Cancelar",
     "bonusAction": "Acción adicional",
     "action": "Acción",
-    "heal": "cura {dice}"
+    "heal": "cura {dice}",
+    "healPct": "cura {pct}% del máximo"
   },
   "intent": {
     "attack": "Ataca por {dmg} de daño si acierta.",

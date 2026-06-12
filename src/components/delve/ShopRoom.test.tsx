@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ShopRoom } from './ShopRoom';
-import { consumableStockForTier } from './shopStock';
+import { consumableStockForChapter } from './shopStock';
 import { useGameStore } from '../../stores/gameStore';
 import { useDelveStore } from '../../stores/delveStore';
 import { useCharacterStore } from '../../stores/characterStore';
@@ -50,7 +50,7 @@ describe('ShopRoom — merchant node', () => {
   });
 
   it('lists the chapter-tiered draughts and rolled arms, and lets the player buy', () => {
-    const consumables = consumableStockForTier(2);
+    const consumables = consumableStockForChapter(2);
     const startInv = useGameStore.getState().character!.inventory.length;
 
     render(<ShopRoom room={shopRoom} onContinue={() => {}} />);

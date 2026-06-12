@@ -46,19 +46,40 @@ export function useConsumable(
   const itemName = getLocalized('items', item.id, 'name', item.name);
   let logText = t('combat.log.useItem', { name: nextCharacter.name, item: itemName });
 
-  if (item.effect === 'heal' && item.healDice) {
-    const heal = roller.roll(item.healDice);
+  if (item.effect === 'heal' && (item.healDice || item.healPercent)) {
+    let rolled = 0;
+    if (item.healDice) rolled = roller.roll(item.healDice).total;
+    // Percentage rung (Superior/Vigor): half of max scales with the drinker
+    // forever — no level-band dice to mistune. Additive with any flat dice.
+    const pctHeal = item.healPercent
+      ? Math.ceil((nextCharacter.hp.max * item.healPercent) / 100)
+      : 0;
     // Rage halves what a draught restores (rounded up), it no longer locks it out.
-    const restored = ragedHealAmount(nextCharacter, heal.total);
+    const restored = ragedHealAmount(nextCharacter, rolled + pctHeal);
     const before = nextCharacter.hp.current;
     const after = Math.min(nextCharacter.hp.max, before + restored);
     const actuallyHealed = after - before;
     nextCharacter = patchHp(nextCharacter, { current: after });
-    logText += t('combat.log.useItemHeal', {
-      dice: item.healDice,
-      roll: heal.total,
-      healed: actuallyHealed,
-    });
+    logText += item.healDice
+      ? t('combat.log.useItemHeal', {
+          dice: item.healDice,
+          roll: rolled,
+          healed: actuallyHealed,
+        })
+      : t('combat.log.useItemHealPct', {
+          pct: item.healPercent ?? 0,
+          healed: actuallyHealed,
+        });
+
+    // Vigor's over-shield: temp HP as a fraction of max. Temp HP never stacks —
+    // keep the larger of this grant and any pool already up (Hold-the-Wall rule).
+    if (item.tempHpPercent) {
+      const grant = Math.ceil((nextCharacter.hp.max * item.tempHpPercent) / 100);
+      if (grant > nextCharacter.hp.temp) {
+        nextCharacter = patchHp(nextCharacter, { temp: grant });
+        logText += t('combat.log.useItemTempHp', { n: grant });
+      }
+    }
 
     // Potion of Vitality regen tail: beyond the immediate knit above, bank a
     // slow restore for the next couple of player turns (ticked in turn.ts).
@@ -79,6 +100,37 @@ export function useConsumable(
     // handles both transparently. Cleared in combat resolution.
     nextCharacter = { ...nextCharacter, poisonImmuneEncounter: true };
     logText += t('combat.log.useItemAntitoxin');
+  }
+
+  // Encounter buffs (Elixir of Iron / Oil of Sharpness) — per-combat flat
+  // effects on the antitoxin lifecycle (set here, cleared in combat
+  // resolution). A re-drink keeps the stronger pour rather than stacking.
+  if (item.encounterDamageReduction) {
+    nextCharacter = {
+      ...nextCharacter,
+      damageReductionEncounter: Math.max(
+        nextCharacter.damageReductionEncounter ?? 0,
+        item.encounterDamageReduction,
+      ),
+    };
+    logText += t('combat.log.useItemIron', { n: item.encounterDamageReduction });
+  }
+  if (item.encounterAttackBonus || item.encounterDamageBonus) {
+    nextCharacter = {
+      ...nextCharacter,
+      attackBonusEncounter: Math.max(
+        nextCharacter.attackBonusEncounter ?? 0,
+        item.encounterAttackBonus ?? 0,
+      ),
+      damageBonusEncounter: Math.max(
+        nextCharacter.damageBonusEncounter ?? 0,
+        item.encounterDamageBonus ?? 0,
+      ),
+    };
+    logText += t('combat.log.useItemOil', {
+      hit: item.encounterAttackBonus ?? 0,
+      dmg: item.encounterDamageBonus ?? 0,
+    });
   }
 
   // Spend action economy

@@ -422,3 +422,117 @@ describe('bot targeting — kill the summoner, not its spawn (owner report 2026-
     expect(target?.kind === 'monster' && target.instance.defId).toBe('mask-chamberlain');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Consumable tiers (#consumable-tiers): the emergency drink understands the
+// ladder, and the one-fight encounter buffs are spent on ranked fights only.
+// ---------------------------------------------------------------------------
+
+describe('chooseCombatAction — tier-aware potion drinking', () => {
+  function hurtTo(c: Character, current: number, max: number): Character {
+    return { ...c, hp: { current, max, temp: 0 } };
+  }
+
+  function itemIdAt(c: Character, action: { kind: string; inventoryIndex?: number }): string {
+    expect(action.kind).toBe('item');
+    return c.inventory[action.inventoryIndex!].itemId;
+  }
+
+  it('drinks the SMALLEST draught that fully covers the deficit — the deep rungs stay banked', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    const hurt: Character = {
+      ...hurtTo(character, 6, 20), // deficit 14
+      inventory: [
+        { itemId: 'potion-of-superior-healing' }, // 50% of 20 = 10 — does not cover
+        { itemId: 'potion-of-greater-healing' }, // 4d4+4 avg 14 — covers exactly
+        { itemId: 'potion-of-vigor' }, // 10 heal — does not cover
+      ],
+    };
+    const action = chooseCombatAction(state, hurt);
+    expect(itemIdAt(hurt, action)).toBe('potion-of-greater-healing');
+  });
+
+  it('when nothing covers, drinks the biggest panic value — Vigor and its over-shield', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    const hurt: Character = {
+      ...hurtTo(character, 60, 200), // deficit 140 — nothing covers
+      inventory: [
+        { itemId: 'potion-of-healing' },
+        { itemId: 'potion-of-vigor' }, // 100 heal + 50 temp = the biggest button
+        { itemId: 'potion-of-superior-healing' }, // 100 heal
+      ],
+    };
+    const action = chooseCombatAction(state, hurt);
+    expect(itemIdAt(hurt, action)).toBe('potion-of-vigor');
+  });
+
+  it('on a covering tie, prefers the plain heal over burning Vigor (cautious profile)', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    const hurt: Character = {
+      ...hurtTo(character, 10, 20), // deficit 10 — both 50% rungs cover exactly
+      inventory: [{ itemId: 'potion-of-vigor' }, { itemId: 'potion-of-superior-healing' }],
+    };
+    const action = chooseCombatAction(state, hurt, 'cautious');
+    expect(itemIdAt(hurt, action)).toBe('potion-of-superior-healing');
+  });
+});
+
+describe('chooseCombatAction — encounter buffs vs ranked foes', () => {
+  function rankFirstMonster(state: CombatState, rank: 'elite' | 'boss'): void {
+    const m = state.combatants.find((c) => c.kind === 'monster');
+    if (m?.kind === 'monster') m.instance.rank = rank;
+  }
+
+  it('drinks Oil of Sharpness against an elite while healthy', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    rankFirstMonster(state, 'elite');
+    const armed: Character = {
+      ...character,
+      inventory: [{ itemId: 'elixir-of-iron' }, { itemId: 'oil-of-sharpness' }],
+    };
+    const action = chooseCombatAction(state, armed);
+    expect(action.kind).toBe('item');
+    expect(armed.inventory[(action as { inventoryIndex: number }).inventoryIndex].itemId).toBe(
+      'oil-of-sharpness',
+    );
+  });
+
+  it('drinks Elixir of Iron against a boss when hurt — the hide buys turns', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    rankFirstMonster(state, 'boss');
+    const bloodied: Character = {
+      ...character,
+      hp: { ...character.hp, current: Math.floor(character.hp.max * 0.45) },
+      inventory: [{ itemId: 'oil-of-sharpness' }, { itemId: 'elixir-of-iron' }],
+    };
+    const action = chooseCombatAction(state, bloodied);
+    expect(action.kind).toBe('item');
+    expect(
+      bloodied.inventory[(action as { inventoryIndex: number }).inventoryIndex].itemId,
+    ).toBe('elixir-of-iron');
+  });
+
+  it('never trickles a buff away on unranked trash', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    const armed: Character = {
+      ...character,
+      inventory: [{ itemId: 'oil-of-sharpness' }, { itemId: 'elixir-of-iron' }],
+    };
+    const action = chooseCombatAction(state, armed);
+    expect(action.kind).not.toBe('item');
+  });
+
+  it('never re-drinks a buff already running this fight', () => {
+    const { state, character } = startCombat(rogue(), [{ defId: 'goblin', count: 1 }]);
+    rankFirstMonster(state, 'elite');
+    const oiled: Character = {
+      ...character,
+      attackBonusEncounter: 2,
+      damageBonusEncounter: 2,
+      damageReductionEncounter: 3,
+      inventory: [{ itemId: 'oil-of-sharpness' }, { itemId: 'elixir-of-iron' }],
+    };
+    const action = chooseCombatAction(state, oiled);
+    expect(action.kind).not.toBe('item');
+  });
+});

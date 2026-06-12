@@ -113,6 +113,7 @@ const PART_KEY: Record<string, string> = {
   Shadowed: 'shadowed',
   Quarry: 'quarry',
   song: 'song',
+  oil: 'oil',
 };
 
 function partLabel(label: string): string {
@@ -264,6 +265,9 @@ export function playerAttack(
   attackBonus += weaponEnhancement;
   // Weapon accuracy lever: the shortbow's inherent +to-hit, traded for a smaller die.
   attackBonus += w.attackMod ?? 0;
+  // Oil of Sharpness: the anointed weapon bites surer for the rest of this
+  // combat (damage half lands in the hit block). Cleared in combat resolution.
+  attackBonus += nextCharacter.attackBonusEncounter ?? 0;
   // Class affinity: a weapon that fits the wielder's hands. The edge is applied
   // as bonus damage in the hit block below (accuracy is the tradeoff lever's job).
   const hasAffinity = w.affinity === nextCharacter.classId;
@@ -516,6 +520,13 @@ export function playerAttack(
     if (w.damageMod) {
       bonusDamage += w.damageMod;
       onTypeParts.push({ amount: w.damageMod, label: 'weapon' });
+    }
+    // Oil of Sharpness: the anointed edge bites deeper every strike this combat.
+    // Full on every swing (a one-fight paid effect, not stacked gear edge — the
+    // Flurry halving is for permanent per-hit edges that compound by level).
+    if (nextCharacter.damageBonusEncounter) {
+      bonusDamage += nextCharacter.damageBonusEncounter;
+      onTypeParts.push({ amount: nextCharacter.damageBonusEncounter, label: 'oil' });
     }
     // Class affinity: the matched weapon bites a little deeper in its owner's hands.
     if (hasAffinity) {

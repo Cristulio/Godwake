@@ -77,7 +77,8 @@ import {
 import { computeAC } from '../src/engine/character/derived';
 import { equipItem } from '../src/engine/character/equip';
 import { characterAffixMods, enhancementOf } from '../src/engine/items/affixMods';
-import { rollGearDrop, rollLegendaryDrop } from '../src/engine/items/drops';
+import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
+import { buyShopConsumables } from '../src/engine/character/shopPolicy';
 import { rollItem } from '../src/engine/items/rollItem';
 import { rollRoomGoldDrops } from '../src/engine/combat/goldDrop';
 import {
@@ -389,6 +390,10 @@ function resolveCombatLoot(
     const ref = rollItem(roller, { rarity: dropRarity, classId: c.classId, depth: chapter });
     c = tryEquipDrop(c, ref);
   }
+  // Healing-draught side channel — rung pool tiers with the room's chapter,
+  // mirroring delveStore.resolveRoomVictory.
+  const potionId = rollPotionDrop(roller, room.kind, chapter);
+  if (potionId) c = { ...c, inventory: [...c.inventory, { itemId: potionId }] };
   // Rare legendary drop → banked to the persistent collection.
   if (rollLegendaryDrop(roller, room.kind)) {
     const banked = bankRandomLegendary(
@@ -437,17 +442,12 @@ function visitShop(
     }
   }
 
-  // Leftover gold → healing potions (the policy drinks them in a pinch).
-  const potion = getItem('potion-of-healing');
-  let safety = 0;
-  while (gold >= potion.cost && safety < 6) {
-    c = { ...c, inventory: [...c.inventory, { itemId: 'potion-of-healing' }] };
-    gold -= potion.cost;
-    safety += 1;
-  }
+  // Leftover gold → tier-aware consumable buys (shared engine policy): the
+  // dearest legal heal rungs first, then one Elixir of Iron / Oil of Sharpness
+  // at depth (the policy drinks them in a pinch / against elites).
+  c = buyShopConsumables({ ...c, goldInPocket: gold }, room.chapter);
 
-  const goldSpent = c.goldInPocket - gold;
-  c = { ...c, goldInPocket: gold };
+  const goldSpent = character.goldInPocket - c.goldInPocket;
   return { character: c, goldSpent, newLegendaries };
 }
 
