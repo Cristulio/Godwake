@@ -1,4 +1,4 @@
-import type { BackdropKind } from '../../assets/backdrops/registry';
+import { BACKDROP_GRADE, type BackdropKind } from '../../assets/backdrops/registry';
 
 /**
  * Fraction of the scene occupied by the near-ground floor band. Scenes are
@@ -48,7 +48,7 @@ export function BattlefieldBackdrop({ url, kind }: BattlefieldBackdropProps) {
         alt=""
         draggable={false}
         className="absolute animate-backdrop-far"
-        style={{ left: '-1%', top: 0, width: '102%', height: '100%' }}
+        style={{ left: '-1%', top: 0, width: '102%', height: '100%', filter: BACKDROP_GRADE }}
       />
       {/* near layer — the floor strip of the same scene, slower drift */}
       <div
@@ -60,7 +60,14 @@ export function BattlefieldBackdrop({ url, kind }: BattlefieldBackdropProps) {
           alt=""
           draggable={false}
           className="absolute animate-backdrop-near"
-          style={{ left: '-1%', bottom: 0, width: '102%', height: `${10000 / (NEAR_BAND * 100)}%` }}
+          style={{
+            left: '-1%',
+            bottom: 0,
+            width: '102%',
+            height: `${10000 / (NEAR_BAND * 100)}%`,
+            // identical grade to the far layer or the y66 seam becomes visible
+            filter: BACKDROP_GRADE,
+          }}
         />
       </div>
       <div className="absolute inset-0" style={{ background: GLOW_BY_KIND[kind] }} />
