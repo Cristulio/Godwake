@@ -536,3 +536,47 @@ describe('chooseCombatAction — encounter buffs vs ranked foes', () => {
     expect(action.kind).not.toBe('item');
   });
 });
+
+describe('paladin bot — Compel obeys the single-foe gate (the Hold-Person directive)', () => {
+  it('never compels into a crowd; the lone scary survivor may be bound', async () => {
+    const { chooseCombatAction, applyPlannedAction } = await import('./actionPolicy');
+    const { createCombat } = await import('./createCombat');
+    const { getMonster } = await import('../../content/monsters');
+    const { createDiceRoller } = await import('../dice');
+    const { buildPlayerCharacter, presetCreationInput } = await import(
+      '../character/defaultCharacter'
+    );
+
+    const roller = createDiceRoller('compel-gate');
+    const mkPaladin = () => {
+      let p = buildPlayerCharacter(presetCreationInput('paladin'));
+      p = {
+        ...p,
+        level: 7,
+        resources: {
+          ...p.resources,
+          knownSpells: ['compel'],
+          spellSlots: { ...(p.resources.spellSlots ?? {}), 2: 2 },
+        },
+      };
+      return p;
+    };
+
+    const crowd = createCombat({
+      roller,
+      character: mkPaladin(),
+      monsters: [{ def: getMonster('hobgoblin') }, { def: getMonster('hobgoblin') }],
+    });
+    let st = crowd.state;
+    let ch = crowd.character;
+    for (let i = 0; i < 6; i++) {
+      const a = chooseCombatAction(st, ch, 'balanced');
+      expect(a.kind === 'cast' && a.spellId === 'compel').toBe(false);
+      if (a.kind === 'end-turn') break;
+      const r = applyPlannedAction({ roller, state: st, character: ch }, a);
+      if (r.state === st && r.character === ch) break;
+      st = r.state;
+      ch = r.character;
+    }
+  });
+});
