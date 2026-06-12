@@ -52,7 +52,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
   const rarity = rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
   const tooDear = gold < stock.cost;
-  const warning = character ? itemEquipNote(character.classId, base) : null;
+  const warning = character ? itemEquipNote(character, base) : null;
   // The usability gate — why this can't be worn yet (wrong class, stat shortfall,
   // class-bound). Shown but never blocks buying: the player may grow into it.
   const denial = character ? equipDenialReason(character, stock.ref.itemId) : null;

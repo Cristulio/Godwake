@@ -282,7 +282,7 @@ export function InventoryScreen() {
                         rolled={ref?.rolled}
                         rolledCost={ref?.rolled ? rolledItemCost(ref) : undefined}
                         equipWarning={
-                          character ? itemEquipNote(character.classId, item) ?? undefined : undefined
+                          character ? itemEquipNote(character, item) ?? undefined : undefined
                         }
                         hint={t('screens.inventory.unequipHintDesktop')}
                       />
@@ -303,7 +303,7 @@ export function InventoryScreen() {
                             rolled={ref.rolled}
                             rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
                             equipWarning={
-                              character ? itemEquipNote(character.classId, item) ?? undefined : undefined
+                              character ? itemEquipNote(character, item) ?? undefined : undefined
                             }
                             hint={t('screens.inventory.unequipHintTouch')}
                           />
@@ -430,7 +430,7 @@ export function InventoryScreen() {
                             rolled={ref.rolled}
                             rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
                             equipWarning={
-                              character ? itemEquipNote(character.classId, item) ?? undefined : undefined
+                              character ? itemEquipNote(character, item) ?? undefined : undefined
                             }
                             hint={hint}
                           />
@@ -464,7 +464,7 @@ export function InventoryScreen() {
                               rolled={ref.rolled}
                               rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
                               equipWarning={
-                                character ? itemEquipNote(character.classId, item) ?? undefined : undefined
+                                character ? itemEquipNote(character, item) ?? undefined : undefined
                               }
                               hint={hint}
                             />

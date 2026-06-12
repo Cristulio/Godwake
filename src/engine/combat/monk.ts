@@ -56,17 +56,17 @@ export function isMonkWeaponId(itemId: string): boolean {
 }
 
 /**
- * Is this monk striking TRULY unarmed — bare-handed (an empty main-hand, or the
- * virtual fists the dispatch swaps in) — and thus rolling the level-scaled
- * Martial Arts die plus the unarmed damage edge? ANY equipped weapon turns this
- * off, including a themed monk weapon: a wielded arm swings its own die,
- * affixes, and enhancement instead. Non-monks are never "unarmed".
+ * Is this monk striking TRULY unarmed — and thus rolling the level-scaled
+ * Martial Arts die plus the unarmed damage edge? The ONLY unarmed state is an
+ * EMPTY main-hand (owner ruling 2026-06-12): the virtual fists ids live solely
+ * inside the attack dispatch, are refused at equip, and legacy saves holding a
+ * rolled Fists item are stripped at load (persistMigration). ANY equipped
+ * weapon turns this off, including a themed monk weapon: a wielded arm swings
+ * its own die, affixes, and enhancement instead. Non-monks are never "unarmed".
  */
 export function monkFightsUnarmed(character: Readonly<Character>): boolean {
   if (character.classId !== 'monk') return false;
-  const mainHand = character.equipped.mainHand;
-  if (!mainHand) return true;
-  return isUnarmedStrikeId(mainHand.itemId);
+  return character.equipped.mainHand == null;
 }
 
 /**

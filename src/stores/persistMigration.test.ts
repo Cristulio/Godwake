@@ -545,3 +545,35 @@ function makeBareCharacter(overrides: Record<string, unknown>): Record<string, u
     ...overrides,
   };
 }
+
+describe('legacy fists strip (the unarmed state is an empty main-hand)', () => {
+  it('strips an equipped rolled Fists and every bagged fists ref; kit gear stays', async () => {
+    const { migrateCharacter } = await import('./persistMigration');
+    const { buildPlayerCharacter, presetCreationInput } = await import(
+      '../engine/character/defaultCharacter'
+    );
+    const monk = buildPlayerCharacter(presetCreationInput('monk'));
+    const legacy = {
+      ...monk,
+      equipped: {
+        ...monk.equipped,
+        mainHand: {
+          itemId: 'monk-fists',
+          rolled: { baseId: 'monk-fists', rarity: 'common', affixes: [], enhancement: 1, name: '+1 Fists' },
+        },
+      },
+      inventory: [
+        ...monk.inventory,
+        { itemId: 'monk-fists' },
+        { itemId: 'monk-fists-grandmaster' },
+        { itemId: 'monk-paired-kama' },
+      ],
+    };
+    const out = migrateCharacter(legacy, {});
+    expect(out?.equipped.mainHand ?? null).toBeNull();
+    const ids = (out?.inventory ?? []).map((r) => r.itemId);
+    expect(ids).not.toContain('monk-fists');
+    expect(ids).not.toContain('monk-fists-grandmaster');
+    expect(ids).toContain('monk-paired-kama');
+  });
+});
