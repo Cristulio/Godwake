@@ -24,6 +24,7 @@ import { isPlayerParalyzed } from './holdPerson';
 import { appendLog } from './log';
 import { resolvePlayerParalyzedTurn, applyCursedGroundChip, applyBardSongPulse } from './turn';
 import { refreshMonsterIntents } from './attack/monsterIntent';
+import { clearEncounterConsumables } from './attack/damage';
 import { playerAttack } from './attack/playerAttack';
 import { wieldsRangedWeapon, wearsHeavierThanLight } from '../character/equip';
 import { getActiveRoller } from '../dice';
@@ -160,6 +161,11 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     vitalityRegenTurnsRemaining: 0,
     vitalityRegenHealPerTurn: 0,
   });
+
+  // Per-combat consumable effects (Antitoxin/Elixir of Iron/Oil of Sharpness)
+  // are cleared in combat RESOLUTION; clearing again here guards any exit path
+  // that skips resolution so a paid one-fight effect never spans two fights.
+  nextCharacter = clearEncounterConsumables(nextCharacter);
 
   // Ascension scaling: HP rides on the (copied) def so spawnMonsterInstance
   // seeds the right max HP; the per-attack damage bonus is stamped on the

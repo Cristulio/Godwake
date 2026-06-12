@@ -226,3 +226,213 @@ describe('Potion of Vitality — regen draught', () => {
     expect(init.character.resources.vitalityRegenHealPerTurn).toBe(0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// The deep consumable ladder (#consumable-tiers): percentage heals, the Vigor
+// over-shield, and the two encounter buffs. Magnitudes referenced here are the
+// PROVISIONAL content seeds — a later sim pass retunes them; the tests pin the
+// MECHANISM (percent-of-max, take-larger temp, per-combat lifecycle), reading
+// magnitudes off the item defs rather than hardcoding them.
+// ---------------------------------------------------------------------------
+
+import { applyDamage, evaluateCombatEnd, playerAttack } from '../../engine/combat/attack';
+import { createDiceRoller } from '../../engine/dice';
+
+describe('deep-ladder consumables — quick-quaff action economy', () => {
+  it.each([
+    'potion-of-superior-healing',
+    'potion-of-vigor',
+    'elixir-of-iron',
+    'oil-of-sharpness',
+  ])('%s costs a bonus action', (id) => {
+    const item = getItem(id) as Consumable;
+    expect(item.kind).toBe('consumable');
+    expect(item.actionCost).toBe('bonus');
+  });
+});
+
+describe('Potion of Superior Healing — the percentage rung', () => {
+  it('restores its healPercent of MAX HP, however large the body', () => {
+    const item = getItem('potion-of-superior-healing') as Consumable;
+    const fighter = makeChar('fighter', [{ itemId: item.id }]);
+    const init = createCombat({ character: fighter, monsters: [{ def: getMonster('goblin') }] });
+    const hurt: Character = { ...init.character, hp: { current: 10, max: 200, temp: 0 } };
+
+    const { character } = useConsumable(
+      { roller: makeScriptedRoller([]), character: hurt, state: init.state },
+      hurt.inventory.findIndex((r) => r.itemId === item.id),
+    );
+
+    const expected = Math.ceil((200 * (item.healPercent ?? 0)) / 100);
+    expect(character.hp.current).toBe(10 + expected);
+    expect(character.actionEconomy.bonusActionUsed).toBe(true);
+    expect(character.inventory.filter((r) => r.itemId === item.id)).toHaveLength(0);
+  });
+
+  it('never over-heals past max', () => {
+    const item = getItem('potion-of-superior-healing') as Consumable;
+    const fighter = makeChar('fighter', [{ itemId: item.id }]);
+    const init = createCombat({ character: fighter, monsters: [{ def: getMonster('goblin') }] });
+    const nearFull: Character = { ...init.character, hp: { current: 95, max: 100, temp: 0 } };
+
+    const { character } = useConsumable(
+      { roller: makeScriptedRoller([]), character: nearFull, state: init.state },
+      nearFull.inventory.findIndex((r) => r.itemId === item.id),
+    );
+    expect(character.hp.current).toBe(100);
+  });
+});
+
+describe('Potion of Vigor — percentage heal + temp-HP over-shield', () => {
+  it('restores healPercent of max AND grants tempHpPercent of max as temp HP', () => {
+    const item = getItem('potion-of-vigor') as Consumable;
+    const fighter = makeChar('fighter', [{ itemId: item.id }]);
+    const init = createCombat({ character: fighter, monsters: [{ def: getMonster('goblin') }] });
+    const hurt: Character = { ...init.character, hp: { current: 20, max: 120, temp: 0 } };
+
+    const { character } = useConsumable(
+      { roller: makeScriptedRoller([]), character: hurt, state: init.state },
+      hurt.inventory.findIndex((r) => r.itemId === item.id),
+    );
+
+    expect(character.hp.current).toBe(
+      20 + Math.ceil((120 * (item.healPercent ?? 0)) / 100),
+    );
+    expect(character.hp.temp).toBe(Math.ceil((120 * (item.tempHpPercent ?? 0)) / 100));
+  });
+
+  it('temp HP takes the LARGER pool, never stacks onto one already up', () => {
+    const item = getItem('potion-of-vigor') as Consumable;
+    const fighter = makeChar('fighter', [{ itemId: item.id }]);
+    const init = createCombat({ character: fighter, monsters: [{ def: getMonster('goblin') }] });
+    const expected = Math.ceil((100 * (item.tempHpPercent ?? 0)) / 100);
+    const shielded: Character = {
+      ...init.character,
+      hp: { current: 50, max: 100, temp: expected + 10 },
+    };
+
+    const { character } = useConsumable(
+      { roller: makeScriptedRoller([]), character: shielded, state: init.state },
+      shielded.inventory.findIndex((r) => r.itemId === item.id),
+    );
+    expect(character.hp.temp).toBe(expected + 10);
+  });
+});
+
+describe('Elixir of Iron — flat per-combat damage reduction', () => {
+  function drinkIron() {
+    const item = getItem('elixir-of-iron') as Consumable;
+    const fighter = makeChar('fighter', [{ itemId: item.id }]);
+    const init = createCombat({ character: fighter, monsters: [{ def: getMonster('goblin') }] });
+    const full: Character = { ...init.character, hp: { current: 100, max: 100, temp: 0 } };
+    const res = useConsumable(
+      { roller: makeScriptedRoller([]), character: full, state: init.state },
+      full.inventory.findIndex((r) => r.itemId === item.id),
+    );
+    return { ...res, dr: item.encounterDamageReduction ?? 0 };
+  }
+
+  it('shaves every incoming blow by the elixir amount, hit after hit (not one-shot)', () => {
+    const { state, character, dr } = drinkIron();
+    expect(dr).toBeGreaterThan(0);
+    expect(character.damageReductionEncounter).toBe(dr);
+
+    const first = applyDamage(state, 'player', 10, character);
+    expect(first.character.hp.current).toBe(100 - (10 - dr));
+    // A second blow the same fight is shaved too — the temper holds.
+    const second = applyDamage(first.state, 'player', 10, first.character);
+    expect(second.character.hp.current).toBe(100 - 2 * (10 - dr));
+  });
+
+  it('never turns a blow into healing — reduction floors at zero', () => {
+    const { state, character, dr } = drinkIron();
+    const tap = applyDamage(state, 'player', Math.max(1, dr - 2), character);
+    expect(tap.character.hp.current).toBe(100);
+  });
+
+  it('expires in combat resolution — the next fight starts untempered', () => {
+    const { state, character } = drinkIron();
+    // Strike the goblin down so the room resolves to victory.
+    const goblinId = state.combatants.find((c) => c.kind === 'monster')!.id;
+    const slain = applyDamage(state, goblinId, 999, character);
+    const ended = evaluateCombatEnd(slain.state, slain.character);
+    expect(ended.state.status).toBe('player-victory');
+    expect(ended.character.damageReductionEncounter ?? 0).toBe(0);
+  });
+});
+
+describe('Oil of Sharpness — per-combat +hit/+damage on the wielded weapon', () => {
+  function oiledAndPlain(seed: string) {
+    const item = getItem('oil-of-sharpness') as Consumable;
+    _resetMonsterInstanceCounter();
+    const base = makeChar('fighter', [{ itemId: item.id }]);
+    const init = createCombat({ character: base, monsters: [{ def: getMonster('goblin') }] });
+    const targetId = init.state.combatants.find((c) => c.kind === 'monster')!.id;
+
+    const drunk = useConsumable(
+      { roller: makeScriptedRoller([]), character: init.character, state: init.state },
+      init.character.inventory.findIndex((r) => r.itemId === item.id),
+    );
+    // Same seed for both swings: the only delta is the oil.
+    const plain = playerAttack(
+      { roller: createDiceRoller(seed), character: init.character, state: init.state },
+      targetId,
+      'longsword',
+    );
+    const oiled = playerAttack(
+      { roller: createDiceRoller(seed), character: drunk.character, state: drunk.state },
+      targetId,
+      'longsword',
+    );
+    return { item, plain, oiled };
+  }
+
+  it('the attack roll carries the oil bonus', () => {
+    const { item, plain, oiled } = oiledAndPlain('oil-hit-1');
+    expect(oiled.state.lastAttack!.attackBonus).toBe(
+      plain.state.lastAttack!.attackBonus + (item.encounterAttackBonus ?? 0),
+    );
+  });
+
+  it('a landed strike deals the oil bonus in extra damage', () => {
+    const item = getItem('oil-of-sharpness') as Consumable;
+    // Find a seed where the PLAIN swing hits, then compare HP deltas same-seed.
+    for (let i = 0; i < 60; i++) {
+      const { plain, oiled } = oiledAndPlain(`oil-dmg-${i}`);
+      const plainGoblin = plain.state.combatants.find((c) => c.kind === 'monster')!;
+      const oiledGoblin = oiled.state.combatants.find((c) => c.kind === 'monster')!;
+      if (plainGoblin.kind !== 'monster' || oiledGoblin.kind !== 'monster') continue;
+      const plainDealt = plainGoblin.instance.hp.max - plainGoblin.instance.hp.current;
+      const oiledDealt = oiledGoblin.instance.hp.max - oiledGoblin.instance.hp.current;
+      if (plainDealt > 0 && oiledGoblin.instance.hp.current > 0) {
+        expect(oiledDealt).toBe(plainDealt + (item.encounterDamageBonus ?? 0));
+        return;
+      }
+    }
+    throw new Error('no clean hit seed found in 60 tries');
+  });
+
+  it('expires in combat resolution alongside the elixir', () => {
+    const { oiled } = oiledAndPlain('oil-end-1');
+    const goblinId = oiled.state.combatants.find((c) => c.kind === 'monster')!.id;
+    const slain = applyDamage(oiled.state, goblinId, 999, oiled.character);
+    const ended = evaluateCombatEnd(slain.state, slain.character);
+    expect(ended.character.attackBonusEncounter ?? 0).toBe(0);
+    expect(ended.character.damageBonusEncounter ?? 0).toBe(0);
+  });
+
+  it('a stale buff never leaks INTO a fresh fight (combat-start guard)', () => {
+    const carried: Character = {
+      ...makeChar('fighter', []),
+      damageReductionEncounter: 3,
+      attackBonusEncounter: 2,
+      damageBonusEncounter: 2,
+      poisonImmuneEncounter: true,
+    };
+    const init = createCombat({ character: carried, monsters: [{ def: getMonster('goblin') }] });
+    expect(init.character.damageReductionEncounter ?? 0).toBe(0);
+    expect(init.character.attackBonusEncounter ?? 0).toBe(0);
+    expect(init.character.damageBonusEncounter ?? 0).toBe(0);
+    expect(init.character.poisonImmuneEncounter ?? false).toBe(false);
+  });
+});

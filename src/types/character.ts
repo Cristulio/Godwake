@@ -501,6 +501,21 @@ export interface Character {
    */
   poisonImmuneEncounter?: boolean;
   /**
+   * Flat incoming-damage reduction for the rest of THIS combat — Elixir of
+   * Iron. Read in applyDamage beside the paladin aura / Song of Steel shaves
+   * (it stacks with both); cleared in combat resolution and at combat start,
+   * mirroring `poisonImmuneEncounter`. Unlike `incomingDamageReduction` (the
+   * one-shot martial brace) it persists hit after hit until the room is done.
+   */
+  damageReductionEncounter?: number;
+  /**
+   * Flat bonus to weapon attack rolls / weapon damage for the rest of THIS
+   * combat — Oil of Sharpness on the wielded weapon. Read in playerAttack;
+   * cleared in combat resolution and at combat start.
+   */
+  attackBonusEncounter?: number;
+  damageBonusEncounter?: number;
+  /**
    * Tactical edge readied against a chapter boss this delve, keyed by boss
    * monster def id. `weak-spot` is the free minor opener advantage; `battle-plan`
    * is the paid gird + brace. Set by the pre-boss intel room, consumed at the

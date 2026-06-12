@@ -17,7 +17,7 @@ import {
   type CampBoon,
   type CampBoonTier,
 } from '../../content/campBoons';
-import { consumableStockForTier, rollGearStock, rollLegendaryOffer, type GearStock, type LegendaryOffer } from './shopStock';
+import { consumableStockForChapter, rollGearStock, rollLegendaryOffer, type GearStock, type LegendaryOffer } from './shopStock';
 import { GearWareRow, ConsumableWareRow, LegendaryWareRow } from './MerchantWares';
 import { CampDiceRoll } from './CampDiceRoll';
 import { useT } from '../../i18n/useT';
@@ -76,9 +76,11 @@ export function CampRoom({ room, onPressSouth }: CampRoomProps) {
     return boonsForCampTier(campTier, character.classId);
   }, [character, campTier]);
 
+  // Draughts gate on the CHAPTER (deep camps carry the deep rungs), not on the
+  // nth-camp boon tier — a 4th+ camp used to fall back to tier-1 basics.
   const consumables = useMemo(
-    () => consumableStockForTier(campTier).map(getItem).filter((it) => it.kind === 'consumable'),
-    [campTier],
+    () => consumableStockForChapter(room.chapter).map(getItem).filter((it) => it.kind === 'consumable'),
+    [room.chapter],
   );
   const classId = character?.classId;
   const gear = useMemo<GearStock[]>(

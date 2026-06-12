@@ -4,7 +4,7 @@ import type { CampRiskResult, DelveState, RoomSpec } from '../types/delve';
 import type { ItemRef, GearRarity } from '../schemas/item';
 import { getActiveRoller } from '../engine/dice';
 import { rollRoomGoldDrops } from '../engine/combat/goldDrop';
-import { rollItem, rollGearDrop, rollLegendaryDrop, rollSetPieceDrop, injectSetPieces, isSetPieceRef } from '../engine/items';
+import { rollItem, rollGearDrop, rollPotionDrop, rollLegendaryDrop, rollSetPieceDrop, injectSetPieces, isSetPieceRef } from '../engine/items';
 import { getSetPiece, canEquipSetPiece, type SetPiece } from '../content/sets';
 import { classStartingResources } from '../engine/character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../engine/character/defaultCharacter';
@@ -581,6 +581,9 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
       delveSpellAttackBonus: 0,
       nextAttackAdvantage: false,
       poisonImmuneEncounter: false,
+      damageReductionEncounter: 0,
+      attackBonusEncounter: 0,
+      damageBonusEncounter: 0,
       conditions: [],
       bossIntel: {},
       boldApproachBosses: [],
@@ -810,6 +813,21 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
           });
           queueFirstGearTutorial();
           if (ref.rolled) droppedItems.push(ref);
+        }
+      }
+      // Healing-draught drop: a rarer side channel beside the gear roll. The
+      // rung pool tiers with the run's chapter (the same CONSUMABLE_MIN_CHAPTER
+      // gate the shops read), so deep clears pay in deep potions.
+      const potionId = rollPotionDrop(getActiveRoller(), room.kind, room.chapter ?? 1);
+      if (potionId) {
+        const cur = useCharacterStore.getState().character;
+        if (cur) {
+          const ref = { itemId: potionId };
+          useCharacterStore.getState().setCharacter({
+            ...cur,
+            inventory: [...cur.inventory, ref],
+          });
+          droppedItems.push(ref);
         }
       }
       // Rare legendary relic drop: banked to the collection, not equipped this run.

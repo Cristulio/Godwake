@@ -132,6 +132,20 @@ export function applyDamage(
     });
     workingAmount = dulled;
   }
+  // Elixir of Iron: iron-tempered skin shaves every blow for the rest of this
+  // combat. Logged per blow like the Song of Steel — the player paid gold for
+  // this fight's hide and should see it hold. Stacks with the shaves above;
+  // never below zero. Cleared in combat resolution (evaluateCombatEnd).
+  const ironReduction = nextCharacter.damageReductionEncounter ?? 0;
+  if (ironReduction > 0 && workingAmount > 0) {
+    const blunted = Math.max(0, workingAmount - ironReduction);
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: t('combat.log.elixirIronDull', { n: workingAmount - blunted }),
+    });
+    workingAmount = blunted;
+  }
   // Rogue Evasion (L10+): a boss's CHARGED special is telegraphed a full turn
   // ahead — the rogue reads the wind-up and rolls clear, taking only half. Fires
   // only inside the charged-special window (set in monsterAttack) and does NOT
@@ -253,6 +267,29 @@ export interface CombatEndResult {
   character: Character;
 }
 
+/**
+ * Strip every per-combat consumable effect (Antitoxin's immunity, Elixir of
+ * Iron's hide, Oil of Sharpness's edge) — called from both resolution paths so
+ * a drink never leaks into the next fight. No-op when nothing is active.
+ */
+export function clearEncounterConsumables(character: Readonly<Character>): Character {
+  if (
+    !character.poisonImmuneEncounter &&
+    !character.damageReductionEncounter &&
+    !character.attackBonusEncounter &&
+    !character.damageBonusEncounter
+  ) {
+    return character;
+  }
+  return {
+    ...character,
+    poisonImmuneEncounter: false,
+    damageReductionEncounter: 0,
+    attackBonusEncounter: 0,
+    damageBonusEncounter: 0,
+  };
+}
+
 export function evaluateCombatEnd(
   state: CombatState,
   character: Readonly<Character>,
@@ -262,9 +299,7 @@ export function evaluateCombatEnd(
     .filter((c) => c.kind === 'monster')
     .every((c) => isDead(c, nextCharacter));
   if (allMonstersDead) {
-    if (nextCharacter.poisonImmuneEncounter) {
-      nextCharacter = { ...nextCharacter, poisonImmuneEncounter: false };
-    }
+    nextCharacter = clearEncounterConsumables(nextCharacter);
     return {
       state: appendLog(
         { ...state, status: 'player-victory' },
@@ -274,9 +309,7 @@ export function evaluateCombatEnd(
     };
   }
   if (nextCharacter.hp.current <= 0) {
-    if (nextCharacter.poisonImmuneEncounter) {
-      nextCharacter = { ...nextCharacter, poisonImmuneEncounter: false };
-    }
+    nextCharacter = clearEncounterConsumables(nextCharacter);
     return {
       state: appendLog(
         { ...state, status: 'player-defeat' },

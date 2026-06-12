@@ -376,10 +376,22 @@ const BARD_NUKE_PRIORITY = [
   'shatter',
 ] as const;
 
-/** Index of the strongest healing consumable in inventory, or -1. */
+/**
+ * Tier-aware emergency-drink pick: the SMALLEST draught whose expected heal
+ * fully covers the HP deficit (don't burn an 800gp rung on a scratch); when
+ * nothing covers, the BIGGEST panic value, where Vigor's temp-HP over-shield
+ * counts (it absorbs the blows the missing heal would have eaten). Ties prefer
+ * the smaller panic value, so Superior is drunk before the dearer Vigor when
+ * either covers. Expected heal = dice average + percent-of-max (the Vitality
+ * regen tail is future turns, not emergency triage — uncounted). Returns the
+ * inventory index, or -1.
+ */
 function bestHealPotionIdx(character: Character): number {
-  let bestIdx = -1;
-  let bestHeal = 0;
+  const deficit = character.hp.max - character.hp.current;
+  let coverIdx = -1;
+  let coverPanic = Infinity;
+  let bigIdx = -1;
+  let bigPanic = 0;
   character.inventory.forEach((ref, idx) => {
     let item;
     try {
@@ -387,14 +399,56 @@ function bestHealPotionIdx(character: Character): number {
     } catch {
       return;
     }
-    if (item.kind !== 'consumable' || item.effect !== 'heal' || !item.healDice) return;
-    const heal = avgOfExpr(item.healDice);
-    if (heal > bestHeal) {
-      bestHeal = heal;
-      bestIdx = idx;
+    if (item.kind !== 'consumable' || item.effect !== 'heal') return;
+    if (!item.healDice && !item.healPercent) return;
+    const heal =
+      (item.healDice ? avgOfExpr(item.healDice) : 0) +
+      (item.healPercent ? Math.ceil((character.hp.max * item.healPercent) / 100) : 0);
+    const panic =
+      heal +
+      (item.tempHpPercent ? Math.ceil((character.hp.max * item.tempHpPercent) / 100) : 0);
+    if (heal >= deficit && panic < coverPanic) {
+      coverPanic = panic;
+      coverIdx = idx;
+    }
+    if (panic > bigPanic) {
+      bigPanic = panic;
+      bigIdx = idx;
     }
   });
-  return bestIdx;
+  return coverIdx >= 0 ? coverIdx : bigIdx;
+}
+
+/** Inventory index of an unconsumed encounter buff worth drinking — Elixir of
+ *  Iron when hurt (the hide buys turns), Oil of Sharpness otherwise (the edge
+ *  compounds over a long fight). -1 when none is carried or both are already
+ *  running. */
+function encounterBuffIdx(character: Character, preferIron: boolean): number {
+  const wantIron = (character.damageReductionEncounter ?? 0) <= 0;
+  const wantOil =
+    (character.attackBonusEncounter ?? 0) <= 0 &&
+    (character.damageBonusEncounter ?? 0) <= 0;
+  let ironIdx = -1;
+  let oilIdx = -1;
+  character.inventory.forEach((ref, idx) => {
+    let item;
+    try {
+      item = getItem(ref.itemId);
+    } catch {
+      return;
+    }
+    if (item.kind !== 'consumable') return;
+    if (wantIron && ironIdx < 0 && item.encounterDamageReduction) ironIdx = idx;
+    if (
+      wantOil &&
+      oilIdx < 0 &&
+      (item.encounterAttackBonus || item.encounterDamageBonus)
+    ) {
+      oilIdx = idx;
+    }
+  });
+  if (preferIron) return ironIdx >= 0 ? ironIdx : oilIdx;
+  return oilIdx >= 0 ? oilIdx : ironIdx;
 }
 
 function fireBoltFullAvg(character: Character): number {
@@ -554,6 +608,15 @@ export function chooseCombatAction(
     if (hpPct <= profile.emergencyHp) {
       const healIdx = bestHealPotionIdx(character);
       if (healIdx >= 0) return { kind: 'item', inventoryIndex: healIdx };
+    }
+
+    // Encounter buff (Elixir of Iron / Oil of Sharpness): one-fight bottled
+    // edges are spent on fights that EARN them — an elite or boss on the field
+    // — never trickled away on trash. Below the emergency drink (survival
+    // first); Iron when hurt enough that the hide buys turns, Oil otherwise.
+    if (live.some((m) => m.instance.rank)) {
+      const buffIdx = encounterBuffIdx(character, hpPct <= profile.secondWindHp);
+      if (buffIdx >= 0) return { kind: 'item', inventoryIndex: buffIdx };
     }
 
     // Druid Entangling Roots — the signature AoE soft-control, now a BONUS

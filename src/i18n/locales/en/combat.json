@@ -83,7 +83,8 @@
     "mark": "mark ({dice})",
     "colossus": "colossus ({dice})",
     "vowReroll": "Vow reroll +{n}",
-    "song": "song"
+    "song": "song",
+    "oil": "oil"
   },
   "cond": {
     "name": {
@@ -168,8 +169,12 @@
     "wildShape": "{name} sheds the body for a beast's shape — {temp} temporary HP and claws to bare, until the form spends out or fades.",
     "useItem": "{name} uses {item}.",
     "useItemHeal": " Rolls {dice} = {roll} → +{healed} HP.",
+    "useItemHealPct": " The draught knits {pct}% of the body whole → +{healed} HP.",
+    "useItemTempHp": " Vigor girds past whole — {n} temporary HP.",
     "useItemVitality": " A slow vitality settles in — about {perTurn} HP at the start of each of the next {turns} turns.",
     "useItemAntitoxin": " The phial empties cold — poison will slide off until the room falls silent.",
+    "useItemIron": " The skin takes the temper of iron — every blow this combat lands {n} lighter.",
+    "useItemOil": " The edge drinks the black oil — +{hit} to hit, +{dmg} damage until the room falls silent.",
     "wardHold": "The wards hold — {name} shrugs off the blow ({label}).",
     "wardPartial": "Warded — {name} takes only {eff} of {amount} ({label}).",
     "disengage": "{name} twists with the blow — {reduction} damage avoided.",
@@ -335,6 +340,7 @@
     "songOpening": "♪ {song} is already on {name}'s lips as the fight begins.",
     "songSpitePulse": "The Song of Spite gnaws — every foe takes {n} psychic.",
     "songSteelDull": "♪ The Song of Steel dulls the blow (−{n}).",
+    "elixirIronDull": "Iron-tempered skin blunts the blow (−{n}).",
     "songWarTempHp": "♪ The war-song girds {name} — {n} temporary HP.",
     "dirgeDrag": ", dragged by the Dirge (−{n})"
   },
@@ -388,7 +394,8 @@
     "cancel": "Cancel",
     "bonusAction": "Bonus action",
     "action": "Action",
-    "heal": "heal {dice}"
+    "heal": "heal {dice}",
+    "healPct": "heal {pct}% of max"
   },
   "intent": {
     "attack": "Attacks for {dmg} damage if it hits.",

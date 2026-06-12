@@ -111,6 +111,32 @@ export const ConsumableSchema = z.object({
    */
   regenPerTurnDice: DiceExpressionStringSchema.optional(),
   regenTurns: z.number().int().positive().optional(),
+  /**
+   * Percentage heal: restores this percent (0–100) of max HP on drink. The
+   * deep-ladder rungs (Superior Healing, Vigor) use this instead of flat dice —
+   * a percent scales with the drinker forever, no level-band math to mistune.
+   * Stacks additively with `healDice` if both are present.
+   */
+  healPercent: z.number().min(0).max(100).optional(),
+  /**
+   * Temp HP granted on drink, as a percent (0–100) of max HP (Potion of Vigor's
+   * over-shield). Temp HP never stacks — the drinker keeps the larger of this
+   * grant and any pool already up.
+   */
+  tempHpPercent: z.number().min(0).max(100).optional(),
+  /**
+   * Flat incoming-damage reduction for the rest of THIS combat (Elixir of
+   * Iron). Read in applyDamage beside the paladin aura / Song of Steel shaves;
+   * cleared in combat resolution like Antitoxin's immunity.
+   */
+  encounterDamageReduction: z.number().optional(),
+  /**
+   * Flat bonus to weapon attack rolls / weapon damage for the rest of THIS
+   * combat (Oil of Sharpness). Read in playerAttack; cleared in combat
+   * resolution like Antitoxin's immunity.
+   */
+  encounterAttackBonus: z.number().optional(),
+  encounterDamageBonus: z.number().optional(),
   /** Cost in gp when bought. */
   cost: z.number(),
   rarity: RaritySchema,
