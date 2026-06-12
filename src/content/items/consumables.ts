@@ -125,31 +125,43 @@ export const ALL_CONSUMABLES: Consumable[] = [
 ];
 
 /**
- * The chapter each consumable ENTERS shop stock (and the depth-tiered potion
- * drop pool) — the single gating knob: adding or re-gating any consumable later
- * is one line here. Existing rungs keep their pre-ladder placement (basic +
- * antitoxin from the gate, Greater at the old tier-2 depth, Vitality at tier-3);
- * antitoxin's always-stocked placement is deliberately untouched — the owner has
- * an open decision on it, and this map is now where that decision lands.
- * Chapter thresholds are PROVISIONAL pending the economy sim pass.
+ * Per-consumable chapter gate, in one of two shapes:
+ *  - `{ from: N }` — enters shop stock (and the depth-tiered potion drop
+ *    pool) at chapter N and stays for every deeper chapter.
+ *  - `{ only: [...] }` — shelved ONLY in the listed chapters.
  */
-export const CONSUMABLE_MIN_CHAPTER: Record<string, number> = {
-  'potion-of-healing': 1,
-  antitoxin: 1,
-  'potion-of-greater-healing': 2,
-  'potion-of-heroism': 3,
-  'potion-of-superior-healing': 8,
-  'elixir-of-iron': 8,
-  'oil-of-sharpness': 8,
-  'potion-of-vigor': 11,
+export type ConsumableChapterGate = { from: number } | { only: readonly number[] };
+
+/**
+ * The single gating knob: adding or re-gating any consumable later is one
+ * line here; unlisted ids never stock. The `from` thresholds are PROVISIONAL
+ * pending the economy sim pass. Antitoxin is the `only` case (owner decision,
+ * 2026-06-12): it shelves solely in the chapters with real poisoners — the
+ * curs (3), the spider-drow nest up to the Matron (4), the dragon's breath
+ * (10), and the late pair (13). The vial on the shelf is the road's warning.
+ */
+export const CONSUMABLE_CHAPTER_GATE: Record<string, ConsumableChapterGate> = {
+  'potion-of-healing': { from: 1 },
+  antitoxin: { only: [3, 4, 10, 13] },
+  'potion-of-greater-healing': { from: 2 },
+  'potion-of-heroism': { from: 3 },
+  'potion-of-superior-healing': { from: 8 },
+  'elixir-of-iron': { from: 8 },
+  'oil-of-sharpness': { from: 8 },
+  'potion-of-vigor': { from: 11 },
 };
+
+/** Whether `id` is shelvable at `chapter` — false for any unlisted id. */
+export function consumableAllowedInChapter(id: string, chapter: number): boolean {
+  const gate = CONSUMABLE_CHAPTER_GATE[id];
+  if (!gate) return false;
+  return 'from' in gate ? chapter >= gate.from : gate.only.includes(chapter);
+}
 
 /** Every consumable id legal at `chapter`, cheapest first (the shop-rack and
  *  drop-pool read). Unlisted ids never stock — the map is the gate. */
 export function consumableIdsForChapter(chapter: number): string[] {
-  return ALL_CONSUMABLES.filter(
-    (c) => (CONSUMABLE_MIN_CHAPTER[c.id] ?? Infinity) <= chapter,
-  )
+  return ALL_CONSUMABLES.filter((c) => consumableAllowedInChapter(c.id, chapter))
     .sort((a, b) => a.cost - b.cost)
     .map((c) => c.id);
 }

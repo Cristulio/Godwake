@@ -4,7 +4,7 @@ import { Panel } from '../ui/Panel';
 import { BlessingCard } from '../ui/BlessingCard';
 import { useGameStore } from '../../stores/gameStore';
 import { getActiveRoller } from '../../engine/dice';
-import { rollBlessingOptions, blessingsForClass } from '../../engine/character/blessings';
+import { rollBlessingOptions, blessingsForCharacter } from '../../engine/character/blessings';
 import { baneQuirkCount } from '../../engine/character/quirks';
 import { playSfx } from '../../engine/audio';
 import { useT } from '../../i18n/useT';
@@ -20,7 +20,6 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   const grantTitheGold = useGameStore((s) => s.grantTitheGold);
   const shrineOptionBonus = useGameStore((s) => s.character?.shrineOptionBonus ?? 0);
   const shrineTitheGold = useGameStore((s) => s.character?.shrineTitheGold ?? 0);
-  const classId = useGameStore((s) => s.character?.classId);
   const character = useGameStore((s) => s.character);
   const baneCount = character ? baneQuirkCount(character) : 0;
   const delveLevel = character?.level ?? 1;
@@ -28,7 +27,10 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   // Blessings are consumed per run, so the shrine offers fewer cards as the
   // pool empties: 3 (+ Wider Pantheon) normally, but capped at how many the
   // soul hasn't already taken, and a flavor line once it's exhausted.
-  const remaining = Math.max(0, blessingsForClass(classId).length - ownedBlessingIds.length);
+  const remaining = Math.max(
+    0,
+    blessingsForCharacter(character ?? undefined).length - ownedBlessingIds.length,
+  );
   const [options, setOptions] = useState<string[]>([]);
   const [chosen, setChosen] = useState<string | null>(null);
 
@@ -37,7 +39,8 @@ export function ShrineRoom({ room, onContinue }: ShrineRoomProps) {
   useEffect(() => {
     const roller = getActiveRoller();
     const count = Math.min(3 + shrineOptionBonus, remaining);
-    if (count > 0) setOptions(rollBlessingOptions(roller, count, classId, ownedBlessingIds));
+    if (count > 0)
+      setOptions(rollBlessingOptions(roller, count, character ?? undefined, ownedBlessingIds));
     // Shrine Tithe: pay out gold on each shrine entry.
     if (shrineTitheGold > 0) grantTitheGold(shrineTitheGold);
     // eslint-disable-next-line react-hooks/exhaustive-deps

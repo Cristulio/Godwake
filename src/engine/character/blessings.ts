@@ -1,21 +1,27 @@
 import type { DiceRoller } from '../dice';
 import type { Character } from '../../types/character';
 import type { Blessing, BlessingModifiers } from '../../schemas/blessing';
-import type { ClassId } from '../../schemas/ids';
+import { combatLean } from './combatLean';
 import { getBlessing, listBlessings, getBlessingCategory } from '../../content/blessings';
 
 /**
- * Filter the blessing pool by class relevance. A blessing with no
- * `classRelevance` is universal and always passes; one with a list passes only
- * when the class is in it. Lets shrines/camps avoid offering a Wizard a
- * weapon-keyed card (dead per PR #105 sim).
+ * Filter the blessing pool by the soul's combat LEAN (combatLean — class +
+ * subclass, resolved at offer time since the lean can flip at the subclass
+ * pick). Untagged blessings are universal and always pass; `weapon` cards go
+ * to lean-martial souls, `caster` cards to lean-caster ones. Keeps a Wizard
+ * off weapon-keyed cards (dead per PR #105 sim) — and, post the static-list
+ * era, puts the monk and the un-sworn paladin ON them. The unarmed monk
+ * draws the full weapon pool: every weapon-pool lever applies at attack
+ * resolution (playerAttack), none is bound to a held weapon item — a guard
+ * test pins that invariant for future cards.
  */
-export function blessingsForClass(classId: ClassId | undefined): Blessing[] {
+export function blessingsForCharacter(
+  c: Pick<Character, 'classId' | 'subclassId'> | undefined,
+): Blessing[] {
   const all = listBlessings();
-  if (!classId) return all;
-  return all.filter(
-    (b) => !b.classRelevance || b.classRelevance.length === 0 || b.classRelevance.includes(classId),
-  );
+  if (!c) return all;
+  const poolKey = combatLean(c) === 'martial' ? 'weapon' : 'caster';
+  return all.filter((b) => !b.pool || b.pool === poolKey);
 }
 
 /**
@@ -91,8 +97,8 @@ export function isNonStackingBlessing(b: Blessing): boolean {
  * present the player with a choice. Uses the seeded roller so the offered
  * blessings are deterministic per save. Dedupes both by id and by
  * mechanical effect signature, so the player never sees two cards that do
- * the same thing. When `classId` is provided, the pool is filtered to
- * class-relevant blessings first (weapon blessings hidden from Wizards).
+ * the same thing. When a character is provided, the pool is filtered by its
+ * combat lean first (weapon cards hidden from lean-casters and vice versa).
  *
  * **Effect-type spread:** the pool is AC-heavy, so beyond signature dedup the
  * roll also favours one card per effect category (defense / vitality / offense
@@ -111,10 +117,10 @@ export function isNonStackingBlessing(b: Blessing): boolean {
 export function rollBlessingOptions(
   roller: DiceRoller,
   count: number = 3,
-  classId?: ClassId,
+  character?: Pick<Character, 'classId' | 'subclassId'>,
   ownedBlessingIds: string[] = [],
 ): string[] {
-  const pool = blessingsForClass(classId);
+  const pool = blessingsForCharacter(character);
   const result: string[] = [];
   const seen = new Set<string>();
   const seenSignatures = new Set<string>();

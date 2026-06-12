@@ -265,9 +265,15 @@ describe('applyEventOutcome — effect kinds', () => {
     expect(r.character.delveAttackBonus).toBe(2);
   });
 
-  it('apply_attack_bonus_run: every full caster gets the SPELL attack bonus instead', () => {
-    for (const classId of ['wizard', 'druid', 'bard'] as const) {
-      const char = makeChar({ classId });
+  it('apply_attack_bonus_run: every lean-caster gets the SPELL attack bonus instead (incl. Radiant paladin, Lore bard)', () => {
+    for (const lean of [
+      { classId: 'wizard', subclassId: null },
+      { classId: 'druid', subclassId: null },
+      { classId: 'bard', subclassId: null },
+      { classId: 'bard', subclassId: 'lore' },
+      { classId: 'paladin', subclassId: 'radiant' },
+    ] as const) {
+      const char = makeChar(lean);
       const r = applyEventOutcome(
         char,
         outcome({ effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }] }),
@@ -280,9 +286,16 @@ describe('applyEventOutcome — effect kinds', () => {
     }
   });
 
-  it('apply_attack_bonus_run: martials and the half-caster paladin keep the weapon side', () => {
-    for (const classId of ['fighter', 'monk', 'paladin'] as const) {
-      const char = makeChar({ classId });
+  it('apply_attack_bonus_run: lean-martials keep the weapon side (incl. Bulwark, Valor bard, Moon druid — supersedes the #595 class rule)', () => {
+    for (const lean of [
+      { classId: 'fighter', subclassId: null },
+      { classId: 'monk', subclassId: null },
+      { classId: 'paladin', subclassId: null },
+      { classId: 'paladin', subclassId: 'bulwark' },
+      { classId: 'bard', subclassId: 'valor' },
+      { classId: 'druid', subclassId: 'circle-of-the-moon' },
+    ] as const) {
+      const char = makeChar(lean);
       const r = applyEventOutcome(
         char,
         outcome({ effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }] }),

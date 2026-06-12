@@ -23,10 +23,13 @@ import { ascensionAscendantLoot } from '../../engine/delve/ascension';
  */
 
 /**
- * Fixed consumable stock by CHAPTER depth (cumulative — a deeper merchant
- * carries everything the shallower one did, plus more). The gate is
- * CONSUMABLE_MIN_CHAPTER (content/items/consumables.ts) — re-stocking any
- * draught is one line there. Arms are rolled, not listed here.
+ * Fixed consumable stock by CHAPTER depth. The gate is CONSUMABLE_CHAPTER_GATE
+ * (content/items/consumables.ts) — re-stocking any draught is one line there.
+ * `from`-gated rungs are cumulative (a deeper merchant carries everything the
+ * shallower one did, plus more); `only`-gated ids (antitoxin) shelve solely in
+ * their listed chapters — the vial on the shelf is the road's warning. Both
+ * vendors (ShopRoom + the camp caravan) read this. Arms are rolled, not
+ * listed here.
  */
 export function consumableStockForChapter(chapter: number | undefined): string[] {
   return consumableIdsForChapter(chapter ?? 1);

@@ -218,15 +218,30 @@ describe('boss intel — buff definitions', () => {
     expect(bossIntelBuffFor('not-a-boss', 'weak-spot')).toBeNull();
   });
 
-  it('weak-spot swaps to the braced save for every full caster, stays the strike otherwise', () => {
-    for (const classId of ['wizard', 'druid', 'bard'] as const) {
-      const buff = bossIntelBuffFor('duergar-ilyich', 'weak-spot', classId);
+  it('weak-spot swaps to the braced save for lean-casters, stays the strike for lean-martials', () => {
+    // Lean-casters (combatLean — class + subclass): incl. the Radiant paladin.
+    for (const c of [
+      { classId: 'wizard', subclassId: null },
+      { classId: 'druid', subclassId: null },
+      { classId: 'bard', subclassId: null },
+      { classId: 'bard', subclassId: 'lore' },
+      { classId: 'paladin', subclassId: 'radiant' },
+    ] as const) {
+      const buff = bossIntelBuffFor('duergar-ilyich', 'weak-spot', c);
       expect(buff!.bracedSave).toBe(true);
       expect(buff!.firstStrikeAdvantage).toBe(false);
       expect(buff!.description).toContain('saving throw');
     }
-    for (const classId of ['fighter', 'monk', 'paladin'] as const) {
-      const buff = bossIntelBuffFor('duergar-ilyich', 'weak-spot', classId);
+    // Lean-martials: incl. Bulwark / the un-sworn paladin, Valor bard, Moon druid.
+    for (const c of [
+      { classId: 'fighter', subclassId: null },
+      { classId: 'monk', subclassId: null },
+      { classId: 'paladin', subclassId: null },
+      { classId: 'paladin', subclassId: 'bulwark' },
+      { classId: 'bard', subclassId: 'valor' },
+      { classId: 'druid', subclassId: 'circle-of-the-moon' },
+    ] as const) {
+      const buff = bossIntelBuffFor('duergar-ilyich', 'weak-spot', c);
       expect(buff!.firstStrikeAdvantage).toBe(true);
       expect(buff!.bracedSave).toBe(false);
     }

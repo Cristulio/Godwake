@@ -7,9 +7,10 @@ import type {
   EventOutcome,
 } from '../../schemas/event';
 import { getBlessing } from '../../content/blessings';
-import { blessingsForClass } from '../character/blessings';
+import { blessingsForCharacter } from '../character/blessings';
+import { combatLean } from '../character/combatLean';
 import { listQuirks, getQuirk } from '../../content/quirks';
-import { isFullCaster, modifierFor } from '../character/derived';
+import { modifierFor } from '../character/derived';
 import { t } from '../../i18n';
 import { skillCheck, type SkillCheckResult } from '../character/skillCheck';
 import { bossIntelBuffFor } from '../../content/bossIntel';
@@ -153,9 +154,9 @@ export function resolveChoiceOutcome(
  */
 function rollNewBlessing(character: Character, roller: DiceRoller): string | null {
   const owned = new Set(character.blessings);
-  // Pull from the class-relevant pool so a random event grant never lands a
-  // Wizard a weapon-attack-keyed dud.
-  const candidates = blessingsForClass(character.classId).filter((b) => !owned.has(b.id));
+  // Pull from the lean-relevant pool so a random event grant never lands a
+  // lean-caster a weapon-attack-keyed dud (or a Bulwark a spell one).
+  const candidates = blessingsForCharacter(character).filter((b) => !owned.has(b.id));
   if (candidates.length === 0) return null;
   const idx = roller.roll('1d100').total % candidates.length;
   return candidates[idx].id;
@@ -420,11 +421,12 @@ export function applyEventOutcome(
         break;
       }
       case 'apply_attack_bonus_run': {
-        // Class-aware: full casters cast, so a weapon-attack bonus is a dud
-        // for them — route it to spell attacks instead. Same split as the
-        // camp-boon table and the boss-intel weak spot. (A Valor bard or a
-        // wild-shaped druid does swing, but the simple class rule stands.)
-        const isCaster = isFullCaster(next.classId);
+        // Lean-aware (combatLean — class + subclass): lean-casters get the
+        // spell-attack side, lean-martials the weapon side. Same split as
+        // the camp-boon table and the boss-intel weak spot. Supersedes the
+        // old full-caster class rule: a Valor bard or Moon druid keeps the
+        // weapon bonus now; a Radiant paladin gets the spell one.
+        const isCaster = combatLean(next) === 'caster';
         next = isCaster
           ? {
               ...next,
@@ -466,7 +468,7 @@ export function applyEventOutcome(
         };
         // Pass the class so the grant-time copy matches the edge the soul will
         // actually get (casters read the braced-save weak spot, not the strike).
-        const buff = bossIntelBuffFor(effect.bossDefId, effect.tier, next.classId);
+        const buff = bossIntelBuffFor(effect.bossDefId, effect.tier, next);
         effectsApplied.push({
           kind: effect.kind,
           detail: buff ? `${buff.label} — ${buff.description}` : 'edge readied',

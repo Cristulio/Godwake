@@ -30,10 +30,12 @@ export type ClassId = z.infer<typeof ClassIdSchema>;
 
 /**
  * The classes that cast off the shared full-caster spell engine (slot ladder,
- * DC/attack scaling) — the single source for "is this soul a caster?" gating.
- * Read by engine `isFullCaster` and by the content offer pools (camp boons,
- * blessings, boss intel, spell-affix classGate), so adding a caster class here
- * routes every weapon-keyed offer to its spell variant in one move.
+ * DC/attack scaling) — the source for ENGINE casting gates: `isFullCaster`,
+ * casterWeapon handling, the spell-affix classGate. The OFFER pools (camp
+ * boons, blessings, boss intel, event attack bonuses) no longer read it —
+ * they resolve the soul's combat lean per class + subclass instead
+ * (engine/character/combatLean), so a Valor bard keeps weapon offers while
+ * still casting off this list.
  */
 export const FULL_CASTER_CLASS_IDS = ['wizard', 'druid', 'bard'] as const satisfies readonly ClassId[];
 
