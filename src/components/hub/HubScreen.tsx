@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { Panel } from '../ui/Panel';
 import { PlayerPortrait } from '../combat/PlayerPortrait';
 import { useGameStore } from '../../stores/gameStore';
+import { useMetaStore } from '../../stores/metaStore';
 import { getRace } from '../../content/races';
 import { getClass } from '../../content/classes';
 import { playMusic, stopMusic } from '../../engine/audio';
@@ -28,6 +29,7 @@ export function HubScreen() {
   const hasReincarnated = useGameStore((s) => s.hasReincarnated);
   const druidGroveUnlocked = useGameStore((s) => s.druidGroveUnlocked);
   const selectedAscension = useGameStore((s) => s.selectedAscension);
+  const ascensionUnlocked = useGameStore((s) => s.ascensionUnlocked);
   const newGamePlusActive = useGameStore((s) => s.newGamePlusActive);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
   const equippedRelics = useGameStore((s) => s.equippedRelics);
@@ -213,11 +215,41 @@ export function HubScreen() {
           <p className="text-[var(--color-text-secondary)] text-sm mb-4 leading-relaxed">
             {t('hub.descentBody')}
           </p>
-          <Button variant="primary" size="lg" onClick={handleEnterDungeon}>
-            {selectedAscension > 0
-              ? t('hub.descendAscension', { n: selectedAscension })
-              : t('hub.descend')}
-          </Button>
+          <div className="flex items-center gap-4 flex-wrap">
+            <Button variant="primary" size="lg" onClick={handleEnterDungeon}>
+              {selectedAscension > 0
+                ? t('hub.descendAscension', { n: selectedAscension })
+                : t('hub.descend')}
+            </Button>
+            {ascensionUnlocked > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="font-display text-[10px] uppercase tracking-widest text-[var(--color-text-dim)]">
+                  {t('hub.ascensionLabel')}
+                </span>
+                <button
+                  type="button"
+                  className="px-2 py-1 border border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:text-[var(--color-accent-amber)] disabled:opacity-30"
+                  disabled={selectedAscension <= 0}
+                  onClick={() => useMetaStore.getState().setSelectedAscension(selectedAscension - 1)}
+                  aria-label={t('hub.ascensionDown')}
+                >
+                  ◂
+                </button>
+                <span className="font-display text-sm text-[var(--color-accent-amber)] min-w-[1.5ch] text-center">
+                  {selectedAscension}
+                </span>
+                <button
+                  type="button"
+                  className="px-2 py-1 border border-[var(--color-border-warm)] text-[var(--color-text-secondary)] hover:text-[var(--color-accent-amber)] disabled:opacity-30"
+                  disabled={selectedAscension >= ascensionUnlocked}
+                  onClick={() => useMetaStore.getState().setSelectedAscension(selectedAscension + 1)}
+                  aria-label={t('hub.ascensionUp')}
+                >
+                  ▸
+                </button>
+              </div>
+            )}
+          </div>
         </Panel>
         <Panel
           tone={groveUnlocked ? 'glow' : 'default'}
