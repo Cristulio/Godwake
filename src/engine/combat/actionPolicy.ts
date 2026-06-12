@@ -223,6 +223,23 @@ function markIsOnLiveTarget(state: CombatState, live: MonsterCombatant[]): boole
   return live.some((m) => m.id === id);
 }
 
+/**
+ * The standing SOURCE that keeps a room full: a live summoner or sustainer
+ * refills/re-wards chaff faster than chaff dies, so swinging at its spawn is a
+ * treadmill (the owner's Mask-Chamberlain report: auto-battle killed
+ * Mirror-Doubles forever while the chamberlain restocked the hall). Cut the
+ * source first. Lowest-HP among sources, so a nearly-felled source still dies
+ * before a fresh one. Ward gates still outrank this (wardingAddTarget) — a
+ * gated boss's anchor add must fall first.
+ */
+function supportSourceTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
+  const sources = live.filter((m) =>
+    getMonster(m.instance.defId).actions.some((a) => a.kind === 'summon' || a.kind === 'sustain'),
+  );
+  if (sources.length === 0) return undefined;
+  return lowestHpTarget(sources);
+}
+
 /** Focus-fire target: lowest current HP (fastest removal), ties to higher threat. */
 function lowestHpTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
   if (live.length === 0) return undefined;
@@ -470,7 +487,7 @@ export function chooseCombatAction(
   // Gate-aware focus: a boss warded by a live add shrugs off blows until the add
   // dies, so prioritize the warding add as the focus target (drop the ward, then
   // burst the boss). Falls back to ordinary lowest-HP focus-fire when ungated.
-  const primary = wardingAddTarget(live) ?? lowestHpTarget(live);
+  const primary = wardingAddTarget(live) ?? supportSourceTarget(live) ?? lowestHpTarget(live);
   const threat = highestThreatTarget(live);
 
   // === Bonus action: survival + rogue setup ===============================

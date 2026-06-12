@@ -368,3 +368,57 @@ describe('chooseCombatAction — Druid Entangling Roots (bonus action)', () => {
     expect((action as { spellId?: string }).spellId).not.toBe('entangling-roots');
   });
 });
+
+describe('bot targeting — kill the summoner, not its spawn (owner report 2026-06-12)', () => {
+  it('focuses the Mask-Chamberlain over fresher low-HP Mirror-Doubles', async () => {
+    const { chooseCombatAction } = await import('./actionPolicy');
+    const { createCombat } = await import('./createCombat');
+    const { getMonster } = await import('../../content/monsters');
+    const { createDiceRoller } = await import('../dice');
+    const { buildPlayerCharacter, presetCreationInput } = await import(
+      '../character/defaultCharacter'
+    );
+
+    const roller = createDiceRoller('kill-the-source');
+    let fighter = buildPlayerCharacter(presetCreationInput('fighter'));
+    fighter = { ...fighter, level: 12 };
+    const made = createCombat({
+      roller,
+      character: fighter,
+      monsters: [
+        { def: getMonster('mask-chamberlain') },
+        { def: getMonster('mirror-double') },
+        { def: getMonster('mirror-double') },
+      ],
+    });
+    // Wound the doubles so naive lowest-HP focus would eat them first.
+    const state = {
+      ...made.state,
+      combatants: made.state.combatants.map((c) =>
+        c.kind === 'monster' && c.instance.defId === 'mirror-double'
+          ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: 5 } } }
+          : c,
+      ),
+    };
+    // A martial class opens with target-less stance spends — walk the policy
+    // through them; the first TARGETED action is the focus-fire read under test.
+    const { applyPlannedAction } = await import('./actionPolicy');
+    let st = state;
+    let ch = made.character;
+    let targeted: string | undefined;
+    for (let i = 0; i < 5; i++) {
+      const action = chooseCombatAction(st, ch, 'balanced');
+      if ('targetId' in action && typeof action.targetId === 'string') {
+        targeted = action.targetId;
+        break;
+      }
+      if (action.kind === 'end-turn') break;
+      const r = applyPlannedAction({ roller, state: st, character: ch }, action);
+      if (r.state === st && r.character === ch) break;
+      st = r.state;
+      ch = r.character;
+    }
+    const target = st.combatants.find((c) => c.id === targeted);
+    expect(target?.kind === 'monster' && target.instance.defId).toBe('mask-chamberlain');
+  });
+});
