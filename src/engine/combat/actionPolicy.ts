@@ -108,6 +108,11 @@ const CAPSTONE_NUKE_HP = 90;
 /** A boss at/above this HP is worth a 7th-level hard lock (Soul Snare's 3-round
  *  paralyze) over the cheaper Hold Person. */
 const SOUL_SNARE_HP = 70;
+/** Power Word: Kill is worth the lone 9th-level slot only on a target this
+ *  beefy — below it, a damage nuke removes the foe just as surely without
+ *  spending the save-or-die. PROVISIONAL — the end-of-campaign sim batch owns
+ *  the final value. */
+const POWER_WORD_KILL_WORTH_HP = 90;
 
 // ---- Playstyle archetypes --------------------------------------------------
 
@@ -248,6 +253,27 @@ function wardingAddTarget(live: MonsterCombatant[]): MonsterCombatant | undefine
 function highestHpTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
   if (live.length === 0) return undefined;
   return [...live].sort((a, b) => b.instance.hp.current - a.instance.hp.current)[0];
+}
+
+/**
+ * Power Word: Kill quarry — the foe worth speaking the word at. Only non-boss
+ * targets qualify (a boss never dies to it, so aiming there is a waste while
+ * anything else stands) and only ones beefy enough that the save-or-die beats
+ * a damage nuke. Elites first — deleting the leader is the word's whole point —
+ * then the beefiest normal (the kill saves the most incoming turns).
+ */
+function bestPowerWordKillTarget(live: MonsterCombatant[]): MonsterCombatant | undefined {
+  const candidates = live.filter(
+    (m) =>
+      m.instance.rank !== 'boss' &&
+      m.instance.hp.current >= POWER_WORD_KILL_WORTH_HP,
+  );
+  if (candidates.length === 0) return undefined;
+  return [...candidates].sort((a, b) => {
+    const eliteRank = (m: MonsterCombatant): number => (m.instance.rank === 'elite' ? 1 : 0);
+    if (eliteRank(a) !== eliteRank(b)) return eliteRank(b) - eliteRank(a);
+    return b.instance.hp.current - a.instance.hp.current;
+  })[0];
 }
 
 /** True only when every living enemy resists OR is immune to this damage type —
@@ -879,6 +905,18 @@ function chooseWizardAction(
     if (knows(character, 'mirror-image')) return { kind: 'cast', spellId: 'mirror-image' };
   }
 
+  // Power Word: Kill — the save-or-die, spoken FIRST. A qualifying quarry
+  // (elite over normal, never a boss, beefy enough to beat any nuke) is worth
+  // the lone 9th-level slot more than anything else the book can buy: a failed
+  // save deletes the foe outright. The boss-nuke fallback lives in the capstone
+  // block below, behind the proper nukes.
+  if (knows(character, 'power-word-kill') && slotsAt(character, 9) > 0) {
+    const quarry = bestPowerWordKillTarget(live);
+    if (quarry) {
+      return { kind: 'cast', spellId: 'power-word-kill', targetId: quarry.id };
+    }
+  }
+
   // Boss finisher: against a genuinely beefy single threat, reach for the
   // deepest working — but MATCH the slot tier to how big the target really is. A
   // true boss (huge HP) merits the 9th/8th-level capstones (transform, unmake,
@@ -924,6 +962,13 @@ function chooseWizardAction(
       }
       const capstone = bestAffordable(character, CAPSTONE_NUKE_PRIORITY);
       if (capstone) return { kind: 'cast', spellId: capstone, targetId: beefy.id };
+      // Power Word: Kill as a boss nuke — only here, when nothing better
+      // remains at the deep tiers. A boss never dies to the word, so the
+      // proper capstone nukes above always outrank it; but with those spent
+      // the big boss-roll still beats plinking with a mid-tier slot.
+      if (knows(character, 'power-word-kill') && slotsAt(character, 9) > 0) {
+        return { kind: 'cast', spellId: 'power-word-kill', targetId: beefy.id };
+      }
     }
     const nuke = bestAffordable(character, MID_NUKE_PRIORITY);
     if (nuke) return { kind: 'cast', spellId: nuke, targetId: beefy.id };

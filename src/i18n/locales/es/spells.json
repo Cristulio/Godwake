@@ -111,6 +111,10 @@
     "name": "Cambiar de Forma",
     "description": "Tu cuerpo se hincha y se cubre de escamas —te conviertes en un dragón. Durante 5 asaltos ganas 100 puntos de golpe temporales y desgarras con tres ataques de garra por Ataque, cada uno mordiendo como una hoja encantada +3. Aún puedes obrar magia, pero un turno lanzando conjuros es un turno sin garras."
   },
+  "power-word-kill": {
+    "name": "Palabra de Poder: Matar",
+    "description": "Pronuncias la única sílaba a la que la muerte responde. Un enemigo que falla una salvación de Constitución es des-dicho —muerto donde está, por fuerte que sea su cuerpo, incluso los campeones coronados entre ellos. Uno que logra mantenerse entero sufre aun así 10d12 necrótico. Solo los señores de los lugares profundos no pueden ser deshechos por una sola palabra: la Palabra arranca 14d12 a aquel cuya voluntad cede, 7d12 a aquel cuya voluntad resiste."
+  },
   "produce-flame": {
     "name": "Producir Llama",
     "description": "Una llama trémula prende en el cuenco de tu mano y salta hacia un objetivo —d10 de fuego más tu modificador de Sabiduría, y la llama crece más feroz conforme tú lo haces. Una salvación de Destreza reduce la quemadura a la mitad. La luz nunca te deja sin antorcha."
