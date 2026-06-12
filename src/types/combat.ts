@@ -330,7 +330,11 @@ export type SpellEffectKind =
   | 'stun-burst' // Stunning Strike lands — palm flash + dizzy star spin
   | 'knockdown-burst' // martial DISRUPT lands — slam wedge + ground dust topple
   // === bard-redesign === the Song engine's beat.
-  | 'song-pulse'; // a bard Song starts/pulses — sound-ring + rising note glyphs on the player
+  | 'song-pulse' // a bard Song starts/pulses — sound-ring + rising note glyphs on the player
+  // === claw-vfx === shapeshift natural weapons (wild-shape beast/dire ladder +
+  // the wizard's Shape Change dragon).
+  | 'claw-rake' // three parallel tear-lines rip across the target — rend, not steel
+  | 'dragon-rake'; // the same rake grown heavy: sword-length talons + gouge flash
 
 /** Alias spelling out that the union is the canonical combat-VFX kind set. */
 export type CombatVfxKind = SpellEffectKind;

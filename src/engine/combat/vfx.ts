@@ -60,11 +60,16 @@ const WEAPON_VFX_BY_ID: Record<string, SpellEffectKind> = {
   'monk-war-staff': 'caster-bonk',
   'archmagi-wand': 'caster-bonk',
   'war-lute': 'caster-bonk',
-  // KNOWN GAP — shapeshift natural weapons (beast-claws*/dire-claws*/
-  // dragon-claws): no claw kind exists in SpellEffectKind yet, so they fall
-  // through to the generic sword 'slash' below. A claw rake identity (three
-  // parallel tear-lines) is a future VFX-lane build; map the claw ids here
-  // once it lands.
+  // Shapeshift natural weapons — the rending claw rake (three parallel
+  // tear-lines), not a steel slash. The dragon's swing is the same language
+  // grown heavy: sword-length talons and a gouge flash where the rake bites.
+  'beast-claws': 'claw-rake',
+  'beast-claws-elder': 'claw-rake',
+  'beast-claws-primal': 'claw-rake',
+  'dire-claws': 'claw-rake',
+  'dire-claws-savage': 'claw-rake',
+  'dire-claws-apex': 'claw-rake',
+  'dragon-claws': 'dragon-rake',
 };
 
 /**

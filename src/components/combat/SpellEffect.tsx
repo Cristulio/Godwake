@@ -24,6 +24,7 @@ import {
   CasterBonkEffect,
   StunBurstEffect,
   KnockdownBurstEffect,
+  ClawRakeEffect,
 } from './SlashEffect';
 
 interface Anchor {
@@ -163,6 +164,11 @@ export function SpellEffect({ kind, origin, target, element, onDone }: SpellEffe
       return <StunBurstEffect origin={origin} target={target} onDone={onDone} />;
     case 'knockdown-burst':
       return <KnockdownBurstEffect origin={origin} target={target} onDone={onDone} />;
+    // === claw-vfx === shapeshift natural weapons.
+    case 'claw-rake':
+      return <ClawRakeEffect origin={origin} target={target} onDone={onDone} />;
+    case 'dragon-rake':
+      return <ClawRakeEffect origin={origin} target={target} heavy onDone={onDone} />;
     // --- class-ability kinds (feat/vfx-combat) ---
     case 'rage':
       return <RageEffect origin={origin} onDone={onDone} />;

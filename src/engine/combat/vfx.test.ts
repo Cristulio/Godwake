@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { weaponVfxKind } from './vfx';
+import { swingSfxForWeapon } from '../audio';
 import { getItem } from '../../content/items';
 import type { Weapon } from '../../schemas/item';
 import { buildPlayerCharacter, presetCreationInput } from '../character/defaultCharacter';
@@ -95,6 +96,15 @@ describe('weaponVfxKind — per-weapon-TYPE identities (animations-revamp)', () 
     expectKind('monk-war-staff', 'caster-bonk');
     expectKind('archmagi-wand', 'caster-bonk');
     expectKind('war-lute', 'caster-bonk');
+    // Shapeshift natural weapons rake — every wild-shape tier, and the
+    // dragon's heavier read.
+    expectKind('beast-claws', 'claw-rake');
+    expectKind('beast-claws-elder', 'claw-rake');
+    expectKind('beast-claws-primal', 'claw-rake');
+    expectKind('dire-claws', 'claw-rake');
+    expectKind('dire-claws-savage', 'claw-rake');
+    expectKind('dire-claws-apex', 'claw-rake');
+    expectKind('dragon-claws', 'dragon-rake');
   });
 
   it('ranged ammunition weapons fire the bow-shot', () => {
@@ -181,6 +191,46 @@ describe('monk VFX wiring (animations-revamp)', () => {
     const m = r.state.combatants.find((c) => c.id === targetId) as MonsterCombatant;
     expect(m.instance.staggeredTurns ?? 0).toBe(0);
     expect(r.state.spellEffectEvent?.kind).toBe('unarmed');
+  });
+});
+
+describe('claw VFX wiring (claw-vfx)', () => {
+  it('a landed claw hit emits the rake, not the sword slash', () => {
+    const druid: Character = {
+      ...buildPlayerCharacter(presetCreationInput('druid')),
+      level: 2,
+    };
+    const roller = scriptRoller([18]);
+    const init = createCombat({ roller, character: druid, monsters: [{ def: getMonster('goblin') }] });
+    const targetId = monsterOf(init.state).id;
+    const r = playerAttack({ roller, character: init.character, state: init.state }, targetId, 'beast-claws');
+    expect(r.state.spellEffectEvent?.kind).toBe('claw-rake');
+  });
+
+  it('dragon claws emit the heavy rake', () => {
+    const wizard: Character = {
+      ...buildPlayerCharacter(presetCreationInput('wizard')),
+      level: 17,
+    };
+    const roller = scriptRoller([18]);
+    const init = createCombat({ roller, character: wizard, monsters: [{ def: getMonster('goblin') }] });
+    const targetId = monsterOf(init.state).id;
+    const r = playerAttack({ roller, character: init.character, state: init.state }, targetId, 'dragon-claws');
+    expect(r.state.spellEffectEvent?.kind).toBe('dragon-rake');
+  });
+
+  it('every claw tier swings the blade whoosh, never the dagger flick', () => {
+    for (const id of [
+      'beast-claws',
+      'beast-claws-elder',
+      'beast-claws-primal',
+      'dire-claws',
+      'dire-claws-savage',
+      'dire-claws-apex',
+      'dragon-claws',
+    ]) {
+      expect(swingSfxForWeapon(weapon(id)), id).toBe('swing_whoosh_blade');
+    }
   });
 });
 
