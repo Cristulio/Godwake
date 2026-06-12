@@ -21,7 +21,14 @@ import { tickPlayerConditions } from './playerConditions';
 import { refreshMonsterIntents } from './attack/monsterIntent';
 import type { ConditionName } from '../../types/conditions';
 import { characterAffixMods } from '../items/affixMods';
-import { evaluateCombatEnd } from './attack/damage';
+import { applyDamage, evaluateCombatEnd } from './attack/damage';
+import {
+  bardActiveSongs,
+  bardReelActive,
+  bardSpitePulseDamage,
+  bardWarSongTempHp,
+} from './bard';
+import { attachCombatVfx } from './vfx';
 import { ragedHealAmount } from '../character/derived';
 import { isRageUnlimited } from '../character/actions';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
@@ -567,6 +574,16 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     nextCharacter = beastEnded.character;
   }
 
+  // Bard: the playing Song pulses at the start of the player's turn — Spite
+  // gnaws every foe, the Valor war-song girds with temp HP, the Reel quickens
+  // the next strike. Sits with the other turn-start ticks so the music keeps
+  // the same clock as rage, regen and the DOTs.
+  if (order[nextIndex] === 'player' && nextState.status === 'active') {
+    const pulsed = applyBardSongPulse(nextState, nextCharacter);
+    nextState = pulsed.state;
+    nextCharacter = pulsed.character;
+  }
+
   // enemy-telegraph: re-select every monster's intent at the top of the
   // player's turn, against the post-housekeeping state, so the badge reflects
   // exactly what the player is now deciding against.
@@ -575,6 +592,69 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
   }
 
   return combatResult(nextState, nextCharacter);
+}
+
+/**
+ * The Bard's song pulse — the automatic per-round beat of whatever music is
+ * playing. Song of Spite bites every living enemy for a flat psychic chip
+ * (through boss wards via applyDamage, like any other damage); the Valor
+ * war-song girds the bard with temp HP (larger-pool rule, never stacks); the
+ * Quickstep Reel hands the bard advantage on its next strike. Steel and the
+ * Dirge are passives read at the point of impact, so they pulse nothing here.
+ * Shared by endTurn (every player turn start) and createCombat (the hero's
+ * turn-0, which never travels through endTurn) — the cursed-ground pattern.
+ * No-op for a silent bard or a non-bard.
+ */
+export function applyBardSongPulse(
+  state: CombatState,
+  character: Readonly<Character>,
+): { state: CombatState; character: Character } {
+  let nextCharacter = character as Character;
+  if (state.status !== 'active' || nextCharacter.hp.current <= 0) {
+    return { state, character: nextCharacter };
+  }
+  const songs = bardActiveSongs(nextCharacter);
+  if (songs.length === 0) return { state, character: nextCharacter };
+
+  let nextState: CombatState = attachCombatVfx(state, 'song-pulse', 'player');
+
+  const spite = bardSpitePulseDamage(nextCharacter);
+  if (spite > 0) {
+    let bitten = 0;
+    for (const combatant of nextState.combatants) {
+      if (combatant.kind !== 'monster' || combatant.instance.hp.current <= 0) continue;
+      const damaged = applyDamage(nextState, combatant.id, spite, nextCharacter);
+      nextState = damaged.state;
+      nextCharacter = damaged.character;
+      bitten += 1;
+    }
+    if (bitten > 0) {
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'damage',
+        text: t('combat.log.songSpitePulse', { n: spite }),
+      });
+    }
+    const ended = evaluateCombatEnd(nextState, nextCharacter);
+    nextState = ended.state;
+    nextCharacter = ended.character;
+  }
+
+  const tempGrant = bardWarSongTempHp(nextCharacter);
+  if (tempGrant > nextCharacter.hp.temp && nextCharacter.hp.current > 0) {
+    nextCharacter = patchHp(nextCharacter, { temp: tempGrant });
+    nextState = appendLog(nextState, {
+      id: nextState.log.length + 1,
+      kind: 'system',
+      text: t('combat.log.songWarTempHp', { name: nextCharacter.name, n: tempGrant }),
+    });
+  }
+
+  if (bardReelActive(nextCharacter) && nextCharacter.nextAttackAdvantage !== true) {
+    nextCharacter = { ...nextCharacter, nextAttackAdvantage: true };
+  }
+
+  return { state: nextState, character: nextCharacter };
 }
 
 /**

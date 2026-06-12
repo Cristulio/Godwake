@@ -24,14 +24,14 @@ export const BARD: Class = ClassSchema.parse({
         id: 'spellcasting',
         name: 'Spellcasting',
         description:
-          'You weave magic through music and the spoken word, keyed to your Charisma — a College repertoire of control, mind-rending sound, and a little self-mending, drawn through a small pool of slots. Vicious Mockery answers at will, a withering insult that lances psychic damage and rattles its mark. A long rest refills the well.',
+          'You weave magic through music and the spoken word, keyed to your Charisma — a College repertoire of control, mind-rending sound, and a little self-mending, drawn through a small pool of slots. Vicious Mockery answers at will: a withering insult that lances psychic damage, rattles its mark, and grows crueller with you — more dice as the campaigns deepen, and sharper still while your music plays. A long rest refills the well.',
         mechanicKey: 'spellcasting',
       },
       {
         id: 'bardic-inspiration',
-        name: 'Bardic Inspiration',
+        name: 'Battle Songs',
         description:
-          'A pool of inspiration dice — Charisma-many, refreshed each fight — you spend on your OWN rolls. A bonus action banks a die onto your next attack roll (it grows d6 → d8 → d10 → d12 as you do), the lift that lands your War Lute or blade. The College reshapes how the die is spent: Valor pours it into weapon damage, Lore spends it to unmake an enemy’s strike.',
+          'You are never not performing. From your first breath in the fight one Song is always playing — an aura that beats out its power on its own, every round, no urging needed. Turning the music to a different Song is a bonus action and spends one die of your inspiration well (Charisma-many, refreshed each fight; the die itself grows d6 → d8 → d10 → d12 as you do, and every Song rings louder with it). Two tunes open the book: the SONG OF SPITE, a jeering air that gnaws every foe with psychic hurt each round — and the SONG OF STEEL, a fortifying march that dulls every blow that lands on you.',
         mechanicKey: 'bardic-inspiration',
       },
     ],
@@ -58,7 +58,16 @@ export const BARD: Class = ClassSchema.parse({
         id: 'font-of-inspiration',
         name: 'Font of Inspiration',
         description:
-          'The well runs deeper and the dice ring louder — your Bardic Inspiration die grows to a d8. The lift you lend your own rolls bites harder from here on.',
+          'The well runs deeper and the music rings louder — your song die grows to a d8. Every Song pulses harder for it, and your Vicious Mockery gains a second barb.',
+      },
+    ],
+    '6': [
+      {
+        id: 'leaden-dirge',
+        name: 'The Leaden Dirge',
+        description:
+          'A third Song joins the book: a dragging, grave-slow march that hangs on enemy limbs like wet rope. While the Dirge plays, every blade raised against you swings heavy and late — their attack rolls suffer for it. Play it when the foes that remain hit hardest.',
+        mechanicKey: 'leaden-dirge',
       },
     ],
     '8': [
@@ -75,7 +84,7 @@ export const BARD: Class = ClassSchema.parse({
         id: 'magical-secrets',
         name: 'Magical Secrets',
         description:
-          'You steal the deeper workings of the wider art — the repertoire opens past the College’s own, and your Bardic Inspiration die grows to a d10. The bard who borrows everything answers anything.',
+          'You steal the deeper workings of the wider art — the repertoire opens past the College’s own, and your song die grows to a d10. The bard who borrows everything answers anything.',
       },
     ],
     '12': [
@@ -86,13 +95,20 @@ export const BARD: Class = ClassSchema.parse({
           'You can increase one ability score by 2, or two ability scores by 1 each.',
         mechanicKey: 'asi',
       },
+      {
+        id: 'quickstep-reel',
+        name: 'The Quickstep Reel',
+        description:
+          'A fourth Song joins the book: a whirling reel that puts lightning in your heels. Each round it plays, your first strike comes quickened — the blow rolls with advantage, faster than any guard can settle.',
+        mechanicKey: 'quickstep-reel',
+      },
     ],
     '15': [
       {
         id: 'superior-inspiration',
         name: 'Superior Inspiration',
         description:
-          'The song never runs dry at the worst moment — your Bardic Inspiration die grows to a d12, the loudest the well rings.',
+          'The song never runs dry at the worst moment — your song die grows to a d12, the loudest the music rings. Every aura you play beats at its full depth now.',
       },
     ],
     '16': [
@@ -118,7 +134,7 @@ export const BARD: Class = ClassSchema.parse({
         id: 'peerless-performer',
         name: 'Peerless Performer',
         description:
-          'You are the song entire — the inspiration well runs two dice deeper than ever, an endless reserve of lift to spend on your own art. The capstone of the College’s long road.',
+          'You are the song entire — the inspiration well runs two dice deeper than ever, an endless reserve to turn the music and cut the blows that dare interrupt it. The capstone of the College’s long road.',
         mechanicKey: 'peerless-performer',
       },
     ],
@@ -138,31 +154,31 @@ export const BARD: Class = ClassSchema.parse({
       id: 'lore',
       name: 'College of Lore',
       description:
-        'The true caster — a bard who turns the whole fight with word and working. Best with caster gear (the War Lute, a spell-focus orb, spell-DC affixes); leans on Cutting Words to keep the squishy support standing.',
+        'The true caster — a bard whose music amplifies the working. Best with caster gear (the War Lute, a spell-focus orb, spell-DC affixes); the playing Song hardens every curse and sharpens every nuke, and Cutting Words keeps the squishy support standing.',
       featuresByLevel: {
         '3': [
           {
             id: 'cutting-words',
             name: 'Bard College: College of Lore',
             description:
-              'You learn to lance the gap in a foe’s confidence at the worst instant for it. When an enemy’s blow would land, spend a Bardic Inspiration die as a reaction to subtract it from the attack — enough, and the strike whistles past. The squishy caster’s guard, paid for from the same well it inspires with.',
+              'You learn to lance the gap in a foe’s confidence at the worst instant for it. When an enemy’s blow would land, spend a Bardic Inspiration die as a reaction to subtract it from the attack — enough, and the strike whistles past. The squishy caster’s guard, paid for from the same well that turns the music.',
             mechanicKey: 'cutting-words',
           },
           {
-            id: 'lore-savant',
-            name: 'Lore Savant',
+            id: 'resonant-lore',
+            name: 'Resonant Lore',
             description:
-              'Your command of the lyric craft hardens every binding and curse — the save DC of your workings rises by 1. Hold Person, Power Word, Vicious Mockery: all that bit harder to shrug.',
-            mechanicKey: 'lore-savant',
+              'Your workings ride the music. While a Song plays — and yours never stops — the save DC of your craft rises by 1 and every spell strikes harder, the song-die’s depth poured into each working. Hold Person, Vicious Mockery, the focused nukes: all of it bites crueller set to music.',
+            mechanicKey: 'resonant-lore',
           },
         ],
         '10': [
           {
-            id: 'peerless-skill',
-            name: 'Peerless Skill',
+            id: 'the-duet',
+            name: 'The Duet',
             description:
-              'Additional Magical Secrets, and a well that never empties when it counts — your inspiration pool runs one die deeper, more Cutting Words to turn aside, more lift to spend on your own strikes.',
-            mechanicKey: 'peerless-skill',
+              'The music deepens until one throat cannot hold it — TWO Songs play at once now, their auras layered (steel under spite, the dirge under either). The inspiration well also runs one die deeper, more music to turn and more Cutting Words to spend.',
+            mechanicKey: 'the-duet',
           },
         ],
       },
@@ -171,7 +187,7 @@ export const BARD: Class = ClassSchema.parse({
       id: 'valor',
       name: 'College of Valor',
       description:
-        'The true martial — a bard who fights in the front rank and sings between the blows. Best with weapon gear (a rapier or finer martial arm, medium armour); pours Bardic Inspiration into damage and swings twice from L6.',
+        'The true martial — a bard who fights in the front rank and lets the music drive the blade. Best with weapon gear (a rapier or finer martial arm, medium armour); every swing under a playing Song carries the song die, the war-song girds you round on round, and you swing twice from L6.',
       featuresByLevel: {
         '3': [
           {
@@ -182,11 +198,11 @@ export const BARD: Class = ClassSchema.parse({
             mechanicKey: 'martial-training',
           },
           {
-            id: 'combat-inspiration',
-            name: 'Combat Inspiration',
+            id: 'war-song',
+            name: 'The War-Song',
             description:
-              'Your inspiration no longer steadies the aim — it drives the blow. A banked Bardic Inspiration die pours into your weapon hit’s DAMAGE instead of the attack roll, the war-song made edge.',
-            mechanicKey: 'combat-inspiration',
+              'In your hands every tune is a war-song. While any Song plays, each weapon blow you land carries the song die as extra hurt — no banking, no thought, the music IS the edge. And the war-song guards its singer: every round it pulses fresh temporary vigor into you, the staying power the front rank demands.',
+            mechanicKey: 'war-song',
           },
         ],
         '6': [
@@ -203,7 +219,7 @@ export const BARD: Class = ClassSchema.parse({
             id: 'combat-superiority',
             name: 'Battle Magic',
             description:
-              'Hardened in the front rank, your war-song runs deeper — the inspiration pool gains a die, more Combat Inspiration to drive into every swing.',
+              'Hardened in the front rank, your war-song runs deeper — the inspiration well gains a die, more music to turn as the tide demands.',
             mechanicKey: 'combat-superiority',
           },
         ],

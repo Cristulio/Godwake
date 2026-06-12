@@ -45,6 +45,17 @@ export interface EquipmentSlots {
 /** A castable spell-slot tier. Cantrips (level 0) cost no slot. */
 export type SpellSlotLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
+/**
+ * The Bard's battle songs — the always-playing auras that pulse each round.
+ * Spite and Steel open at L1; the Dirge and the Reel join the book on the
+ * level curve (gated by their class-feature mechanics).
+ */
+export type BardSongId =
+  | 'song-of-spite'
+  | 'song-of-steel'
+  | 'leaden-dirge'
+  | 'quickstep-reel';
+
 /** Wizard spell slots by level. Missing entries treated as 0. */
 export interface SpellSlots {
   1?: number;
@@ -454,13 +465,13 @@ export interface Character {
    */
   stunningStrikeActive?: boolean;
   /**
-   * Bard Bardic Inspiration stance. Set true when the Bard spends an inspiration
-   * die (bonus action): the die is rolled and applied to the next attack roll
-   * (core/Lore) or, for a Valor bard with Combat Inspiration, to the next weapon
-   * hit's DAMAGE (resolved + cleared in playerAttack). A banked die persists
-   * until spent; cleared on combat start.
+   * Bard Songs currently playing (the always-on performance). Seeded at combat
+   * start (createCombat keeps the carried tune or strikes up Song of Spite) and
+   * re-pointed by startBardSong (bonus action + 1 inspiration die). One song at
+   * a time; the Lore college's L10 Duet holds two. Persists between fights —
+   * the bard is never not performing — and is ignored for non-bards.
    */
-  inspirationActive?: boolean;
+  activeSongIds?: BardSongId[];
   /**
    * Paladin Divine Smite stance. Set true when the Paladin arms a smite (a free
    * declaration): the next weapon hit that connects spends the cheapest spell

@@ -13,6 +13,7 @@ import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
 import { useMetaStore } from '../../../stores/metaStore';
 import { wearsHeavierThanLight } from '../../character/equip';
 import { paladinAuraDamageReduction } from '../paladin';
+import { bardSteelReduction } from '../bard';
 import { t } from '../../../i18n';
 
 const UNCANNY_DODGE_LEVEL = 5;
@@ -116,6 +117,20 @@ export function applyDamage(
   const auraReduction = paladinAuraDamageReduction(nextCharacter);
   if (auraReduction > 0 && workingAmount > 0) {
     workingAmount = Math.max(0, workingAmount - auraReduction);
+  }
+  // Bard — Song of Steel: while the fortifying march plays, every incoming blow
+  // is dulled by a flat amount (the answer to "mobs destroy me", L1, both
+  // colleges). Logged per blow, unlike the silent paladin aura — hearing the
+  // music work IS the redesign's point. Never below zero.
+  const steelReduction = bardSteelReduction(nextCharacter);
+  if (steelReduction > 0 && workingAmount > 0) {
+    const dulled = Math.max(0, workingAmount - steelReduction);
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: t('combat.log.songSteelDull', { n: workingAmount - dulled }),
+    });
+    workingAmount = dulled;
   }
   // Rogue Evasion (L10+): a boss's CHARGED special is telegraphed a full turn
   // ahead — the rogue reads the wind-up and rolls clear, taking only half. Fires

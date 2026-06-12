@@ -716,11 +716,11 @@
   },
   "bard.spellcasting": {
     "name": "Lanzamiento de Conjuros",
-    "description": "Tejes magia con música y palabra, ligada a tu Carisma: un repertorio de Colegio de control, sonido que rasga la mente y un poco de cura propia, sacado de un puñado de espacios. La Burla Cruel responde a voluntad, un insulto mordaz que clava daño psíquico y desconcierta a su objetivo. Un descanso largo rellena el pozo."
+    "description": "Tejes magia con música y palabra, ligada a tu Carisma: un repertorio de Colegio de control, sonido que rasga la mente y un poco de remiendo propio, canalizado por una pequeña reserva de espacios. La Burla Dañina responde a voluntad: un insulto fulminante que lancea daño psíquico, sacude a su blanco y se vuelve más cruel contigo — más dados cuanto más hondo llega la campaña, y más afilada aún mientras tu música suena. Un descanso largo rellena el pozo."
   },
   "bard.bardic-inspiration": {
-    "name": "Inspiración Bárdica",
-    "description": "Un puñado de dados de inspiración —tantos como tu modificador de Carisma, renovados en cada combate— que gastas en TUS propias tiradas. Una acción adicional guarda un dado para tu próxima tirada de ataque (crece d6 → d8 → d10 → d12 contigo), el empujón que hace conectar tu Laúd de Guerra o tu hoja. El Colegio reescribe cómo se gasta: Valor lo vuelca en daño de arma, Saber lo gasta en deshacer el golpe de un enemigo."
+    "name": "Canciones de Batalla",
+    "description": "Nunca dejas de tocar. Desde tu primer aliento en la lucha siempre suena una Canción: un aura que late su poder por sí sola, cada ronda, sin que nadie la empuje. Cambiar la música a otra Canción es una acción adicional y gasta un dado de tu pozo de inspiración (tantos como tu Carisma, renovados en cada lucha; el dado mismo crece d6 → d8 → d10 → d12 contigo, y cada Canción suena más fuerte con él). Dos melodías abren el libro: la CANCIÓN DEL DESDÉN, un aire burlón que roe a cada enemigo con daño psíquico ronda a ronda — y la CANCIÓN DEL ACERO, una marcha fortificante que amortigua cada golpe que te alcanza."
   },
   "bard.jack-of-all-trades": {
     "name": "Versátil",
@@ -732,7 +732,7 @@
   },
   "bard.font-of-inspiration": {
     "name": "Fuente de Inspiración",
-    "description": "El pozo corre más hondo y los dados suenan más fuerte: tu dado de Inspiración Bárdica crece a un d8. El empujón que prestas a tus propias tiradas muerde más fuerte desde aquí."
+    "description": "El pozo corre más hondo y la música suena más fuerte: tu dado de canción crece a un d8. Cada Canción late con más fuerza, y tu Burla Dañina gana una segunda púa."
   },
   "bard.asi-8": {
     "name": "Mejora de Puntuación de Característica",
@@ -740,7 +740,7 @@
   },
   "bard.magical-secrets": {
     "name": "Secretos Mágicos",
-    "description": "Robas las obras más profundas del arte ajeno: el repertorio se abre más allá del propio Colegio, y tu dado de Inspiración Bárdica crece a un d10. El bardo que lo toma todo prestado responde a todo."
+    "description": "Robas las obras más profundas del arte ajeno: el repertorio se abre más allá del propio Colegio, y tu dado de canción crece a un d10. El bardo que todo lo toma prestado a todo responde."
   },
   "bard.asi-12": {
     "name": "Mejora de Puntuación de Característica",
@@ -748,7 +748,7 @@
   },
   "bard.superior-inspiration": {
     "name": "Inspiración Superior",
-    "description": "La canción nunca se agota en el peor momento: tu dado de Inspiración Bárdica crece a un d12, lo más alto que suena el pozo."
+    "description": "La canción nunca se agota en el peor momento: tu dado de canción crece a un d12, lo más alto que suena la música. Cada aura que tocas late ahora a toda su hondura."
   },
   "bard.asi-16": {
     "name": "Mejora de Puntuación de Característica",
@@ -760,35 +760,23 @@
   },
   "bard.peerless-performer": {
     "name": "Intérprete sin Igual",
-    "description": "Eres la canción entera: el pozo de inspiración corre dos dados más hondo que nunca, una reserva inagotable que gastar en tu propio arte. La cúspide del largo camino del Colegio."
+    "description": "Eres la canción entera: el pozo de inspiración corre dos dados más hondo que nunca, una reserva inagotable para cambiar la música y cortar los golpes que osen interrumpirla. La cima del largo camino del Colegio."
   },
   "bard.lore": {
     "name": "Colegio del Saber",
-    "description": "El verdadero lanzador: un bardo que vuelca el combate entero con palabra y conjuro. Mejor con equipo de lanzador (el Laúd de Guerra, un orbe de foco, afijos de CD de conjuro); se apoya en Palabras Cortantes para mantener en pie al frágil apoyo."
+    "description": "El verdadero lanzador: un bardo cuya música amplifica la obra. Mejor con equipo de lanzador (el Laúd de Guerra, un orbe de foco, afijos de CD de conjuro); la Canción que suena endurece cada maldición y afila cada estallido, y las Palabras Cortantes mantienen en pie al frágil apoyo."
   },
   "bard.lore.cutting-words": {
     "name": "Colegio de Bardo: Colegio del Saber",
-    "description": "Aprendes a clavar la grieta en la seguridad de un enemigo en el peor instante para él. Cuando un golpe enemigo fuera a conectar, gasta un dado de Inspiración Bárdica como reacción para restarlo del ataque: con suficiente, el golpe silba en el aire. La guardia del frágil lanzador, pagada del mismo pozo con el que inspira."
-  },
-  "bard.lore.lore-savant": {
-    "name": "Erudito del Saber",
-    "description": "Tu dominio de la lírica endurece toda atadura y maldición: la CD de salvación de tus conjuros sube en 1. Inmovilizar Persona, Palabra de Poder, Burla Cruel: todo eso cuesta más sacudirse."
-  },
-  "bard.lore.peerless-skill": {
-    "name": "Habilidad sin Par",
-    "description": "Secretos Mágicos Adicionales, y un pozo que no se vacía cuando importa: tu reserva de inspiración corre un dado más hondo, más Palabras Cortantes que desviar, más empuje que gastar en tus propios golpes."
+    "description": "Aprendes a clavar la grieta en la seguridad de un enemigo en el peor instante para él. Cuando un golpe enemigo fuera a conectar, gasta un dado de Inspiración Bárdica como reacción para restarlo del ataque — si basta, el golpe pasa silbando de largo. La guardia del lanzador frágil, pagada del mismo pozo que cambia la música."
   },
   "bard.valor": {
     "name": "Colegio del Valor",
-    "description": "El verdadero marcial: un bardo que pelea en primera línea y canta entre los golpes. Mejor con equipo de arma (un estoque o mejor arma marcial, armadura intermedia); vuelca la Inspiración Bárdica en daño y golpea dos veces desde nivel 6."
+    "description": "El verdadero marcial: un bardo que pelea en primera línea y deja que la música empuje la hoja. Mejor con equipo de arma (un estoque o un arma marcial más fina, armadura intermedia); cada golpe bajo una Canción lleva el dado de canción, el canto de guerra te protege ronda a ronda, y golpeas dos veces desde el nivel 6."
   },
   "bard.valor.martial-training": {
     "name": "Colegio de Bardo: Colegio del Valor",
     "description": "El entrenamiento del escaldo de guerra: tomas armadura intermedia, escudos y el arsenal marcial completo, el equipo de primera línea del que prescinde el bardo lanzador. Ahora entras en lo peor, no lo rodeas."
-  },
-  "bard.valor.combat-inspiration": {
-    "name": "Inspiración de Combate",
-    "description": "Tu inspiración ya no asienta la puntería: impulsa el golpe. Un dado de Inspiración Bárdica guardado se vuelca en el DAÑO de tu impacto de arma en vez de en la tirada de ataque, la canción de guerra hecha filo."
   },
   "bard.valor.extra-attack": {
     "name": "Ataque Adicional",
@@ -796,7 +784,7 @@
   },
   "bard.valor.combat-superiority": {
     "name": "Magia de Batalla",
-    "description": "Curtido en primera línea, tu canción de guerra corre más hondo: la reserva de inspiración gana un dado, más Inspiración de Combate que volcar en cada mandoble."
+    "description": "Curtido en primera línea, tu canto de guerra corre más hondo: el pozo de inspiración gana un dado, más música que cambiar según pida la marea."
   },
   "paladin": {
     "name": "Paladín",
@@ -878,5 +866,25 @@
   "paladin.bulwark.unbreakable-aura": {
     "name": "Aura Inquebrantable",
     "description": "El aura del muro de escudos corre más honda que nunca —sus puntos de golpe protectores se hinchan, y un colchón firme ahora resta algo de cada golpe que aterriza sobre ti. Cuanto más tiempo te sostienes, más difícil eres de derribar."
+  },
+  "bard.leaden-dirge": {
+    "name": "La Endecha de Plomo",
+    "description": "Una tercera Canción se suma al libro: una marcha fúnebre, lenta como la tumba, que cuelga de los miembros enemigos como soga mojada. Mientras la Endecha suena, toda hoja alzada contra ti llega pesada y tardía — sus tiradas de ataque lo sufren. Tócala cuando los enemigos que quedan golpean más fuerte."
+  },
+  "bard.quickstep-reel": {
+    "name": "La Giga Vertiginosa",
+    "description": "Una cuarta Canción se suma al libro: una giga arremolinada que pone relámpagos en tus talones. Cada ronda que suena, tu primer golpe llega acelerado — la tirada va con ventaja, más rápida de lo que guardia alguna puede asentarse."
+  },
+  "bard.lore.resonant-lore": {
+    "name": "Saber Resonante",
+    "description": "Tus obras cabalgan la música. Mientras una Canción suena — y la tuya nunca calla — la CD de salvación de tu arte sube en 1 y cada conjuro golpea más fuerte, la hondura del dado de canción vertida en cada obra. Inmovilizar Persona, la Burla Dañina, los estallidos concentrados: todo muerde más cruel puesto en música."
+  },
+  "bard.lore.the-duet": {
+    "name": "El Dueto",
+    "description": "La música se ahonda hasta que una sola garganta no puede contenerla: ahora suenan DOS Canciones a la vez, sus auras en capas (el acero bajo el desdén, la endecha bajo cualquiera). El pozo de inspiración corre además un dado más hondo: más música que cambiar y más Palabras Cortantes que gastar."
+  },
+  "bard.valor.war-song": {
+    "name": "El Canto de Guerra",
+    "description": "En tus manos toda melodía es un canto de guerra. Mientras suene cualquier Canción, cada golpe de arma que conectas lleva el dado de canción como daño extra — sin guardar nada, sin pensarlo: la música ES el filo. Y el canto de guerra protege a quien lo canta: cada ronda late vigor temporal fresco en ti, el aguante que la primera línea exige."
   }
 }

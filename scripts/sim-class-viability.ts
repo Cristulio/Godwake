@@ -565,7 +565,7 @@ interface ProcCounters {
   patientDefense: number;
   stunningStrike: number;
   /** Bard Bardic Inspiration dice spent (bonus-action self-buff onto attack/damage). */
-  bardicInspiration: number;
+  bardSongSwaps: number;
   /** Paladin Lay on Hands self-heals spent (bonus-action pool spend). */
   layOnHands: number;
   /** Paladin Divine Smites armed (the slot→radiant rider on a weapon hit). */
@@ -601,7 +601,7 @@ function freshProcs(): ProcCounters {
     flurry: 0,
     patientDefense: 0,
     stunningStrike: 0,
-    bardicInspiration: 0,
+    bardSongSwaps: 0,
     layOnHands: 0,
     divineSmite: 0,
     martialOffense: 0,
@@ -658,7 +658,7 @@ function runPlayerTurnInstrumented(
     else if (action.kind === 'flurry-of-blows') pc.flurry += 1;
     else if (action.kind === 'patient-defense') pc.patientDefense += 1;
     else if (action.kind === 'stunning-strike') pc.stunningStrike += 1;
-    else if (action.kind === 'bardic-inspiration') pc.bardicInspiration += 1;
+    else if (action.kind === 'bard-song') pc.bardSongSwaps += 1;
     else if (action.kind === 'lay-on-hands') pc.layOnHands += 1;
     else if (action.kind === 'divine-smite') pc.divineSmite += 1;
     else if (action.kind === 'martial-offense') pc.martialOffense += 1;

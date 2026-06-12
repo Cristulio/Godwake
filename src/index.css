@@ -1447,6 +1447,24 @@ img, svg.pixel {
 }
 .animate-spell-bloom-double { animation: godwake-spell-bloom-double 560ms ease-out forwards; }
 
+/* === bard-redesign === the Song pulse: an expanding sound-ring + note glyphs
+   rising off the performer. Fired on song start/switch and on each round's
+   automatic pulse, so it stays small and quick (the music is constant — the
+   effect must never wear out its welcome). */
+@keyframes godwake-song-ring {
+  0% { opacity: 0; transform: scale(0.25); }
+  25% { opacity: 0.9; }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+.animate-song-ring { animation: godwake-song-ring 680ms ease-out forwards; }
+
+@keyframes godwake-song-note {
+  0% { opacity: 0; transform: translate(0, 6px) scale(0.7) rotate(-6deg); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx, 0px), -42px) scale(1.05) rotate(8deg); }
+}
+.animate-song-note { animation: godwake-song-note 720ms ease-out forwards; }
+
 /* === Reduced motion ===
    Honour prefers-reduced-motion for the combat juice: strip the screen shake,
    hit-stop jolt, knockback/lunge displacement, idle loop, spark travel and the

@@ -83,7 +83,7 @@
     "mark": "marca ({dice})",
     "colossus": "coloso ({dice})",
     "vowReroll": "Repetida del Voto +{n}",
-    "inspiration": "inspiración"
+    "song": "canción"
   },
   "cond": {
     "name": {
@@ -325,13 +325,18 @@
     "readyBuff": "{name} prepara la {label}{gird}.",
     "openingVolley": "{name} suelta una andanada inicial antes de que el enemigo pueda acercarse.",
     "combatBegins": "Comienza el combate.",
-    "bardicInspiration": "{name} toma aire y afianza el próximo golpe — guarda un d{die} de inspiración.",
     "layOnHands": "{name} impone las manos y la luz cierra {amount} PG.",
     "divineSmiteArm": "{name} alza un Castigo Divino — el próximo golpe arderá.",
     "cuttingWords": "{name} corta el golpe con una palabra mordaz (−{n}) — se va desviado.",
     "viciousMockeryCast": "{name} lanza {spell} contra {target}. Salvación de SAB{resolute}: {mod} = {total} contra CD {dc} — {result}.",
     "viciousMockeryDamage": "{target} sufre {dealt} psíquico{halved}.",
-    "viciousMockeryRattle": "{target} queda desconcertado — su próximo golpe se irá perdido."
+    "viciousMockeryRattle": "{target} queda desconcertado — su próximo golpe se irá perdido.",
+    "songStrikeUp": "♪ {name} cambia la música — suena {song}.",
+    "songOpening": "♪ {song} ya está en los labios de {name} cuando empieza la lucha.",
+    "songSpitePulse": "La Canción del Desdén roe — cada enemigo sufre {n} de daño psíquico.",
+    "songSteelDull": "♪ La Canción del Acero amortigua el golpe (−{n}).",
+    "songWarTempHp": "♪ El canto de guerra protege a {name} — {n} PG temporales.",
+    "dirgeDrag": ", arrastrado por la Endecha (−{n})"
   },
   "screen": {
     "encounter": "Encuentro",
@@ -526,11 +531,6 @@
     "tempHpLevel": "+{n} PG temp (nivel {level})",
     "acBane": "+{n} CA ({banes} marca{s} de alma)",
     "soulMarkPlural": "s",
-    "inspiration": "Inspiración (d{die})",
-    "inspirationReady": "Un dado de Inspiración Bárdica para gastar en tus propias tiradas. La reserva se rellena al comenzar cada lucha.",
-    "inspirationSpent": "Gastado — se rellena el próximo combate.",
-    "inspirationBanked": "Hay un dado guardado para tu próxima tirada de ataque (o daño de arma, en Valor).",
-    "inspirationBankedPill": "d{die} listo",
     "layOnHands": "Imposición de Manos",
     "layOnHandsPool": "{n}/{max} PG",
     "layOnHandsTitle": "Tu reserva renovable de gracia sanadora. Gasta un fragmento como acción adicional para cerrar tus propias heridas; se rellena en cada combate.",
@@ -538,7 +538,13 @@
     "smiteArmed": "Armado",
     "smiteIdle": "Inactivo",
     "smiteArmedTitle": "Hay un castigo armado — tu próximo impacto de arma gasta tu espacio de conjuro más bajo en daño radiante. Los espacios son el combustible: vuelven al descansar.",
-    "smiteIdleTitle": "Arma un castigo para abrasar tu próximo impacto con la luz de un espacio de conjuro. El combustible son tus espacios (arriba); descansar los rellena."
+    "smiteIdleTitle": "Arma un castigo para abrasar tu próximo impacto con la luz de un espacio de conjuro. El combustible son tus espacios (arriba); descansar los rellena.",
+    "songWell": "La Canción (d{die})",
+    "songWellReady": "Un dado de inspiración — el pozo que cambia la música y corta los golpes. Se rellena al comenzar cada lucha.",
+    "songWellSpent": "Gastado — se rellena el próximo combate.",
+    "nowPlaying": "♪ {song}",
+    "songSilent": "en silencio",
+    "songSilentTitle": "No suena ninguna canción."
   },
   "bar": {
     "secondWind": "Acción adicional: cura 1d10 + tu nivel. Una vez por combate.",
@@ -562,9 +568,31 @@
     "wildShapeEmpty": "No quedan cambios de Forma Salvaje este combate — se renuevan la próxima lucha.",
     "wildShape": "Acción adicional: muda el cuerpo por la forma de una bestia — gana su vitalidad como PG temporales y desgarra con garras durante varias rondas. Una o dos veces por combate.",
     "spells": "Acción: elige un conjuro preparado.",
-    "inspirationLore": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) para tu próxima tirada de ataque — el empujón que hace conectar el golpe.",
-    "inspirationValor": "Acción adicional: guarda un dado de Inspiración Bárdica (d{die}) en el DAÑO de tu próximo impacto de arma (Inspiración de Combate).",
     "layOnHands": "Acción adicional: vuelca un fragmento de tu reserva renovable de Imposición de Manos en tus propias heridas. Se rellena en cada combate.",
-    "divineSmite": "Gratis: arma un Castigo Divino — tu próximo impacto de arma gasta tu espacio de conjuro más bajo para abrasar al objetivo con daño radiante."
+    "divineSmite": "Gratis: arma un Castigo Divino — tu próximo impacto de arma gasta tu espacio de conjuro más bajo para abrasar al objetivo con daño radiante.",
+    "songPlaying": "Sonando ahora. {desc}",
+    "songSwitch": "Acción adicional + 1 dado de inspiración: cambia la música. {desc}"
+  },
+  "songs": {
+    "song-of-spite": {
+      "name": "Canción del Desdén",
+      "short": "Desdén",
+      "desc": "Un aire burlón: cada enemigo sufre daño psíquico con cada pulso de la música."
+    },
+    "song-of-steel": {
+      "name": "Canción del Acero",
+      "short": "Acero",
+      "desc": "Una marcha fortificante: mientras suena, todo golpe que te alcanza llega amortiguado."
+    },
+    "leaden-dirge": {
+      "name": "la Endecha de Plomo",
+      "short": "Endecha",
+      "desc": "Un arrastre fúnebre: mientras suena, los ataques enemigos llegan pesados y tardíos."
+    },
+    "quickstep-reel": {
+      "name": "la Giga Vertiginosa",
+      "short": "Giga",
+      "desc": "Un torbellino de pasos: tu primer golpe de cada ronda llega acelerado, con ventaja."
+    }
   }
 }

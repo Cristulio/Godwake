@@ -121,11 +121,11 @@
     "spellsBtn": "Conjuros ({n})",
     "item": "Objeto",
     "endTurn": "Terminar Turno",
-    "inspiration": "♪ Inspirar ({n})",
-    "inspirationOn": "♪ Inspirado (d{die})",
     "layOnHands": "✚ Imponer Manos ({n})",
     "divineSmite": "✦ Castigo",
-    "smiteOn": "✦ Castigo ✓"
+    "smiteOn": "✦ Castigo ✓",
+    "song": "{song}",
+    "songOn": "♪ {song}"
   },
   "postmortem": {
     "soulFalls": "El Alma Cae",

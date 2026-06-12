@@ -23,7 +23,7 @@ import {
   spellcastingMod,
 } from '../../character/derived';
 import { beastWeaponId } from '../wildShape';
-import { bardInspirationDieSize, spendsInspirationOnDamage } from '../bard';
+import { bardWarSongDie } from '../bard';
 import { paladinSmiteOnHit } from '../paladin';
 import { rageDamageBonus } from '../../character/actions';
 import {
@@ -112,7 +112,7 @@ const PART_KEY: Record<string, string> = {
   maneuver: 'maneuver',
   Shadowed: 'shadowed',
   Quarry: 'quarry',
-  inspiration: 'inspiration',
+  song: 'song',
 };
 
 function partLabel(label: string): string {
@@ -333,18 +333,6 @@ export function playerAttack(
   if (hideAdvantage) nextCharacter = { ...nextCharacter, nextAttackAdvantage: false };
   if (forceSneak) nextCharacter = { ...nextCharacter, nextAttackForceSneak: false };
   if (nextBonus > 0) nextCharacter = { ...nextCharacter, nextAttackBonus: 0 };
-  // Bard Bardic Inspiration (core / College of Lore): a banked inspiration die
-  // rides this attack roll — the self-buff that helps the War Lute or a finesse
-  // blade land. A Valor bard with Combat Inspiration instead pours the die into
-  // damage (resolved in the hit block below), so its banked die is left for that.
-  if (
-    nextCharacter.inspirationActive === true &&
-    !spendsInspirationOnDamage(nextCharacter)
-  ) {
-    const insp = roller.roll({ count: 1, die: bardInspirationDieSize(nextCharacter), modifier: 0 });
-    attackBonus += insp.total;
-    nextCharacter = { ...nextCharacter, inspirationActive: false };
-  }
   let toHit = roller.d20(advantage, attackBonus);
   // Assassin Mortal Strike (L11): the opening strike of the fight on a full-HP
   // foe is an automatic critical — front-load the kill before it can guard.
@@ -598,18 +586,14 @@ export function playerAttack(
       bonusDamage += shadow;
       onTypeParts.push({ amount: shadow, label: 'shadow' });
     }
-    // Bard Combat Inspiration (College of Valor): a banked inspiration die pours
-    // into the weapon hit's damage instead of the attack roll — the martial fork
-    // of Bardic Inspiration. Rides the first hit of the turn (the flag clears on
-    // application); a clean miss leaves the die banked for the next swing.
-    if (
-      nextCharacter.inspirationActive === true &&
-      spendsInspirationOnDamage(nextCharacter)
-    ) {
-      const insp = roller.roll({ count: 1, die: bardInspirationDieSize(nextCharacter), modifier: 0 });
-      bonusDamage += insp.total;
-      onTypeParts.push({ amount: insp.total, label: 'inspiration' });
-      nextCharacter = { ...nextCharacter, inspirationActive: false };
+    // Bard — the Valor War-Song: while any music plays, EVERY weapon hit carries
+    // the song die as bonus damage, automatically — no banking, no bonus action.
+    // The war-skald's blade keeps time with whatever is playing.
+    const warSongDie = bardWarSongDie(nextCharacter);
+    if (warSongDie !== 0) {
+      const song = roller.roll({ count: 1, die: warSongDie, modifier: 0 });
+      bonusDamage += song.total;
+      onTypeParts.push({ amount: song.total, label: 'song' });
     }
     // Apotheosis: the ascendant caster's every blow bites for far more.
     if (isAscendant(nextCharacter)) {

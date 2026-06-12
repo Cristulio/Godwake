@@ -21,7 +21,8 @@ import {
   type CombatActionResult,
 } from './types';
 import { isPlayerParalyzed } from './holdPerson';
-import { resolvePlayerParalyzedTurn, applyCursedGroundChip } from './turn';
+import { appendLog } from './log';
+import { resolvePlayerParalyzedTurn, applyCursedGroundChip, applyBardSongPulse } from './turn';
 import { refreshMonsterIntents } from './attack/monsterIntent';
 import { playerAttack } from './attack/playerAttack';
 import { wieldsRangedWeapon, wearsHeavierThanLight } from '../character/equip';
@@ -38,7 +39,7 @@ import { bossIntelBuffFor } from '../../content/bossIntel';
 import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
 import { martialPoolMax } from './martialResource';
-import { bardInspirationMax } from './bard';
+import { bardActiveSongs, bardInspirationMax, bardKnownSongs } from './bard';
 import { layOnHandsMax, paladinAuraTempHp } from './paladin';
 
 // MAX_COMBAT_LOG now lives in the leaf log module (breaking the createCombat ⇄
@@ -365,9 +366,16 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   }
 
   // Bard: refill the Bardic Inspiration pool each encounter (mirrors the Monk's
-  // Ki cadence) and clear any banked-but-unspent die from the prior fight.
+  // Ki cadence) and make sure the music is already playing — the carried tune
+  // keeps ringing between fights, a fresh soul opens on Song of Spite. The
+  // opening song is free (only mid-fight switches spend a die): the bard is
+  // never not performing.
   if (nextCharacter.classId === 'bard') {
-    nextCharacter = { ...nextCharacter, inspirationActive: false };
+    const carried = bardActiveSongs(nextCharacter);
+    nextCharacter = {
+      ...nextCharacter,
+      activeSongIds: carried.length > 0 ? carried : bardKnownSongs(nextCharacter).slice(0, 1),
+    };
     nextCharacter = patchResources(nextCharacter, {
       inspirationDiceRemaining: bardInspirationMax(nextCharacter),
     });
@@ -554,6 +562,22 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
       const cursed = applyCursedGroundChip(state, nextCharacter);
       state = cursed.state;
       nextCharacter = cursed.character;
+    }
+
+    // Bard: the carried song is already ringing as the fight opens — pulse it
+    // for turn 0 (the same once-only treatment as the cursed-ground chip).
+    if (state.status === 'active' && bardActiveSongs(nextCharacter).length > 0) {
+      state = appendLog(state, {
+        id: state.log.length + 1,
+        kind: 'narration',
+        text: t('combat.log.songOpening', {
+          name: nextCharacter.name,
+          song: t(`combat.songs.${bardActiveSongs(nextCharacter)[0]}.name`),
+        }),
+      });
+      const pulsed = applyBardSongPulse(state, nextCharacter);
+      state = pulsed.state;
+      nextCharacter = pulsed.character;
     }
 
     // Ranged opening volley: a bow-wielder looses a free shot before the enemy

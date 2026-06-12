@@ -7,29 +7,38 @@ import {
   isFullCaster,
   spellcastingAbility,
   proficiencyBonus,
+  computeAC,
 } from '../character/derived';
 import { abilityModifier } from '../../types/abilities';
 import { isWeaponProficient, isArmorProficient } from '../character/equip';
 import { canCastSpell } from './spells';
-import { spellSaveDC } from './spells/helpers';
+import { spellSaveDC, spellDamageBonus } from './spells/helpers';
 import { wizardSpellSlotsForLevel } from '../character/actions';
-import { computeAC } from '../character/derived';
 import {
   bardInspirationMax,
   bardInspirationDieSize,
   bardInspirationLeft,
-  useBardicInspiration,
-  spendsInspirationOnDamage,
+  bardKnownSongs,
+  bardActiveSongs,
+  bardMaxActiveSongs,
+  bardSongPower,
+  bardSteelReduction,
+  bardDirgePenalty,
+  bardWarSongDie,
+  bardViciousMockeryDice,
+  startBardSong,
 } from './bard';
+import { chooseCombatAction } from './actionPolicy';
 import { classUnlockRenown, isClassUnlocked } from '../progression/unlocks';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack } from './attack/playerAttack';
 import { monsterAttack } from './attack/monsterAttack';
+import { endTurn } from './turn';
 import { castSpell } from './spells';
 import { parseDiceExpression, type DiceRoller } from '../dice';
 import { getItem } from '../../content/items';
 import { getMonster } from '../../content/monsters';
-import type { Character } from '../../types/character';
+import type { BardSongId, Character } from '../../types/character';
 import type { CombatState, MonsterCombatant } from '../../types/combat';
 
 function makeBard(level = 1, subclassId: string | null = null): Character {
@@ -45,6 +54,10 @@ function makeBard(level = 1, subclassId: string | null = null): Character {
   };
 }
 
+function withSongs(c: Character, songs: BardSongId[]): Character {
+  return { ...c, activeSongIds: songs };
+}
+
 function withMainHand(c: Character, itemId: string | null): Character {
   return { ...c, equipped: { ...c.equipped, mainHand: itemId === null ? null : { itemId } } };
 }
@@ -54,7 +67,8 @@ function monsterOf(state: CombatState): MonsterCombatant {
 }
 
 /** A roller whose d20 results are scripted in order; every other die returns its
- *  average. Lets a test force an attack to land/miss deterministically. */
+ *  average (ceil((die+1)/2): d4→3, d6→4, d8→5, d10→6, d12→7). Lets a test force
+ *  an attack or save to land/miss deterministically. */
 function scriptRoller(d20s: number[]): DiceRoller {
   let i = 0;
   const nextD20 = () => (i < d20s.length ? d20s[i++] : 10);
@@ -107,6 +121,8 @@ function scriptRoller(d20s: number[]): DiceRoller {
   };
 }
 
+const AVG = { d4: 3, d6: 4, d8: 5, d10: 6, d12: 7 } as const;
+
 beforeEach(() => {
   _resetMonsterInstanceCounter();
 });
@@ -145,19 +161,19 @@ describe('Bard — unlock gating (deepest slot, 800 renown)', () => {
   });
 });
 
-describe('Bard — Bardic Inspiration resource', () => {
+describe('Bard — the inspiration well (the music\'s fuel)', () => {
   it('pool = CHA mod, deeper at the college L10 + the L20 capstone', () => {
     const l1 = makeBard(1);
     const chaMod = abilityModifier(effectiveAbilityScores(l1).cha);
     expect(bardInspirationMax(l1)).toBe(Math.max(1, chaMod));
-    // College L10 beats (Lore Peerless Skill / Valor Combat Superiority) add one.
+    // College L10 beats (Lore's Duet / Valor Battle Magic) add one.
     expect(bardInspirationMax(makeBard(10, 'lore'))).toBe(Math.max(1, chaMod) + 1);
     expect(bardInspirationMax(makeBard(10, 'valor'))).toBe(Math.max(1, chaMod) + 1);
     // The L20 capstone adds two more on top.
     expect(bardInspirationMax(makeBard(20, 'lore'))).toBe(Math.max(1, chaMod) + 3);
   });
 
-  it('the die grows with level: d6 → d8 → d10 → d12', () => {
+  it('the song die grows with level: d6 → d8 → d10 → d12', () => {
     expect(bardInspirationDieSize(makeBard(1))).toBe(6);
     expect(bardInspirationDieSize(makeBard(5))).toBe(8);
     expect(bardInspirationDieSize(makeBard(10, 'lore'))).toBe(10);
@@ -175,73 +191,200 @@ describe('Bard — Bardic Inspiration resource', () => {
     });
     expect(character.resources.inspirationDiceRemaining).toBe(bardInspirationMax(spent));
   });
+});
 
-  it('the spend banks a die (bonus action) and decrements the pool', () => {
-    const bard = makeBard(1);
-    const before = bardInspirationLeft(bard);
-    const { state } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
-    const { character } = useBardicInspiration({ character: bard, state });
-    expect(character.inspirationActive).toBe(true);
-    expect(bardInspirationLeft(character)).toBe(before - 1);
-    expect(character.actionEconomy.bonusActionUsed).toBe(true);
+describe('Bard — the Song book (known by level)', () => {
+  it('opens with Spite + Steel at L1; the Dirge joins at L6, the Reel at L12', () => {
+    expect(bardKnownSongs(makeBard(1))).toEqual(['song-of-spite', 'song-of-steel']);
+    expect(bardKnownSongs(makeBard(5))).toEqual(['song-of-spite', 'song-of-steel']);
+    expect(bardKnownSongs(makeBard(6))).toContain('leaden-dirge');
+    expect(bardKnownSongs(makeBard(11))).not.toContain('quickstep-reel');
+    expect(bardKnownSongs(makeBard(12))).toContain('quickstep-reel');
   });
 
-  it('a banked inspiration die rides the next attack roll (core / Lore)', () => {
-    const bard = withMainHand(makeBard(1), 'war-lute');
-    const goblinAc = getMonster('goblin').ac;
-    const chaMod = abilityModifier(effectiveAbilityScores(bard).cha);
-    const flatBonus = proficiencyBonus(1) + chaMod;
-    // A natural roll that lands ONLY with the inspiration die (avg 4 on a d6).
-    const nat = goblinAc - flatBonus - 1;
-    const roller = scriptRoller([nat]);
-    const { state } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
-    const inspired: Character = { ...bard, inspirationActive: true };
-    const r = playerAttack({ roller, character: inspired, state }, monsterOf(state).id, 'war-lute');
-    // The die (+4) is folded into the logged attack bonus, and the blow lands.
-    expect(r.state.lastAttack?.attackBonus).toBe(flatBonus + 4);
-    expect(r.state.lastAttack?.hit).toBe(true);
-    expect(r.character.inspirationActive).toBe(false);
+  it('one song plays at a time; the Lore Duet (L10) holds two', () => {
+    expect(bardMaxActiveSongs(makeBard(9, 'lore'))).toBe(1);
+    expect(bardMaxActiveSongs(makeBard(10, 'lore'))).toBe(2);
+    expect(bardMaxActiveSongs(makeBard(10, 'valor'))).toBe(1);
   });
 });
 
-describe('Bard — War Lute (CHA caster-weapon)', () => {
-  it('scales attack + damage off Charisma, not STR/DEX', () => {
-    const bard = withMainHand(makeBard(3), 'war-lute');
-    const chaMod = abilityModifier(effectiveAbilityScores(bard).cha);
-    const roller = scriptRoller([10]);
-    const { state } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
-    const r = playerAttack({ roller, character: bard, state }, monsterOf(state).id, 'war-lute');
-    // CHA-keyed: attack bonus is prof + CHA mod (the War Lute carries no attackMod).
-    expect(r.state.lastAttack?.attackBonus).toBe(proficiencyBonus(3) + chaMod);
+describe('Bard — the music is always playing', () => {
+  it('createCombat strikes up Song of Spite for a fresh bard — free, full pool', () => {
+    const bard = makeBard(1);
+    const { character } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    expect(bardActiveSongs(character)).toEqual(['song-of-spite']);
+    // The opening song costs nothing — the pool reads full.
+    expect(bardInspirationLeft(character)).toBe(bardInspirationMax(bard));
   });
 
-  it('is War Lute, finesse blades, and a hand crossbow — proficient for the bard', () => {
+  it('the carried tune keeps ringing into the next fight', () => {
+    const bard = withSongs(makeBard(3), ['song-of-steel']);
+    const { character } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    expect(bardActiveSongs(character)).toEqual(['song-of-steel']);
+  });
+
+  it('a stale unknown song is dropped and the default takes over', () => {
+    const bard = withSongs(makeBard(1), ['leaden-dirge']); // not known at L1
+    const { character } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    expect(bardActiveSongs(character)).toEqual(['song-of-spite']);
+  });
+});
+
+describe('Bard — switching songs (bonus action + 1 die)', () => {
+  it('the switch spends the bonus action and one inspiration die, and replaces the tune', () => {
+    const setup = createCombat({ character: makeBard(1), monsters: [{ def: getMonster('goblin') }] });
+    const before = bardInspirationLeft(setup.character);
+    const r = startBardSong({ character: setup.character, state: setup.state }, 'song-of-steel');
+    expect(bardActiveSongs(r.character)).toEqual(['song-of-steel']);
+    expect(bardInspirationLeft(r.character)).toBe(before - 1);
+    expect(r.character.actionEconomy.bonusActionUsed).toBe(true);
+  });
+
+  it('refused when the song already plays, the well is dry, the bonus is spent, or the song is unlearned', () => {
+    const setup = createCombat({ character: makeBard(1), monsters: [{ def: getMonster('goblin') }] });
+    // Already playing.
+    const same = startBardSong({ character: setup.character, state: setup.state }, 'song-of-spite');
+    expect(same.character).toBe(setup.character);
+    // Dry well.
+    const dry: Character = {
+      ...setup.character,
+      resources: { ...setup.character.resources, inspirationDiceRemaining: 0 },
+    };
+    expect(startBardSong({ character: dry, state: setup.state }, 'song-of-steel').character).toBe(dry);
+    // Bonus action spent.
+    const spent: Character = {
+      ...setup.character,
+      actionEconomy: { ...setup.character.actionEconomy, bonusActionUsed: true },
+    };
+    expect(startBardSong({ character: spent, state: setup.state }, 'song-of-steel').character).toBe(spent);
+    // Unlearned (the Dirge needs L6).
+    const early = startBardSong({ character: setup.character, state: setup.state }, 'leaden-dirge');
+    expect(early.character).toBe(setup.character);
+  });
+
+  it('the Lore Duet layers a second song, and a third replaces the oldest', () => {
+    const lore10 = makeBard(10, 'lore');
+    const setup = createCombat({ character: lore10, monsters: [{ def: getMonster('goblin') }] });
+    expect(bardActiveSongs(setup.character)).toEqual(['song-of-spite']);
+    const two = startBardSong({ character: setup.character, state: setup.state }, 'song-of-steel');
+    expect(bardActiveSongs(two.character)).toEqual(['song-of-spite', 'song-of-steel']);
+    // Free the bonus action (a fresh turn) and start a third — the oldest yields.
+    const freshTurn: Character = {
+      ...two.character,
+      actionEconomy: { ...two.character.actionEconomy, bonusActionUsed: false },
+    };
+    const three = startBardSong({ character: freshTurn, state: two.state }, 'leaden-dirge');
+    expect(bardActiveSongs(three.character)).toEqual(['song-of-steel', 'leaden-dirge']);
+  });
+});
+
+describe('Bard — Song of Spite (the pulse gnaws every foe)', () => {
+  it('bites at combat start (turn 0) for the die-tier power', () => {
+    const bard = makeBard(1); // d6 tier → power 2
+    const { state } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    const goblin = monsterOf(state);
+    expect(goblin.instance.hp.current).toBe(goblin.instance.hp.max - bardSongPower(bard));
+  });
+
+  it('pulses again each time the player turn comes back around', () => {
     const bard = makeBard(1);
-    for (const id of ['war-lute', 'rapier', 'dagger', 'shortsword', 'hand-crossbow']) {
-      expect(isWeaponProficient(bard, getItem(id) as never)).toBe(true);
-    }
-    // A heavy two-handed martial arm is NOT in the base kit.
-    expect(isWeaponProficient(bard, getItem('greatsword') as never)).toBe(false);
+    const setup = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    const afterOpen = monsterOf(setup.state).instance.hp.current;
+    // Player passes; the goblin's turn runs; the turn wraps to the player → pulse.
+    const passed = endTurn(setup.state, setup.character);
+    const roller = scriptRoller([1]); // goblin swings and misses
+    const enemyTurn = monsterAttack(
+      { roller, character: passed.character, state: passed.state },
+      monsterOf(passed.state).id,
+    );
+    const wrapped = endTurn(enemyTurn.state, enemyTurn.character);
+    expect(monsterOf(wrapped.state).instance.hp.current).toBe(afterOpen - bardSongPower(bard));
+  });
+
+  it('the pulse scales with the song die tier', () => {
+    expect(bardSongPower(makeBard(1))).toBe(2); // d6
+    expect(bardSongPower(makeBard(5))).toBe(3); // d8
+    expect(bardSongPower(makeBard(10))).toBe(4); // d10
+    expect(bardSongPower(makeBard(15))).toBe(5); // d12
+  });
+});
+
+describe('Bard — Song of Steel (the blows are dulled)', () => {
+  it('reads the die-tier reduction only while Steel plays', () => {
+    const steel = withSongs(makeBard(1), ['song-of-steel']);
+    expect(bardSteelReduction(steel)).toBe(2);
+    expect(bardSteelReduction(withSongs(makeBard(1), ['song-of-spite']))).toBe(0);
+  });
+
+  it('dulls a landed blow by the reduction (visible in the lighter HP loss)', () => {
+    const goblinAtk = (getMonster('goblin').actions.find((a) => a.kind === 'attack') as { attackBonus: number }).attackBonus;
+    const landThe = (songs: BardSongId[]): number => {
+      _resetMonsterInstanceCounter();
+      const bard = withSongs(makeBard(1), songs);
+      const setup = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+      // A nat that lands clean without critting, regardless of song.
+      const nat = Math.max(2, computeAC(setup.character) - goblinAtk + 4);
+      const roller = scriptRoller([Math.min(19, nat)]);
+      const r = monsterAttack({ roller, character: setup.character, state: setup.state }, monsterOf(setup.state).id);
+      return setup.character.hp.current - r.character.hp.current;
+    };
+    const hurtUnderSpite = landThe(['song-of-spite']);
+    const hurtUnderSteel = landThe(['song-of-steel']);
+    expect(hurtUnderSpite).toBeGreaterThan(0);
+    expect(hurtUnderSpite - hurtUnderSteel).toBe(bardSongPower(makeBard(1)));
+  });
+});
+
+describe('Bard — the Leaden Dirge (enemy blades drag)', () => {
+  it('is unlearned before L6 and reads the die-tier drag while playing', () => {
+    expect(bardDirgePenalty(withSongs(makeBard(6), ['leaden-dirge']))).toBe(2);
+    expect(bardDirgePenalty(withSongs(makeBard(10), ['leaden-dirge']))).toBe(3);
+    expect(bardDirgePenalty(withSongs(makeBard(6), ['song-of-spite']))).toBe(0);
+  });
+
+  it('drags a blow that would have just landed into a miss', () => {
+    const goblinAtk = (getMonster('goblin').actions.find((a) => a.kind === 'attack') as { attackBonus: number }).attackBonus;
+    const swingUnder = (songs: BardSongId[]) => {
+      _resetMonsterInstanceCounter();
+      const bard = withSongs(makeBard(6), songs);
+      const setup = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+      // A nat that hits the AC EXACTLY — the dirge's −2 turns it into a miss.
+      const nat = Math.max(2, computeAC(setup.character) - goblinAtk);
+      const roller = scriptRoller([nat]);
+      const r = monsterAttack({ roller, character: setup.character, state: setup.state }, monsterOf(setup.state).id);
+      return { hit: r.state.lastAttack?.hit, hurt: setup.character.hp.current - r.character.hp.current };
+    };
+    expect(swingUnder(['song-of-spite']).hit).toBe(true);
+    const dirged = swingUnder(['leaden-dirge']);
+    expect(dirged.hit).toBe(false);
+    expect(dirged.hurt).toBe(0);
+  });
+});
+
+describe('Bard — the Quickstep Reel (the first strike quickens)', () => {
+  it('the pulse hands the bard advantage on its next attack', () => {
+    const bard = withSongs(makeBard(12), ['quickstep-reel']);
+    const { character } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    expect(character.nextAttackAdvantage).toBe(true);
   });
 });
 
 describe('Bard — the college is a build-defining fork', () => {
-  it('College of Lore = a caster: Cutting Words + Lore Savant, no Combat Inspiration', () => {
+  it('College of Lore = the caster: Cutting Words + Resonant Lore, no War-Song', () => {
     const lore = makeBard(3, 'lore');
     expect(characterHasMechanic(lore, 'cutting-words')).toBe(true);
-    expect(characterHasMechanic(lore, 'lore-savant')).toBe(true);
-    expect(characterHasMechanic(lore, 'combat-inspiration')).toBe(false);
+    expect(characterHasMechanic(lore, 'resonant-lore')).toBe(true);
+    expect(characterHasMechanic(lore, 'war-song')).toBe(false);
     expect(characterHasMechanic(lore, 'martial-training')).toBe(false);
-    // Lore Savant hardens the save DC by one over a core bard.
-    expect(spellSaveDC(lore)).toBe(spellSaveDC(makeBard(3)) + 1);
     // No Extra Attack on the caster path.
     expect(characterHasMechanic(makeBard(6, 'lore'), 'extra-attack')).toBe(false);
   });
 
-  it('College of Valor = a martial: Martial Training + Combat Inspiration + Extra Attack', () => {
+  it('College of Valor = the martial: Martial Training + the War-Song + Extra Attack', () => {
     const valor = makeBard(6, 'valor');
     expect(characterHasMechanic(valor, 'martial-training')).toBe(true);
-    expect(characterHasMechanic(valor, 'combat-inspiration')).toBe(true);
+    expect(characterHasMechanic(valor, 'war-song')).toBe(true);
     expect(characterHasMechanic(valor, 'extra-attack')).toBe(true);
     expect(characterHasMechanic(valor, 'cutting-words')).toBe(false);
     // Martial Training opens the martial weapon rack + medium armour the core lacks.
@@ -250,22 +393,48 @@ describe('Bard — the college is a build-defining fork', () => {
     expect(isArmorProficient(makeBard(6, 'lore'), getItem('half-plate') as never)).toBe(false);
   });
 
-  it('Valor pours the inspiration die into DAMAGE; Lore/core into the attack roll', () => {
-    expect(spendsInspirationOnDamage(makeBard(6, 'valor'))).toBe(true);
-    expect(spendsInspirationOnDamage(makeBard(6, 'lore'))).toBe(false);
-    expect(spendsInspirationOnDamage(makeBard(1))).toBe(false);
+  it('Resonant Lore amps DC and spell damage WHILE the music plays', () => {
+    const silent = withSongs(makeBard(3, 'lore'), []);
+    const singing = withSongs(makeBard(3, 'lore'), ['song-of-spite']);
+    expect(spellSaveDC(singing)).toBe(spellSaveDC(silent) + 1);
+    expect(spellDamageBonus(singing)).toBe(spellDamageBonus(silent) + bardSongPower(singing));
+    // Core bard gets no amp from the same song.
+    expect(spellSaveDC(withSongs(makeBard(3), ['song-of-spite']))).toBe(spellSaveDC(withSongs(makeBard(3), [])));
   });
 
-  it("Valor's Combat Inspiration die rides the weapon hit's damage", () => {
-    const valor = withMainHand(makeBard(6, 'valor'), 'rapier');
-    const roller = scriptRoller([19]); // a clean hit
-    const { state } = createCombat({ character: valor, monsters: [{ def: getMonster('goblin') }] });
-    const armed: Character = { ...valor, inspirationActive: true };
-    const before = monsterOf(state).instance.hp.current;
-    const r = playerAttack({ roller, character: armed, state }, monsterOf(state).id, 'rapier');
-    expect(r.character.inspirationActive).toBe(false); // the die was spent on the hit
-    // The blow connected and chewed real HP (rapier + DEX + Combat Inspiration die).
-    expect(monsterOf(r.state).instance.hp.current).toBeLessThan(before);
+  it("the Valor War-Song die rides every weapon hit while music plays — automatically", () => {
+    const swing = (songs: BardSongId[]): number => {
+      _resetMonsterInstanceCounter();
+      const valor = withMainHand(makeBard(6, 'valor'), 'rapier');
+      // A beefy target so the swing never overkill-clamps; strip/keep the songs
+      // AFTER createCombat so both runs share an identical opening pulse.
+      const setup = createCombat({ character: valor, monsters: [{ def: getMonster('ghoul') }] });
+      const swinger = { ...setup.character, activeSongIds: songs };
+      const before = monsterOf(setup.state).instance.hp.current;
+      const roller = scriptRoller([19]); // a clean hit
+      const r = playerAttack(
+        { roller, character: swinger, state: setup.state },
+        monsterOf(setup.state).id,
+        'rapier',
+      );
+      return before - monsterOf(r.state).instance.hp.current;
+    };
+    const silent = swing([]);
+    const sung = swing(['song-of-steel']);
+    // The war-song adds exactly one song die (d8 at L6 — avg 5 on the script roller).
+    expect(sung - silent).toBe(AVG.d8);
+    expect(bardWarSongDie(withSongs(makeBard(6, 'valor'), ['song-of-steel']))).toBe(8);
+    expect(bardWarSongDie(withSongs(makeBard(6, 'lore'), ['song-of-steel']))).toBe(0);
+  });
+
+  it('the Valor war-song pulses temp HP each round (the front-line staying power)', () => {
+    const valor = makeBard(3, 'valor');
+    const { character } = createCombat({ character: valor, monsters: [{ def: getMonster('goblin') }] });
+    expect(character.hp.temp).toBe(bardSongPower(valor));
+    // A Lore bard's pulse girds nothing.
+    _resetMonsterInstanceCounter();
+    const lore = createCombat({ character: makeBard(3, 'lore'), monsters: [{ def: getMonster('goblin') }] });
+    expect(lore.character.hp.temp).toBe(0);
   });
 
   it("Lore's Cutting Words spends a die to turn a hit into a miss", () => {
@@ -275,12 +444,104 @@ describe('Bard — the college is a build-defining fork', () => {
     // An enemy roll that BARELY beats AC (a hit by 0) — less than the d8 (avg 5),
     // so Cutting Words turns it into a clean miss.
     const goblinAttackBonus = (getMonster('goblin').actions.find((a) => a.kind === 'attack') as { attackBonus: number }).attackBonus;
-    const nat = Math.max(2, computeAC(armed) - goblinAttackBonus);
+    const nat = Math.max(2, computeAC(ac.character) - goblinAttackBonus);
     const roller = scriptRoller([nat]);
-    const r = monsterAttack({ roller, character: armed, state: ac.state }, monsterOf(ac.state).id);
+    const r = monsterAttack({ roller, character: ac.character, state: ac.state }, monsterOf(ac.state).id);
     // The die was spent and the reaction used; the player took no damage.
-    expect(bardInspirationLeft(r.character)).toBe(1);
-    expect(r.character.hp.current).toBe(armed.hp.current);
+    expect(bardInspirationLeft(r.character)).toBe(bardInspirationLeft(ac.character) - 1);
+    expect(r.character.hp.current).toBe(ac.character.hp.current);
+  });
+});
+
+describe('Bard — Vicious Mockery grows up (real cantrip breakpoints)', () => {
+  it('dice climb at the standard breakpoints: 1d4 → 2d4 (L5) → 3d4 (L11) → 4d4 (L17)', () => {
+    expect(bardViciousMockeryDice(1)).toBe(1);
+    expect(bardViciousMockeryDice(4)).toBe(1);
+    expect(bardViciousMockeryDice(5)).toBe(2);
+    expect(bardViciousMockeryDice(10)).toBe(2);
+    expect(bardViciousMockeryDice(11)).toBe(3);
+    expect(bardViciousMockeryDice(16)).toBe(3);
+    expect(bardViciousMockeryDice(17)).toBe(4);
+    expect(bardViciousMockeryDice(20)).toBe(4);
+  });
+
+  it('the playing song sharpens the insult by a song-die roll', () => {
+    const barb = (songs: BardSongId[]): number => {
+      _resetMonsterInstanceCounter();
+      const bard = withSongs(makeBard(1), songs);
+      // Strip the song before createCombat would re-seed: build the state, then
+      // cast with the songs we want (empty = the dev-only silent case).
+      const setup = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+      const caster = { ...setup.character, activeSongIds: songs };
+      const before = monsterOf(setup.state).instance.hp.current;
+      const roller = scriptRoller([1]); // the save fails
+      const r = castSpell({ roller, character: caster, state: setup.state, spellId: 'vicious-mockery', targetId: monsterOf(setup.state).id });
+      expect(r.cast).toBe(true);
+      return before - monsterOf(r.state).instance.hp.current;
+    };
+    // Sung minus silent = exactly the song die (d6 avg 4 on the script roller).
+    expect(barb(['song-of-spite']) - barb([])).toBe(AVG.d6);
+  });
+
+  it('deals breakpoint dice + CHA on a failed save, half on a made one, and rattles', () => {
+    const bard = makeBard(5); // 2d4 tier, d8 song die
+    const chaMod = abilityModifier(effectiveAbilityScores(bard).cha);
+    const setup = createCombat({ character: bard, monsters: [{ def: getMonster('ghoul') }] });
+    const target = monsterOf(setup.state);
+    const before = target.instance.hp.current;
+    // Failed save (nat 1): full damage + the rattle. NOTE the opening Spite pulse
+    // already chipped the ghoul at combat start; measure from the post-pulse HP.
+    const roller = scriptRoller([1]);
+    const r = castSpell({ roller, character: setup.character, state: setup.state, spellId: 'vicious-mockery', targetId: target.id });
+    expect(r.cast).toBe(true);
+    const expected = 2 * AVG.d4 + AVG.d8 + chaMod + spellDamageBonus(setup.character);
+    expect(before - monsterOf(r.state).instance.hp.current).toBe(expected);
+    expect(monsterOf(r.state).instance.conditions.some((c) => c.name === 'frightened')).toBe(true);
+  });
+
+  it('a made save takes half and shrugs the rattle', () => {
+    const bard = makeBard(1);
+    const setup = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    const before = monsterOf(setup.state).instance.hp.current;
+    const roller = scriptRoller([20]); // the save lands
+    const r = castSpell({ roller, character: setup.character, state: setup.state, spellId: 'vicious-mockery', targetId: monsterOf(setup.state).id });
+    const chaMod = abilityModifier(effectiveAbilityScores(bard).cha);
+    const full = AVG.d4 + AVG.d6 + chaMod + spellDamageBonus(setup.character);
+    expect(before - monsterOf(r.state).instance.hp.current).toBe(Math.floor(full / 2));
+    expect(monsterOf(r.state).instance.conditions.some((c) => c.name === 'frightened')).toBe(false);
+  });
+});
+
+describe('Bard — the bot keeps the right song up', () => {
+  it('switches to Steel when the room is crowded', () => {
+    const bard = makeBard(1); // core: no Cutting Words, free to spend the well
+    const setup = createCombat({
+      character: bard,
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('goblin') }, { def: getMonster('goblin') }],
+    });
+    const action = chooseCombatAction(setup.state, setup.character);
+    expect(action).toEqual({ kind: 'bard-song', songId: 'song-of-steel' });
+  });
+
+  it('stays on Spite against a lone foe at full health (no wasted swap)', () => {
+    const bard = makeBard(1);
+    const setup = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    const action = chooseCombatAction(setup.state, setup.character);
+    expect(action.kind).not.toBe('bard-song');
+  });
+
+  it('a Lore bard holds its last die for Cutting Words instead of swapping', () => {
+    const lore = makeBard(3, 'lore');
+    const setup = createCombat({
+      character: lore,
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('goblin') }, { def: getMonster('goblin') }],
+    });
+    const oneDie: Character = {
+      ...setup.character,
+      resources: { ...setup.character.resources, inspirationDiceRemaining: 1 },
+    };
+    const action = chooseCombatAction(setup.state, oneDie);
+    expect(action.kind).not.toBe('bard-song');
   });
 });
 
@@ -320,16 +581,22 @@ describe('Bard — spellcasting (the College repertoire)', () => {
     expect(r.character.hp.current).toBeGreaterThan(5);
   });
 
-  it('Vicious Mockery deals psychic damage and rattles a foe that fails its save', () => {
-    const bard = makeBard(3);
-    const { state } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
-    const before = monsterOf(state).instance.hp.current;
-    // A failed WIS save (low roll) → full damage + frightened.
-    const roller = scriptRoller([1]);
-    const r = castSpell({ roller, character: bard, state, spellId: 'vicious-mockery', targetId: monsterOf(state).id });
-    expect(r.cast).toBe(true);
-    const mob = monsterOf(r.state);
-    expect(mob.instance.hp.current).toBeLessThan(before);
-    expect(mob.instance.conditions.some((c) => c.name === 'frightened')).toBe(true);
+  it('the War Lute scales attack off Charisma, not STR/DEX', () => {
+    const bard = withMainHand(makeBard(3), 'war-lute');
+    const chaMod = abilityModifier(effectiveAbilityScores(bard).cha);
+    const roller = scriptRoller([10]);
+    const { state, character } = createCombat({ character: bard, monsters: [{ def: getMonster('goblin') }] });
+    const r = playerAttack({ roller, character, state }, monsterOf(state).id, 'war-lute');
+    // CHA-keyed: attack bonus is prof + CHA mod (the War Lute carries no attackMod).
+    expect(r.state.lastAttack?.attackBonus).toBe(proficiencyBonus(3) + chaMod);
+  });
+
+  it('is War Lute, finesse blades, and a hand crossbow — proficient for the bard', () => {
+    const bard = makeBard(1);
+    for (const id of ['war-lute', 'rapier', 'dagger', 'shortsword', 'hand-crossbow']) {
+      expect(isWeaponProficient(bard, getItem(id) as never)).toBe(true);
+    }
+    // A heavy two-handed martial arm is NOT in the base kit.
+    expect(isWeaponProficient(bard, getItem('greatsword') as never)).toBe(false);
   });
 });

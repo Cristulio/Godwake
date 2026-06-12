@@ -328,7 +328,9 @@ export type SpellEffectKind =
   | 'bow-shot' // arrow flight with a draw-flash at release + feather burst on impact
   | 'caster-bonk' // staff/orb/wand bonk — modest arc, indignant arcane pop
   | 'stun-burst' // Stunning Strike lands — palm flash + dizzy star spin
-  | 'knockdown-burst'; // martial DISRUPT lands — slam wedge + ground dust topple
+  | 'knockdown-burst' // martial DISRUPT lands — slam wedge + ground dust topple
+  // === bard-redesign === the Song engine's beat.
+  | 'song-pulse'; // a bard Song starts/pulses — sound-ring + rising note glyphs on the player
 
 /** Alias spelling out that the union is the canonical combat-VFX kind set. */
 export type CombatVfxKind = SpellEffectKind;

@@ -17,7 +17,7 @@ import {
 import { turnsUntilCunningRegen } from '../../engine/combat/cunningAction';
 import { spellAttackBonus, spellSaveDC } from '../../engine/combat/spells';
 import { monkKiMax } from '../../engine/combat/monk';
-import { bardInspirationMax, bardInspirationLeft, bardInspirationDieSize } from '../../engine/combat/bard';
+import { bardActiveSongs, bardInspirationMax, bardInspirationLeft, bardInspirationDieSize } from '../../engine/combat/bard';
 import { layOnHandsLeft, layOnHandsMax } from '../../engine/combat/paladin';
 import { getBlessing } from '../../content/blessings';
 import { bossIntelBuffFor } from '../../content/bossIntel';
@@ -280,11 +280,11 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
   const isBard = character.classId === 'bard';
   const isPaladinClass = character.classId === 'paladin';
 
-  // --- Bard resources (Bardic Inspiration) ---
+  // --- Bard resources (the song well + what's playing) ---
   const inspirationMax = bardInspirationMax(character);
   const inspirationNow = bardInspirationLeft(character);
-  const inspirationBanked = character.inspirationActive === true;
   const inspirationDie = bardInspirationDieSize(character);
+  const activeSongs = bardActiveSongs(character);
 
   // --- Paladin resources (Lay on Hands pool + Divine Smite armed) ---
   const layPool = layOnHandsLeft(character);
@@ -545,23 +545,33 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
       )}
 
       {isBard && inspirationMax > 0 && (
-        <Section title={t('combat.hud.inspiration', { die: inspirationDie })}>
-          <div className="flex flex-wrap items-center gap-1.5 max-w-[150px]">
+        <Section title={t('combat.hud.songWell', { die: inspirationDie })}>
+          <div className="flex flex-wrap items-center gap-1.5 max-w-[170px]">
             {Array.from({ length: Math.max(inspirationMax, inspirationNow) }).map((_, i) => (
               <Dot
                 key={`insp-${i}`}
                 on={i < inspirationNow}
-                title={i < inspirationNow ? t('combat.hud.inspirationReady') : t('combat.hud.inspirationSpent')}
+                title={i < inspirationNow ? t('combat.hud.songWellReady') : t('combat.hud.songWellSpent')}
               />
             ))}
-            {inspirationBanked && (
-              <Pill
-                text={t('combat.hud.inspirationBankedPill', { die: inspirationDie })}
-                on
-                tone="amber"
-                title={t('combat.hud.inspirationBanked')}
-              />
-            )}
+            {activeSongs.length > 0
+              ? activeSongs.map((songId) => (
+                  <Pill
+                    key={songId}
+                    text={t('combat.hud.nowPlaying', { song: t(`combat.songs.${songId}.short`) })}
+                    on
+                    tone="amber"
+                    title={t(`combat.songs.${songId}.desc`)}
+                  />
+                ))
+              : (
+                  <Pill
+                    text={t('combat.hud.songSilent')}
+                    on={false}
+                    tone="amber"
+                    title={t('combat.hud.songSilentTitle')}
+                  />
+                )}
           </div>
         </Section>
       )}

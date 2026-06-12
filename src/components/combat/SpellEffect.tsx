@@ -201,6 +201,9 @@ export function SpellEffect({ kind, origin, target, element, onDone }: SpellEffe
       return <FlurryEffect origin={origin} target={target} onDone={onDone} />;
     case 'enemy-frenzy':
       return <FrenzyEffect origin={origin} onDone={onDone} />;
+    // === bard-redesign ===
+    case 'song-pulse':
+      return <SongPulseEffect origin={origin} onDone={onDone} />;
     // === druid-signature ===
     case 'regrowth':
       return <RegrowthEffect origin={origin} onDone={onDone} />;
@@ -2565,6 +2568,51 @@ function FrenzyWisp() {
 }
 
 // ---------- Druid: Regrowth (heal-over-time) ----------
+
+// ---------- Bard Song pulse (bard-redesign) ----------
+// The music made visible: a quick sound-ring breathing off the performer with
+// a few note glyphs rising. Deliberately small/short — it fires every round.
+function SongPulseEffect({ origin, onDone }: SelfProps) {
+  useDoneTimer(760, onDone);
+  const ringSize = 96;
+  const notes = [
+    { x: -20, glyph: '♪', delay: 0 },
+    { x: 4, glyph: '♫', delay: 110 },
+    { x: 22, glyph: '♪', delay: 220 },
+  ];
+  return (
+    <div className="absolute" style={{ left: origin.x, top: origin.y, width: 0, height: 0 }}>
+      <div
+        className="absolute animate-song-ring"
+        style={{ left: -ringSize / 2, top: -ringSize / 2 - 10, width: ringSize, height: ringSize }}
+      >
+        <svg width={ringSize} height={ringSize} viewBox="-48 -48 96 96" style={{ overflow: 'visible' }}>
+          <circle cx="0" cy="0" r="30" fill="none" stroke="#e8b54a" strokeWidth="2.5" opacity="0.85" />
+          <circle cx="0" cy="0" r="40" fill="none" stroke="#caa0e8" strokeWidth="1.5" opacity="0.5" />
+        </svg>
+      </div>
+      {notes.map((n, i) => (
+        <div
+          key={i}
+          className="absolute animate-song-note"
+          style={
+            {
+              left: n.x,
+              top: -34,
+              color: '#ffe9ad',
+              textShadow: '0 0 6px rgba(232,181,74,0.9)',
+              fontSize: 15,
+              animationDelay: `${n.delay}ms`,
+              '--dx': `${n.x * 0.6}px`,
+            } as React.CSSProperties
+          }
+        >
+          {n.glyph}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function RegrowthEffect({ origin, onDone }: SelfProps) {
   useDoneTimer(1050, onDone);
