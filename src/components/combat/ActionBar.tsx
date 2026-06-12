@@ -17,7 +17,7 @@ import {
   MARTIAL_DEFENSE_COST,
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
-import { stunningStrikeKiCost } from '../../engine/combat/monk';
+import { stunningStrikeKiCost, monkKitActive } from '../../engine/combat/monk';
 import { bardInspirationDieSize, bardInspirationLeft, spendsInspirationOnDamage } from '../../engine/combat/bard';
 import { isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from '../../engine/combat/paladin';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
@@ -225,14 +225,19 @@ export function ActionBar({
 
   // Monk Ki actions. Flurry of Blows / Patient Defense are bonus-action Ki
   // spends; Stunning Strike is a free stance armed before the swing. All gate on
-  // a Ki point in the well.
+  // a Ki point in the well AND the kit being live — bare hands or a themed monk
+  // weapon. With an ordinary weapon in hand the buttons stay visible but dark,
+  // so the cost of the held steel is legible at a glance.
   const ki = character.resources.kiPointsRemaining ?? 0;
+  const monkKitOn = isMonk && monkKitActive(character);
+  const kitDarkTitle = isMonk && !monkKitOn ? t('combat.bar.kitDark') : null;
   const hasFlurry = isMonk && characterHasMechanic(character, 'flurry-of-blows');
   const flurryQueued = hasFlurryStrike;
   const canFlurry =
     playersTurn &&
     active &&
     hasFlurry &&
+    monkKitOn &&
     ki > 0 &&
     !flurryQueued &&
     !character.actionEconomy.bonusActionUsed &&
@@ -243,6 +248,7 @@ export function ActionBar({
     playersTurn &&
     active &&
     hasPatientDefense &&
+    monkKitOn &&
     ki > 0 &&
     !patientActive &&
     !character.actionEconomy.bonusActionUsed &&
@@ -253,6 +259,7 @@ export function ActionBar({
     playersTurn &&
     active &&
     hasStunningStrike &&
+    monkKitOn &&
     ki >= stunningStrikeKiCost(character) &&
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
@@ -524,7 +531,7 @@ export function ActionBar({
             variant={canFlurry ? 'primary' : 'secondary'}
             onClick={onFlurry}
             disabled={!canFlurry}
-            title={t('combat.bar.flurry')}
+            title={kitDarkTitle ?? t('combat.bar.flurry')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {flurryQueued ? t('ui.combat.flurryOn', { n: character.flurryStrikesRemaining ?? 0 }) : t('ui.combat.flurry', { n: ki })}
@@ -535,7 +542,7 @@ export function ActionBar({
             variant={canPatientDefense ? 'primary' : 'secondary'}
             onClick={onPatientDefense}
             disabled={!canPatientDefense}
-            title={t('combat.bar.patientDefense')}
+            title={kitDarkTitle ?? t('combat.bar.patientDefense')}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {patientActive ? t('ui.combat.patientOn') : t('ui.combat.patientDefense')}
@@ -546,7 +553,7 @@ export function ActionBar({
             variant={canStunningStrike ? 'primary' : 'secondary'}
             onClick={onStunningStrike}
             disabled={!canStunningStrike}
-            title={t('combat.bar.stunningStrike')}
+            title={kitDarkTitle ?? t('combat.bar.stunningStrike', { cost: stunningStrikeKiCost(character) })}
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? t('ui.combat.stunningOn') : t('ui.combat.stunningStrike')}

@@ -615,7 +615,7 @@
   },
   "monk.martial-arts": {
     "name": "Artes Marciales",
-    "description": "Tus puños son el arma. Los golpes sin armas caen como un d6 y cabalgan tu Destreza, y el dado crece conforme tú lo haces —d8 a nivel 5, d10 a nivel 11, d12 a nivel 17. Toda la escuela está construida para gastar Ki y sepultar a un enemigo bajo una lluvia de golpes."
+    "description": "Tus puños son el arma. Los golpes sin armas caen como un d6 y cabalgan tu Destreza, y el dado crece conforme tú lo haces —d8 a nivel 5, d10 a nivel 11, d12 a nivel 17. Toda la escuela está construida para gastar Ki y sepultar a un enemigo bajo una lluvia de golpes. Las armas del templo —bastón, kama, guja— fluyen con las formas: el Ki no pierde pie mientras el arma blande su propio acero, pero el dado creciente pertenece solo a la mano vacía."
   },
   "monk.unarmored-defense-monk": {
     "name": "Defensa sin Armadura",

@@ -122,20 +122,18 @@ function startingKitFor(classId: ClassId): StartingKit {
       };
     }
     case 'monk': {
-      // No armour — Unarmored Defense (DEX + WIS) does the work, and steel would
-      // only cost the stance. The fists are the weapon; the shortsword is the one
-      // martial arm the schools permit, kept for reach. Two potions for the
-      // squishy striker's cushion.
-      const fists: ItemRef = { itemId: 'monk-fists' };
+      // No armour and no arms — Unarmored Defense (DEX + WIS) guards, and the
+      // EMPTY main-hand is the weapon: the unarmed state is a bare slot, never a
+      // phantom "Fists" item (the attack dispatch swaps in the level-scaled
+      // Martial Arts die). Temple arms (staff/kama/glaive) are found, not
+      // started with. Two potions for the squishy striker's cushion.
       return {
         inventory: [
-          fists,
-          { itemId: 'shortsword' },
           { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
         equipped: {
-          mainHand: fists,
+          mainHand: null,
           offHand: null,
           armor: null,
         },

@@ -31,10 +31,12 @@ export const WEAPON_BASE_IDS = [
 ] as const;
 
 /**
- * Monk weapons count as unarmed — they carry the affix + enhancement rolls a
- * bare-handed striker has no main-hand slot for. A monk's rolled weapon loot is
- * drawn from these alone (the generic rack above is non-unarmed, so it'd turn the
- * kit dark); no other class ever rolls one.
+ * Themed monk weapons — the arms that KEEP the Ki kit (Flurry / Stunning Strike /
+ * stances) while swinging their own die, affixes, and enhancement in place of the
+ * Martial Arts die + unarmed edge. They carry the per-hit gear rolls a bare-handed
+ * striker has no main-hand slot for. A monk's rolled weapon loot draws from these
+ * alone (the generic rack above would still the kit entirely); no other class
+ * ever rolls one.
  */
 export const MONK_WEAPON_BASE_IDS = [
   'monk-war-staff',

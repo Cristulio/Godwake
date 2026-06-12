@@ -5,7 +5,7 @@ import type { Character } from '../../types/character';
 import { Button } from '../ui/Button';
 import { getItem } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
-import { armorEquipWarning, equipDenialReason, equippedRefsForItemSlot } from '../../engine/character/equip';
+import { itemEquipNote, equipDenialReason, equippedRefsForItemSlot } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { ItemTooltip } from '../inventory/ItemTooltip';
@@ -52,8 +52,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
   const rarity = rolled?.rarity ?? 'white';
   const color = GEAR_RARITY_COLOR[rarity];
   const tooDear = gold < stock.cost;
-  const warning =
-    character && base.kind === 'armor' ? armorEquipWarning(character.classId, base) : null;
+  const warning = character ? itemEquipNote(character.classId, base) : null;
   // The usability gate — why this can't be worn yet (wrong class, stat shortfall,
   // class-bound). Shown but never blocks buying: the player may grow into it.
   const denial = character ? equipDenialReason(character, stock.ref.itemId) : null;

@@ -6,5 +6,7 @@
   "cantWield": "Un {class} no puede empuñar esto",
   "cantWear": "Un {class} no puede vestir esto",
   "requiresAbility": "Requiere {ability} {value}",
-  "requiresStrength": "Requiere {ability} {value}"
+  "requiresStrength": "Requiere {ability} {value}",
+  "monkWeaponKeepsKit": "Forjada en las formas — el Ki, la ráfaga y las posturas no pierden pie. El golpe cambia el dado creciente y el filo de la mano vacía por el acero propio de esta arma.",
+  "monkWeaponStillsKit": "El acero aquieta las formas — sin Ki, sin ráfaga, sin posturas mientras la empuñes. La mano vacía no pide nada."
 }
