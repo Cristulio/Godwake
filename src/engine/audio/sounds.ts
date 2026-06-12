@@ -1594,21 +1594,24 @@ function runSong(
 }
 
 // ---------------------------------------------------------------------------
-// TITLE — "the god is dead; you are awake." A aeolian, slow and wide: lone
+// TITLE — "the god is dead; you are awake." A minor, slow and wide: lone
 // square lead states the motif over a deep drone, bell answers, long echo.
+// The answer leans on the raised seventh — the wound that will not shut.
 // ---------------------------------------------------------------------------
 
 const TITLE_LEAD_A = mel([
   // The motif, stated plainly...
   ['A3', 1.5], ['C4', 0.5], ['B3', 1], ['E4', 2], ['D4', 1], ['A3', 2],
-  [null, 2],
-  // ...and the echoing answer, falling back to sleep.
-  ['E4', 1], ['D4', 1], ['C4', 1.5], ['B3', 0.5], ['A3', 3], [null, 4],
+  [null, 3],
+  // ...and the answer sinks onto the leading tone before it can rest.
+  ['E4', 1], ['C4', 1], ['B3', 1.5], ['G#3', 0.5], ['A3', 4], [null, 3],
   // Up an octave, farther away.
-  ['A4', 1.5, 0.7], ['C5', 0.5, 0.7], ['B4', 1, 0.7], ['E5', 2, 0.75],
-  ['D5', 1, 0.7], ['C5', 2, 0.7],
+  ['A4', 1.5, 0.7], ['C5', 0.5, 0.7], ['B4', 1, 0.7], ['E5', 2, 0.7],
+  ['D5', 1, 0.65], ['C5', 2, 0.65],
   [null, 1],
-  ['B4', 1, 0.6], ['G4', 1, 0.6], ['E4', 1, 0.6], ['A3', 4, 0.8],
+  // The sigh home: down to the seventh, lifted, let go.
+  ['C5', 1, 0.6], ['B4', 1, 0.6], ['A4', 1, 0.6], ['G#4', 1, 0.6],
+  ['A4', 3, 0.75],
 ]);
 
 const TITLE_SPEC: SongSpec = {
@@ -1656,32 +1659,40 @@ const TITLE_SPEC: SongSpec = {
 };
 
 // ---------------------------------------------------------------------------
-// HUB — Wakeford at night: fireside safety with the old wound under it.
-// A aeolian, wistful triangle lead over Am–F–C–Em, wind and fire crackles.
+// HUB — Wakeford at night: the fire is lit, and almost no one is left to sit
+// at it. A minor over an i–VI–iv–V wheel; the pads are hollowed to open
+// fifths and the bass walks the raised seventh into every return home.
 // ---------------------------------------------------------------------------
 
 const HUB_PROG: number[][] = [
-  ch('A2', 'C3', 'E3'),
-  ch('F2', 'A2', 'C3'),
-  ch('C3', 'E3', 'G3'),
-  ch('E2', 'B2', 'E3'),
+  ch('A2', 'E3', 'A3'),
+  ch('F2', 'C3', 'F3'),
+  ch('D3', 'A3', 'D4'),
+  ch('E3', 'B3', 'E4'),
 ];
-const HUB_BASS_ROOTS = ['A2', 'F2', 'C3', 'E2'];
+const HUB_BASS_ROOTS = ['A2', 'F2', 'D2', 'E2'];
 
 const HUB_LEAD_A = mel([
-  ['A4', 1.5], ['C5', 0.5], ['B4', 1], ['A4', 1], ['E4', 2.5], [null, 1.5],
-  ['F4', 1.5], ['A4', 0.5], ['G4', 1], ['E4', 1], ['D4', 2.5], [null, 1.5],
-  ['C5', 1.5], ['B4', 0.5], ['A4', 1], ['G4', 1], ['E4', 2], ['G4', 1.5], [null, 0.5],
-  ['F4', 1], ['E4', 1], ['D4', 1], ['C4', 1], ['A3', 3], [null, 1],
+  // Long tones falling; the E-major bar holds the leading tone like a breath.
+  ['A4', 2.5], ['C5', 0.5], ['B4', 1],
+  ['A4', 1.5], ['G4', 0.5], ['F4', 2],
+  ['E4', 2], ['D4', 1.5], [null, 0.5],
+  ['E4', 1], ['G#4', 2], ['B4', 1],
+  ['A4', 2.5], [null, 0.5], ['E5', 1],
+  ['C5', 1.5], ['A4', 0.5], ['G4', 2],
+  ['F4', 1], ['E4', 2], ['D4', 1],
+  ['C4', 1.5], ['B3', 1.5], [null, 1],
 ]);
-// Second half: variation rising, then the motif as the cadence.
+// Second half: the far voice, ending unresolved on G# — the motif answers it.
 const HUB_LEAD_B = mel([
-  ['C5', 1.5], ['D5', 0.5], ['C5', 1], ['B4', 1], ['A4', 2.5], [null, 1.5],
-  ['A4', 1.5], ['C5', 0.5], ['B4', 1], ['G4', 1], ['E4', 2.5], [null, 1.5],
+  ['E5', 2.5], ['D5', 0.5], ['C5', 1],
+  ['C5', 1], ['A4', 2], [null, 1],
+  ['F4', 1.5], ['E4', 1.5], ['D4', 1],
+  ['B3', 1], ['G#4', 1.5], [null, 1.5],
 ]);
 
 const HUB_SPEC: SongSpec = {
-  bpm: 92,
+  bpm: 84,
   barsPerBlock: 16,
   trim: 1.19,
   setup: (ctx, out) => {
@@ -1703,33 +1714,33 @@ const HUB_SPEC: SongSpec = {
     };
   },
   block: (ctx, out, t0, blockIdx) => {
-    const beatS = 60 / 92;
+    const beatS = 60 / 84;
     const barS = 4 * beatS;
-    // Pads + bass walk the Am–F–C–Em wheel.
+    // Pads + bass walk the Am–F–Dm–E wheel; the E bar's bass lifts to G#.
     for (let bar = 0; bar < 16; bar++) {
       const chord = HUB_PROG[bar % 4];
       const t = t0 + bar * barS;
+      const root = HUB_BASS_ROOTS[bar % 4];
       padChordAt(ctx, out, chord, t, barS * 1.02, {
         level: 0.075,
         type: 'triangle',
         detune: 6,
-        attack: barS * 0.3,
-        lowpass: 1300,
+        attack: barS * 0.45,
+        lowpass: 1000,
       });
       lineAt(
         ctx, out,
-        mel([
-          [HUB_BASS_ROOTS[bar % 4], 1.5],
-          [null, 0.5],
-          [HUB_BASS_ROOTS[bar % 4], 1],
-          [null, 1],
-        ]),
+        mel(
+          bar % 4 === 3
+            ? [[root, 1.5], [null, 0.5], ['G#2', 1], [null, 1]]
+            : [[root, 1.5], [null, 0.5], [root, 1], [null, 1]],
+        ),
         t, beatS,
         { level: 0.085, type: 'triangle', sustain: 0.9 },
       );
-      // Soft hat ticks arrive once the theme has settled in.
+      // One soft hat tick per bar once the theme has settled in.
       if (blockIdx > 0) {
-        drumBarAt(ctx, out, '....h.......h...', t, beatS, 0.4);
+        drumBarAt(ctx, out, '............h...', t, beatS, 0.35);
       }
     }
     // Lead: wistful verse, rising answer, motif cadence.
@@ -1740,7 +1751,7 @@ const HUB_SPEC: SongSpec = {
       vibrato: { hz: 5, cents: 10, after: 0.18 },
     });
     lineAt(ctx, out, HUB_LEAD_B, t0 + 32 * beatS, beatS, {
-      level: 0.08,
+      level: 0.07,
       type: 'triangle',
       sustain: 0.92,
       vibrato: { hz: 5, cents: 10, after: 0.18 },
@@ -1771,26 +1782,27 @@ const HUB_SPEC: SongSpec = {
 };
 
 // ---------------------------------------------------------------------------
-// GROVE — sacred green. E dorian (the raised 6th is the light through the
-// canopy): harp arpeggios, bell motif at half speed, one soft pulse per bar.
+// GROVE — sacred green, grieving. E minor in hollowed fifths: harp arpeggios,
+// bell motif at half speed, and the raised seventh (D#) arrives once per
+// round like light reaching the forest floor.
 // ---------------------------------------------------------------------------
 
 const GROVE_PROG: number[][] = [
-  ch('E3', 'G3', 'B3'), ch('E3', 'G3', 'B3'),
-  ch('A3', 'C#4', 'E4'), ch('A3', 'C#4', 'E4'),
-  ch('E3', 'G3', 'B3'), ch('G3', 'B3', 'D4'),
-  ch('D3', 'F#3', 'A3'), ch('E3', 'G3', 'B3'),
+  ch('E3', 'B3', 'E4'), ch('E3', 'B3', 'E4'),
+  ch('A3', 'E4', 'A4'), ch('A3', 'E4', 'A4'),
+  ch('E3', 'B3', 'E4'), ch('C3', 'G3', 'E4'),
+  ch('B2', 'F#3', 'B3'), ch('E3', 'B3', 'E4'),
 ];
-const GROVE_BASS = ['E2', 'E2', 'A2', 'A2', 'E2', 'G2', 'D2', 'E2'];
+const GROVE_BASS = ['E2', 'E2', 'A2', 'A2', 'E2', 'C2', 'B1', 'E2'];
 const GROVE_ARPS: Record<string, string[]> = {
   E2: ['E3', 'B3', 'E4', 'G4', 'B4', 'G4', 'E4', 'B3'],
-  G2: ['G3', 'D4', 'G4', 'B4', 'D5', 'B4', 'G4', 'D4'],
-  A2: ['A3', 'E4', 'A4', 'C#5', 'E5', 'C#5', 'A4', 'E4'],
-  D2: ['D3', 'A3', 'D4', 'F#4', 'A4', 'F#4', 'D4', 'A3'],
+  C2: ['C3', 'G3', 'C4', 'E4', 'G4', 'E4', 'C4', 'G3'],
+  A2: ['A3', 'E4', 'A4', 'C5', 'E5', 'C5', 'A4', 'E4'],
+  B1: ['B2', 'F#3', 'B3', 'D#4', 'F#4', 'D#4', 'B3', 'F#3'],
 };
 
 const GROVE_SPEC: SongSpec = {
-  bpm: 78,
+  bpm: 72,
   barsPerBlock: 8,
   trim: 1.19,
   setup: (ctx, out) => {
@@ -1815,7 +1827,7 @@ const GROVE_SPEC: SongSpec = {
     };
   },
   block: (ctx, out, t0, blockIdx) => {
-    const beatS = 60 / 78;
+    const beatS = 60 / 72;
     const barS = 4 * beatS;
     for (let bar = 0; bar < 8; bar++) {
       const t = t0 + bar * barS;
@@ -1823,8 +1835,8 @@ const GROVE_SPEC: SongSpec = {
         level: 0.06,
         type: 'triangle',
         detune: 7,
-        attack: barS * 0.4,
-        lowpass: 1500,
+        attack: barS * 0.5,
+        lowpass: 1200,
       });
       // Harp: one arpeggio sweep per bar.
       const arp = GROVE_ARPS[GROVE_BASS[bar]];
@@ -1853,7 +1865,7 @@ const GROVE_SPEC: SongSpec = {
         pos += s.beats;
       }
     } else {
-      for (const [i, n] of (['B4', 'A4', 'F#4', 'E4'] as const).entries()) {
+      for (const [i, n] of (['B4', 'G4', 'F#4', 'E4'] as const).entries()) {
         bellAt(ctx, out, midi(n), t0 + (12 + i * 4) * beatS, 3 * beatS, 0.04);
       }
     }
@@ -1918,10 +1930,11 @@ function makeCombatSpec(core: CombatCoreDef, knob: CombatKnob): SongSpec {
   };
 }
 
-// BROOD — the front-line fight. D aeolian, driving 8ths, the old D-minor
-// arpeggio identity grown up: Dm Dm C C / Dm Dm Bb A with the motif cadence.
+// BROOD — the front-line fight. D harmonic-minor world, driving 8ths:
+// Dm Dm Bb Bb / Dm Dm Gm A — the old bright C-major answer turned down into
+// Bb, and the A-major cadence (the raised seventh) pulling the loop home.
 const BROOD_BASS_BARS: ParsedStep[][] = [
-  ...['D2', 'D2', 'C2', 'C2', 'D2', 'D2'].map((r) => {
+  ...['D2', 'D2', 'Bb1', 'Bb1', 'D2', 'D2'].map((r) => {
     const up = midi(r) + 12;
     return mel([
       [r, 0.5], [r, 0.5], [null, 0.5], [r, 0.5],
@@ -1929,8 +1942,8 @@ const BROOD_BASS_BARS: ParsedStep[][] = [
     ]).map((s, i) => (i === 3 ? { ...s, m: up } : s));
   }),
   mel([
-    ['Bb1', 0.5], ['Bb1', 0.5], [null, 0.5], ['Bb2', 0.5],
-    ['Bb1', 0.5], [null, 0.5], ['Bb1', 0.5], ['Bb1', 0.5],
+    ['G1', 0.5], ['G1', 0.5], [null, 0.5], ['G2', 0.5],
+    ['G1', 0.5], [null, 0.5], ['G1', 0.5], ['G1', 0.5],
   ]),
   mel([
     ['A1', 0.5], ['A1', 0.5], [null, 0.5], ['A2', 0.5],
@@ -1942,9 +1955,9 @@ const BROOD_LEAD = mel([
   // Bars 1-2: the rising D-minor call.
   ['D4', 0.5], ['F4', 0.5], ['A4', 0.5], ['D5', 1], ['C5', 0.5], ['A4', 1],
   ['F4', 0.5], ['A4', 0.5], ['C5', 0.5], ['A4', 1.5], [null, 1],
-  // Bars 3-4: answer on C major, harder.
-  ['C4', 0.5], ['E4', 0.5], ['G4', 0.5], ['C5', 1], ['B4', 0.5], ['G4', 1],
-  ['E4', 0.5], ['G4', 0.5], ['E4', 0.5], ['C4', 1.5], [null, 1],
+  // Bars 3-4: the answer turns down through Bb — grief with its teeth out.
+  ['D4', 0.5], ['F4', 0.5], ['Bb4', 0.5], ['D5', 1], ['C5', 0.5], ['A4', 1],
+  ['F4', 0.5], ['G4', 0.5], ['F4', 0.5], ['D4', 1.5], [null, 1],
   // Bars 5-6: the call again, higher tension.
   ['D4', 0.5], ['F4', 0.5], ['A4', 0.5], ['D5', 1], ['E5', 0.5], ['D5', 1],
   ['C5', 0.5], ['A4', 0.5], ['F4', 0.5], ['D4', 1.5], [null, 1],
@@ -1952,7 +1965,7 @@ const BROOD_LEAD = mel([
 
 const BROOD_STAB_CHORDS = [
   ch('D4', 'F4', 'A4'),
-  ch('Bb3', 'D4', 'F4'),
+  ch('G3', 'Bb3', 'D4'),
   ch('A3', 'C#4', 'E4'),
 ];
 
@@ -2017,16 +2030,17 @@ const BROOD_CORE_DEF: CombatCoreDef = {
       swing,
       vibrato: { hz: 5.6, cents: 11, after: 0.12 },
     });
-    // High arpeggio shimmer once the fight has lived a block.
+    // High shimmer over the Bb bars once the fight has lived a block; the
+    // back half stays clear for the cadence.
     if (blockIdx > 0) {
-      for (const bar of [2, 3, 6, 7]) {
+      for (const bar of [2, 3]) {
         lineAt(
           ctx, out,
           mel([
-            ['D5', 0.25], ['F5', 0.25], ['A5', 0.25], ['F5', 0.25],
-            ['D5', 0.25], ['F5', 0.25], ['A5', 0.25], ['F5', 0.25],
-            ['C5', 0.25], ['E5', 0.25], ['G5', 0.25], ['E5', 0.25],
-            ['C5', 0.25], ['E5', 0.25], ['G5', 0.25], ['E5', 0.25],
+            ['D5', 0.25], ['F5', 0.25], ['Bb5', 0.25], ['F5', 0.25],
+            ['D5', 0.25], ['F5', 0.25], ['Bb5', 0.25], ['F5', 0.25],
+            ['D5', 0.25], ['F5', 0.25], ['Bb5', 0.25], ['F5', 0.25],
+            ['D5', 0.25], ['F5', 0.25], ['Bb5', 0.25], ['F5', 0.25],
           ]),
           t0 + bar * barS, beatS,
           { level: 0.032, type: 'square', sustain: 0.5, semitones: semi },
@@ -2114,17 +2128,18 @@ const STALK_CORE_DEF: CombatCoreDef = {
   },
 };
 
-// SURGE — blades out, blood up. E minor gallop at speed: heroic and frantic,
-// the third combat color (frenzy/rally) the old pair never had.
-const SURGE_BASS_ROOTS = ['E2', 'E2', 'C2', 'D2', 'E2', 'C2', 'D2', 'E2'];
+// SURGE — blades out, blood up. E harmonic-minor gallop at speed: still
+// frantic, but the bright bVII bars now bare the V-major's raised seventh —
+// the augmented-second snarl instead of the heroic shine.
+const SURGE_BASS_ROOTS = ['E2', 'E2', 'C2', 'B1', 'E2', 'C2', 'B1', 'E2'];
 
 const SURGE_LEAD = mel([
   ['E4', 0.5], ['G4', 0.5], ['B4', 0.5], ['E5', 1], ['D5', 0.5], ['B4', 1],
   ['G4', 0.5], ['A4', 0.5], ['B4', 0.5], ['G4', 1], ['E4', 0.5], [null, 1],
   ['C5', 0.75], ['B4', 0.25], ['A4', 0.5], ['B4', 1], ['G4', 0.5], ['E4', 1],
-  ['D5', 0.75], ['C5', 0.25], ['B4', 0.5], ['A4', 1], ['B4', 0.5], [null, 1],
+  ['D#5', 0.75], ['C5', 0.25], ['B4', 0.5], ['A4', 1], ['B4', 0.5], [null, 1],
   ['E5', 0.5], ['D5', 0.5], ['B4', 0.5], ['G4', 1], ['A4', 0.5], ['B4', 1],
-  ['C5', 0.5], ['B4', 0.5], ['A4', 0.5], ['G4', 1], ['F#4', 0.5], [null, 1],
+  ['C5', 0.5], ['B4', 0.5], ['A4', 0.5], ['F#4', 1], ['D#4', 0.5], [null, 1],
 ]);
 
 const SURGE_CORE_DEF: CombatCoreDef = {
@@ -2198,8 +2213,8 @@ const SURGE_CORE_DEF: CombatCoreDef = {
           mel([
             ['E5', 0.25], ['G5', 0.25], ['B5', 0.25], ['G5', 0.25],
             ['E5', 0.25], ['G5', 0.25], ['B5', 0.25], ['G5', 0.25],
-            ['D5', 0.25], ['F#5', 0.25], ['A5', 0.25], ['F#5', 0.25],
-            ['D5', 0.25], ['F#5', 0.25], ['A5', 0.25], ['F#5', 0.25],
+            ['B4', 0.25], ['D#5', 0.25], ['F#5', 0.25], ['D#5', 0.25],
+            ['B4', 0.25], ['D#5', 0.25], ['F#5', 0.25], ['D#5', 0.25],
           ]),
           t0 + bar * barS, beatS,
           { level: 0.03, type: 'square', sustain: 0.45, semitones: semi },
@@ -2695,41 +2710,41 @@ const THRONE_BOSS_SPEC: SongSpec = (() => {
 })();
 
 // ---------------------------------------------------------------------------
-// VICTORY — the fanfare, C major. The same bones the game has always sung,
-// now with a counter-voice, walking bass and kit — and the motif's major-key
-// tag closing the loop.
+// VICTORY — relief, not parade. A minor, the fanfare bones kept but weary;
+// the E-major bars carry the raised seventh, and the motif's major tag at
+// the cadence is the one shaft of light let through.
 // ---------------------------------------------------------------------------
 
 const VICTORY_LEAD = mel([
-  // Six bars of fanfare; the motif tag owns bars 7-8.
-  ['G4', 0.5], ['C5', 0.5], ['E5', 0.5], ['G5', 2.5],
-  ['E5', 0.5], ['G5', 1], ['F5', 0.5], ['E5', 0.5], ['D5', 1.5],
-  ['C5', 1], ['E5', 0.5], ['G5', 1.5], ['A5', 0.5], ['G5', 0.5],
-  ['F5', 0.5], ['E5', 0.5], ['D5', 0.5], ['C5', 1], ['D5', 0.5], ['E5', 1],
-  ['F5', 0.5], ['D5', 0.5], ['B4', 0.5], ['G4', 1], ['B4', 0.5], ['D5', 1],
-  ['C5', 0.5], ['E5', 0.5], ['G5', 1], ['E5', 1], ['G5', 1],
+  // Six bars of weary fanfare; the motif's picardy tag owns bars 7-8.
+  ['E5', 1], ['C5', 0.5], ['A4', 0.5], ['B4', 1], ['C5', 1],
+  ['D5', 1.5], ['B4', 0.5], ['G4', 2],
+  ['A4', 1], ['C5', 1.5], ['B4', 0.5], ['A4', 1],
+  ['G#4', 2.5], ['B4', 1], [null, 0.5],
+  ['A4', 1], ['C5', 1], ['E5', 1.5], ['D5', 0.5],
+  ['C5', 1.5], ['A4', 1], ['F4', 1.5],
 ]);
 const VICTORY_COUNTER = mel([
-  ['E4', 0.5], ['G4', 0.5], ['C5', 0.5], ['E5', 2.5],
-  ['C5', 0.5], ['E5', 1], ['D5', 0.5], ['C5', 0.5], ['B4', 1.5],
-  ['A4', 1], ['C5', 0.5], ['E5', 1.5], ['F5', 0.5], ['E5', 0.5],
-  ['D5', 0.5], ['C5', 0.5], ['B4', 0.5], ['A4', 1], ['B4', 0.5], ['C5', 1],
-  ['A4', 0.5], ['B4', 0.5], ['G4', 0.5], ['E4', 1], ['G4', 0.5], ['B4', 1],
-  ['G4', 0.5], ['C5', 0.5], ['E5', 1], ['C5', 1], ['E5', 1],
+  ['C5', 1], ['A4', 0.5], ['E4', 0.5], ['G4', 1], ['A4', 1],
+  ['B4', 1.5], ['G4', 0.5], ['D4', 2],
+  ['F4', 1], ['A4', 1.5], ['G4', 0.5], ['F4', 1],
+  ['E4', 2.5], ['G#4', 1], [null, 0.5],
+  ['E4', 1], ['A4', 1], ['C5', 1.5], ['B4', 0.5],
+  ['A4', 1.5], ['F4', 1], ['D4', 1.5],
 ]);
-const VICTORY_BASS_ROOTS = ['C3', 'G2', 'A2', 'E2', 'F2', 'C3', 'G2', 'G2'];
+const VICTORY_BASS_ROOTS = ['A2', 'G2', 'F2', 'E2', 'A2', 'F2', 'E2', 'A2'];
 
 const VICTORY_SPEC: SongSpec = {
-  bpm: 138,
+  bpm: 124,
   barsPerBlock: 8,
-  trim: 1.35,
+  trim: 1.45,
   block: (ctx, out, t0) => {
-    const beatS = 60 / 138;
+    const beatS = 60 / 124;
     const barS = 4 * beatS;
     const pads = [
-      ch('C4', 'E4', 'G4'), ch('G3', 'B3', 'D4'), ch('A3', 'C4', 'E4'),
-      ch('E3', 'G3', 'B3'), ch('F3', 'A3', 'C4'), ch('C4', 'E4', 'G4'),
-      ch('G3', 'B3', 'D4'), ch('G3', 'B3', 'D4'),
+      ch('A3', 'C4', 'E4'), ch('G3', 'B3', 'D4'), ch('F3', 'A3', 'C4'),
+      ch('E3', 'G#3', 'B3'), ch('A3', 'C4', 'E4'), ch('F3', 'A3', 'C4'),
+      ch('E3', 'G#3', 'B3'), ch('A3', 'C#4', 'E4'),
     ];
     for (let bar = 0; bar < 8; bar++) {
       const t = t0 + bar * barS;
@@ -2766,8 +2781,8 @@ const VICTORY_SPEC: SongSpec = {
       type: 'triangle',
       sustain: 0.75,
     });
-    // Bars 7-8 over the cadence: the Godwake motif in the major.
-    lineAt(ctx, out, motifSteps('C5', 'major'), t0 + 24 * beatS, beatS, {
+    // Bars 7-8 over the cadence: the Godwake motif turned major — the light.
+    lineAt(ctx, out, motifSteps('A4', 'major'), t0 + 24 * beatS, beatS, {
       level: 0.09,
       type: 'square',
       sustain: 0.8,
@@ -2777,23 +2792,24 @@ const VICTORY_SPEC: SongSpec = {
 };
 
 // ---------------------------------------------------------------------------
-// SHOP — coin and lamplight. A dorian vamp with a swung pluck arp: jaunty
-// enough to feel safe, minor enough to remember where you are.
+// SHOP — coin and lamplight in a town that remembers. A minor pluck vamp,
+// barely swung; the last bar turns on E major (the raised seventh) before
+// the lamp gutters back to Am.
 // ---------------------------------------------------------------------------
 
 const SHOP_BARS: Array<{ arp: string[]; bass: string }> = [
   { arp: ['A3', 'C4', 'E4', 'G4', 'A4', 'G4', 'E4', 'C4'], bass: 'A2' },
   { arp: ['A3', 'C4', 'E4', 'G4', 'B4', 'G4', 'E4', 'C4'], bass: 'A2' },
-  { arp: ['D4', 'F#4', 'A4', 'C5', 'D5', 'C5', 'A4', 'F#4'], bass: 'D3' },
-  { arp: ['D4', 'F#4', 'A4', 'C5', 'B4', 'A4', 'F#4', 'D4'], bass: 'D3' },
+  { arp: ['D4', 'F4', 'A4', 'C5', 'D5', 'C5', 'A4', 'F4'], bass: 'D3' },
+  { arp: ['D4', 'F4', 'A4', 'C5', 'A4', 'F4', 'D4', 'A3'], bass: 'D3' },
   { arp: ['A3', 'C4', 'E4', 'G4', 'A4', 'G4', 'E4', 'C4'], bass: 'A2' },
-  { arp: ['G3', 'B3', 'D4', 'F#4', 'G4', 'F#4', 'D4', 'B3'], bass: 'G2' },
+  { arp: ['G3', 'B3', 'D4', 'F4', 'G4', 'F4', 'D4', 'B3'], bass: 'G2' },
   { arp: ['A3', 'C4', 'E4', 'A4', 'E4', 'C4', 'A3', 'E3'], bass: 'A2' },
-  { arp: ['A3', 'C4', 'E4', 'G4', 'E4', 'C4', 'A3', 'C4'], bass: 'A2' },
+  { arp: ['E3', 'G#3', 'B3', 'E4', 'B3', 'G#3', 'E3', 'B2'], bass: 'E2' },
 ];
 
 const SHOP_SPEC: SongSpec = {
-  bpm: 100,
+  bpm: 90,
   barsPerBlock: 8,
   trim: 1.45,
   setup: (ctx, out) =>
@@ -2804,7 +2820,7 @@ const SHOP_SPEC: SongSpec = {
       { hz: 0.07, depth: 120 },
     ),
   block: (ctx, out, t0, blockIdx) => {
-    const beatS = 60 / 100;
+    const beatS = 60 / 90;
     const barS = 4 * beatS;
     for (let bar = 0; bar < 8; bar++) {
       const t = t0 + bar * barS;
@@ -2813,7 +2829,7 @@ const SHOP_SPEC: SongSpec = {
         ctx, out,
         mel(arp.map((n) => [n, 0.5] as MStep)),
         t, beatS,
-        { level: 0.06, type: 'triangle', sustain: 0.42, swing: 0.16, attack: 0.003 },
+        { level: 0.06, type: 'triangle', sustain: 0.42, swing: 0.1, attack: 0.003 },
       );
       lineAt(
         ctx, out,
@@ -2821,23 +2837,23 @@ const SHOP_SPEC: SongSpec = {
         t, beatS,
         { level: 0.085, type: 'triangle', sustain: 0.8 },
       );
-      drumBarAt(ctx, out, 'k...h...h...h...', t, beatS, 0.35, 0.16);
+      drumBarAt(ctx, out, 'k.......h.......', t, beatS, 0.3, 0.1);
     }
-    // A little merchant's whistle, every other pass.
+    // The lamplighter's sigh, every other pass.
     if (blockIdx % 2 === 1) {
       lineAt(
         ctx, out,
         mel([
-          ['A4', 0.5], ['C5', 0.5], ['B4', 0.5], ['G4', 0.5], ['E4', 1.5], [null, 0.5],
-          ['G4', 0.5], ['A4', 0.5], ['B4', 1], ['A4', 1.5], [null, 0.5],
+          ['A4', 1], ['C5', 1.5], ['B4', 0.5], ['A4', 1], ['G#4', 1.5],
+          ['A4', 2.5], [null, 2],
         ]),
         t0 + 16 * beatS, beatS,
         {
           level: 0.055,
           type: 'square',
-          sustain: 0.65,
-          swing: 0.16,
-          vibrato: { hz: 5.5, cents: 9, after: 0.1 },
+          sustain: 0.75,
+          swing: 0.1,
+          vibrato: { hz: 5.2, cents: 10, after: 0.15 },
         },
       );
     }
@@ -2887,8 +2903,8 @@ const EVENT_SPEC: SongSpec = {
         level: 0.055,
         type: 'triangle',
         detune: 8,
-        attack: barS * 0.5,
-        lowpass: 1200,
+        attack: barS * 0.6,
+        lowpass: 950,
       });
       // Pendulum.
       lineAt(
@@ -2902,7 +2918,7 @@ const EVENT_SPEC: SongSpec = {
         { level: 0.05, type: 'triangle', sustain: 0.7 },
       );
     }
-    bellAt(ctx, out, midi(blockIdx % 2 === 0 ? 'B5' : 'E5'), t0 + 14 * beatS, 4 * beatS, 0.035);
+    bellAt(ctx, out, midi(blockIdx % 2 === 0 ? 'E5' : 'C5'), t0 + 14 * beatS, 4 * beatS, 0.035);
   },
 };
 
