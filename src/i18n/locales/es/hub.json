@@ -105,5 +105,8 @@
   },
   "setGear": {
     "equippedCount": "{n}/{total} equipadas"
-  }
+  },
+  "ascensionLabel": "Ascensión",
+  "ascensionDown": "Bajar la ascensión",
+  "ascensionUp": "Subir la ascensión"
 }

@@ -659,3 +659,26 @@ describe('New Game+ run-launcher flow', () => {
     expect(useGameStore.getState().newGamePlusFlow).toBe(false);
   });
 });
+
+describe('Continue from a quit-to-title save (owner-hit 2026-06-12)', () => {
+  it('loads a titled save with a living soul straight to the hub', async () => {
+    const { useGameStore, SAVE_SLOT_KEY_PREFIX } = await import('./gameStore');
+    const { useScreenStore } = await import('./screenStore');
+    const { buildPlayerCharacter, presetCreationInput } = await import(
+      '../engine/character/defaultCharacter'
+    );
+    const raw = localStorage.getItem(SAVE_SLOT_KEY_PREFIX + '0');
+    const wrapper = raw ? JSON.parse(raw) : { state: {}, version: 21 };
+    wrapper.state = {
+      ...wrapper.state,
+      screen: 'title',
+      character: buildPlayerCharacter(presetCreationInput('fighter')),
+      delve: null,
+      combat: null,
+    };
+    localStorage.setItem(SAVE_SLOT_KEY_PREFIX + '0', JSON.stringify(wrapper));
+    const res = useGameStore.getState().loadFromSlot(0);
+    expect(res.ok).toBe(true);
+    expect(useScreenStore.getState().screen).toBe('hub');
+  });
+});

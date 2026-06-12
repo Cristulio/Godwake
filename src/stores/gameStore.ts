@@ -1052,6 +1052,13 @@ export const useGameStore = create<GameState>()(
               ? (migrateV1ToV2({ ...wrapper.state } as unknown as Record<string, unknown>) as unknown as PersistedSnapshot)
               : wrapper.state;
           scatterSnapshot(migrated);
+          // A save quit-to-title persists screen='title' — restoring it verbatim
+          // makes Continue a visible no-op (owner-hit, 2026-06-12). A loaded soul
+          // with no live run belongs at the hub; only a characterless save stays
+          // on the title.
+          if (migrated.screen === 'title' && migrated.character) {
+            useScreenStore.getState().setScreen('hub');
+          }
           return { ok: true };
         },
 
