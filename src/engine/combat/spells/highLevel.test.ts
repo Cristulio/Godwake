@@ -173,9 +173,10 @@ describe('Shape Change — the become-a-dragon capstone', () => {
 
   it('the claws strike at +3 to hit and +3 damage (a +3 enchanted weapon)', () => {
     const w = makeArchmage('shape-change');
-    // Heavy STR so both swings clear the target AC on the same seed — the +3
-    // damage delta is only meaningful when both connect.
-    const strong: Character = { ...w, baseAbilityScores: { ...w.baseAbilityScores, str: 30 } };
+    // Heavy INT (the claws' casterWeapon attack stat) so both swings clear the
+    // target AC on the same seed — the +3 damage delta is only meaningful when
+    // both connect.
+    const strong: Character = { ...w, baseAbilityScores: { ...w.baseAbilityScores, int: 30 } };
     const init = createCombat({ character: strong, monsters: [{ def: getMonster('spider-broodmother') }] });
     const monId = findMonster(init.state).id;
 

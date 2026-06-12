@@ -1,6 +1,7 @@
 export { applyDamage, evaluateCombatEnd } from './damage';
 export {
   playerAttack,
+  attackWeaponId,
   sneakAttackDiceForLevel,
   weaponDamageDice,
   type AttackContext,

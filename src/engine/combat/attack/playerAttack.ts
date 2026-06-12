@@ -15,12 +15,14 @@ import {
   effectiveAbilityScores,
   characterHasMechanic,
   isRaging,
+  isWildShaped,
   ragedHealAmount,
   proficiencyBonus,
   isFullCaster,
   spellcastingAbility,
   spellcastingMod,
 } from '../../character/derived';
+import { beastWeaponId } from '../wildShape';
 import { bardInspirationDieSize, spendsInspirationOnDamage } from '../bard';
 import { paladinSmiteOnHit } from '../paladin';
 import { rageDamageBonus } from '../../character/actions';
@@ -34,9 +36,15 @@ import {
   DRAGON_CLAW_ATTACKS,
   DRAGON_CLAW_DAMAGE_BONUS,
   DRAGON_CLAW_HIT_BONUS,
+  DRAGON_CLAW_WEAPON_ID,
   isDragonForm,
 } from '../shapeChange';
-import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
+import {
+  monkKiSaveDC,
+  monkFightsUnarmed,
+  martialArtsWeaponId,
+  MONK_UNARMED_DAMAGE_EDGE,
+} from '../monk';
 import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon, rageBrokenByArmor } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
@@ -147,6 +155,24 @@ function targetAC(target: Combatant, character: Readonly<Character>): number {
 }
 
 /**
+ * Which weapon id an attack action swings RIGHT NOW — the single source of
+ * truth for every attack dispatch (the player's CombatScreen tap and the bot's
+ * actionPolicy both resolve through here, so the two paths can never diverge).
+ * A transformed body fights with its own arms, ahead of anything equipped:
+ * dragon form swings the Dragon Claws, a wild-shaped druid its level-tier beast
+ * claws, a bare-handed monk its Martial Arts fists. Otherwise the equipped
+ * main-hand (undefined when bare-handed and none of the above applies).
+ */
+export function attackWeaponId(character: Readonly<Character>): string | undefined {
+  if (isDragonForm(character)) return DRAGON_CLAW_WEAPON_ID;
+  if (isWildShaped(character)) return beastWeaponId(character);
+  if (character.classId === 'monk' && monkFightsUnarmed(character)) {
+    return martialArtsWeaponId(character);
+  }
+  return character.equipped.mainHand?.itemId;
+}
+
+/**
  * Player attacks a target with a weapon (must be the equipped main-hand).
  * Returns CombatActionResult: callers use result.state and result.character
  * directly. Internals thread a local `nextCharacter` accumulator — no in-place
@@ -176,10 +202,14 @@ export function playerAttack(
   // Ranged weapons (bows, crossbows) are flagged by the `ammunition` property.
   // Thrown daggers stay in the finesse branch — they're melee that can fly.
   const isRanged = isRangedWeapon(w);
-  // The Bard's War Lute is a CHA caster-weapon: its attack AND damage scale off
-  // the wielder's spellcasting modifier (Charisma) instead of STR/DEX — the
-  // "wand" the caster-leaning bard strikes with. Only a spellcasting class earns
-  // it; a non-caster swinging one falls back to the ordinary STR/DEX read.
+  // Caster-weapons (`casterWeapon` flag): attack AND damage scale off the
+  // wielder's spellcasting modifier instead of STR/DEX. The Bard's War Lute
+  // (CHA) is the armed case; the SHAPESHIFT natural weapons ride the same read —
+  // a wild-shaped druid's beast claws strike off WIS, a Shape-Changed wizard's
+  // dragon claws off INT. The transformed body fights with the caster's grown
+  // stat, never the sheet's dumped STR/DEX (the to-hit fix behind the forms
+  // playing as martial beasts). Only a spellcasting class earns the read; a
+  // non-caster swinging one falls back to the ordinary STR/DEX branch.
   const isCasterWeapon = w.casterWeapon === true && isFullCaster(nextCharacter.classId);
   const attackAbility: AbilityName = isCasterWeapon
     ? spellcastingAbility(nextCharacter)

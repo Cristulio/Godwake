@@ -61,9 +61,25 @@
     "name": "Garras de Bestia",
     "description": "Diente y garra —las armas naturales de la forma prestada."
   },
+  "beast-claws-elder": {
+    "name": "Garras Ancestrales",
+    "description": "El bosque antiguo responde a una llamada más honda —formas más pesadas, mayor alcance, un desgarro más certero."
+  },
+  "beast-claws-primal": {
+    "name": "Garras Primigenias",
+    "description": "Las primeras bestias, recordadas en diente y tendón —lo salvaje tal como era antes de los nombres."
+  },
   "dire-claws": {
     "name": "Garras Atroces",
     "description": "Los depredadores más pesados que un druida del Círculo de la Luna puede vestir —un desgarro más hondo y certero."
+  },
+  "dire-claws-savage": {
+    "name": "Garras Salvajes",
+    "description": "Las formas más hondas del círculo lunar —depredadores supremos que van a la garganta, no al flanco."
+  },
+  "dire-claws-apex": {
+    "name": "Garras del Depredador",
+    "description": "Nada en el bosque antiguo cazaba a estas criaturas —la última forma que la luna le muestra a un druida."
   },
   "dragon-claws": {
     "name": "Garras de Dragón",
