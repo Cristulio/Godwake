@@ -1074,3 +1074,51 @@ describe('delveStore — a pending level-up is forced before the next fight', ()
     expect(d.currentRoomId).toBe(target);
   });
 });
+
+describe('run ledger survives a mid-run persist round-trip (the deploy-reload path)', () => {
+  it('keeps mobsKilled and visitedRoomIds through snapshot/scatter', async () => {
+    const { useGameStore, SAVE_SLOT_KEY_PREFIX } = await import('./gameStore');
+    const { useDelveStore } = await import('./delveStore');
+    const { buildPlayerCharacter, presetCreationInput } = await import(
+      '../engine/character/defaultCharacter'
+    );
+    const { useCharacterStore } = await import('./characterStore');
+
+    useCharacterStore.setState({
+      character: buildPlayerCharacter(presetCreationInput('fighter')),
+      saveSeed: 'ledger-seed',
+    });
+    const delve = useDelveStore.getState();
+    const current = delve.delve;
+    // Build a minimal mid-run delve with a fat ledger.
+    const midRun = {
+      ...(current ?? {}),
+      rooms: Array.from({ length: 5 }, (_, i) => ({ id: `r${i}`, kind: i === 4 ? 'boss' : 'combat' })),
+      currentRoomIdx: 3,
+      phase: 'active',
+      mobsKilled: 137,
+      visitedRoomIds: ['r0', 'r1', 'r2', 'r3'],
+    };
+    useDelveStore.setState({ delve: midRun as never });
+
+    const raw = localStorage.getItem(SAVE_SLOT_KEY_PREFIX + '0');
+    const wrapper = raw ? JSON.parse(raw) : { state: {}, version: 21 };
+    // Simulate the persist write of the live state, then a reload's restore.
+    wrapper.state = {
+      ...wrapper.state,
+      screen: 'delve',
+      character: useCharacterStore.getState().character,
+      delve: midRun,
+      combat: null,
+    };
+    // Order matters: the persist middleware auto-writes slot 0 on every store
+    // change, so clear the live store FIRST and write the crafted wrapper LAST.
+    useDelveStore.setState({ delve: null });
+    localStorage.setItem(SAVE_SLOT_KEY_PREFIX + '0', JSON.stringify(wrapper));
+    const res = useGameStore.getState().loadFromSlot(0);
+    expect(res.ok).toBe(true);
+    const restored = useDelveStore.getState().delve;
+    expect(restored?.mobsKilled).toBe(137);
+    expect(restored?.visitedRoomIds).toEqual(['r0', 'r1', 'r2', 'r3']);
+  });
+});

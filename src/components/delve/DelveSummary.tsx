@@ -24,7 +24,8 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
   const ascensionLevel = delve.ascensionLevel ?? 0;
   const ascension = getAscensionLevel(ascensionLevel);
   // Single source of truth — exactly what finishDelve will bank.
-  const renownEarned = character ? computeDelveRenown(delve, character).total : 0;
+  const renown = character ? computeDelveRenown(delve, character) : null;
+  const renownEarned = renown?.total ?? 0;
   // A clear at the current highest rung opens the next (see unlockNextAscension).
   // ascensionUnlocked hasn't incremented yet — finishDelve runs on Return.
   const willUnlockAscension =
@@ -52,6 +53,19 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
           <Stat label={t('ui.summary.xpEarned')} value={String(delve.xpEarned)} color="amber" />
           <Stat label={victorious ? t('ui.summary.renown') : t('ui.summary.renownLost')} value={`+${renownEarned}`} color="amber" />
         </div>
+        {renown && (
+          <div className="mt-3 pt-3 border-t border-[var(--color-border-dim)] text-center">
+            <span className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
+              {t('ui.summary.renownLedger', {
+                mobs: renown.mobsKilled,
+                bosses: renown.bossesKilled,
+                rooms: renown.roomsReached,
+                base: renown.base,
+                mult: renown.multiplier.toFixed(2),
+              })}
+            </span>
+          </div>
+        )}
         {banes > 0 && (
           <div className="mt-3 pt-3 border-t border-[var(--color-border-dim)] text-center">
             <span className="text-[var(--color-accent-amber)] text-[10px] uppercase tracking-widest">

@@ -161,7 +161,8 @@
     "deepens": "The world deepens. Ascension {n} opens to you — a harder road, and a richer one. The Grove stirs with it.",
     "groveReturns": "The grove will return you to life. Your soul remembers what your flesh has forgotten.",
     "returnToTown": "Return to Wakeford",
-    "wakeAtGrove": "Wake at the Grove"
+    "wakeAtGrove": "Wake at the Grove",
+    "renownLedger": "{mobs} foes felled · {bosses} bosses broken · {rooms} rooms walked — {base} weight × {mult} of the soul"
   },
   "level": {
     "soulTempers": "The soul tempers",
