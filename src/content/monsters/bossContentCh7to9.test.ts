@@ -7,6 +7,10 @@ import {
   effectiveMonsterActions,
   refreshMonsterIntents,
 } from '../../engine/combat/attack/monsterIntent';
+import {
+  applyPlayerCondition,
+  playerConditionMods,
+} from '../../engine/combat/playerConditions';
 import { createDiceRoller } from '../../engine/dice';
 import type { DiceRoller } from '../../engine/dice';
 import { getMonster } from './index';
@@ -104,14 +108,80 @@ describe('Ch7 — Drowned Custodian', () => {
 });
 
 describe('Ch8 — Ashen Marshal', () => {
-  it('winds up Marshalled Volley (telegraphed frighten)', () => {
-    const volley = getMonster('ashen-marshal').actions.find((a) => a.name === 'Marshalled Volley');
-    expect(volley?.kind).toBe('debuff');
-    expect(volley?.telegraph?.chargeText).toBeTruthy();
-    expect(volley && volley.kind === 'debuff' && volley.condition).toBe('frightened');
+  it("sounds The Marshal's Horn (telegraphed frighten) and acts twice a turn", () => {
+    const def = getMonster('ashen-marshal');
+    expect(def.actionsPerTurn).toBe(2);
+    const horn = def.actions.find((a) => a.name === "The Marshal's Horn");
+    expect(horn?.kind).toBe('debuff');
+    expect(horn?.telegraph?.chargeText).toBeTruthy();
+    expect(horn && horn.kind === 'debuff' && horn.condition).toBe('frightened');
   });
 
-  it('enters the enrage phase at half HP — transforms, drops guard, gains Cauterising Brand', () => {
+  it('resolves two actions in one turn — a frightened hero still eats the full drill twice', () => {
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(7);
+    const def = getMonster('ashen-marshal');
+    // Pre-frightened so the picker skips the horn (and round 2 skips the
+    // opener): both slots fall through to the Old Campaign multiattack.
+    const character = applyPlayerCondition(fighter(1000), { name: 'frightened', rounds: 99 });
+    const init = createCombat({ character, monsters: [{ def }] });
+    const id = primary(init.state).id;
+    const drill = def.actions.find((a) => a.kind === 'multiattack');
+    const swings = drill && drill.kind === 'multiattack' ? drill.attacks : 0;
+    expect(swings).toBeGreaterThan(0);
+    const before = init.state.attackEventCounter;
+    const r = turn(roller, init.state, init.character, id, 2);
+    expect(r.state.attackEventCounter - before).toBe(2 * swings);
+  });
+
+  it('the horn winds up one turn, then frightens through a failed WIS save (attack disadvantage)', () => {
+    let landed = false;
+    for (let seed = 1; seed <= 200 && !landed; seed++) {
+      _resetMonsterInstanceCounter();
+      const roller = createDiceRoller(seed);
+      const def = getMonster('ashen-marshal');
+      const init = createCombat({ character: fighter(1000), monsters: [{ def }] });
+      const id = primary(init.state).id;
+      // Round 1: the opener, then the horn goes to his lips — a full charging
+      // act, no blade. (On seeds where the hero saves the hold, the opener
+      // re-fires in the second slot instead — skip those seeds.)
+      const r1 = turn(roller, init.state, init.character, id, 1);
+      if (primary(r1.state).instance.pendingTelegraph?.actionName !== "The Marshal's Horn") {
+        continue;
+      }
+      // Round 2: the charged call resolves before anything else.
+      const r2 = turn(roller, r1.state, r1.character, id, 2);
+      if (r2.character.conditions.some((c) => c.name === 'frightened')) {
+        landed = true;
+        expect(playerConditionMods(r2.character).attackDisadvantage).toBe(true);
+        expect(r2.state.log.some((l) => /gripped by fear/.test(l.text))).toBe(true);
+      }
+    }
+    expect(landed).toBe(true);
+  });
+
+  it('a passed WIS save shrugs the horn — no fear takes hold, the resist is logged', () => {
+    let resisted = false;
+    for (let seed = 1; seed <= 300 && !resisted; seed++) {
+      _resetMonsterInstanceCounter();
+      const roller = createDiceRoller(seed);
+      const def = getMonster('ashen-marshal');
+      const init = createCombat({ character: fighter(1000), monsters: [{ def }] });
+      const id = primary(init.state).id;
+      const r1 = turn(roller, init.state, init.character, id, 1);
+      if (primary(r1.state).instance.pendingTelegraph?.actionName !== "The Marshal's Horn") {
+        continue;
+      }
+      const r2 = turn(roller, r1.state, r1.character, id, 2);
+      if (!r2.character.conditions.some((c) => c.name === 'frightened')) {
+        resisted = true;
+        expect(r2.state.log.some((l) => /resists The Marshal's Horn/.test(l.text))).toBe(true);
+      }
+    }
+    expect(resisted).toBe(true);
+  });
+
+  it('enters the half-HP phase — transforms, drops guard, keeps the brand and the whole base kit', () => {
     _resetMonsterInstanceCounter();
     const roller = createDiceRoller(7);
     const def = getMonster('ashen-marshal');
@@ -125,7 +195,42 @@ describe('Ch8 — Ashen Marshal', () => {
     expect(inst.transformed).toBe(true);
     expect(inst.ac).toBe(acBefore - 2);
     expect(r.state.log.some((l) => /reignites/i.test(l.text))).toBe(true);
-    expect(effectiveMonsterActions(def, inst).map((a) => a.name)).toContain('Cauterising Brand');
+    // The phase re-lists the kit (replaceActions): every base action must
+    // survive the boundary — a charged horn re-derives by name on resolve.
+    const replaced = effectiveMonsterActions(def, inst).map((a) => a.name);
+    expect(replaced).toContain('Cauterising Brand');
+    expect(replaced).toContain('The Line Answers');
+    for (const a of def.actions) expect(replaced).toContain(a.name);
+  });
+
+  it('past half he calls the line — ONE wave of two Slagbound Legionaries, never a second', () => {
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(7);
+    const def = getMonster('ashen-marshal');
+    // Pre-frightened so neither slot spends the turn charging the horn — the
+    // call must land at the phase beat, not wait behind the signature.
+    const character = applyPlayerCondition(fighter(1000), { name: 'frightened', rounds: 99 });
+    const init = createCombat({ character, monsters: [{ def }] });
+    const id = primary(init.state).id;
+    const bloodied = setHp(init.state, id, 100);
+    const r3 = turn(roller, bloodied, init.character, id, 3);
+    expect(liveDefs(r3.state, 'slagbound-legionary').length).toBe(2);
+    // Later bloodied turns never re-call the wave (once: true).
+    let r = r3;
+    for (let round = 4; round <= 6; round++) {
+      r = turn(roller, r.state, r.character, id, round);
+    }
+    expect(liveDefs(r.state, 'slagbound-legionary').length).toBe(2);
+  });
+
+  it('the call points at the registered Slagbound Legionary def', () => {
+    const def = getMonster('ashen-marshal');
+    const call = def.phases?.[0]?.addActions?.find((a) => a.name === 'The Line Answers');
+    expect(call?.kind).toBe('summon');
+    expect(call && call.kind === 'summon' && call.summonDefId).toBe('slagbound-legionary');
+    expect(call && call.kind === 'summon' && call.count).toBe(2);
+    expect(call && call.kind === 'summon' && call.once).toBe(true);
+    expect(() => getMonster('slagbound-legionary')).not.toThrow();
   });
 });
 
