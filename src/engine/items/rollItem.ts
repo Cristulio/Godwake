@@ -5,6 +5,7 @@ import type { Affix, GearRarity, ItemRef, Weapon, Armor, Accessory } from '../..
 import { getItem, getAffix, listAffixes } from '../../content/items';
 import { ORB_BASE_IDS } from '../../content/items/setBases';
 import { classWeaponProficient, classArmorProficient } from '../character/equip';
+import { affixScaleForRef, isTwoHandedPremiumBase } from './twoHandedPremium';
 
 export type BaseKind = 'weapon' | 'armor' | 'accessory';
 
@@ -328,7 +329,9 @@ export function rolledItemName(baseName: string, affixIds: string[], enhancement
  * expensive. `base.cost` (the realism number) is intentionally ignored. A flat
  * power floor + affix/enhancement premiums, all scaled by the rarity multiplier;
  * the +N premium is the gold sink that soaks mid-game inflation. The weights are
- * seed values pending the economy sim pass.
+ * seed values pending the economy sim pass. A true two-hander's affix premium
+ * scales by the same knob its magnitudes read at (twoHandedPremium), so the
+ * hotter roll prices as the power it actually grants.
  */
 const ITEM_POWER_FLOOR = 40;
 const AFFIX_PREMIUM = 70;
@@ -337,7 +340,8 @@ export function rolledItemCost(ref: ItemRef): number {
   const rarity = ref.rolled?.rarity ?? 'white';
   const enh = ref.rolled?.enhancement ?? 0;
   const enhancePremium = enh * 60 + enh * enh * 40;
-  const power = ITEM_POWER_FLOOR + AFFIX_PREMIUM * affixCount + enhancePremium;
+  const affixPremium = AFFIX_PREMIUM * affixCount * affixScaleForRef(ref);
+  const power = ITEM_POWER_FLOOR + affixPremium + enhancePremium;
   return Math.round(power * RARITY_PRICE_MULT[rarity]);
 }
 
@@ -389,7 +393,11 @@ export function rollItem(roller: DiceRoller, opts: RollItemOptions): ItemRef {
   const carriesEnhancement =
     base.kind === 'weapon' ||
     (base.kind === 'armor' && base.category !== 'robe' && base.category !== 'orb');
-  const enhancement = carriesEnhancement ? rollEnhancement(roller, depth) : 0;
+  let enhancement = carriesEnhancement ? rollEnhancement(roller, depth) : 0;
+  // Two-handed premium, +N edge: one step closer to the depth cap, never past it.
+  if (isTwoHandedPremiumBase(base)) {
+    enhancement = Math.min(enhancement + 1, depthEnhanceCap(depth));
+  }
 
   return {
     itemId: base.id,

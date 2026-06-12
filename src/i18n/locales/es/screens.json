@@ -192,6 +192,7 @@
     "twoH": "2m",
     "oneHanded": "A una mano",
     "twoHanded": "A dos manos",
+    "twoHandedPremium": "Peso a dos manos — sus encantamientos rinden un {pct}% más.",
     "versatileHands": "Versátil ({dice} a dos manos)",
     "acShield": "escudo +{n} CA",
     "robeNoAc": "túnica · sin CA",
