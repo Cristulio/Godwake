@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
+import { getItem } from '../../content/items';
 import {
   characterHasMechanic,
   effectiveAbilityScores,
@@ -26,9 +27,11 @@ export const MONK_UNARMED_DAMAGE_EDGE = 2;
 
 /**
  * The virtual unarmed-strike profiles the engine swaps in at each Martial Arts
- * tier (see {@link martialArtsWeaponId}). These — and an empty hand — are the
- * ONLY things that count as "unarmed". A real weapon, even a themed "monk
- * weapon", does not.
+ * tier (see {@link martialArtsWeaponId}). Pure attack-dispatch internals: they
+ * are never owned, dealt, or equipped — a monk's empty main-hand IS the unarmed
+ * state, and the dispatch resolves one of these ids only at the moment of the
+ * swing. These — and an empty hand — are the only things that count as
+ * "unarmed". A real weapon, even a themed monk weapon, does not.
  */
 const UNARMED_STRIKE_IDS: ReadonlySet<string> = new Set([
   'monk-fists',
@@ -38,23 +41,47 @@ const UNARMED_STRIKE_IDS: ReadonlySet<string> = new Set([
 ]);
 
 /** Whether this item id is the monk's bare-fist unarmed strike — the only weapon
- *  id that earns the Martial Arts kit + unarmed damage edge. */
+ *  id that earns the Martial Arts die + unarmed damage edge. */
 export function isUnarmedStrikeId(itemId: string): boolean {
   return UNARMED_STRIKE_IDS.has(itemId);
 }
 
+/** Whether this item id is a themed monk weapon (war staff / paired kama /
+ *  temple glaive — the `monkWeapon` content flag): an arm drilled into the
+ *  forms, so the Ki kit keeps flowing around it (see {@link monkKitActive}).
+ *  The virtual fists are "unarmed", not a weapon, and don't carry the flag. */
+export function isMonkWeaponId(itemId: string): boolean {
+  const item = getItem(itemId);
+  return item.kind === 'weapon' && item.monkWeapon === true;
+}
+
 /**
- * Is this monk striking TRULY unarmed — bare-handed (no weapon, or the virtual
- * fists) — and thus entitled to the Martial Arts die, Flurry / Stunning Strike /
- * all Ki spends, and the unarmed damage edge? ANY equipped weapon turns the kit
- * off, including a themed "monk weapon": the player trades the kit for the
- * weapon's own die, affixes, and enhancement. Non-monks are never "unarmed".
+ * Is this monk striking TRULY unarmed — bare-handed (an empty main-hand, or the
+ * virtual fists the dispatch swaps in) — and thus rolling the level-scaled
+ * Martial Arts die plus the unarmed damage edge? ANY equipped weapon turns this
+ * off, including a themed monk weapon: a wielded arm swings its own die,
+ * affixes, and enhancement instead. Non-monks are never "unarmed".
  */
 export function monkFightsUnarmed(character: Readonly<Character>): boolean {
   if (character.classId !== 'monk') return false;
   const mainHand = character.equipped.mainHand;
   if (!mainHand) return true;
   return isUnarmedStrikeId(mainHand.itemId);
+}
+
+/**
+ * Does the monk's Ki kit fire — Flurry of Blows, Patient Defense, Stunning
+ * Strike, and the Ki-flavoured per-hit riders (Ki-Empowered, Open Hand, Shadow)?
+ * True bare-handed AND with a themed monk weapon in hand: those arms are drilled
+ * into the forms, so wielding one trades only the Martial Arts die + unarmed
+ * edge for the weapon's die, affixes, and enhancement — the Ki keeps flowing.
+ * An ordinary weapon (a found shortsword, a longbow) stills the whole kit.
+ */
+export function monkKitActive(character: Readonly<Character>): boolean {
+  if (character.classId !== 'monk') return false;
+  if (monkFightsUnarmed(character)) return true;
+  const mainHand = character.equipped.mainHand;
+  return mainHand != null && isMonkWeaponId(mainHand.itemId);
 }
 
 /** Max Ki points for a monk: one per level, +2 at the L20 capstone (Perfect Self),
@@ -110,7 +137,10 @@ export function flurryStrikeCount(character: Readonly<Character>): number {
 export function monkHasPendingTurnAction(character: Readonly<Character>): boolean {
   if (character.classId !== 'monk') return false;
   const pendingFlurry = (character.flurryStrikesRemaining ?? 0) > 0;
+  // An affordable Ki bonus only holds the turn while the kit can actually fire —
+  // a monk who took up an ordinary weapon has no Flurry to wait for.
   const usableKi =
+    monkKitActive(character) &&
     characterHasMechanic(character, 'flurry-of-blows') &&
     (character.resources.kiPointsRemaining ?? 0) > 0 &&
     !character.actionEconomy.bonusActionUsed;
@@ -131,7 +161,7 @@ export interface MonkActionContext {
 export function useFlurryOfBlows(ctx: MonkActionContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.classId !== 'monk') return combatResult(state, character);
-  if (!monkFightsUnarmed(character)) return combatResult(state, character);
+  if (!monkKitActive(character)) return combatResult(state, character);
   if (!characterHasMechanic(character, 'flurry-of-blows')) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
   if ((character.flurryStrikesRemaining ?? 0) > 0) return combatResult(state, character);
@@ -159,7 +189,7 @@ export function useFlurryOfBlows(ctx: MonkActionContext): CombatActionResult {
 export function usePatientDefense(ctx: MonkActionContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.classId !== 'monk') return combatResult(state, character);
-  if (!monkFightsUnarmed(character)) return combatResult(state, character);
+  if (!monkKitActive(character)) return combatResult(state, character);
   if (!characterHasMechanic(character, 'patient-defense')) return combatResult(state, character);
   if (character.patientDefenseActive === true) return combatResult(state, character);
   if (character.actionEconomy.bonusActionUsed) return combatResult(state, character);
@@ -180,15 +210,16 @@ export function usePatientDefense(ctx: MonkActionContext): CombatActionResult {
 
 /**
  * Monk Stunning Strike. A free stance (no action cost) that ARMS a staggering
- * blow with 2 Ki: the next unarmed hit forces the target to save against the
- * monk's Ki DC or be staggered (it loses its next turn) — resolved on the
- * connecting hit in playerAttack. A clean miss leaves it armed; the Ki was spent
- * to arm it. Cleared at the start of the next turn.
+ * blow ({@link stunningStrikeKiCost} Ki): the next kit-bearing hit — bare-handed
+ * or with a monk weapon — forces the target to save against the monk's Ki DC or
+ * be staggered (it loses its next turn) — resolved on the connecting hit in
+ * playerAttack. A clean miss leaves it armed; the Ki was spent to arm it.
+ * Cleared at the start of the next turn.
  */
 export function useStunningStrike(ctx: MonkActionContext): CombatActionResult {
   const { character, state } = ctx;
   if (character.classId !== 'monk') return combatResult(state, character);
-  if (!monkFightsUnarmed(character)) return combatResult(state, character);
+  if (!monkKitActive(character)) return combatResult(state, character);
   if (!characterHasMechanic(character, 'stunning-strike')) return combatResult(state, character);
   if (character.stunningStrikeActive === true) return combatResult(state, character);
   const ki = character.resources.kiPointsRemaining ?? 0;

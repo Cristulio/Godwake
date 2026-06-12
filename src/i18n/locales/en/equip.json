@@ -6,5 +6,7 @@
   "cantWield": "A {class} can't wield this",
   "cantWear": "A {class} can't wear this",
   "requiresAbility": "Requires {ability} {value}",
-  "requiresStrength": "Requires Strength {value}"
+  "requiresStrength": "Requires Strength {value}",
+  "monkWeaponKeepsKit": "Drilled into the forms — Ki, the flurry, and the stances keep their footing. The swing trades the empty hand’s growing die and edge for this arm’s own steel.",
+  "monkWeaponStillsKit": "Steel stills the forms — no Ki, no flurry, no stances while this is in hand. The empty hand asks for nothing."
 }

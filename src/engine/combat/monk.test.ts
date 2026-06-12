@@ -12,8 +12,11 @@ import {
   useStunningStrike,
   monkHasPendingTurnAction,
   monkFightsUnarmed,
+  monkKitActive,
   isUnarmedStrikeId,
+  isMonkWeaponId,
 } from './monk';
+import { equipItem, unequipSlot } from '../character/equip';
 import {
   classUnlockRenown,
   STARTER_CLASSES,
@@ -141,6 +144,33 @@ describe('Monk — class definition + registry', () => {
     expect(characterHasMechanic(makeMonk(6), 'ki-empowered')).toBe(true);
     expect(characterHasMechanic(makeMonk(9), 'flurry-three')).toBe(true);
     expect(characterHasMechanic(makeMonk(20), 'perfect-self')).toBe(true);
+  });
+});
+
+describe('Monk — empty-handed by default (no phantom Fists item)', () => {
+  it('spawns with a bare main-hand and owns no weapon at all', () => {
+    const monk = buildPlayerCharacter(presetCreationInput('monk'));
+    expect(monk.equipped.mainHand).toBeNull();
+    expect(monk.inventory.some((ref) => ref.itemId.startsWith('monk-fists'))).toBe(false);
+    expect(monk.inventory.some((ref) => ref.itemId === 'shortsword')).toBe(false);
+    expect(monkFightsUnarmed(monk)).toBe(true);
+    expect(monkKitActive(monk)).toBe(true);
+  });
+
+  it('equipping a weapon and unequipping it returns the slot to clean unarmed', () => {
+    const base = makeMonk(5);
+    const armed = equipItem(
+      { ...base, inventory: [...base.inventory, { itemId: 'shortsword' }] },
+      base.inventory.length,
+    );
+    expect(armed.equipped.mainHand?.itemId).toBe('shortsword');
+    expect(monkFightsUnarmed(armed)).toBe(false);
+    expect(monkKitActive(armed)).toBe(false);
+
+    const bare = unequipSlot(armed, 'mainHand');
+    expect(bare.equipped.mainHand).toBeNull();
+    expect(monkFightsUnarmed(bare)).toBe(true);
+    expect(monkKitActive(bare)).toBe(true);
   });
 });
 
@@ -366,6 +396,11 @@ describe('Monk — turn auto-end guard (monkHasPendingTurnAction)', () => {
   it('never holds a non-monk', () => {
     expect(monkHasPendingTurnAction({ ...makeMonk(5), classId: 'fighter' })).toBe(false);
   });
+
+  it('releases a monk whose held ordinary weapon stills the kit; holds a monk-weapon wielder', () => {
+    expect(monkHasPendingTurnAction(withMainHand(makeMonk(5), 'shortsword'))).toBe(false);
+    expect(monkHasPendingTurnAction(withMainHand(makeMonk(5), 'monk-war-staff'))).toBe(true);
+  });
 });
 
 describe('Monk — Wholeness of Body temp HP', () => {
@@ -396,7 +431,7 @@ describe('Monk — Wholeness of Body temp HP', () => {
   });
 });
 
-describe('Monk — unarmed gating (kit + damage edge)', () => {
+describe('Monk — unarmed/kit gating (die + edge vs Ki kit)', () => {
   it('counts only bare fists as unarmed — monk weapons and ordinary weapons are not', () => {
     expect(isUnarmedStrikeId('monk-fists')).toBe(true);
     expect(isUnarmedStrikeId('monk-fists-master')).toBe(true);
@@ -407,6 +442,24 @@ describe('Monk — unarmed gating (kit + damage edge)', () => {
     expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'monk-fists-adept'))).toBe(true);
     expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'monk-war-staff'))).toBe(false);
     expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'shortsword'))).toBe(false);
+  });
+
+  it('flags the three temple arms as monk weapons — fists and ordinary arms are not', () => {
+    expect(isMonkWeaponId('monk-war-staff')).toBe(true);
+    expect(isMonkWeaponId('monk-paired-kama')).toBe(true);
+    expect(isMonkWeaponId('monk-temple-glaive')).toBe(true);
+    expect(isMonkWeaponId('monk-fists')).toBe(false);
+    expect(isMonkWeaponId('monk-fists-grandmaster')).toBe(false);
+    expect(isMonkWeaponId('shortsword')).toBe(false);
+  });
+
+  it('keeps the Ki kit bare-handed and with a monk weapon; an ordinary weapon stills it', () => {
+    expect(monkKitActive(withMainHand(makeMonk(5), null))).toBe(true);
+    expect(monkKitActive(withMainHand(makeMonk(5), 'monk-war-staff'))).toBe(true);
+    expect(monkKitActive(withMainHand(makeMonk(5), 'monk-paired-kama'))).toBe(true);
+    expect(monkKitActive(withMainHand(makeMonk(5), 'shortsword'))).toBe(false);
+    // Non-monks never carry the kit, bare hands or not.
+    expect(monkKitActive(withMainHand({ ...makeMonk(5), classId: 'fighter' }, null))).toBe(false);
   });
 
   it('lands the unarmed damage edge bare-handed', () => {
@@ -422,18 +475,22 @@ describe('Monk — unarmed gating (kit + damage edge)', () => {
     expect(r.state.log.some((e) => /martial arts/i.test(e.text))).toBe(true);
   });
 
-  it('turns the kit dark with ANY weapon — ordinary OR themed monk weapon', () => {
-    for (const weaponId of ['shortsword', 'monk-war-staff'] as const) {
+  it('turns the whole kit dark with an ordinary weapon — no Flurry, no stances, no edge', () => {
+    for (const weaponId of ['shortsword', 'dagger'] as const) {
       const roller = scriptRoller([18]);
       const monk = withMainHand(makeMonk(5), weaponId);
       const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('goblin') }] });
 
-      // Flurry of Blows refuses to arm and spends no Ki.
+      // Flurry of Blows refuses to arm and spends no Ki; the stances refuse too.
       const flurried = useFlurryOfBlows({ character: init.character, state: init.state });
       expect(flurried.character.flurryStrikesRemaining ?? 0).toBe(0);
       expect(flurried.character.resources.kiPointsRemaining).toBe(
         init.character.resources.kiPointsRemaining,
       );
+      const guarded = usePatientDefense({ character: init.character, state: init.state });
+      expect(guarded.character.patientDefenseActive ?? false).toBe(false);
+      const armed = useStunningStrike({ character: init.character, state: init.state });
+      expect(armed.character.stunningStrikeActive ?? false).toBe(false);
 
       // The plain weapon swing carries no martial-arts / ki edge.
       const targetId = monsterOf(init.state).id;
@@ -442,9 +499,45 @@ describe('Monk — unarmed gating (kit + damage edge)', () => {
     }
   });
 
-  it('an equipped weapon swings with its own die + enhancement — kit stays dark', () => {
-    // The tradeoff payoff: a +2 war staff lands its enhancement on the swing, but
-    // the unarmed kit (martial-arts edge, ki) is gone — the weapon bought it off.
+  it('keeps the Ki kit with a themed monk weapon — Flurry arms and pours weapon strikes', () => {
+    const roller = scriptRoller([18, 18, 18]);
+    const monk = withMainHand(makeMonk(1), 'monk-war-staff');
+    const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('blue-wyrmling') }] });
+    const kiBefore = init.character.resources.kiPointsRemaining ?? 0;
+    const targetId = monsterOf(init.state).id;
+
+    const flurried = useFlurryOfBlows({ character: init.character, state: init.state });
+    expect(flurried.character.flurryStrikesRemaining).toBe(2);
+    expect(flurried.character.resources.kiPointsRemaining).toBe(kiBefore - 1);
+
+    // The strikes swing the WEAPON (its own die — no martial-arts edge), and the
+    // queued flurry extras still burn down without re-spending the action.
+    let r = playerAttack({ roller, character: flurried.character, state: flurried.state }, targetId, 'monk-war-staff');
+    expect(r.character.actionEconomy.actionUsed).toBe(true);
+    expect(r.state.log.some((e) => /martial arts/i.test(e.text))).toBe(false);
+    r = playerAttack({ roller, character: r.character, state: r.state }, targetId, 'monk-war-staff');
+    expect(r.character.flurryStrikesRemaining).toBe(1);
+  });
+
+  it('Stunning Strike arms and resolves on a connecting monk-weapon hit', () => {
+    // Force the staff hit to land (nat 18) then the foe's CON save to fail (nat 1).
+    const roller = scriptRoller([18, 1]);
+    const monk = withMainHand(makeMonk(5), 'monk-war-staff');
+    const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('goblin') }] });
+    const armed = useStunningStrike({ character: init.character, state: init.state });
+    expect(armed.character.stunningStrikeActive).toBe(true);
+
+    const targetId = monsterOf(armed.state).id;
+    const r = playerAttack({ roller, character: armed.character, state: armed.state }, targetId, 'monk-war-staff');
+    const m = r.state.combatants.find((c) => c.id === targetId) as MonsterCombatant;
+    expect(m.instance.staggeredTurns).toBe(1);
+    expect(r.character.stunningStrikeActive ?? false).toBe(false);
+  });
+
+  it('a monk weapon swings its own die + enhancement; the unarmed die + edge stay home', () => {
+    // The tradeoff: a +2 war staff lands its enhancement on the swing and keeps
+    // Ki flowing, but the martial-arts edge (and the scaling die) belong to the
+    // empty hand alone.
     const roller = scriptRoller([18]);
     const monk = withMainHand(makeMonk(5), 'monk-war-staff', 2);
     const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('blue-wyrmling') }] });
@@ -454,6 +547,25 @@ describe('Monk — unarmed gating (kit + damage edge)', () => {
     const line = damageLines[damageLines.length - 1].text;
     expect(line).toMatch(/enhancement/);
     expect(line).not.toMatch(/martial arts/);
+  });
+
+  it('halves a monk weapon\'s enhancement on Flurry extras — gear must not compound per strike', () => {
+    const roller = scriptRoller([18, 18, 18]);
+    const monk = withMainHand(makeMonk(1), 'monk-war-staff', 2);
+    const init = createCombat({ roller, character: monk, monsters: [{ def: getMonster('blue-wyrmling') }] });
+    const targetId = monsterOf(init.state).id;
+
+    const flurried = useFlurryOfBlows({ character: init.character, state: init.state });
+
+    // Strike 1 — the Attack action: the full +2 enhancement.
+    let r = playerAttack({ roller, character: flurried.character, state: flurried.state }, targetId, 'monk-war-staff');
+    const afterFirst = r.state.log.filter((e) => e.kind === 'damage');
+    expect(afterFirst[afterFirst.length - 1].text).toMatch(/\+ 2 enhancement/);
+
+    // Strike 2 — a bonus Flurry strike: half the gear edge (2 → 1).
+    r = playerAttack({ roller, character: r.character, state: r.state }, targetId, 'monk-war-staff');
+    const afterSecond = r.state.log.filter((e) => e.kind === 'damage');
+    expect(afterSecond[afterSecond.length - 1].text).toMatch(/\+ 1 enhancement/);
   });
 
   it('halves the per-hit Grove edge on Flurry extras so it no longer compounds', () => {

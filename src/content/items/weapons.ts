@@ -300,17 +300,18 @@ export const DRAGON_CLAWS: Weapon = WeaponSchema.parse({
   description: 'Talons the length of swords — the natural arms of the dragon you have become.',
 });
 
-// Monk Martial Arts fists — never sold or rolled (absent from loot/shop pools,
-// which draw from explicit id lists). The engine swaps the monk's attack to the
-// level-appropriate die via martialArtsWeaponId. Finesse so the strike rides the
-// monk's DEX; affinity grants the matched edge. The die grows with the school:
-// d6 → d8 (L5) → d10 (L11) → d12 (L17).
+// Monk Martial Arts fists — VIRTUAL attack profiles, never owned, sold, rolled,
+// or equipped (a monk's unarmed state is an EMPTY main-hand; these ids exist only
+// inside the attack dispatch, which swaps the swing to the level-appropriate die
+// via martialArtsWeaponId). Finesse so the strike rides the monk's DEX; affinity
+// grants the matched edge. The die grows with the school: d6 → d8 (L5) →
+// d10 (L11) → d12 (L17). Not flagged monkWeapon — they ARE the unarmed strike,
+// not an arm that keeps the kit.
 export const MONK_FISTS: Weapon = WeaponSchema.parse({
   id: 'monk-fists',
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
-  monkWeapon: true,
   category: 'simple',
   damage: '1d6',
   damageType: 'bludgeoning',
@@ -325,7 +326,6 @@ export const MONK_FISTS_ADEPT: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
-  monkWeapon: true,
   category: 'simple',
   damage: '1d8',
   damageType: 'bludgeoning',
@@ -340,7 +340,6 @@ export const MONK_FISTS_MASTER: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
-  monkWeapon: true,
   category: 'simple',
   damage: '1d10',
   damageType: 'bludgeoning',
@@ -355,7 +354,6 @@ export const MONK_FISTS_GRANDMASTER: Weapon = WeaponSchema.parse({
   kind: 'weapon',
   name: 'Fists',
   affinity: 'monk',
-  monkWeapon: true,
   category: 'simple',
   damage: '1d12',
   damageType: 'bludgeoning',
@@ -365,12 +363,14 @@ export const MONK_FISTS_GRANDMASTER: Weapon = WeaponSchema.parse({
   description: 'The body perfected into a weapon — every strike a falling beam.',
 });
 
-// Bespoke monk arms — themed weapons that COUNT AS UNARMED (monkWeapon). Wielding
-// one keeps the full kit and the unarmed damage edge while letting the monk carry
-// rolled affixes + a +N enhancement on the main-hand (the per-hit gear a bare-
-// handed striker otherwise has no slot for). The strike still rides the level-
-// scaled Martial Arts die, not the listed damage — these dice are the off-the-
-// rack fallback for any non-monk who somehow swings one. Rollable monk loot.
+// Bespoke monk arms (monkWeapon) — the weapons drilled into the forms. Wielding
+// one KEEPS the Ki kit (Flurry / Patient Defense / Stunning Strike and the Ki
+// per-hit riders) but the swing is the weapon's own: its listed die, rolled
+// affixes, and +N enhancement REPLACE the level-scaled Martial Arts die and the
+// unarmed damage edge. That's the trade — the empty hand grows forever and hits
+// a little harder bare; the temple arm is the gear path, carrying the per-hit
+// rolls a bare-handed striker has no main-hand slot for. Rollable monk loot
+// (rollItem.MONK_WEAPON_BASE_IDS); an ordinary weapon stills the kit entirely.
 export const MONK_WAR_STAFF: Weapon = WeaponSchema.parse({
   id: 'monk-war-staff',
   kind: 'weapon',

@@ -10,9 +10,10 @@ import {
   equipDenialReason,
   equippedInventoryIndices,
   type EquipSlot,
-  armorEquipWarning,
+  itemEquipNote,
   equippedRefsForItemSlot,
 } from '../../engine/character/equip';
+import { martialArtsWeaponId, MONK_UNARMED_DAMAGE_EDGE } from '../../engine/combat/monk';
 import { rolledItemCost } from '../../engine/items/rollItem';
 import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
@@ -261,6 +262,8 @@ export function InventoryScreen() {
                         </div>
                       </div>
                     </div>
+                  ) : slot === 'mainHand' && character.classId === 'monk' ? (
+                    <UnarmedHand character={character} />
                   ) : (
                     <div className="flex items-center gap-3 opacity-60">
                       <div className="w-14 h-14 border border-dashed border-[var(--color-border-dim)] flex items-center justify-center text-[var(--color-text-muted)] text-2xl">
@@ -279,9 +282,7 @@ export function InventoryScreen() {
                         rolled={ref?.rolled}
                         rolledCost={ref?.rolled ? rolledItemCost(ref) : undefined}
                         equipWarning={
-                          character && item.kind === 'armor'
-                            ? armorEquipWarning(character.classId, item) ?? undefined
-                            : undefined
+                          character ? itemEquipNote(character.classId, item) ?? undefined : undefined
                         }
                         hint={t('screens.inventory.unequipHintDesktop')}
                       />
@@ -302,9 +303,7 @@ export function InventoryScreen() {
                             rolled={ref.rolled}
                             rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
                             equipWarning={
-                              character && item.kind === 'armor'
-                                ? armorEquipWarning(character.classId, item) ?? undefined
-                                : undefined
+                              character ? itemEquipNote(character.classId, item) ?? undefined : undefined
                             }
                             hint={t('screens.inventory.unequipHintTouch')}
                           />
@@ -431,9 +430,7 @@ export function InventoryScreen() {
                             rolled={ref.rolled}
                             rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
                             equipWarning={
-                              character && item.kind === 'armor'
-                                ? armorEquipWarning(character.classId, item) ?? undefined
-                                : undefined
+                              character ? itemEquipNote(character.classId, item) ?? undefined : undefined
                             }
                             hint={hint}
                           />
@@ -467,9 +464,7 @@ export function InventoryScreen() {
                               rolled={ref.rolled}
                               rolledCost={ref.rolled ? rolledItemCost(ref) : undefined}
                               equipWarning={
-                                character && item.kind === 'armor'
-                                  ? armorEquipWarning(character.classId, item) ?? undefined
-                                  : undefined
+                                character ? itemEquipNote(character.classId, item) ?? undefined : undefined
                               }
                               hint={hint}
                             />
@@ -489,6 +484,43 @@ export function InventoryScreen() {
           {t('screens.inventory.footer')}
         </div>
       </Panel>
+    </div>
+  );
+}
+
+/**
+ * The monk's empty main-hand IS the weapon. Render the living unarmed state —
+ * the level-scaled Martial Arts die plus the bare-hand edge — in place of the
+ * generic empty-slot hint. Deliberately NOT an item card: there is nothing
+ * equipped, nothing to drag out, and no phantom "Fists" occupying the slot.
+ */
+function UnarmedHand({ character }: { character: Character }) {
+  const { t } = useT();
+  const ma = getItem(martialArtsWeaponId(character));
+  const die = ma.kind === 'weapon' ? ma.damage : '1d6';
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-14 h-14 border-2 border-[var(--color-border-warm)] bg-[var(--color-bg-elevated)] flex items-center justify-center shrink-0">
+        <svg viewBox="0 0 32 32" width="40" height="40" aria-hidden>
+          <g fill="var(--color-accent-amber)" fillOpacity="0.85">
+            <rect x="13" y="24" width="6" height="4" />
+            <rect x="9" y="12" width="14" height="12" rx="2" />
+            <rect x="9" y="8" width="3" height="6" rx="1" />
+            <rect x="13" y="7" width="3" height="7" rx="1" />
+            <rect x="17" y="7" width="3" height="7" rx="1" />
+            <rect x="21" y="8" width="3" height="6" rx="1" />
+            <rect x="6" y="14" width="4" height="7" rx="1.5" />
+          </g>
+        </svg>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-display uppercase tracking-wider text-[11px] text-[var(--color-text-primary)]">
+          {t('screens.inventory.unarmedName')}
+        </div>
+        <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
+          {t('screens.inventory.unarmedLine', { die, edge: MONK_UNARMED_DAMAGE_EDGE })}
+        </div>
+      </div>
     </div>
   );
 }

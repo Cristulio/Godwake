@@ -20,7 +20,7 @@ export const MONK: Class = ClassSchema.parse({
         id: 'martial-arts',
         name: 'Martial Arts',
         description:
-          'Your fists are the weapon. Unarmed strikes fall as a d6 and ride your Dexterity, and the die grows as you do — d8 at 5th, d10 at 11th, d12 at 17th. The whole school is built to spend Ki and bury a foe in blows.',
+          'Your fists are the weapon. Unarmed strikes fall as a d6 and ride your Dexterity, and the die grows as you do — d8 at 5th, d10 at 11th, d12 at 17th. The whole school is built to spend Ki and bury a foe in blows. Temple arms — staff, kama, glaive — flow with the forms: Ki keeps its footing while the weapon swings its own steel, but the growing die belongs to the empty hand alone.',
         mechanicKey: 'martial-arts',
       },
       {

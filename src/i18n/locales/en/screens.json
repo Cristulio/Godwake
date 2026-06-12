@@ -52,7 +52,7 @@
       "barbarian": "Greataxe, no armor · 2 healing potions · 20 gold",
       "ranger": "Longbow, shortsword & leather armor · 1 healing potion · 15 gold",
       "druid": "Sickle & leather armor · 2 healing potions · 20 gold",
-      "monk": "Bare fists & shortsword, no armor · 2 healing potions · 15 gold",
+      "monk": "Empty hands, no armor · 2 healing potions · 15 gold",
       "bard": "War Lute, rapier, shield & leather armor · 3 healing potions · 20 gold",
       "paladin": "Longsword, shield & chain mail · 2 healing potions · 25 gold"
     },
@@ -144,6 +144,8 @@
       "ring2": "An affix-bearing ring.",
       "boots": "Affix-bearing boots."
     },
+    "unarmedName": "Empty Hand",
+    "unarmedLine": "{die} +{edge} bludgeoning · martial arts",
     "group": {
       "weapons": "Weapons",
       "armor": "Armor & Shields",

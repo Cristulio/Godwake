@@ -487,9 +487,9 @@ export function CombatScreen({
       return;
     }
     const roller = getActiveRoller();
-    // A monk fighting unarmed-style (bare hands or a monk weapon) strikes with
-    // its level-scaled Martial Arts die; a monk who took up an ordinary weapon
-    // swings that weapon plainly, kit dark.
+    // A bare-handed monk strikes with its level-scaled Martial Arts die; a monk
+    // who took up a weapon swings that weapon's own die (a themed monk weapon
+    // keeps the Ki kit flowing around the swing; an ordinary arm stills it).
     const weaponId = isDragonForm(character)
       ? DRAGON_CLAW_WEAPON_ID
       : character.classId === 'monk' && monkFightsUnarmed(character)

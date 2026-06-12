@@ -1,5 +1,5 @@
 import type { Character, EquipmentSlots } from '../../types/character';
-import type { Armor, ItemRef, Weapon } from '../../schemas/item';
+import type { Armor, Item, ItemRef, Weapon } from '../../schemas/item';
 import type { ClassId } from '../../schemas/ids';
 import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
@@ -174,6 +174,24 @@ export function armorEquipWarning(classId: ClassId, armor: { category: string })
     return t('equip.heavyRage');
   }
   return agileTradeoffWarning(classId, armor);
+}
+
+/**
+ * The caveat to surface when {@link classId} inspects ANY item — the cost (or
+ * keep) of taking it up. Armour routes to {@link armorEquipWarning}. A weapon in
+ * a MONK's hands answers the question the rack can't: a themed monk weapon keeps
+ * the Ki kit flowing (trading the Martial Arts die + bare-hand edge for the
+ * arm's own die, affixes, and enhancement); any other weapon stills the whole
+ * kit. Null when the piece carries no caveat for the class.
+ */
+export function itemEquipNote(classId: ClassId, item: Item): string | null {
+  if (item.kind === 'armor') return armorEquipWarning(classId, item);
+  if (item.kind === 'weapon' && classId === 'monk') {
+    return item.monkWeapon === true
+      ? t('equip.monkWeaponKeepsKit')
+      : t('equip.monkWeaponStillsKit');
+  }
+  return null;
 }
 
 /**

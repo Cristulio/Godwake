@@ -48,6 +48,7 @@ import {
   useStunningStrike,
   martialArtsWeaponId,
   monkFightsUnarmed,
+  monkKitActive,
 } from './monk';
 import { useBardicInspiration, bardInspirationLeft, spendsInspirationOnDamage } from './bard';
 import { useLayOnHands, useDivineSmite, isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from './paladin';
@@ -427,10 +428,10 @@ export function chooseCombatAction(
   const isMonk = character.classId === 'monk';
   const isBard = character.classId === 'bard';
   const isPal = isPaladin(character);
-  // The monk's Ki kit (Flurry / Patient Defense / Stunning Strike) only fires
-  // when fighting truly bare-handed; ANY weapon in hand (even a monk weapon)
+  // The monk's Ki kit (Flurry / Patient Defense / Stunning Strike) fires
+  // bare-handed or with a themed monk weapon in hand; an ordinary weapon
   // turns it dark.
-  const monkKit = isMonk && monkFightsUnarmed(character);
+  const monkKit = isMonk && monkKitActive(character);
 
   // Gate-aware focus: a boss warded by a live add shrugs off blows until the add
   // dies, so prioritize the warding add as the focus target (drop the ward, then
@@ -696,8 +697,9 @@ export function chooseCombatAction(
       return { kind: 'stunning-strike' };
     }
     // Weapon classes (and a wizard with no castable option) swing at the
-    // focus-fire target.
-    if (primary && character.equipped.mainHand) {
+    // focus-fire target. A monk's empty main-hand IS a weapon — the unarmed
+    // strike needs no held item.
+    if (primary && (character.equipped.mainHand || monkFightsUnarmed(character))) {
       return { kind: 'attack', targetId: primary.id };
     }
   }
@@ -1391,7 +1393,8 @@ export function applyPlannedAction(
     case 'attack': {
       // A wild-shaped druid strikes with its beast profile (claws/bite); a
       // bare-handed monk strikes with its level-scaled Martial Arts die. A monk
-      // who took up a weapon (even a monk weapon) swings that weapon plainly.
+      // who took up a weapon swings that weapon's own die (a themed monk weapon
+      // keeps the Ki kit flowing around the swing; an ordinary arm stills it).
       const weaponId = isDragonForm(character)
         ? DRAGON_CLAW_WEAPON_ID
         : isWildShaped(character)

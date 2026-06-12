@@ -36,7 +36,7 @@ import {
   DRAGON_CLAW_HIT_BONUS,
   isDragonForm,
 } from '../shapeChange';
-import { monkKiSaveDC, monkFightsUnarmed, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
+import { monkKiSaveDC, monkFightsUnarmed, monkKitActive, MONK_UNARMED_DAMAGE_EDGE } from '../monk';
 import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon, rageBrokenByArmor } from '../../character/equip';
 import { HUNTERS_MARK_DICE } from '../huntersMark';
@@ -193,10 +193,13 @@ export function playerAttack(
     : abilityModifier(scores[attackAbility]);
   const profBonus = proficiencyBonus(nextCharacter.level);
 
-  // A monk earns the Martial Arts kit (and the unarmed damage edge below) only
-  // when striking truly bare-handed — no weapon equipped. ANY weapon in hand,
-  // even a themed "monk weapon", turns it all off: a plain swing.
+  // The monk's two gates. TRULY bare-handed earns the Martial Arts die + the
+  // unarmed damage edge. The Ki kit (Flurry, Stunning Strike, and the Ki-flavoured
+  // per-hit riders below) also fires with a themed monk weapon in hand — the
+  // weapon swings its own die/affixes/enhancement but the forms keep flowing. An
+  // ordinary weapon stills both: a plain swing.
   const monkUnarmedStrike = monkFightsUnarmed(nextCharacter);
+  const monkKitOn = monkKitActive(nextCharacter);
 
   const quirkMods = characterQuirkMods(nextCharacter);
   // Sealed Wards twist: blessings are inert this fight — every blessing-sourced
@@ -275,9 +278,9 @@ export function playerAttack(
   const condMods = playerConditionMods(nextCharacter);
   const recklessAdvantage = nextCharacter.recklessActive === true && !isRanged;
   // Monk (Way of Shadow): the unseen opener — the first strike of the fight
-  // lands with advantage.
+  // lands with advantage. A Ki rider: it flows bare-handed or with a monk weapon.
   const shadowOpener =
-    isFirstAttack && monkUnarmedStrike && characterHasMechanic(nextCharacter, 'shadow-strike');
+    isFirstAttack && monkKitOn && characterHasMechanic(nextCharacter, 'shadow-strike');
   // Rogue Assassinate (L4): the killer opens from the blind side — the first
   // strike of the fight lands with advantage (and extra Sneak dice, below).
   const assassinateOpener =
@@ -453,15 +456,16 @@ export function playerAttack(
 
     // Monk Flurry compounding guard. A Flurry strike fires AFTER the Attack
     // action is spent (a bonus-action extra), so on entry the action is already
-    // used — that's the signal this swing is an extra unarmed strike, not a
-    // primary one. Those extras take only HALF the per-hit Grove edge (Whetstone)
-    // and gear damage affixes, so Flurry × per-hit-edge no longer COMPOUNDS up the
-    // ascension ladder (where Grove tiers + affixes are biggest, and the Monk —
-    // alone — was topping Asc 6). The intrinsic Martial Arts kit (unarmed edge,
-    // Ki, Open Hand, Shadow) still rides every strike in full — the kit fires;
-    // only the stacked external edge is rationed on the extra strikes.
+    // used — that's the signal this swing is an extra kit strike, not a primary
+    // one. Those extras take only HALF the per-hit Grove edge (Whetstone) and
+    // gear damage (affixes + a monk weapon's enhancement), so Flurry ×
+    // per-hit-edge no longer COMPOUNDS up the ascension ladder (where Grove
+    // tiers + affixes are biggest, and the Monk — alone — was topping Asc 6).
+    // The intrinsic Martial Arts kit (unarmed edge, Ki, Open Hand, Shadow)
+    // still rides every strike in full — the kit fires; only the stacked
+    // external edge is rationed on the extra strikes.
     const diminishedExtraEdge =
-      monkUnarmedStrike && nextCharacter.actionEconomy.actionUsed === true;
+      monkKitOn && nextCharacter.actionEconomy.actionUsed === true;
     const scaleExtraEdge = (v: number): number =>
       diminishedExtraEdge ? Math.floor(v / 2) : v;
 
@@ -480,10 +484,14 @@ export function playerAttack(
       }
     }
     // Weapon enhancement (+N): the same flat bonus already added to the attack
-    // roll now lands on damage.
+    // roll now lands on damage. Gear edge, so a monk's Flurry extras take half —
+    // a +3 monk weapon must not multiply by strike count any more than affixes do.
     if (weaponEnhancement > 0) {
-      bonusDamage += weaponEnhancement;
-      onTypeParts.push({ amount: weaponEnhancement, label: 'enhancement' });
+      const enh = scaleExtraEdge(weaponEnhancement);
+      if (enh > 0) {
+        bonusDamage += enh;
+        onTypeParts.push({ amount: enh, label: 'enhancement' });
+      }
     }
     // Weapon damage lever: the longbow's inherent +damage, paid for in accuracy.
     if (w.damageMod) {
@@ -535,15 +543,15 @@ export function playerAttack(
       bonusDamage += MONK_UNARMED_DAMAGE_EDGE;
       onTypeParts.push({ amount: MONK_UNARMED_DAMAGE_EDGE, label: 'martial arts' });
     }
-    // Monk Ki-Empowered Strikes (L6): channelled Ki rides every unarmed blow.
-    if (monkUnarmedStrike && characterHasMechanic(nextCharacter, 'ki-empowered')) {
+    // Monk Ki-Empowered Strikes (L6): channelled Ki rides every kit-bearing blow.
+    if (monkKitOn && characterHasMechanic(nextCharacter, 'ki-empowered')) {
       bonusDamage += 1;
       onTypeParts.push({ amount: 1, label: 'ki' });
     }
     // Monk (Open Hand): a flurry batters the guard open — extra bite on the
     // strikes that fall while a flurry is still pouring out.
     if (
-      monkUnarmedStrike &&
+      monkKitOn &&
       characterHasMechanic(nextCharacter, 'open-hand-technique') &&
       (nextCharacter.flurryStrikesRemaining ?? 0) > 0
     ) {
@@ -554,7 +562,7 @@ export function playerAttack(
     }
     // Monk (Shadow): the unseen opener drives extra Ki-charged damage home.
     // Cloak of Shadows (L10) deepens the opener from +3 to +6.
-    if (isFirstAttack && monkUnarmedStrike && characterHasMechanic(nextCharacter, 'shadow-strike')) {
+    if (isFirstAttack && monkKitOn && characterHasMechanic(nextCharacter, 'shadow-strike')) {
       const shadow = 3 + (characterHasMechanic(nextCharacter, 'cloak-of-shadows') ? 3 : 0);
       bonusDamage += shadow;
       onTypeParts.push({ amount: shadow, label: 'shadow' });
@@ -1108,12 +1116,12 @@ export function playerAttack(
       }
     }
 
-    // Monk Stunning Strike: an armed unarmed blow that lands forces a CON save —
-    // on a fail the target is staggered (loses its next turn). Boss/elite foes
-    // roll the save with advantage (resolute will) rather than being immune. The
-    // Ki was already spent to arm the stance; it clears once a blow connects (a
-    // clean miss leaves it armed for the next swing).
-    if (nextCharacter.stunningStrikeActive === true && monkUnarmedStrike && target.kind === 'monster') {
+    // Monk Stunning Strike: an armed kit blow (bare-handed or a monk weapon) that
+    // lands forces a CON save — on a fail the target is staggered (loses its next
+    // turn). Boss/elite foes roll the save with advantage (resolute will) rather
+    // than being immune. The Ki was already spent to arm the stance; it clears
+    // once a blow connects (a clean miss leaves it armed for the next swing).
+    if (nextCharacter.stunningStrikeActive === true && monkKitOn && target.kind === 'monster') {
       const stillStanding = nextState.combatants.some(
         (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
       );
