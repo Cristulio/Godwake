@@ -1241,9 +1241,17 @@
         "name": "Mantener la Línea",
         "desc": "No lo grita. Lo dice del modo en que un hombre dice una cosa que siempre ha sido obedecida —aguantad la línea—, y alguna parte adiestrada y enterrada de ti que nunca fue soldado se cuadra igual, traba tus talones y tu espina, y no te deja romper filas ni para salvar la vida."
       },
-      "Marshalled Volley": {
-        "name": "Andanada Coordinada",
-        "desc": "La andanada llega como llegó el día en que el campo murió: no apuntada, simplemente soltada, un cielo oscureciéndose de astiles de ceniza todos a la vez, y algo más viejo que el coraje en ti se quiebra y solo quiere ser pequeño, y a cubierto, y no estar aquí."
+      "The Marshal's Horn": {
+        "name": "El Cuerno del Mariscal",
+        "desc": "La llamada del cuerno rueda por el campo como rodó el día en que la línea aguantó y murió aguantando: una orden más vieja que tu coraje, dirigida no a tu mente sino a tu médula, y tu médula responde: quiere formar filas, o retroceder, cualquier cosa antes que plantarse ante el hombre que aún da órdenes a los muertos."
+      },
+      "The Line Answers": {
+        "name": "La Línea Responde",
+        "desc": "No mira para ver si es obedecido; jamás ha tenido que hacerlo. Dos de las compañías pesadas ligadas a la escoria giran fuera de la marcha sin fin y se cierran sobre ti al paso: la reserva que ha retenido durante cien años, comprometida al fin, porque por fin has logrado merecerla."
+      },
+      "Cauterising Brand": {
+        "name": "Marca Cauterizante",
+        "desc": "La hoja es ya todo horno abierto, y donde te roza ya no corta y cauteriza en un solo trazo limpio: simplemente quema, una marca que sigue quemando, cociendo la fuerza fuera del brazo para que tus propios golpes caigan blandos y lentos mientras el calor se abre camino hacia dentro."
       },
       "Old Campaign": {
         "name": "Vieja Campaña",
