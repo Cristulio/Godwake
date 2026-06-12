@@ -555,7 +555,7 @@ describe('legacy fists strip (the unarmed state is an empty main-hand)', () => {
     const monk = buildPlayerCharacter(presetCreationInput('monk'));
     const rolledFists: import('../schemas/item').ItemRef = {
       itemId: 'monk-fists',
-      rolled: { baseId: 'monk-fists', rarity: 'common', affixes: [], enhancement: 1, name: '+1 Fists' },
+      rolled: { baseId: 'monk-fists', rarity: 'white', affixes: [], enhancement: 1, name: '+1 Fists' },
     };
     const legacy: typeof monk = {
       ...monk,
