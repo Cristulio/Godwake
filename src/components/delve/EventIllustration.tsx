@@ -2,7 +2,7 @@ import {
   resolveEventIllustration,
   type IllustrationCategory,
 } from '../../schemas/event';
-import { backdropFor } from '../../assets/backdrops/registry';
+import { BACKDROP_GRADE, backdropFor } from '../../assets/backdrops/registry';
 import ironCellsUrl from '../../assets/illustrations/iron-cells.svg';
 import athkatlaUrl from '../../assets/illustrations/athkatla.svg';
 import spellholdUrl from '../../assets/illustrations/spellhold.svg';
@@ -75,7 +75,14 @@ export function EventIllustration({ explicit, chapter, className = '' }: EventIl
         src={sceneUrl ?? entry.url}
         alt={entry.label}
         className="h-full w-full"
-        style={{ objectFit: 'cover', objectPosition: 'center', imageRendering: 'pixelated' }}
+        style={{
+          objectFit: 'cover',
+          objectPosition: 'center',
+          imageRendering: 'pixelated',
+          // graded like the battlefield layers; region illustrations are not
+          // backdrop scenes and keep their authored color
+          filter: sceneUrl ? BACKDROP_GRADE : undefined,
+        }}
       />
       <div className="pointer-events-none absolute inset-0 [background-image:radial-gradient(ellipse_at_50%_120%,transparent_40%,rgba(10,8,5,0.55))]" />
       <div className="pointer-events-none absolute bottom-0 right-0 bg-[rgba(10,8,5,0.7)] px-2 py-0.5 text-[9px] uppercase tracking-widest text-[var(--color-text-dim)]">

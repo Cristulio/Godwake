@@ -68,6 +68,15 @@ import ch14Event from './ch14-event.svg';
  */
 export type BackdropKind = 'combat' | 'elite' | 'boss' | 'event';
 
+/**
+ * Uniform color grade applied to every authored scene at render time (the
+ * scene <img> layers ONLY — never the glow/readability/vignette overlay
+ * stack above them). The scenes read slightly washed next to the HD sprite
+ * art; this deepens the color without touching the authored files. One knob:
+ * retune here, all 56 scenes follow.
+ */
+export const BACKDROP_GRADE = 'saturate(1.16) contrast(1.05)';
+
 const SCENES: Record<number, Partial<Record<BackdropKind, string>>> = {
   1: { combat: ch1Combat, elite: ch1Elite, boss: ch1Boss, event: ch1Event },
   2: { combat: ch2Combat, elite: ch2Elite, boss: ch2Boss, event: ch2Event },
