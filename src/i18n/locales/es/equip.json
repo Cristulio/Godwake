@@ -7,6 +7,7 @@
   "cantWear": "Un {class} no puede vestir esto",
   "requiresAbility": "Requiere {ability} {value}",
   "requiresStrength": "Requiere {ability} {value}",
-  "monkWeaponKeepsKit": "Forjada en las formas — el Ki, la ráfaga y las posturas no pierden pie. El golpe cambia el dado creciente y el filo de la mano vacía por el acero propio de esta arma.",
-  "monkWeaponStillsKit": "El acero aquieta las formas — sin Ki, sin ráfaga, sin posturas mientras la empuñes. La mano vacía no pide nada."
+  "monkWeaponKeepsKit": "Forjada en las formas: el Ki, la ráfaga y las posturas mantienen el paso. El precio: tus golpes de mano vacía de {die} +{edge} se apartan por el acero de este brazo.",
+  "monkWeaponStillsKit": "El acero acalla las formas: sin Ki, sin ráfaga, sin posturas mientras esto esté en la mano, y los {die} +{edge} de la mano vacía se van con ellas. La mano vacía no pide nada.",
+  "fistsNotAnItem": "La mano vacía no es un objeto: nunca se va."
 }

@@ -5,6 +5,11 @@ import { getItem } from '../../content/items';
 import { getClass } from '../../content/classes';
 import { getSetPiece } from '../../content/sets';
 import { effectiveAbilityScores, characterHasMechanic } from './derived';
+import {
+  isUnarmedStrikeId,
+  martialArtsWeaponId,
+  MONK_UNARMED_DAMAGE_EDGE,
+} from '../combat/monk';
 import { t, getLocalized } from '../../i18n';
 
 /** Class display name through the content overlay (Spanish when active, else English). */
@@ -177,19 +182,23 @@ export function armorEquipWarning(classId: ClassId, armor: { category: string })
 }
 
 /**
- * The caveat to surface when {@link classId} inspects ANY item — the cost (or
+ * The caveat to surface when {@link character} inspects ANY item — the cost (or
  * keep) of taking it up. Armour routes to {@link armorEquipWarning}. A weapon in
- * a MONK's hands answers the question the rack can't: a themed monk weapon keeps
- * the Ki kit flowing (trading the Martial Arts die + bare-hand edge for the
- * arm's own die, affixes, and enhancement); any other weapon stills the whole
- * kit. Null when the piece carries no caveat for the class.
+ * a MONK's hands answers the question the rack can't, with the price named in
+ * the monk's CURRENT numbers: a themed monk weapon keeps the Ki kit flowing but
+ * trades away the empty hand's level-scaled die + edge; any other weapon stills
+ * the whole kit AND takes the same trade. Null when the piece carries no caveat
+ * for the class.
  */
-export function itemEquipNote(classId: ClassId, item: Item): string | null {
-  if (item.kind === 'armor') return armorEquipWarning(classId, item);
-  if (item.kind === 'weapon' && classId === 'monk') {
+export function itemEquipNote(character: Character, item: Item): string | null {
+  if (item.kind === 'armor') return armorEquipWarning(character.classId, item);
+  if (item.kind === 'weapon' && character.classId === 'monk') {
+    const fists = getItem(martialArtsWeaponId(character));
+    const die = fists.kind === 'weapon' ? fists.damage : '1d6';
+    const params = { die, edge: MONK_UNARMED_DAMAGE_EDGE };
     return item.monkWeapon === true
-      ? t('equip.monkWeaponKeepsKit')
-      : t('equip.monkWeaponStillsKit');
+      ? t('equip.monkWeaponKeepsKit', params)
+      : t('equip.monkWeaponStillsKit', params);
   }
   return null;
 }
@@ -276,6 +285,14 @@ export function isArmorProficient(character: Character, armor: Armor): boolean {
  */
 export function equipDenialReason(character: Character, itemId: string): string | null {
   const item = getItem(itemId);
+
+  // The monk's fists are not an item: the unarmed state is an EMPTY main-hand.
+  // The virtual fists ids exist only inside the attack dispatch — nothing rolls
+  // or deals them anymore, and legacy saves are stripped at load — so this is
+  // pure belt-and-suspenders against a future pool regression.
+  if (isUnarmedStrikeId(itemId)) {
+    return t('equip.fistsNotAnItem');
+  }
 
   // A class-bound SET piece only seats while playing its class (belt-and-
   // suspenders over the class-biased drop / inject paths).

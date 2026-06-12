@@ -2,6 +2,7 @@ import type { Character } from '../types/character';
 import type { ClassId } from '../schemas/ids';
 import type { UnlockedUpgrades } from '../engine/character/upgrades';
 import { getAffix } from '../content/items';
+import { isUnarmedStrikeId } from '../engine/combat/monk';
 import { getBlessing } from '../content/blessings';
 import { getQuirk } from '../content/quirks';
 import type { RelicSlot } from '../content/legendaries';
@@ -138,6 +139,18 @@ export function migrateCharacter(
   if (!Array.isArray(c.quirks)) c.quirks = [];
   // Engine started reading conditions explicitly later in the session.
   if (!Array.isArray(c.conditions)) c.conditions = [];
+
+  // The monk's fists were once a real item (a starter, and briefly rollable —
+  // live saves hold things like a "+1 Fists"). The unarmed state is now
+  // strictly an EMPTY main-hand, so strip every fists ref — equipped or
+  // bagged — and the soul wakes bare-handed with the kit intact. itemId is
+  // the BASE id even on rolled items, so this catches affixed copies too.
+  if (c.equipped?.mainHand && isUnarmedStrikeId(c.equipped.mainHand.itemId)) {
+    c.equipped = { ...c.equipped, mainHand: null };
+  }
+  if (Array.isArray(c.inventory) && c.inventory.some((r) => isUnarmedStrikeId(r.itemId))) {
+    c.inventory = c.inventory.filter((r) => !isUnarmedStrikeId(r.itemId));
+  }
 
   // permanentBonuses (v3): pre-refactor, the 11 top-level permanentXxxBonus
   // fields lived directly on Character. Fold them into the nested object and

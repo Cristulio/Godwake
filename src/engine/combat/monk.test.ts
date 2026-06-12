@@ -439,7 +439,10 @@ describe('Monk — unarmed/kit gating (die + edge vs Ki kit)', () => {
     expect(isUnarmedStrikeId('shortsword')).toBe(false);
 
     expect(monkFightsUnarmed(withMainHand(makeMonk(5), null))).toBe(true);
-    expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'monk-fists-adept'))).toBe(true);
+    // Owner ruling 2026-06-12: the ONLY unarmed state is an empty hand. A
+    // virtual fists id can no longer occupy the slot (refused at equip,
+    // stripped from legacy saves) — holding one is NOT unarmed.
+    expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'monk-fists-adept'))).toBe(false);
     expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'monk-war-staff'))).toBe(false);
     expect(monkFightsUnarmed(withMainHand(makeMonk(5), 'shortsword'))).toBe(false);
   });
