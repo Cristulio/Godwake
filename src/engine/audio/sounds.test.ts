@@ -109,6 +109,8 @@ describe('audio SFX registry', () => {
       'ui_hover',
       'spell_necrotic',
       'reincarnation_sting',
+      'swing_claw_tear',
+      'swing_claw_tear_heavy',
     ] as const) {
       expect(SFX_IDS).toContain(id);
     }
