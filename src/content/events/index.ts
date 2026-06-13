@@ -2374,7 +2374,7 @@ const POOL: EventTemplate[] = [
     eventType: 'shrine',
     title: 'A Shrine Built of Slainkin Bone',
     flavor:
-      "One of the Five raised this before you killed your way to it — an altar of fused bone and old blood, every fragment a sibling of yours, a child of the Lord of Murder rendered down to its essence and stacked toward a god that is dead and will not stay dead. The taint in your own blood leans toward it like iron to a lodestone.",
+      "One of the Five raised this before you killed your way to it — an altar of fused bone and old blood, every fragment a sibling of yours, a child of the Slain God rendered down to its essence and stacked toward a god that is dead and will not stay dead. The taint in your own blood leans toward it like iron to a lodestone.",
     minChapter: 13,
     choices: [
       {
@@ -2384,7 +2384,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'religion', dc: 17 },
         outcome: {
           resolution:
-            "You let the taint reach for the altar and then you take hold of it — name it yours, not the dead god's, and draw the rendered essence of your siblings up your own arm on your own terms. It is a terrible inheritance and you spend it like coin. The Lord of Murder gets nothing. You get the edge of every death stacked here.",
+            "You let the taint reach for the altar and then you take hold of it — name it yours, not the dead god's, and draw the rendered essence of your siblings up your own arm on your own terms. It is a terrible inheritance and you spend it like coin. The Slain God gets nothing. You get the edge of every death stacked here.",
           effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }, { kind: 'temp_hp', amount: 14 }],
         },
         failureOutcome: {
@@ -2483,7 +2483,7 @@ const POOL: EventTemplate[] = [
     eventType: 'omen',
     title: 'The Throne That Waits',
     flavor:
-      "The Threshold folds open on it: the Throne of the Slain God, vast and empty and patient, the seat of the dead Lord of Murder waiting for an heir to fill it. The taint in your blood roars toward the empty chair. To sit is to become a god of slaughter. The Throne does not command. It only waits, as it has waited through every life you have spent climbing to it.",
+      "The Threshold folds open on it: the Throne of the Slain God, vast and empty and patient, the seat of that dead god of slaughter waiting for an heir to fill it. The taint in your blood roars toward the empty chair. To sit is to become a god of slaughter. The Throne does not command. It only waits, as it has waited through every life you have spent climbing to it.",
     minChapter: 14,
     choices: [
       {

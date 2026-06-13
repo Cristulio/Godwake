@@ -1237,7 +1237,7 @@ function ThroneOfBhaalScene({ label }: SceneProps) {
         <rect x="134" y="74" width="8" height="22" />
         <rect x="178" y="74" width="8" height="22" />
       </g>
-      {/* a skull set in the crest — the Slain God, Lord of Murder */}
+      {/* a skull set in the crest — the Slain God, the dead god of slaughter */}
       <ellipse cx="160" cy="40" rx="5" ry="5.5" fill="#3a2a2e" />
       <circle cx="158" cy="39" r="1.2" fill="#8a1020" />
       <circle cx="162" cy="39" r="1.2" fill="#8a1020" />

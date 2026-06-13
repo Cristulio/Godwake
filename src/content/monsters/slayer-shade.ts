@@ -35,5 +35,5 @@ export const SLAYER_SHADE: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Every child of the Lord of Murder carries the Slayer the way a sword carries an edge: a shape under the skin that is nothing but the urge to kill, made flesh. Most spend their lives keeping it asleep. Here, in the captor's pit, the burning ground reaches into you and pulls a thread of it loose — and what comes free is this, a grey, swift, hungering echo of the worst thing you could be, wearing the start of your own features and meaning to wear the rest. It is not summoned from outside. It was always in you. Hell only does you the discourtesy of letting it walk.",
+    "Every child of the Slain God carries the Slayer the way a sword carries an edge: a shape under the skin that is nothing but the urge to kill, made flesh. Most spend their lives keeping it asleep. Here, in the captor's pit, the burning ground reaches into you and pulls a thread of it loose — and what comes free is this, a grey, swift, hungering echo of the worst thing you could be, wearing the start of your own features and meaning to wear the rest. It is not summoned from outside. It was always in you. Hell only does you the discourtesy of letting it walk.",
 });

@@ -1694,7 +1694,7 @@
   },
   "slayer-shade": {
     "name": "Sombra del Verdugo",
-    "flavorText": "Todo hijo del Señor del Asesinato carga al Verdugo como una espada carga un filo: una forma bajo la piel que no es más que el impulso de matar, vuelto carne. La mayoría pasa la vida manteniéndolo dormido. Aquí, en el foso del captor, el suelo ardiente se mete en ti y tira de un hilo de él hasta soltarlo, y lo que sale libre es esto, un eco gris, veloz y hambriento de lo peor que podrías ser, vistiendo el comienzo de tus propias facciones y dispuesto a vestir el resto. No se invoca desde fuera. Siempre estuvo en ti. El Infierno solo te hace la descortesía de dejarlo caminar.",
+    "flavorText": "Todo hijo del Dios Caído carga al Verdugo como una espada carga un filo: una forma bajo la piel que no es más que el impulso de matar, vuelto carne. La mayoría pasa la vida manteniéndolo dormido. Aquí, en el foso del captor, el suelo ardiente se mete en ti y tira de un hilo de él hasta soltarlo, y lo que sale libre es esto, un eco gris, veloz y hambriento de lo peor que podrías ser, vistiendo el comienzo de tus propias facciones y dispuesto a vestir el resto. No se invoca desde fuera. Siempre estuvo en ti. El Infierno solo te hace la descortesía de dejarlo caminar.",
     "actions": {
       "Slayer-Talon": {
         "name": "Garra del Asesino",
