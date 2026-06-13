@@ -87,19 +87,19 @@ export function TitleScreen() {
         className="absolute inset-0 pointer-events-none opacity-[0.9]"
         style={{
           background:
-            'repeating-linear-gradient(90deg, transparent 0 74px, rgba(0,0,0,0.45) 74px 76px, rgba(188,146,96,0.22) 76px 78px, rgba(10,7,5,0.9) 78px 90px, rgba(0,0,0,0.5) 90px 94px)',
+            'repeating-linear-gradient(90deg, transparent 0 64px, rgba(0,0,0,0.45) 64px 66px, rgba(188,146,96,0.24) 66px 68px, rgba(10,7,5,0.92) 68px 82px, rgba(0,0,0,0.5) 82px 86px)',
           WebkitMaskImage:
-            'radial-gradient(ellipse 44% 50% at 50% 44%, transparent 0%, transparent 24%, black 70%)',
+            'radial-gradient(ellipse 40% 40% at 50% 42%, transparent 0%, transparent 14%, black 60%)',
           maskImage:
-            'radial-gradient(ellipse 44% 50% at 50% 44%, transparent 0%, transparent 24%, black 70%)',
+            'radial-gradient(ellipse 40% 40% at 50% 42%, transparent 0%, transparent 14%, black 60%)',
         }}
       />
-      {/* Torch light-pools (flicker) */}
+      {/* Torch light-pools (flicker) — tall warm washes down each torch column */}
       <div
         className="absolute inset-0 pointer-events-none animate-torch-flicker"
         style={{
           background:
-            'radial-gradient(circle 260px at 30% 45%, rgba(255,179,71,0.13) 0%, transparent 68%), radial-gradient(circle 260px at 70% 45%, rgba(255,179,71,0.13) 0%, transparent 68%)',
+            'radial-gradient(ellipse 200px 340px at 19% 38%, rgba(255,179,71,0.15) 0%, transparent 70%), radial-gradient(ellipse 200px 340px at 81% 38%, rgba(255,179,71,0.15) 0%, transparent 70%)',
         }}
       />
       {/* Central warm glow under the title */}
@@ -120,10 +120,13 @@ export function TitleScreen() {
         }}
       />
 
-      {/* Twin torch icons flanking the title */}
+      {/* Tall wall-torches flanking the central column — flame up at the title,
+          the pole running the height of the menu down toward New Game. */}
+      <TallTorch side="left" />
+      <TallTorch side="right" />
+
       <div className="relative z-10 text-center animate-fade-in-slow">
-        <div className="flex items-center justify-center gap-3 sm:gap-8 mb-2">
-          <Torch />
+        <div className="flex items-center justify-center mb-2">
           <h1
             className={`font-display text-4xl sm:text-5xl md:text-7xl tracking-[0.15em] text-[var(--color-accent-amber)] transition-all duration-1000 ${
               glow ? 'drop-shadow-[0_0_42px_rgba(244,167,66,0.55)]' : 'drop-shadow-[0_0_8px_rgba(244,167,66,0.2)]'
@@ -132,7 +135,6 @@ export function TitleScreen() {
           >
             GODWAKE
           </h1>
-          <Torch flipped />
         </div>
         <div className="font-narrative italic text-[var(--color-text-secondary)] text-base md:text-lg tracking-wider mt-6 max-w-md mx-auto leading-relaxed">
           {t('ui.title.tagline')}
@@ -250,19 +252,23 @@ function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfi
   );
 }
 
-// Soul-motes rising off the two torches. A fixed spread (clustered on the two
-// torch columns at ~30% / ~70%) with per-mote duration / drift / climb / delay
-// so the handful reads as organic rather than a marching grid.
-const EMBERS = Array.from({ length: 16 }, (_, i) => {
-  const column = i % 2 === 0 ? 30 : 70;
+// Soul-motes / ash drifting up across the cell. A fixed spread (full width, a
+// touch denser on the two torch columns) with per-mote duration / drift / climb
+// / delay so the swarm reads as organic rather than a marching grid.
+const EMBERS = Array.from({ length: 34 }, (_, i) => {
+  // Every third mote hugs a torch column (~19% / 81%); the rest fill the width.
+  const onTorch = i % 3 === 0;
+  const left = onTorch
+    ? (i % 6 === 0 ? 19 : 81) + (((i * 13) % 7) - 3)
+    : 8 + ((i * 167) % 84);
   return {
-    left: column + (((i * 37) % 9) - 4),
-    bottom: 30 + ((i * 53) % 22),
-    dur: 6 + ((i * 7) % 5),
-    delay: (i * 0.9) % 7,
-    drift: (i % 2 === 0 ? -1 : 1) * (5 + (i % 4) * 4),
-    climb: 180 + ((i * 29) % 120),
-    size: i % 3 === 0 ? 3 : 2,
+    left,
+    bottom: 16 + ((i * 53) % 42),
+    dur: 6 + ((i * 7) % 6),
+    delay: (i * 0.6) % 8,
+    drift: (i % 2 === 0 ? -1 : 1) * (4 + (i % 5) * 4),
+    climb: 200 + ((i * 29) % 170),
+    size: i % 4 === 0 ? 3 : 2,
   };
 });
 
@@ -291,31 +297,46 @@ function Embers() {
   );
 }
 
-function Torch({ flipped = false }: { flipped?: boolean }) {
+// A tall wall-sconce torch: flame at the top (level with the title), a long iron
+// pole running down the height of the menu toward New Game, held by a bracket.
+function TallTorch({ side }: { side: 'left' | 'right' }) {
+  const gid = `poleGrad-${side}`;
   return (
     <svg
-      viewBox="0 0 24 64"
-      width="32"
-      height="80"
-      className={`animate-torch-flicker ${flipped ? '-scale-x-100' : ''}`}
+      viewBox="0 0 28 240"
+      preserveAspectRatio="xMidYMin meet"
+      className={`absolute top-[30%] h-[44%] w-auto z-10 pointer-events-none animate-torch-flicker ${
+        side === 'left' ? 'left-[15%]' : 'right-[15%] -scale-x-100'
+      }`}
       aria-hidden
     >
-      {/* Pole */}
-      <rect x="10" y="28" width="4" height="36" fill="#3A2E22" />
-      <rect x="10" y="28" width="4" height="36" fill="url(#poleGrad)" opacity="0.5" />
-      {/* Crown */}
-      <rect x="8" y="24" width="8" height="6" fill="#6B4A2E" />
-      {/* Flame */}
-      <ellipse cx="12" cy="14" rx="6" ry="10" fill="#FF6B2B" opacity="0.95" />
-      <ellipse cx="12" cy="11" rx="4" ry="8" fill="#FFB347" opacity="0.95" />
-      <ellipse cx="12" cy="9" rx="2.5" ry="5" fill="#FFD700" />
-      <ellipse cx="12" cy="20" rx="3" ry="2" fill="#FF4730" opacity="0.6" />
       {/* Glow */}
-      <ellipse cx="12" cy="14" rx="12" ry="14" fill="#FFB347" opacity="0.1" />
+      <ellipse cx="14" cy="24" rx="20" ry="30" fill="#FFB347" opacity="0.14" />
+      {/* Flame */}
+      <ellipse cx="14" cy="24" rx="9" ry="18" fill="#FF6B2B" opacity="0.96" />
+      <ellipse cx="14" cy="19" rx="5.6" ry="13" fill="#FFB347" opacity="0.96" />
+      <ellipse cx="14" cy="15" rx="3.2" ry="8" fill="#FFD700" />
+      <ellipse cx="14" cy="34" rx="4" ry="2.6" fill="#FF4730" opacity="0.6" />
+      {/* Sconce cup */}
+      <rect x="8" y="40" width="12" height="6" fill="#6B4A2E" />
+      <rect x="7" y="46" width="14" height="3" fill="#3A2E22" />
+      {/* Long pole — lit warm by the flame near the top, fading dark down the wall */}
+      <rect x="11" y="46" width="6" height="194" fill={`url(#${gid})`} />
+      {/* Torch-side rim highlight so the iron rod catches the light */}
+      <rect x="11" y="46" width="1.4" height="194" fill={`url(#${gid}-rim)`} />
+      {/* Iron bracket pinning the pole to the wall partway down */}
+      <rect x="5" y="150" width="18" height="4" fill="#4A3826" />
+      <rect x="5" y="150" width="18" height="1.5" fill="#7a5836" />
       <defs>
-        <linearGradient id="poleGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0a0805" />
-          <stop offset="100%" stopColor="#3A2E22" />
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#c98a4a" />
+          <stop offset="18%" stopColor="#7a5230" />
+          <stop offset="100%" stopColor="#241910" />
+        </linearGradient>
+        <linearGradient id={`${gid}-rim`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#ffcf8a" stopOpacity="0.9" />
+          <stop offset="30%" stopColor="#d49a5a" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#d49a5a" stopOpacity="0.08" />
         </linearGradient>
       </defs>
     </svg>
