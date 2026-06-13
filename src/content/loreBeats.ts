@@ -259,7 +259,7 @@ export const LORE_BEATS: LoreBeat[] = [
     speaker: 'imoen',
     context: 'descent',
     minChapters: 12,
-    text: "The Voice is dead, and the truth it hid is standing up in its place. You're a Child of the Slain God — the dead Lord of Murder — and so is every soul burning in that city, all of you hunted for the god in your blood. And something whispers now where Velnaris used to. It wants you to swing. Don't.",
+    text: "The Voice is dead, and the truth it hid is standing up in its place. You're a Child of the Slain God — the dead god of slaughter — and so is every soul burning in that city, all of you hunted for the god in your blood. And something whispers now where Velnaris used to. It wants you to swing. Don't.",
   },
   {
     id: 'lore-29-the-kind-womans-smile',

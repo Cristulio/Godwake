@@ -629,10 +629,10 @@
   },
   "bhaalspawn-shrine": {
     "title": "Un santuario hecho de hueso de Engendro del Dios Caído",
-    "flavor": "Uno de los Cinco erigió esto antes de que te abrieras paso a matar hasta él: un altar de hueso fundido y sangre vieja, cada fragmento un hermano tuyo, un hijo del Señor del Asesinato destilado a su esencia y apilado hacia un dios que está muerto y no quiere seguir muerto. La corrupción de tu propia sangre se inclina hacia él como el hierro a una piedra imán.",
+    "flavor": "Uno de los Cinco erigió esto antes de que te abrieras paso a matar hasta él: un altar de hueso fundido y sangre vieja, cada fragmento un hermano tuyo, un hijo del Dios Caído destilado a su esencia y apilado hacia un dios que está muerto y no quiere seguir muerto. La corrupción de tu propia sangre se inclina hacia él como el hierro a una piedra imán.",
     "choice.master-the-taint.label": "[Religión] Tomar la esencia en tus propios términos",
     "choice.master-the-taint.hint": "La sangre del Dios Caído en ti responde al altar lo quieras o no. Domina la llamada y la esencia es combustible; piérdete en ella y te quema hacia el dios muerto.",
-    "choice.master-the-taint.resolution": "Dejas que la corrupción alcance el altar y entonces la sujetas: la nombras tuya, no del dios muerto, y subes la esencia destilada de tus hermanos por tu propio brazo en tus propios términos. Es una herencia terrible y la gastas como moneda. El Señor del Asesinato no recibe nada. Tú recibes el filo de cada muerte apilada aquí.",
+    "choice.master-the-taint.resolution": "Dejas que la corrupción alcance el altar y entonces la sujetas: la nombras tuya, no del dios muerto, y subes la esencia destilada de tus hermanos por tu propio brazo en tus propios términos. Es una herencia terrible y la gastas como moneda. El Dios Caído no recibe nada. Tú recibes el filo de cada muerte apilada aquí.",
     "choice.master-the-taint.failureResolution": "La corrupción se te escurre del agarre y el altar toma la holgura: tira de la esencia a través de ti hacia el hueco con forma de dios en su centro, y por un instante rugiente eres solo un conducto, solo un fragmento entre los fragmentos. Te zafas antes de que te apile en el montón, pero se queda con un trozo a la salida.",
     "choice.read-the-essence.label": "[Arcanos] Leer el ensalmo que ata el hueso",
     "choice.read-the-essence.hint": "Uno de los Cinco creyó que esto alzaría a un dios muerto. Descifra el conjuro y descifrarás su plan; léelo mal y la atadura gasta su latigazo en el heredero más cercano.",
@@ -659,7 +659,7 @@
   },
   "throne-that-waits": {
     "title": "El trono que aguarda",
-    "flavor": "El Umbral se pliega sobre él: el Trono del Dios Caído, vasto y vacío y paciente, el asiento del difunto Señor del Asesinato esperando un heredero que lo llene. La corrupción de tu sangre ruge hacia la silla vacía. Sentarse es convertirse en un dios de la matanza. El Trono no ordena. Solo aguarda, como ha aguardado a lo largo de cada vida que has gastado escalando hasta él.",
+    "flavor": "El Umbral se pliega sobre él: el Trono del Dios Caído, vasto y vacío y paciente, el asiento de aquel difunto dios de la matanza esperando un heredero que lo llene. La corrupción de tu sangre ruge hacia la silla vacía. Sentarse es convertirse en un dios de la matanza. El Trono no ordena. Solo aguarda, como ha aguardado a lo largo de cada vida que has gastado escalando hasta él.",
     "choice.refuse-the-throne.label": "[Perspicacia] Ver el Trono por la trampa que es",
     "choice.refuse-the-throne.hint": "Todo en ti que la corrupción construyó quiere sentarse. Ve con claridad qué hace de ti sentarse y pasarás de largo más fuerte que cualquier dios; deja decidir a la sangre y el asiento toma lo que se le debe.",
     "choice.refuse-the-throne.resolution": "Miras la silla vacía y, bajo el rugido de la sangre, ves con claridad lo que es: no una recompensa en lo alto del ascenso sino el propósito entero del ascenso, un hambre con forma de dios que vestiría tu rostro y lo llamaría ascensión. Le das la espalda a la herencia de cada asesinato de tu linaje. El rechazarlo es lo más fuerte que has hecho jamás, y te deja más fuerte.",
