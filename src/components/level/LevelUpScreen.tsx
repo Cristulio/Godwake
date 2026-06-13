@@ -18,6 +18,7 @@ import type { Character } from '../../types/character';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
+import { stripDiacritics } from '../../i18n';
 import { combatLean } from '../../engine/character/combatLean';
 import { SchoolBottomLine, archetypeAccent } from './SchoolBottomLine';
 
@@ -186,7 +187,7 @@ export function LevelUpScreen() {
               {features.map(({ f, tcId }) => (
                 <li key={f.id} className="border-l-2 border-[var(--color-accent-amber)] pl-3">
                   <div className="font-display text-[var(--color-text-primary)] text-[11px] uppercase tracking-[0.2em]">
-                    {tc('classes', tcId, 'name', f.name)}
+                    {stripDiacritics(tc('classes', tcId, 'name', f.name))}
                   </div>
                   <div className="text-[var(--color-text-secondary)] text-sm leading-relaxed mt-1.5">
                     {tc('classes', tcId, 'description', f.description)}
@@ -280,7 +281,7 @@ export function LevelUpScreen() {
                   <button
                     key={sub.id}
                     onClick={() => setPickedArchetypeId(selected ? null : sub.id)}
-                    className={`text-left px-3 py-2 border text-sm transition-all hover:brightness-110 ${
+                    className={`flex flex-col text-left px-3 py-2 border text-sm transition-all hover:brightness-110 ${
                       selected
                         ? 'bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
                         : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]'
@@ -293,7 +294,7 @@ export function LevelUpScreen() {
                     }}
                   >
                     <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
-                      {tc('classes', `${cls.id}.${sub.id}`, 'name', sub.name)}
+                      {stripDiacritics(tc('classes', `${cls.id}.${sub.id}`, 'name', sub.name))}
                     </div>
                     {feat && (
                       <div className="text-[var(--color-text-secondary)] text-xs mt-1.5 leading-relaxed normal-case tracking-normal">
@@ -326,7 +327,7 @@ export function LevelUpScreen() {
                   <button
                     key={sp.id}
                     onClick={() => setPickedSpellId(selected ? null : sp.id)}
-                    className={`text-left px-3 py-2 border text-sm transition-colors ${
+                    className={`flex flex-col text-left px-3 py-2 border text-sm transition-colors ${
                       selected
                         ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
                         : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
@@ -334,7 +335,7 @@ export function LevelUpScreen() {
                   >
                     <div className="flex items-baseline justify-between gap-2">
                       <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
-                        {tc('spells', sp.id, 'name', sp.name)}
+                        {stripDiacritics(tc('spells', sp.id, 'name', sp.name))}
                       </div>
                       <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest">
                         L{sp.level} · {t(`ui.level.school.${sp.school}`)}

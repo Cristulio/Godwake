@@ -1,5 +1,6 @@
 import type { Subclass } from '../../schemas/class';
 import { useT } from '../../i18n/useT';
+import { stripDiacritics } from '../../i18n';
 
 /**
  * Accent color per archetype word, keyed by the EN source word (stable across
@@ -74,7 +75,7 @@ export function SchoolBottomLine({ classId, sub }: { classId: string; sub: Subcl
           textShadow: `0 0 10px ${accent}66`,
         }}
       >
-        {tc('classes', key, 'archetype', bl.archetype)}
+        {stripDiacritics(tc('classes', key, 'archetype', bl.archetype))}
       </span>
       <ul className="mt-2 flex flex-col gap-1.5">
         {bl.levers.map((lever, i) => (
