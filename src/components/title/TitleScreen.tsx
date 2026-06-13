@@ -57,20 +57,64 @@ export function TitleScreen() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center gap-12 px-4">
-      {/* Painted ambient backdrop — concentric warm glow + smoky verticals */}
+      {/* Dungeon-cell backdrop: dim stone, a far grove-green bleed at the top,
+          iron bars (masked clear of the title), torch-lit pools, rising embers,
+          and a vignette. The torches + title ride above it at z-10. */}
+      {/* Stone wall + mortar courses */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(180deg, #0b0908 0%, #15110d 45%, #0e0b09 100%)' }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          background:
+            'repeating-linear-gradient(0deg, transparent 0 38px, rgba(0,0,0,0.35) 38px 40px), repeating-linear-gradient(90deg, transparent 0 120px, rgba(0,0,0,0.16) 120px 122px)',
+        }}
+      />
+      {/* Far grove-green bleed from the top edge — the green you wake toward */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at center 35%, rgba(244,167,66,0.16) 0%, rgba(180,80,30,0.06) 30%, transparent 60%), radial-gradient(ellipse at center 100%, rgba(139,31,27,0.18) 0%, transparent 50%)',
+            'radial-gradient(ellipse 55% 32% at 50% -8%, rgba(96,168,104,0.11) 0%, rgba(60,120,72,0.04) 45%, transparent 72%)',
         }}
       />
-      {/* Vertical smoke lines */}
+      {/* Iron cell bars — faded clear of the centre so the logo stays clean */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-30 animate-torch-flicker"
+        className="absolute inset-0 pointer-events-none opacity-70"
         style={{
           background:
-            'repeating-linear-gradient(180deg, transparent 0px, transparent 30px, rgba(255,179,71,0.04) 30px, rgba(255,179,71,0.04) 31px)',
+            'repeating-linear-gradient(90deg, transparent 0 70px, rgba(0,0,0,0.55) 70px 78px, rgba(150,110,70,0.10) 78px 79px)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse 46% 52% at 50% 45%, transparent 0%, transparent 32%, black 78%)',
+          maskImage:
+            'radial-gradient(ellipse 46% 52% at 50% 45%, transparent 0%, transparent 32%, black 78%)',
+        }}
+      />
+      {/* Torch light-pools (flicker) */}
+      <div
+        className="absolute inset-0 pointer-events-none animate-torch-flicker"
+        style={{
+          background:
+            'radial-gradient(circle 260px at 30% 45%, rgba(255,179,71,0.13) 0%, transparent 68%), radial-gradient(circle 260px at 70% 45%, rgba(255,179,71,0.13) 0%, transparent 68%)',
+        }}
+      />
+      {/* Central warm glow under the title */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse at center 38%, rgba(244,167,66,0.14) 0%, rgba(180,80,30,0.05) 30%, transparent 60%), radial-gradient(ellipse at center 102%, rgba(139,31,27,0.16) 0%, transparent 50%)',
+        }}
+      />
+      <Embers />
+      {/* Vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 78% 78% at 50% 48%, transparent 42%, rgba(0,0,0,0.55) 100%)',
         }}
       />
 
@@ -200,6 +244,47 @@ function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfi
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Soul-motes rising off the two torches. A fixed spread (clustered on the two
+// torch columns at ~30% / ~70%) with per-mote duration / drift / climb / delay
+// so the handful reads as organic rather than a marching grid.
+const EMBERS = Array.from({ length: 16 }, (_, i) => {
+  const column = i % 2 === 0 ? 30 : 70;
+  return {
+    left: column + (((i * 37) % 9) - 4),
+    bottom: 30 + ((i * 53) % 22),
+    dur: 6 + ((i * 7) % 5),
+    delay: (i * 0.9) % 7,
+    drift: (i % 2 === 0 ? -1 : 1) * (5 + (i % 4) * 4),
+    climb: 180 + ((i * 29) % 120),
+    size: i % 3 === 0 ? 3 : 2,
+  };
+});
+
+function Embers() {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden>
+      {EMBERS.map((e, i) => (
+        <span
+          key={i}
+          className="absolute animate-ember-rise"
+          style={{
+            left: `${e.left}%`,
+            bottom: `${e.bottom}%`,
+            width: e.size,
+            height: e.size,
+            background: i % 4 === 0 ? '#ffd479' : '#f4a742',
+            boxShadow: '0 0 4px rgba(244,167,66,0.7)',
+            animationDelay: `${e.delay}s`,
+            ['--ember-dur' as string]: `${e.dur}s`,
+            ['--ember-drift' as string]: `${e.drift}px`,
+            ['--ember-climb' as string]: `${e.climb}px`,
+          }}
+        />
+      ))}
     </div>
   );
 }
