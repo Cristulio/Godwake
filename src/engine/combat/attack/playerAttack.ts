@@ -52,7 +52,7 @@ import {
 } from '../monk';
 import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon, offHandWeaponRef, rageBrokenByArmor } from '../../character/equip';
-import { HUNTERS_MARK_DICE } from '../huntersMark';
+import { HUNTERS_MARK_DICE, RANGER_TWIN_REND_BONUS } from '../huntersMark';
 import { characterQuirkMods } from '../../character/quirks';
 import { characterBlessingMods } from '../../character/blessings';
 import { characterCampBoonMods } from '../../character/campBoons';
@@ -118,6 +118,7 @@ const PART_KEY: Record<string, string> = {
   Shadowed: 'shadowed',
   Quarry: 'quarry',
   vow: 'vow',
+  rend: 'rend',
   song: 'song',
   oil: 'oil',
 };
@@ -946,6 +947,13 @@ function resolveSwing(
       if (affixMods.markDamageBonus > 0) {
         bonusDamage += affixMods.markDamageBonus;
         onTypeParts.push({ amount: affixMods.markDamageBonus, label: 'Quarry' });
+      }
+      // Ranger Blade Dancer — Twin Rend (L10): each blade bites the marked quarry
+      // the deeper. The off-hand follow runs this same swing path, so a dual-
+      // wielding blade dancer lands it on BOTH swings. On-type, like the Quarry affix.
+      if (characterHasMechanic(nextCharacter, 'twin-rend')) {
+        bonusDamage += RANGER_TWIN_REND_BONUS;
+        onTypeParts.push({ amount: RANGER_TWIN_REND_BONUS, label: 'rend' });
       }
     }
 

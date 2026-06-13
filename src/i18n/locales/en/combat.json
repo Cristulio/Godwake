@@ -81,6 +81,7 @@
     "shadowed": "Shadowed",
     "quarry": "Quarry",
     "vow": "vow",
+    "rend": "rend",
     "sneak": "sneak ({dice})",
     "mark": "mark ({dice})",
     "colossus": "colossus ({dice})",
@@ -135,8 +136,10 @@
     "ranger": {
       "pool": "Focus",
       "offense": "Aimed Shot",
+      "offenseBlade": "Rending Strike",
       "defense": "Set Stance",
-      "disrupt": "Crippling Shot"
+      "disrupt": "Crippling Shot",
+      "disruptBlade": "Hamstring"
     }
   },
   "log": {

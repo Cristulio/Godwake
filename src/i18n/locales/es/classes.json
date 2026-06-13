@@ -571,6 +571,22 @@
     "name": "Azote de Gigantes",
     "description": "Has hecho un estudio de derribar a los seres descomunales. Tu azote contra élites y jefes se duplica —cada impacto sobre la gran amenaza de la sala clava 2d10 en vez de uno, y el monstruo nombrado se desangra el doble de rápido."
   },
+  "ranger.blade-dancer": {
+    "name": "Danzante de Cuchillas",
+    "description": "La inclinación cuerpo a cuerpo —un explorador que tira el arco y toma una cuchilla en cada mano. Mejor con dos armas ligeras (colmillos pareados) y equipo de afijos al impacto/robo de vida: marcas a una presa y la haces jirones de cerca, y cada Marca del Cazador muerde dos veces porque ambas hojas llevan el sello. Un atacante de dos filos —la pelea cercana que los cónclaves del arco largo nunca quisieron.",
+    "archetype": "Dos Filos",
+    "lever0": "Cambia el arco por dos hojas — cada turno cae un golpe automático con la mano torpe.",
+    "lever1": "Tu Marca del Cazador sella a través de AMBAS hojas, así que una presa marcada sangra por partida doble.",
+    "lever2": "Nivel 10: tus hojas muerden a tu presa marcada por +3 más cada una — la tromba de colmillos gemelos que acaba con el enemigo sellado."
+  },
+  "ranger.blade-dancer.blade-dancer": {
+    "name": "Cónclave de Explorador: Danzante de Cuchillas",
+    "description": "Renuncias al arco y peleas con una hoja en cada puño —un par de colmillos pareados. Cada turno tu mano torpe sigue a la diestra con un golpe propio, y tu Marca del Cazador sella a través de ambas, de modo que la presa que marcas sangra por el doble de hojas. La pelea cercana, veloz y de dos filos que los Cazadores del arco largo jamás aprendieron."
+  },
+  "ranger.blade-dancer.twin-rend": {
+    "name": "Desgarro Gemelo",
+    "description": "Has aprendido por dónde se deshace lo marcado. Cada hoja que clavas en tu presa de la Marca del Cazador muerde más hondo ahora —ambos colmillos hurgando en la misma herida, desgarrando al enemigo sellado mucho más rápido que la marca por sí sola hasta que cede."
+  },
   "druid": {
     "name": "Druida",
     "characterName": "Lureth Sombra de Roble",
