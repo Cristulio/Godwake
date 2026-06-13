@@ -331,6 +331,7 @@ function loadoutScore(c: Character): number {
   score += m.damageBonus * 1.6;
   score += m.bleedDamage * 1.3;
   score += m.lifestealPct * 0.06;
+  score += m.spellLifestealPct * 0.06;
   score += m.tempHpPerCombat * 0.35;
   score += m.critRangeBonus * 1.8;
   score += (m.rageDamageBonus + m.markDamageBonus + m.sneakDamageBonus + m.followupDamageBonus) * 0.6;

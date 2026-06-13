@@ -85,6 +85,7 @@ import {
   slotForItem,
 } from '../src/engine/character/equip';
 import { monkFightsUnarmed } from '../src/engine/combat/monk';
+import { bardActiveSongs } from '../src/engine/combat/bard';
 import { characterAffixMods } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
 import { buyShopConsumables } from '../src/engine/character/shopPolicy';
@@ -353,6 +354,7 @@ function loadoutScore(c: Character): number {
   score += m.damageBonus * 1.6;
   score += m.bleedDamage * 1.3;
   score += m.lifestealPct * 0.06;
+  score += m.spellLifestealPct * 0.06;
   score += m.tempHpPerCombat * 0.35;
   score += m.critRangeBonus * 1.8;
   score += (m.rageDamageBonus + m.markDamageBonus + m.sneakDamageBonus + m.followupDamageBonus) * 0.6;
@@ -605,8 +607,11 @@ interface ProcCounters {
   flurry: number;
   patientDefense: number;
   stunningStrike: number;
-  /** Bard Bardic Inspiration dice spent (bonus-action self-buff onto attack/damage). */
+  /** Bard `bard-song` actions (starting/swapping the playing song). */
   bardSongSwaps: number;
+  /** Bard song pulses — player turns that began with music playing (the engine's
+   *  auto-pulse gate: applyBardSongPulse fires iff bardActiveSongs is non-empty). */
+  songPulses: number;
   /** Paladin Lay on Hands self-heals spent (bonus-action pool spend). */
   layOnHands: number;
   /** Paladin Divine Smites armed (the slot→radiant rider on a weapon hit). */
@@ -643,6 +648,7 @@ function freshProcs(): ProcCounters {
     patientDefense: 0,
     stunningStrike: 0,
     bardSongSwaps: 0,
+    songPulses: 0,
     layOnHands: 0,
     divineSmite: 0,
     martialOffense: 0,
@@ -686,12 +692,16 @@ function runPlayerTurnInstrumented(
   let s = state;
   let ch = character;
   if (ch.classId === 'rogue') pc.rogueTurns += 1;
+  // Song pulse: the engine fires applyBardSongPulse at every player-turn start
+  // with music playing (endTurn, plus createCombat's turn-0) — by the time this
+  // turn runs, that pulse has already applied. Counting active songs at turn
+  // entry therefore equals the engine's pulse count exactly.
+  if (ch.classId === 'bard' && bardActiveSongs(ch).length > 0) pc.songPulses += 1;
   for (let i = 0; i < 16; i++) {
     if (s.status !== 'active') break;
     const action = chooseCombatAction(s, ch, ARCHETYPE);
     if (action.kind === 'end-turn') break;
     if (action.kind === 'rage') pc.rage += 1;
-    else if (action.kind === 'reckless-attack') pc.reckless += 1;
     else if (action.kind === 'hunters-mark') pc.huntersMarkCast += 1;
     else if (action.kind === 'cunning-action' && action.choice === 'hide') pc.hide += 1;
     else if (action.kind === 'wild-shape') pc.wildShape += 1;
@@ -708,9 +718,15 @@ function runPlayerTurnInstrumented(
 
     const colossusBefore = s.colossusSlayerUsedThisTurn === true;
     const sneakBefore = s.sneakAttackUsedThisTurn === true;
+    // Reckless isn't an action — it's the `recklessActive` flag rage flips on
+    // from L2 (the reckless-attack mechanic), riding rage 1:1 until the fury
+    // fades. Count the false→true edge, the same flip-detection the colossus /
+    // sneak counters above use for their state flags.
+    const recklessBefore = ch.recklessActive === true;
     const logLenBefore = s.log.length;
     const r = applyPlannedAction({ roller, state: s, character: ch }, action);
     if (r.state === s && r.character === ch) break; // engine refused — stop
+    if (!recklessBefore && r.character.recklessActive === true) pc.reckless += 1;
 
     if (action.kind === 'attack') {
       if (!colossusBefore && r.state.colossusSlayerUsedThisTurn === true) pc.colossus += 1;
@@ -1096,9 +1112,9 @@ function renderAscensionHistogram(aggs: ClassAggregate[]): string {
 function renderProcs(): string {
   const lines: string[] = [];
   lines.push(
-    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | Martial OFF/combat | Martial DEF/combat | Martial DIS/combat | Martial total/combat | LayOnHands/combat | Smite/combat |',
+    '| Class | Combats | Rage/combat | Reckless/combat | HMark cast/combat | Colossus/combat | HMark die/combat | Sneak/combat | Sneak/turn | Hide/combat | WildShape/combat | Spell cast/combat | Flurry/combat | StunStrike/combat | PatientDef/combat | Martial OFF/combat | Martial DEF/combat | Martial DIS/combat | Martial total/combat | Song swap/combat | Song pulse/combat | LayOnHands/combat | Smite/combat |',
   );
-  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|----------------:|----------------:|----------------:|-----------------:|----------------:|------------:|');
+  lines.push('|------|------:|----------:|--------------:|----------------:|--------------:|---------------:|------------:|----------:|-----------:|---------------:|----------------:|------------:|----------------:|----------------:|----------------:|----------------:|----------------:|-----------------:|----------------:|-----------------:|----------------:|------------:|');
   for (const classId of CLASSES) {
     const p = PROCS[classId];
     const per = (n: number) => (p.combats ? num(n / p.combats, 2) : '—');
@@ -1106,12 +1122,13 @@ function renderProcs(): string {
     const perTurn = (n: number) => (p.rogueTurns ? num(n / p.rogueTurns, 2) : '—');
     const relevant = (s: string, when: boolean) => (when ? s : '·');
     const isRogue = classId === 'rogue';
-    const isCaster = classId === 'wizard' || classId === 'druid';
+    const isCaster = classId === 'wizard' || classId === 'druid' || classId === 'bard';
     const isMonk = classId === 'monk';
+    const isBard = classId === 'bard';
     const isMartial = classId === 'fighter' || classId === 'barbarian' || classId === 'ranger';
     const martialTotal = p.martialOffense + p.martialDefense + p.martialDisrupt;
     lines.push(
-      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(perMartial(p.martialOffense), isMartial)} | ${relevant(perMartial(p.martialDefense), isMartial)} | ${relevant(perMartial(p.martialDisrupt), isMartial)} | ${relevant(perMartial(martialTotal), isMartial)} | ${relevant(per(p.layOnHands), classId === 'paladin')} | ${relevant(per(p.divineSmite), classId === 'paladin')} |`,
+      `| ${classId} | ${p.combats} | ${relevant(per(p.rage), classId === 'barbarian')} | ${relevant(per(p.reckless), classId === 'barbarian')} | ${relevant(per(p.huntersMarkCast), classId === 'ranger')} | ${relevant(per(p.colossus), classId === 'ranger')} | ${relevant(per(p.huntersMarkDie), classId === 'ranger')} | ${relevant(per(p.sneakAttack), isRogue)} | ${relevant(perTurn(p.sneakAttack), isRogue)} | ${relevant(per(p.hide), isRogue)} | ${relevant(per(p.wildShape), classId === 'druid')} | ${relevant(per(p.spellCast), isCaster)} | ${relevant(per(p.flurry), isMonk)} | ${relevant(per(p.stunningStrike), isMonk)} | ${relevant(per(p.patientDefense), isMonk)} | ${relevant(perMartial(p.martialOffense), isMartial)} | ${relevant(perMartial(p.martialDefense), isMartial)} | ${relevant(perMartial(p.martialDisrupt), isMartial)} | ${relevant(perMartial(martialTotal), isMartial)} | ${relevant(per(p.bardSongSwaps), isBard)} | ${relevant(per(p.songPulses), isBard)} | ${relevant(per(p.layOnHands), classId === 'paladin')} | ${relevant(per(p.divineSmite), classId === 'paladin')} |`,
     );
   }
   return lines.join('\n');
