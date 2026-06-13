@@ -57,27 +57,124 @@ export function TitleScreen() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center gap-12 px-4">
-      {/* Painted ambient backdrop — concentric warm glow + smoky verticals */}
+      {/* Dungeon-cell backdrop: dim stone, a far grove-green bleed at the top,
+          iron bars (masked clear of the title), torch-lit pools, rising embers,
+          and a vignette. The torches + title ride above it at z-10. */}
+      {/* Stone wall + mortar courses */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(180deg, #0b0908 0%, #15110d 45%, #0e0b09 100%)' }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none opacity-60"
+        style={{
+          background:
+            'repeating-linear-gradient(0deg, rgba(255,206,150,0.03) 0 1px, transparent 1px 42px, rgba(0,0,0,0.5) 42px 44px), repeating-linear-gradient(90deg, transparent 0 116px, rgba(0,0,0,0.28) 116px 118px)',
+        }}
+      />
+      {/* Far grove-green bleed from the top edge — the green you wake toward */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at center 35%, rgba(244,167,66,0.16) 0%, rgba(180,80,30,0.06) 30%, transparent 60%), radial-gradient(ellipse at center 100%, rgba(139,31,27,0.18) 0%, transparent 50%)',
+            'radial-gradient(ellipse 55% 32% at 50% -8%, rgba(96,168,104,0.11) 0%, rgba(60,120,72,0.04) 45%, transparent 72%)',
         }}
       />
-      {/* Vertical smoke lines */}
+      {/* Rusted iron cell grid — rust-toned vertical bars + two horizontal
+          cross-rails (top & bottom), top-lit, with a turbulence rust mottle.
+          Masked clear of the centre so the logo stays legible. */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1200 720"
+        aria-hidden
+        style={{
+          opacity: 0.92,
+          WebkitMaskImage:
+            'radial-gradient(ellipse 40% 40% at 50% 42%, transparent 0%, transparent 14%, black 60%)',
+          maskImage:
+            'radial-gradient(ellipse 40% 40% at 50% 42%, transparent 0%, transparent 14%, black 60%)',
+        }}
+      >
+        <defs>
+          <linearGradient id="rustV" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#0c0704" />
+            <stop offset="16%" stopColor="#3a2313" />
+            <stop offset="40%" stopColor="#7e4d2c" />
+            <stop offset="52%" stopColor="#9c633a" />
+            <stop offset="72%" stopColor="#532f1c" />
+            <stop offset="100%" stopColor="#090503" />
+          </linearGradient>
+          <linearGradient id="rustH" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0c0704" />
+            <stop offset="22%" stopColor="#7e4d2c" />
+            <stop offset="46%" stopColor="#9c633a" />
+            <stop offset="72%" stopColor="#452a19" />
+            <stop offset="100%" stopColor="#090503" />
+          </linearGradient>
+          <linearGradient id="barLight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ffd9a0" stopOpacity="0.22" />
+            <stop offset="42%" stopColor="#ffd9a0" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0.42" />
+          </linearGradient>
+          <filter id="rustMottle">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.16" numOctaves="2" seed="11" result="n" />
+            <feColorMatrix
+              in="n"
+              type="matrix"
+              values="0 0 0 0 0.42  0 0 0 0 0.26  0 0 0 0 0.13  0 0 0 0.55 0"
+            />
+          </filter>
+          <pattern id="vbars" width="92" height="720" patternUnits="userSpaceOnUse">
+            <rect x="39" y="0" width="15" height="720" fill="url(#rustV)" />
+            <rect x="39" y="0" width="15" height="720" filter="url(#rustMottle)" opacity="0.35" style={{ mixBlendMode: 'overlay' }} />
+          </pattern>
+        </defs>
+        {/* Vertical bars */}
+        <rect width="1200" height="720" fill="url(#vbars)" />
+        {/* Two horizontal cross-rails */}
+        <g>
+          <rect x="0" y="74" width="1200" height="18" fill="url(#rustH)" />
+          <rect x="0" y="74" width="1200" height="18" filter="url(#rustMottle)" opacity="0.35" style={{ mixBlendMode: 'overlay' }} />
+          <rect x="0" y="610" width="1200" height="18" fill="url(#rustH)" />
+          <rect x="0" y="610" width="1200" height="18" filter="url(#rustMottle)" opacity="0.35" style={{ mixBlendMode: 'overlay' }} />
+        </g>
+        {/* Whole-grid top lighting */}
+        <rect width="1200" height="720" fill="url(#barLight)" style={{ mixBlendMode: 'soft-light' }} />
+      </svg>
+      {/* Torch light-pools (flicker) — tall warm washes down each torch column */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-30 animate-torch-flicker"
+        className="absolute inset-0 pointer-events-none animate-torch-flicker"
         style={{
           background:
-            'repeating-linear-gradient(180deg, transparent 0px, transparent 30px, rgba(255,179,71,0.04) 30px, rgba(255,179,71,0.04) 31px)',
+            'radial-gradient(ellipse 200px 340px at 19% 38%, rgba(255,179,71,0.15) 0%, transparent 70%), radial-gradient(ellipse 200px 340px at 81% 38%, rgba(255,179,71,0.15) 0%, transparent 70%)',
+        }}
+      />
+      {/* Central warm glow under the title */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse at center 38%, rgba(244,167,66,0.14) 0%, rgba(180,80,30,0.05) 30%, transparent 60%), radial-gradient(ellipse at center 102%, rgba(139,31,27,0.16) 0%, transparent 50%)',
+        }}
+      />
+      <Embers />
+      {/* Vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 78% 78% at 50% 48%, transparent 42%, rgba(0,0,0,0.55) 100%)',
         }}
       />
 
-      {/* Twin torch icons flanking the title */}
+      {/* Tall wall-torches flanking the central column — flame up at the title,
+          the pole running the height of the menu down toward New Game. */}
+      <TallTorch side="left" />
+      <TallTorch side="right" />
+
       <div className="relative z-10 text-center animate-fade-in-slow">
-        <div className="flex items-center justify-center gap-3 sm:gap-8 mb-2">
-          <Torch />
+        <div className="flex items-center justify-center mb-2">
           <h1
             className={`font-display text-4xl sm:text-5xl md:text-7xl tracking-[0.15em] text-[var(--color-accent-amber)] transition-all duration-1000 ${
               glow ? 'drop-shadow-[0_0_42px_rgba(244,167,66,0.55)]' : 'drop-shadow-[0_0_8px_rgba(244,167,66,0.2)]'
@@ -86,7 +183,6 @@ export function TitleScreen() {
           >
             GODWAKE
           </h1>
-          <Torch flipped />
         </div>
         <div className="font-narrative italic text-[var(--color-text-secondary)] text-base md:text-lg tracking-wider mt-6 max-w-md mx-auto leading-relaxed">
           {t('ui.title.tagline')}
@@ -204,31 +300,91 @@ function NewGameConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfi
   );
 }
 
-function Torch({ flipped = false }: { flipped?: boolean }) {
+// Soul-motes / ash drifting up across the cell. A fixed spread (full width, a
+// touch denser on the two torch columns) with per-mote duration / drift / climb
+// / delay so the swarm reads as organic rather than a marching grid.
+const EMBERS = Array.from({ length: 34 }, (_, i) => {
+  // Every third mote hugs a torch column (~19% / 81%); the rest fill the width.
+  const onTorch = i % 3 === 0;
+  const left = onTorch
+    ? (i % 6 === 0 ? 19 : 81) + (((i * 13) % 7) - 3)
+    : 8 + ((i * 167) % 84);
+  return {
+    left,
+    bottom: 16 + ((i * 53) % 42),
+    dur: 6 + ((i * 7) % 6),
+    delay: (i * 0.6) % 8,
+    drift: (i % 2 === 0 ? -1 : 1) * (4 + (i % 5) * 4),
+    climb: 200 + ((i * 29) % 170),
+    size: i % 4 === 0 ? 3 : 2,
+  };
+});
+
+function Embers() {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden>
+      {EMBERS.map((e, i) => (
+        <span
+          key={i}
+          className="absolute animate-ember-rise"
+          style={{
+            left: `${e.left}%`,
+            bottom: `${e.bottom}%`,
+            width: e.size,
+            height: e.size,
+            background: i % 4 === 0 ? '#ffd479' : '#f4a742',
+            boxShadow: '0 0 4px rgba(244,167,66,0.7)',
+            animationDelay: `${e.delay}s`,
+            ['--ember-dur' as string]: `${e.dur}s`,
+            ['--ember-drift' as string]: `${e.drift}px`,
+            ['--ember-climb' as string]: `${e.climb}px`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// A tall wall-sconce torch: flame at the top (level with the title), a long iron
+// pole running down the height of the menu toward New Game, held by a bracket.
+function TallTorch({ side }: { side: 'left' | 'right' }) {
+  const gid = `poleGrad-${side}`;
   return (
     <svg
-      viewBox="0 0 24 64"
-      width="32"
-      height="80"
-      className={`animate-torch-flicker ${flipped ? '-scale-x-100' : ''}`}
+      viewBox="0 0 28 240"
+      preserveAspectRatio="xMidYMin meet"
+      className={`absolute top-[30%] h-[44%] w-auto z-10 pointer-events-none animate-torch-flicker ${
+        side === 'left' ? 'left-[15%]' : 'right-[15%] -scale-x-100'
+      }`}
       aria-hidden
     >
-      {/* Pole */}
-      <rect x="10" y="28" width="4" height="36" fill="#3A2E22" />
-      <rect x="10" y="28" width="4" height="36" fill="url(#poleGrad)" opacity="0.5" />
-      {/* Crown */}
-      <rect x="8" y="24" width="8" height="6" fill="#6B4A2E" />
-      {/* Flame */}
-      <ellipse cx="12" cy="14" rx="6" ry="10" fill="#FF6B2B" opacity="0.95" />
-      <ellipse cx="12" cy="11" rx="4" ry="8" fill="#FFB347" opacity="0.95" />
-      <ellipse cx="12" cy="9" rx="2.5" ry="5" fill="#FFD700" />
-      <ellipse cx="12" cy="20" rx="3" ry="2" fill="#FF4730" opacity="0.6" />
       {/* Glow */}
-      <ellipse cx="12" cy="14" rx="12" ry="14" fill="#FFB347" opacity="0.1" />
+      <ellipse cx="14" cy="24" rx="20" ry="30" fill="#FFB347" opacity="0.14" />
+      {/* Flame */}
+      <ellipse cx="14" cy="24" rx="9" ry="18" fill="#FF6B2B" opacity="0.96" />
+      <ellipse cx="14" cy="19" rx="5.6" ry="13" fill="#FFB347" opacity="0.96" />
+      <ellipse cx="14" cy="15" rx="3.2" ry="8" fill="#FFD700" />
+      <ellipse cx="14" cy="34" rx="4" ry="2.6" fill="#FF4730" opacity="0.6" />
+      {/* Sconce cup */}
+      <rect x="8" y="40" width="12" height="6" fill="#6B4A2E" />
+      <rect x="7" y="46" width="14" height="3" fill="#3A2E22" />
+      {/* Long pole — lit warm by the flame near the top, fading dark down the wall */}
+      <rect x="11" y="46" width="6" height="194" fill={`url(#${gid})`} />
+      {/* Torch-side rim highlight so the iron rod catches the light */}
+      <rect x="11" y="46" width="1.4" height="194" fill={`url(#${gid}-rim)`} />
+      {/* Iron bracket pinning the pole to the wall partway down */}
+      <rect x="5" y="150" width="18" height="4" fill="#4A3826" />
+      <rect x="5" y="150" width="18" height="1.5" fill="#7a5836" />
       <defs>
-        <linearGradient id="poleGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0a0805" />
-          <stop offset="100%" stopColor="#3A2E22" />
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#c98a4a" />
+          <stop offset="18%" stopColor="#7a5230" />
+          <stop offset="100%" stopColor="#241910" />
+        </linearGradient>
+        <linearGradient id={`${gid}-rim`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#ffcf8a" stopOpacity="0.9" />
+          <stop offset="30%" stopColor="#d49a5a" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#d49a5a" stopOpacity="0.08" />
         </linearGradient>
       </defs>
     </svg>
