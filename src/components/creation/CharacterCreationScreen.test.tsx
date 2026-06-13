@@ -43,32 +43,26 @@ describe('CharacterCreationScreen — selection', () => {
     expect(screen.queryByRole('button', { name: /maelis vell/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /lureth oakshadow/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /shen ironroot/i })).not.toBeInTheDocument();
-    // The six sealed non-starters (barbarian/rogue/druid/monk/bard/paladin) sit at
-    // 200/300/450/600/800/1000 renown spent for every origin — none is the
-    // first-offering slot.
-    expect(screen.getAllByText(/unlocks at \d+ renown spent/i).length).toBe(6);
+    // Only the NEXT soul to wake (the cheapest sealed, Barbarian @200 for a
+    // fighter-origin fresh soul) shows its renown bar; the five sealed deeper
+    // mask to "???" so the ladder reveals one rung at a time.
+    expect(screen.getAllByText(/unlocks at \d+ renown spent/i).length).toBe(1);
+    expect(screen.getAllByText('???').length).toBe(5);
   });
 
-  it('renders sealed souls in the origin order, each naming its renown-spent bar (origin=wizard swap)', () => {
+  it('reveals only the next sealed soul (origin=wizard swap), masking the rest as ???', () => {
     // A wizard-origin soul mid-swap with nothing spent yet: only the worn Mage is
-    // choosable; the other six are sealed in the wizard order — Fighter first (on
-    // the first offering), then Hunter@100, then the non-starters at 200..600.
+    // choosable. Of the eight sealed souls (wizard order — Fighter first on the
+    // first offering, then Hunter@100, then the non-starters at 200..1000), only
+    // the next one (Fighter) shows its bar; the other seven mask to "???".
     useGameStore.setState({ character: buildPlayerCharacter(presetCreationInput('wizard')) });
     useMetaStore.setState({ originClass: 'wizard', renownSpent: 0 });
     render(<CharacterCreationScreen />);
     const bars = screen
       .getAllByText(/renown spent|after your first offering/i)
       .map((el) => el.textContent);
-    expect(bars).toEqual([
-      'After your first offering',
-      'Unlocks at 100 renown spent',
-      'Unlocks at 200 renown spent',
-      'Unlocks at 300 renown spent',
-      'Unlocks at 450 renown spent',
-      'Unlocks at 600 renown spent',
-      'Unlocks at 800 renown spent',
-      'Unlocks at 1000 renown spent',
-    ]);
+    expect(bars).toEqual(['After your first offering']);
+    expect(screen.getAllByText('???').length).toBe(7);
   });
 
   it('has no point-buy or multi-step controls', () => {
