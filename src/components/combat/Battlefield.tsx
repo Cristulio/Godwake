@@ -378,7 +378,7 @@ function UstNathaTempleBackdrop() {
       <rect x="328" y="0" width="14" height="72" fill="#1a0612" stroke="#06020a" strokeWidth="0.5" />
       <polygon points="328,72 342,72 335,88" fill="#1a0612" stroke="#06020a" strokeWidth="0.5" />
       <rect x="332" y="22" width="6" height="18" fill="#b53a3a" opacity="0.65" />
-      {/* Faerzress wall-flecks (sickly green and faint purple) */}
+      {/* Deepglow wall-flecks (sickly green and faint purple) */}
       <g opacity="0.85">
         <circle cx="36" cy="60" r="1.2" fill="#7cf0b0" />
         <circle cx="118" cy="84" r="0.9" fill="#7cf0b0" />
@@ -540,7 +540,7 @@ function UstNathaThroneBackdrop() {
         <line x1="155" y1="56" x2="210" y2="86" />
         <line x1="210" y1="86" x2="245" y2="56" />
       </g>
-      {/* Faerzress wall-flecks (deep purple and a hint of green) */}
+      {/* Deepglow wall-flecks (deep purple and a hint of green) */}
       <g opacity="0.85">
         <circle cx="98" cy="58" r="1.2" fill="#b78cff" />
         <circle cx="124" cy="86" r="0.9" fill="#7cf0b0" />

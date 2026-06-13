@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Bone Stalker — undead patchwork from the Athkatlan paupers' ditch.
+ * Bone Stalker — undead patchwork from the Stormhaven paupers' ditch.
  * Bigger than a skeleton, slower, but it remembers the rope it died on
  * and keeps a length of it knotted at the wrist as a cudgel.
  */

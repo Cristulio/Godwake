@@ -43,5 +43,5 @@ export const SLAVER_OVERSEER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'He has overseen pits from Calimport to the Athkatlan docks and learned that the chain does half the work and the FEAR of the chain does the other half. He and the captain are paid by different masters and neither has ever once questioned the arrangement on a working day.',
+    'He has overseen pits from Calimport to the Stormhaven docks and learned that the chain does half the work and the FEAR of the chain does the other half. He and the captain are paid by different masters and neither has ever once questioned the arrangement on a working day.',
 });

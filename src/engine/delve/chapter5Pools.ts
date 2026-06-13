@@ -29,7 +29,7 @@ export const CHAPTER5_TITLE = 'The Godwake';
  * Deepdark and into the light that should not be down here. BG2/FromSoft tone.
  */
 export const CHAPTER5_FLAVOR =
-  "The Deepdark does not end so much as give up. The faerzress thins, the rock goes pale, and then there is light ahead where light has no business being — not torch, not faerzress, not the cold blue of the deep fungi, but a high steady dawn-coloured glow leaking up through the floor of the world. You have been here before. You do not remember being here before. The two facts sit in you at once and neither will leave. Every step toward the light, something old and tired turns over in your chest and recognises the road home, and you understand, the way you understand a thing in a dream, that you have walked this last mile more times than you have been alive — and that this time you mean to reach the end of it.";
+  "The Deepdark does not end so much as give up. The deepglow thins, the rock goes pale, and then there is light ahead where light has no business being — not torch, not deepglow, not the cold blue of the deep fungi, but a high steady dawn-coloured glow leaking up through the floor of the world. You have been here before. You do not remember being here before. The two facts sit in you at once and neither will leave. Every step toward the light, something old and tired turns over in your chest and recognises the road home, and you understand, the way you understand a thing in a dream, that you have walked this last mile more times than you have been alive — and that this time you mean to reach the end of it.";
 
 export interface EncounterEntry {
   title: string;

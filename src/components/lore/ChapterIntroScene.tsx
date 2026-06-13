@@ -39,7 +39,7 @@ const CHAPTER_META: Record<
   },
   4: {
     title: 'Chapter IV — Zhal Vasha',
-    subtitle: 'A drow city in the deep faerzress',
+    subtitle: 'A drow city deep in the glowing dark',
     render: UstNathaScene,
   },
   5: {

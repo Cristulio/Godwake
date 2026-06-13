@@ -46,5 +46,5 @@ export const CAVERN_HUNTING_SPIDER: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    'Big as a war-hound and twice as patient, it hunts the faerzress-lit galleries below Zhal Vasha. The drow do not keep it; they simply walk a different corridor. It has learned that the things which come from the surface do not know which corridor to avoid.',
+    'Big as a war-hound and twice as patient, it hunts the deepglow-lit galleries below Zhal Vasha. The drow do not keep it; they simply walk a different corridor. It has learned that the things which come from the surface do not know which corridor to avoid.',
 });

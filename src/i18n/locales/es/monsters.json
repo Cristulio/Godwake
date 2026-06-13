@@ -674,7 +674,7 @@
   },
   "cavern-hunting-spider": {
     "name": "Araña Cazadora de Caverna",
-    "flavorText": "Grande como un perro de guerra y el doble de paciente, caza las galerías iluminadas por la faerzress bajo Zhal Vasha. Los drow no la guardan; simplemente caminan por otro corredor. Ha aprendido que las cosas que vienen de la superficie no saben qué corredor evitar.",
+    "flavorText": "Grande como un perro de guerra y el doble de paciente, caza las galerías iluminadas por el fulgor profundo bajo Zhal Vasha. Los drow no la guardan; simplemente caminan por otro corredor. Ha aprendido que las cosas que vienen de la superficie no saben qué corredor evitar.",
     "actions": {
       "Web Spray": {
         "name": "Rociada de Telaraña",

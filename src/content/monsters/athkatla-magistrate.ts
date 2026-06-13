@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster, type MonsterSummon } from '../../schemas/monster';
 
 /**
- * Athkatlan Magistrate — Ch2 boss. A senior Veiled Magus who sits as
+ * Stormhaven Magistrate — Ch2 boss. A senior Veiled Magus who sits as
  * magistrate over a guild court and rules with the kind of casual cruelty
  * that requires no warrant. Brittle (low HP, light armor) but lethal: opens
  * combat with a Hold Person and then chips the paralyzed player to death

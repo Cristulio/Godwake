@@ -37,7 +37,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Hobgoblin and His Knife',
     flavorText:
-      "A hobgoblin mercenary in Athkatlan livery stands at the corner with a robed cult-knife at his elbow — paid by different masters, agreed about the morning. The hobgoblin nods once; the cultist moves first.",
+      "A hobgoblin mercenary in Stormhaven livery stands at the corner with a robed cult-knife at his elbow — paid by different masters, agreed about the morning. The hobgoblin nods once; the cultist moves first.",
     monsters: [
       { defId: 'hobgoblin', count: 1 },
       { defId: 'cult-fanatic', count: 1 },
@@ -101,7 +101,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'A Hobgoblin Picket',
     flavorText:
-      "A hobgoblin in scavenged Athkatlan colors stands with a cuirassier, professional and unhurried. The hobgoblin gives the order; the slaver moves.",
+      "A hobgoblin in scavenged Stormhaven colors stands with a cuirassier, professional and unhurried. The hobgoblin gives the order; the slaver moves.",
     monsters: [
       { defId: 'hobgoblin', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },
@@ -319,7 +319,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: "The Wardpriest's Line",
     flavorText:
-      "A hobgoblin in Athkatlan livery holds the lane while a wardpriest stands a step behind, two fingers raised. The hobgoblin should have died a round ago. The grey light keeps deciding otherwise.",
+      "A hobgoblin in Stormhaven livery holds the lane while a wardpriest stands a step behind, two fingers raised. The hobgoblin should have died a round ago. The grey light keeps deciding otherwise.",
     monsters: [
       { defId: 'cowled-wardpriest', count: 1 },
       { defId: 'hobgoblin', count: 1 },
