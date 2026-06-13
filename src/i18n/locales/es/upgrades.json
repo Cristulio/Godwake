@@ -2,17 +2,17 @@
   "pilgrims-boots": {
     "name": "Botas del Peregrino",
     "flavor": "Los druidas regalan al alma despierta un par de botas de cuero crudo antes del camino. La primera milla enseña a la espalda. La centésima la endurece.",
-    "effect": "+{n} de PG máximo, permanente."
+    "effect": "+{n} de PG máximo."
   },
   "iron-will": {
     "name": "Voluntad de Hierro",
     "flavor": "El Manantial tira más hondo esta vez. Despiertas con un aliento que antes no tenías. Tome lo que tome el amo, el alma conserva un poco más.",
-    "effect": "+5 de PG máximo, permanente."
+    "effect": "+5 de PG máximo."
   },
   "mantle-of-the-wakened": {
     "name": "Manto del Despierto",
     "flavor": "El Manantial guarda algo — un puñado de la vida vieja cosido en la costura de la nueva. La carne recuerda heridas que aún no ha recibido.",
-    "effect": "+{n} de PG máximo, permanente a través de las reencarnaciones."
+    "effect": "+{n} de PG máximo."
   },
   "hardier-soul": {
     "name": "Alma más Recia",
@@ -25,48 +25,48 @@
   "cloak-of-the-grove": {
     "name": "Capa de la Arboleda",
     "flavor": "Seda de araña entretejida con frondas de helecho y la ceniza del fuego del último invierno. Se mueve cuando ningún viento la roza.",
-    "effect": "+{n} a la CA, permanente."
+    "effect": "+{n} a la CA."
   },
   "wellspring-depths": {
     "name": "Hondura del Manantial",
     "flavor": "El estanque solo muestra su fondo a un alma que ha recorrido el camino entero y ha vuelto. Lo que da ahora, antes no podía darlo.",
-    "effect": "+{n} de PG máximo, permanente a través de las reencarnaciones.",
+    "effect": "+{n} de PG máximo.",
     "unlockLabel": "Completa la cadena para desbloquear."
   },
   "first-cut": {
     "name": "Primer Tajo",
     "flavor": "Un hilo rojo atado a la muñeca. La mano que guía se mueve medio aliento antes que las demás.",
-    "effect": "+{n} de daño en el primer ataque de cada combate, permanente."
+    "effect": "+{n} de daño en el primer ataque de cada combate."
   },
   "bleed-out": {
     "name": "Desangrado",
     "flavor": "Una pluma de búho prendida a tu cuello por una niña que no quiso hablar. Las cosas heridas se inclinan hacia ti, y tú hacia ellas.",
-    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos), permanente."
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos)."
   },
   "fellfast-strike": {
     "name": "Golpe Aciago",
     "flavor": "Una esquirla de hueso de halcón engastada en el pomo. Cuando el golpe acierta, el hueso zumba y la herida cala más hondo de lo que el acero debería alcanzar.",
-    "effect": "+{n} de daño en los golpes críticos, permanente."
+    "effect": "+{n} de daño en los golpes críticos."
   },
   "whetstone-resolve": {
     "name": "Temple de Amoladera",
     "flavor": "Una piedra del tamaño de tu pulgar, grasienta de aceite viejo y sangre más vieja. El filo que te da no se mella.",
-    "effect": "+{n} de daño en todos los golpes con arma, permanente."
+    "effect": "+{n} de daño en todos los golpes con arma."
   },
   "heirloom-blade": {
     "name": "Hoja Heredada",
     "flavor": "Una hoja depositada sobre las piedras del Manantial la noche de tu última muerte. La empuñadura ha sido pulida por otra mano.",
-    "effect": "+{n} a todas las tiradas de ataque, permanente."
+    "effect": "+{n} a todas las tiradas de ataque."
   },
   "killers-eye": {
     "name": "Ojo del Asesino",
     "flavor": "Un collar de dientes de lobo. Los druidas no dirán cuál de los hijos del Manantial lo perdió. Tu ojo se aguza antes de que sepas por qué.",
-    "effect": "Crítico con {lo}-20 en vez de solo 20 (rango de crítico +{n}), permanente."
+    "effect": "Crítico con {lo}-20 en vez de solo 20 (rango de crítico +{n})."
   },
   "crown-of-the-returned": {
     "name": "Corona del Retornado",
     "flavor": "Forjada de la ceniza de cadenas superadas. Solo un alma que la rueda ha traído de vuelta una y otra vez puede portarla sin arder.",
-    "effect": "+{n} a todas las tiradas de ataque y de ataque con conjuro, permanente.",
+    "effect": "+{n} a todas las tiradas de ataque y de ataque con conjuro.",
     "unlockLabel": "Alcanza la Ascensión 3 para desbloquear."
   },
   "quartermasters-stipend": {
@@ -152,42 +152,42 @@
   "knife-in-the-dark": {
     "name": "Cuchillo en la Oscuridad",
     "flavor": "El otro rostro de Selene — la herida encuentra el camino a casa.",
-    "effect": "+{n}d6 de daño de Ataque Furtivo, permanente."
+    "effect": "+{n}d6 de daño de Ataque Furtivo."
   },
   "arcane-focus": {
     "name": "Foco Arcano",
     "flavor": "Un nodo del Manantial asentado tras tu esternón. Los conjuros apuntan un poco más certeros.",
-    "effect": "+{n} a las tiradas de ataque con conjuro, permanente."
+    "effect": "+{n} a las tiradas de ataque con conjuro."
   },
   "burning-tongue": {
     "name": "Lengua Ardiente",
     "flavor": "Mielikki quema una palabra en el fondo de tu garganta. Cada conjuro sabe más caliente al salir.",
-    "effect": "+{n} de daño a los conjuros, permanente."
+    "effect": "+{n} de daño a los conjuros."
   },
   "sigil-of-the-wakened-mind": {
     "name": "Sigilo de la Mente Despierta",
     "flavor": "Una vieja druida traza una runa sobre tus ojos. El mundo oye tus palabras más alto.",
-    "effect": "+{n} a la CD de salvación de tus conjuros, permanente (los enemigos salvan con más dificultad contra ellos)."
+    "effect": "+{n} a la CD de salvación de tus conjuros (los enemigos salvan con más dificultad contra ellos)."
   },
   "brutal-scars": {
     "name": "Cicatrices Brutales",
     "flavor": "Cada herida que el amo te dio sanó torcida, en algo más duro. Cuando aciertas un golpe certero, las viejas cicatrices se abren con él.",
-    "effect": "+{n} de daño en los golpes críticos, permanente."
+    "effect": "+{n} de daño en los golpes críticos."
   },
   "reckless-eye": {
     "name": "Ojo Temerario",
     "flavor": "Dejaste de proteger los huecos. Lanzando el cuerpo abierto, ves la muerte que los cautos nunca verán.",
-    "effect": "Crítico con {lo}-20 en vez de solo 20 (rango de crítico +{n}), permanente."
+    "effect": "Crítico con {lo}-20 en vez de solo 20 (rango de crítico +{n})."
   },
   "first-arrow": {
     "name": "Primera Flecha",
     "flavor": "La flecha se suelta antes de que el enemigo tenga nombre. El Manantial mantiene firme tu mano de tiro en cada vida.",
-    "effect": "+{n} de daño en el primer ataque de cada combate, permanente."
+    "effect": "+{n} de daño en el primer ataque de cada combate."
   },
   "colossus-slayer": {
     "name": "Matacolosos",
     "flavor": "Aprendiste qué hilo, al tirar de él, deshace todo el tapiz. Los que sangran nunca duran mucho bajo tu mirada.",
-    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos), permanente."
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos)."
   },
   "primal-reservoir": {
     "name": "Reserva Primigenia",
@@ -200,14 +200,14 @@
   "verdant-wrath": {
     "name": "Ira Verdeante",
     "flavor": "La ira de Mielikki es la del bosque — lenta en despertar, y ruinosa una vez encendida. Tus conjuros llevan algo de esa vieja furia verde a cada vida.",
-    "effect": "+{n} de daño a los conjuros, permanente."
+    "effect": "+{n} de daño a los conjuros."
   },
   "deep-roots": {
     "name": "Raíces Profundas",
     "flavor": "Tu alma echa raíces más allá del fondo del Manantial, hasta el agua quieta de debajo. De ella tomas un aliento más de la Urdimbre del que el cuerpo recibió.",
     "effect": {
-      "one": "+{n} espacio de conjuro de primer nivel por descenso, permanente.",
-      "other": "+{n} espacios de conjuro de primer nivel por descenso, permanente."
+      "one": "+{n} espacio de conjuro de primer nivel por descenso.",
+      "other": "+{n} espacios de conjuro de primer nivel por descenso."
     }
   },
   "brimming-well": {
@@ -221,14 +221,14 @@
   "pressure-points": {
     "name": "Puntos de Presión",
     "flavor": "Una mano vieja guía la tuya a los lugares donde la vida corre fina bajo la piel. Cuando el golpe acierta, el cuerpo olvida por un momento cómo mantenerse en pie.",
-    "effect": "+{n} de daño en los golpes críticos, permanente."
+    "effect": "+{n} de daño en los golpes críticos."
   },
   "wellspring-of-mysteries": {
     "name": "Manantial de Misterios",
     "flavor": "El Manantial guarda una página que los maestros nunca escribieron — un pliegue de la Urdimbre cosido en el alma, tuyo para gastar y hallar esperando de nuevo.",
     "effect": {
-      "one": "+{n} espacio de conjuro de primer nivel por descenso, permanente.",
-      "other": "+{n} espacios de conjuro de primer nivel por descenso, permanente."
+      "one": "+{n} espacio de conjuro de primer nivel por descenso.",
+      "other": "+{n} espacios de conjuro de primer nivel por descenso."
     }
   }
 }
