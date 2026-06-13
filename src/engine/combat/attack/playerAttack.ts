@@ -137,6 +137,17 @@ const ASSASSINATE_BONUS_SNEAK_DICE = 2;
 const ENVENOM_BLEED_PER_TURN = 2;
 const ENVENOM_BLEED_TURNS = 2;
 
+/** Dual-wield off-hand ability-modifier share — the canonical 5e Two-Weapon
+ *  Fighting style. The automatic off-hand follow-swing (Berserker / Battle
+ *  Master / Thief) now lands its weapon die PLUS the wielder's ability modifier
+ *  divided by this denominator (floored). 1 = full mod: a 1d4 off-hand roughly
+ *  doubles, so dropping the shield (+2 AC, which bites through the #590
+ *  effective-AC curve) becomes a real trade. 2 = half mod — the dial-back if the
+ *  buff pushes a dual-wielder past the martial band in sim-class-viability. The
+ *  gear edge stays halved separately (scaleExtraEdge) so loot scaling is
+ *  unaffected. */
+const DUAL_WIELD_OFFHAND_ABIL_MOD_DENOM = 1;
+
 /**
  * Which damage dice a weapon rolls. A versatile weapon swung two-handed — i.e.
  * with the off-hand empty (no shield, no second weapon) — rolls its larger
@@ -187,8 +198,9 @@ export function attackWeaponId(character: Readonly<Character>): string | undefin
  * Dual wielding (the `dual-wielder` schools — Berserker, Battle Master,
  * Thief): the turn's first Attack-action swing is followed by an automatic
  * off-hand swing — its own attack roll with the off-hand weapon's profile,
- * damage of the weapon's die with NO ability modifier and the gear edge
- * halved (the flurry-extras guard). Same target while it stands, else the
+ * damage of the weapon's die PLUS the wielder's ability modifier (5e
+ * Two-Weapon Fighting) and the gear edge halved (the flurry-extras guard).
+ * Same target while it stands, else the
  * next live foe. Once per Attack action, so Extra Attack doesn't multiply it
  * (an Action Surge's fresh action earns a fresh follow, like everything else
  * it resets); bonus-action swings (Quick Strike) never trigger it.
@@ -247,8 +259,9 @@ export function playerAttack(
 /**
  * One weapon swing, resolved end to end. `offHand` marks the automatic
  * dual-wield follow-up: it swings the OFF-hand weapon (its own enhancement
- * and affixes — never the resting main-hand's), drops the ability modifier
- * from damage, halves the per-hit gear edge via the flurry guard, and spends
+ * and affixes — never the resting main-hand's), keeps the ability modifier on
+ * damage (5e Two-Weapon Fighting, scaled by the dual-wield denom), halves the
+ * per-hit gear edge via the flurry guard, and spends
  * no action economy (it rides the action already paid for). Internals thread
  * a local `nextCharacter` accumulator — no in-place mutation of
  * `ctx.character` anywhere.
@@ -941,10 +954,13 @@ function resolveSwing(
       bonusDamage -= condMods.outgoingDamagePenalty;
       onTypeParts.push({ amount: -condMods.outgoingDamagePenalty, label: 'weakened' });
     }
-    // The off-hand follow lands the weapon's die WITHOUT the ability modifier
-    // — the second blade's bite is the steel alone (the attack roll above
-    // keeps the full profile; only damage drops the mod).
-    const damageAbilMod = isOffHandSwing ? 0 : abilMod;
+    // The off-hand follow lands the weapon's die PLUS the wielder's ability
+    // modifier (5e Two-Weapon Fighting), divided by the dual-wield denom so the
+    // share is tunable — full at 1. The gear edge is still halved via
+    // scaleExtraEdge above, so only the base bite scales up, not the loot edge.
+    const damageAbilMod = isOffHandSwing
+      ? Math.floor(abilMod / DUAL_WIELD_OFFHAND_ABIL_MOD_DENOM)
+      : abilMod;
     const totalDamage = Math.max(
       1,
       damageRoll.total + damageAbilMod + damageExpr.modifier + bonusDamage,

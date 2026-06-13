@@ -239,7 +239,7 @@ describe('dual wield — the off-hand swing', () => {
     expect(pair.character.actionEconomy.actionUsed).toBe(true);
   });
 
-  it('off-hand damage is the weapon die alone — no ability modifier', () => {
+  it('off-hand damage carries the ability modifier (5e Two-Weapon Fighting)', () => {
     const pair = findOpeningPair(
       () => makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword'),
       { mainHit: true, offHit: true },
@@ -247,8 +247,11 @@ describe('dual wield — the off-hand swing', () => {
     );
     const mainDmg = damageLineAfter(pair.state, pair.mainLine);
     const offDmg = damageLineAfter(pair.state, pair.offLine);
+    // The off-hand follow now adds the wielder's ability mod, same as the main
+    // swing — the dropped-shield trade has to actually pay. Gear edge stays
+    // halved (covered by the next case), so only the base bite scaled up.
     expect(mainDmg!.text).toMatch(/\+ \d+ STR/);
-    expect(offDmg!.text).not.toMatch(/STR|DEX/);
+    expect(offDmg!.text).toMatch(/\+ \d+ STR/);
   });
 
   it("the off-hand's gear edge is HALVED and never leaks onto main-hand swings", () => {

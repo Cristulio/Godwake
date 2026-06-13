@@ -164,7 +164,7 @@ export const ROGUE: Class = ClassSchema.parse({
             id: 'second-knife',
             name: 'Second Knife',
             description:
-              'The other hand was never just for balance. A light blade rides where a shield won’t: each turn your first strike is chased by an off-hand cut with its own attack roll — the blade’s die alone, no ability bonus, half its gear’s edge. Sneak Attack still lands once a turn, but if the first knife misses the gap, the second one hunts it.',
+              'The other hand was never just for balance. A light blade rides where a shield won’t: each turn your first strike is chased by an off-hand cut with its own attack roll — the blade’s die plus your ability modifier, half its gear’s edge. Sneak Attack still lands once a turn, but if the first knife misses the gap, the second one hunts it.',
             mechanicKey: 'dual-wielder',
           },
         ],
