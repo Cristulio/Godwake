@@ -223,5 +223,48 @@ export const DRUID: Class = ClassSchema.parse({
         ],
       },
     },
+    {
+      id: 'circle-of-the-tempest',
+      name: 'Circle of the Tempest',
+      description:
+        'The Circle that never wears the beast — it becomes the storm the beast runs from. Best with a caster build: the orb in your off-hand, robes, and the spell-DC and spell-damage gear that sharpens every working you loose.',
+      bottomLine: {
+        archetype: 'Stormcaller',
+        levers: [
+          "+1 to your spell save DC — the wild's call is harder to shrug off.",
+          'Level 6: every damaging spell lands for an extra half your level, flat.',
+          'Level 10: +1 more spell save DC (+2 in all) — none weather the storm.',
+        ],
+      },
+      featuresByLevel: {
+        '2': [
+          {
+            id: 'circle-of-the-tempest',
+            name: 'Druid Circle: Circle of the Tempest',
+            description:
+              'You give the old fury a voice instead of a body. Your spell save DC rises by 1, so the saves your workings demand bite harder. Rewards a caster build — spell-DC and spell-damage gear, the orb in the off-hand — over the beast form.',
+            mechanicKey: 'circle-of-the-tempest',
+          },
+        ],
+        '6': [
+          {
+            id: 'gathering-storm',
+            name: 'Gathering Storm',
+            description:
+              'The longer the wild speaks through you, the harder it strikes — every damaging spell you loose lands for additional damage equal to half your level, a flat edge on top of every die the slot already rolls.',
+            mechanicKey: 'gathering-storm',
+          },
+        ],
+        '10': [
+          {
+            id: 'eye-of-the-storm',
+            name: 'Eye of the Storm',
+            description:
+              'You stand untouched at the heart of the ruin you call down, and nothing set against you weathers it — your spell save DC rises by 1 again, two in all over the circle-less druid.',
+            mechanicKey: 'eye-of-the-storm',
+          },
+        ],
+      },
+    },
   ],
 });

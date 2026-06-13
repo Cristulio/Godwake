@@ -72,6 +72,9 @@ export function spellSaveDC(character: Readonly<Character>): number {
   // never not performing), every save-or-suck working bites one harder — the
   // caster lean of the Lore fork, now carried by the song.
   const loreBonus = bardLoreAmpDc(character);
+  // Druid Circle of the Tempest: the wild's call is harder to shrug off. +1 at
+  // the L2 circle pick, +1 again at L10 (Eye of the Storm) → +2 in all.
+  const tempestBonus = tempestCircleDcBonus(character);
   const boonBonus = characterCampBoonMods(character).spellDcBonus ?? 0;
   const blessingBonus = characterBlessingMods(character).spellDcBonus ?? 0;
   return (
@@ -80,6 +83,7 @@ export function spellSaveDC(character: Readonly<Character>): number {
     proficiencyBonus(character.level) +
     classBonus +
     loreBonus +
+    tempestBonus +
     (character.permanentBonuses?.spellDc ?? 0) +
     boonBonus +
     blessingBonus +
@@ -99,6 +103,31 @@ export function empoweredEvocationBonus(character: Readonly<Character>): number 
     : 0;
 }
 
+/**
+ * Druid Circle of the Tempest — spell save DC bonus: +1 at the L2 circle pick
+ * (`circle-of-the-tempest`), +1 again at L10 (`eye-of-the-storm`), +2 in all.
+ * Folded into {@link spellSaveDC}, mirroring the bard's Lore amp.
+ */
+export function tempestCircleDcBonus(character: Readonly<Character>): number {
+  const c = character as Character;
+  return (
+    (characterHasMechanic(c, 'circle-of-the-tempest') ? 1 : 0) +
+    (characterHasMechanic(c, 'eye-of-the-storm') ? 1 : 0)
+  );
+}
+
+/**
+ * Druid Circle of the Tempest — Gathering Storm (L6): every damaging spell lands
+ * for an extra +⌊level/2⌋, the caster-fork mirror of Empowered Evocation. Folded
+ * into {@link spellDamageBonus} so every handler reading the shared rider picks
+ * it up (the druid's damaging workings all route through it).
+ */
+export function gatheringStormBonus(character: Readonly<Character>): number {
+  return characterHasMechanic(character as Character, 'gathering-storm')
+    ? Math.floor(character.level / 2)
+    : 0;
+}
+
 export function spellDamageBonus(character: Readonly<Character>): number {
   const boonBonus = characterCampBoonMods(character).spellDamageBonus ?? 0;
   const blessingBonus = characterBlessingMods(character).spellDamageBonus ?? 0;
@@ -109,6 +138,9 @@ export function spellDamageBonus(character: Readonly<Character>): number {
     blessingBonus +
     ascendantBonus +
     empoweredEvocationBonus(character) +
+    // Druid Circle of the Tempest — Gathering Storm (L6): +⌊level/2⌋ on every
+    // damaging working, the caster-fork mirror of Empowered Evocation.
+    gatheringStormBonus(character) +
     // Bard College of Lore — Resonant Lore: the playing song amplifies every
     // working's damage (scales with the song-die tier).
     bardLoreAmpDamage(character) +
