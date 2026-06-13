@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Shadow Hound — a fey beast that walks the Athkatlan lamp-corners. Eats
+ * Shadow Hound — a fey beast that walks the Stormhaven lamp-corners. Eats
  * light, hunts in pairs, vanishes when it loses sight of its prey. The
  * hounds the slaver houses turn loose at night and the Cowled politely
  * pretend not to see.

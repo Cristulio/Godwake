@@ -121,7 +121,7 @@ export const BOSS_INTEL_CARDS: BossIntelCard[] = [
     battlePlanResolution:
       "You read the litany and the whole devotional pattern: the temple-prayer to still you, the venomed dagger turning on each stroke, the spider-glyph at distance, the second wind halfway down the prayer. You walk in with your mind set against the stilling and your opening strike already aimed past her guard.",
     walkPastResolution:
-      "You leave the antechamber as you found it and the litany unread. Eilistraee's hidden moon notes the going. The Matron's tribute-purse will weigh a touch heavier when the prayer is broken.",
+      "You leave the antechamber as you found it and the litany unread. Selene's hidden moon notes the going. The Matron's tribute-purse will weigh a touch heavier when the prayer is broken.",
     coinCost: bossIntelCoinCost(4),
   },
   // ─── Ch5 · The Hollow Dawn ────────────────────────────────────────────

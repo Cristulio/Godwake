@@ -504,13 +504,13 @@ const POOL: EventTemplate[] = [
     eventType: 'stranger',
     title: 'A Beggar at the Gate',
     flavor:
-      "A bone-thin man in Waukeen's faded yellow squats by the customs post. \"A coin, walker. A coin and the merchant queen counts you fair on her scales.\"",
+      "A bone-thin man in Pecunia's faded yellow squats by the customs post. \"A coin, walker. A coin and the merchant queen counts you fair on her scales.\"",
     minChapter: 2,
     choices: [
       {
         id: 'give',
         label: 'Drop a silver in his hand',
-        hint: 'Waukeen marks the giver.',
+        hint: 'Pecunia marks the giver.',
         requiresGold: 5,
         outcome: {
           resolution:
@@ -523,12 +523,12 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'recall-waukeens-prayer',
-        label: "[History] Speak Waukeen's prayer of passage",
+        label: "[History] Speak Pecunia's prayer of passage",
         hint: 'Know the old words — the ones a true supplicant of the merchant queen gives before crossing a threshold.',
         skillCheck: { skill: 'history', dc: 11 },
         outcome: {
           resolution:
-            "You pause and find the old Waukeen passage-prayer — the seven-syllable one the gate-merchants still use in Calimshan. His eyes open. He murmurs the response and presses his own blessing into your hand. \"A walker who knows the road before the last road — she marks you herself.\"",
+            "You pause and find the old Pecunian passage-prayer — the seven-syllable one the gate-merchants still use in the Sun Cities. His eyes open. He murmurs the response and presses his own blessing into your hand. \"A walker who knows the road before the last road — she marks you herself.\"",
           effects: [{ kind: 'grant_blessing', random: true }],
         },
         failureOutcome: {
@@ -839,7 +839,7 @@ const POOL: EventTemplate[] = [
         requiresGold: 50,
         outcome: {
           resolution:
-            'He sights down the blade, then lays it across your palms hilt-first. "Waukeen keep your edge keen, walker." The balance is clean and the edge is hungry. It goes to your hip like it has always lived there.',
+            'He sights down the blade, then lays it across your palms hilt-first. "Pecunia keep your edge keen, walker." The balance is clean and the edge is hungry. It goes to your hip like it has always lived there.',
           effects: [
             { kind: 'gold_delta', amount: -50 },
             { kind: 'grant_item', itemId: 'rapier', affixIds: ['keen', 'bloodletting'] },
@@ -1170,7 +1170,7 @@ const POOL: EventTemplate[] = [
   EventTemplateSchema.parse({
     id: 'eilistraee-shrine',
     eventType: 'shrine',
-    title: 'A Hidden Shrine to Eilistraee',
+    title: 'A Hidden Shrine to Selene',
     flavor:
       "A cleft in the rock barely wide enough for a shoulder. Inside: a tallow stub burning steadier than it should, and a small silver figure of a woman with a sword raised to a moon she cannot see. A drow has been hiding her here.",
     minChapter: 4,
@@ -1192,7 +1192,7 @@ const POOL: EventTemplate[] = [
       {
         id: 'observe-the-rite',
         label: '[Religion] Keep the moon-rite yourself',
-        hint: "Honour Eilistraee the way her hidden faithful do — no coin, only the rite done right. Perform it true and she answers; fumble her secret liturgy and the dark closes cold.",
+        hint: "Honour Selene the way her hidden faithful do — no coin, only the rite done right. Perform it true and she answers; fumble her secret liturgy and the dark closes cold.",
         skillCheck: { skill: 'religion', dc: 15 },
         outcome: {
           resolution:
@@ -1315,7 +1315,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'investigation', dc: 12 },
         outcome: {
           resolution:
-            "The cipher yields on the third attempt — a basic shift with a Calimshite salt the last column gives away. Behind it: a supplier address and a debt that was never settled. You fold the ledger back in the gutter and walk with the address on a loose page in your pocket.",
+            "The cipher yields on the third attempt — a basic shift with a southern salt the last column gives away. Behind it: a supplier address and a debt that was never settled. You fold the ledger back in the gutter and walk with the address on a loose page in your pocket.",
           effects: [{ kind: 'gold_delta', amount: 28 }],
         },
         failureOutcome: {
@@ -1385,7 +1385,7 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'religion', dc: 13 },
         outcome: {
           resolution:
-            'The copper figure is Shaundakul — the Rider of the East Wind, patron of explorers and those who vanish on purpose. The rite is three words and a breath turned south-east. The dead flowers stand straight for a moment. A warmth, road-warm, settles between your shoulder-blades and stays.',
+            'The copper figure is the Rider of the East Wind, patron of explorers and those who vanish on purpose. The rite is three words and a breath turned south-east. The dead flowers stand straight for a moment. A warmth, road-warm, settles between your shoulder-blades and stays.',
           effects: [{ kind: 'grant_blessing', random: true }],
         },
         failureOutcome: {

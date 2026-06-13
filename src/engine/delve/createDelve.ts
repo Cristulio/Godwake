@@ -1424,7 +1424,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     },
     shrines: [
       {
-        title: 'A Curbside Shrine to Waukeen',
+        title: 'A Curbside Shrine to Pecunia',
         flavorText:
           "A pillar of guilded sandstone, four niches at the base. Stormhaven's merchant queen does not promise gold — only that the scale will tip true. Coins clink at the bottom of the basin.",
       },
@@ -1449,7 +1449,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     shop: {
       title: 'A Coin-Lender at the Curb',
       flavorText:
-        "A Waukeenar coin-lender keeps a folding stall in the colonnade, scales out, ledger open. In Stormhaven everything is for sale and the only sin is a debt unpaid. He weighs your purse before he weighs his words.",
+        "A Pecunian coin-lender keeps a folding stall in the colonnade, scales out, ledger open. In Stormhaven everything is for sale and the only sin is a debt unpaid. He weighs your purse before he weighs his words.",
     },
     bossDefId: 'athkatla-magistrate',
     boss: {
@@ -1518,7 +1518,7 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
     },
     shrines: [
       {
-        title: 'A Faerzress Sigil to Eilistraee',
+        title: 'A Deepglow Sigil to Selene',
         flavorText:
           "Hidden behind a fallen slab in the lower tunnels — a circle scratched in chalk, a moon-and-sword glyph at its centre. The drow goddess of the dance, the one Arachne's priestesses have a standing kill-order on. The bone-light flickers green here in a way that is not entirely natural.",
       },
@@ -1532,18 +1532,18 @@ const GODWAKE_CHAPTERS: ChapterContent[] = [
       {
         title: 'A Disused Slave-Pen',
         flavorText:
-          "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The faerzress glow is dim enough here that the corridor-watch will not look in.",
+          "A cage-tier the slavers have not stocked this season — the chains hang slack, the straw is old. The deepglow glow is dim enough here that the corridor-watch will not look in.",
       },
       {
-        title: 'A Cold Faerzress Hollow',
+        title: 'A Cold Deepglow Hollow',
         flavorText:
-          "A pocket in the rock where the faerzress has guttered out — no glow, no warmth, and for that reason no drow patrol bothers to sweep it. The dark is total and, for once, on your side.",
+          "A pocket in the rock where the deepglow has guttered out — no glow, no warmth, and for that reason no drow patrol bothers to sweep it. The dark is total and, for once, on your side.",
       },
     ],
     shop: {
       title: "A Surface-Smuggler's Cache",
       flavorText:
-        "A duergar smuggler runs surface-goods past the Lolthite tithe-takers and has a tarp of them spread on the stone — steel that doesn't crumble in the deep damp, draughts the priestesses would burn him for. He trades fast and watches the tunnel-mouth the whole time.",
+        "A duergar smuggler runs surface-goods past the Spider-Queen's tithe-takers and has a tarp of them spread on the stone — steel that doesn't crumble in the deep damp, draughts the priestesses would burn him for. He trades fast and watches the tunnel-mouth the whole time.",
     },
     bossDefId: 'drow-matron-mother',
     boss: {
@@ -1798,7 +1798,7 @@ const GODWAKE_CAMPS: RoomFlavor[] = [
   {
     title: 'A Fire at the Edge of the Light',
     flavorText:
-      "The Matron's temple is behind you and the faerzress thins to nothing ahead, where a pale dawn-coloured glow leaks up through the floor of the world. A last camp on the lip of it — a deep-gnome exile who fled the Deepdark and could go no further, a small cold fire that throws no shadow toward the light. He does not ask where you mean to go. He has seen the look before, on the others who climbed past him and did not come back down.",
+      "The Matron's temple is behind you and the deepglow thins to nothing ahead, where a pale dawn-coloured glow leaks up through the floor of the world. A last camp on the lip of it — a deep-gnome exile who fled the Deepdark and could go no further, a small cold fire that throws no shadow toward the light. He does not ask where you mean to go. He has seen the look before, on the others who climbed past him and did not come back down.",
   },
   {
     title: 'A Stillness Before the Wheel',

@@ -23,7 +23,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Tunnel-Watcher',
     flavorText:
-      "A drow scout has been waiting at the mouth of the side-tunnel since the faerzress shifted three bells ago. He sees you the moment you crest the rise. He does not lift the crossbow yet — he is checking your house-trim first, to see whose problem you are.",
+      "A drow scout has been waiting at the mouth of the side-tunnel since the deepglow shifted three bells ago. He sees you the moment you crest the rise. He does not lift the crossbow yet — he is checking your house-trim first, to see whose problem you are.",
     monsters: [{ defId: 'drow-crossbowman', count: 1 }],
     xpReward: 300,
     goldReward: 30,
@@ -39,7 +39,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'A Brood Underfoot',
     flavorText:
-      "The corridor floor is webbed at ankle height and the web is moving. Two driderlings come out of the wall-cracks, fangs already in front of them, eyes catching the faerzress like dropped beads.",
+      "The corridor floor is webbed at ankle height and the web is moving. Two driderlings come out of the wall-cracks, fangs already in front of them, eyes catching the deepglow like dropped beads.",
     monsters: [{ defId: 'driderling', count: 2, displayPrefix: 'Driderling' }],
     xpReward: 320,
     goldReward: 22,
@@ -55,7 +55,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: "The Crossbow at the Turn",
     flavorText:
-      "A drow crossbowman has set the corner since the last bell, mithral catching the faerzress. He has not yet decided whether to fire — he is reading your stride for slave-house or freelance.",
+      "A drow crossbowman has set the corner since the last bell, mithral catching the deepglow. He has not yet decided whether to fire — he is reading your stride for slave-house or freelance.",
     monsters: [{ defId: 'drow-crossbowman', count: 1 }],
     xpReward: 290,
     goldReward: 28,
@@ -134,7 +134,7 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'Two Warriors at the Arch',
     flavorText:
-      "Two drow warriors of the same House at the archway, scimitars drawn at parade-rest, mithral catching the faerzress. Their hand-sign agrees that you are not a guest.",
+      "Two drow warriors of the same House at the archway, scimitars drawn at parade-rest, mithral catching the deepglow. Their hand-sign agrees that you are not a guest.",
     monsters: [{ defId: 'drow-warrior', count: 2, displayPrefix: 'Warrior' }],
     xpReward: 580,
     goldReward: 40,
