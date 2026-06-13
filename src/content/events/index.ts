@@ -1120,7 +1120,7 @@ const POOL: EventTemplate[] = [
             'You draw your own blade across your forearm. She gathers the dripping into a thumb-vial and breathes a syllable over it. A coldness threads up your spine and steadies your stance.',
           effects: [
             { kind: 'hp_delta', amount: -8 },
-            { kind: 'apply_attack_bonus_run', amount: 2 },
+            { kind: 'apply_attack_bonus_run', amount: 1 },
           ],
         },
       },
@@ -1145,8 +1145,11 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'deception', dc: 15 },
         outcome: {
           resolution:
-            'You bow as a noble of Zhal Vasha would bow, and put the priestess\'s own beauty into Arachne\'s mouth — the kind of compliment that is also a prayer. Her smile does not change, but her hand opens. "The Spider notes a tongue worth keeping." The corridor opens. No blood. No coin. The blessing she leaves is colder than the dark.',
-          effects: [{ kind: 'grant_blessing', random: true }],
+            'You bow as a noble of Zhal Vasha would bow, and put the priestess\'s own beauty into Arachne\'s mouth — the kind of compliment that is also a prayer. Her smile does not change, but her hand opens. "The Spider notes a tongue worth keeping." The corridor opens. No blood. No coin. The blessing she leaves is colder than the dark — and the cold of it sinks under the skin like a second hide, a chill that turns a blade before it bites.',
+          effects: [
+            { kind: 'grant_blessing', random: true },
+            { kind: 'temp_hp', amount: 14 },
+          ],
         },
         failureOutcome: {
           resolution:
@@ -1196,8 +1199,11 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'religion', dc: 15 },
         outcome: {
           resolution:
-            "You know this faith, outlawed above and below — the sword raised to the unseen moon, the silent step, the words sung under the breath. You give the rite its due without a coin to your name, and the tallow steadies to a clean silver burn. A warmth that has nothing to do with the candle settles into your chest for the rest of the road.",
-          effects: [{ kind: 'grant_blessing_id', id: 'selunes-veil' }],
+            "You know this faith, outlawed above and below — the sword raised to the unseen moon, the silent step, the words sung under the breath. You give the rite its due without a coin to your name, and the tallow steadies to a clean silver burn. A warmth that has nothing to do with the candle settles into your chest for the rest of the road — fuller than any coin could buy, for a grace earned and not purchased.",
+          effects: [
+            { kind: 'grant_blessing_id', id: 'selunes-veil' },
+            { kind: 'temp_hp', amount: 10 },
+          ],
         },
         failureOutcome: {
           resolution:
@@ -1577,8 +1583,11 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'sleight-of-hand', dc: 16 },
         outcome: {
           resolution:
-            "You take your own loose thread between two fingers and tie it off in a knot the Loom did not plan — small, stubborn, yours. The pattern accepts it without unpicking the rest. You walk on woven by your own hand, which is a kind of armour.",
-          effects: [{ kind: 'temp_hp', amount: 16 }],
+            "You take your own loose thread between two fingers and tie it off in a knot the Loom did not plan — small, stubborn, yours. The pattern accepts it without unpicking the rest. You walk on woven by your own hand, which is a kind of armour — and the steadiness it takes to bind your own fate true rides on into the swing of your arm.",
+          effects: [
+            { kind: 'apply_attack_bonus_run', amount: 1 },
+            { kind: 'temp_hp', amount: 16 },
+          ],
         },
         failureOutcome: {
           resolution:
@@ -1882,8 +1891,8 @@ const POOL: EventTemplate[] = [
         skillCheck: { skill: 'religion', dc: 16 },
         outcome: {
           resolution:
-            "You sweep the ash from the bowl and read the shrine by its bones — a frontier war-god, the kind soldiers pray to in the half-hour before a charge. You give it the soldier's prayer, blunt and true, and it answers the way it always did: not with comfort, but with an edge.",
-          effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }, { kind: 'temp_hp', amount: 12 }],
+            "You sweep the ash from the bowl and read the shrine by its bones — a frontier war-god, the kind soldiers pray to in the half-hour before a charge. You give it the soldier's prayer, blunt and true, and it answers the way it always did: not with comfort, but with an edge — a war-god's full measure, honed twice over for a soldier who named it right.",
+          effects: [{ kind: 'apply_attack_bonus_run', amount: 2 }, { kind: 'temp_hp', amount: 12 }],
         },
         failureOutcome: {
           resolution:

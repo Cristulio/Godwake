@@ -7,9 +7,9 @@ the knobs the tuning pass moves. No content is changed by this run._
 
 ## Principle 2 — shrine vs omen parity
 
-- Shrines (5): mean best-choice EV **163g**
-- Omens (7): mean best-choice EV **139g**
-- Shrine/Omen EV ratio: **1.17×** (target ≈ 1.0; >1.3 = shrines dominate)
+- Shrines (5): mean best-choice EV **150g** · mean best success-value **218g**
+- Omens (7): mean best-choice EV **139g** · mean best success-value **230g**
+- Shrine/Omen EV ratio: **1.08×** · reward-when-earned ratio: **0.95×** (target band 0.9–1.3; >1.3 = shrines dominate)
 
 ## Principle 3 — risk pays (DC vs reward)
 
@@ -17,9 +17,19 @@ the knobs the tuning pass moves. No content is changed by this run._
 |---|--:|--:|
 | easy ≤11 | 5 | 61g |
 | medium 12–14 | 28 | 66g |
-| hard ≥15 | 41 | 164g |
+| hard ≥15 | 41 | 173g |
 
 _If hard gates do not out-reward easy ones, risk is not paying (principle 3)._
+
+### within-event (shrines/omens): does the high-roll beat playing it safe?
+
+11/12 gated shrine/omen events pass
+(best gated success-value > best safe EV). Offenders — a roll whose prize is no
+better than the no-risk option:
+
+| event | type | minCh | best gated success | best safe EV |
+|---|---|--:|--:|--:|
+| cracked-mirror | omen | 1 | 130g | 152g |
 
 ## Principle 1 — chapter-relevance (gold + HP now scale; flat = qualitative)
 
@@ -32,11 +42,11 @@ for review, not flagged as broken:
 
 | event | type | minCh | best EV | qualitative-share |
 |---|---|--:|--:|--:|
-| drow-priestess-test | shrine | 4 | 304g | 95% |
 | breach-in-the-wall | ruin | 12 | 219g | 98% |
 | bhaalspawn-shrine | shrine | 13 | 208g | 100% |
 | elf-at-the-last-stair | stranger | 10 | 206g | 99% |
 | voice-in-the-pocket-plane | stranger | 14 | 200g | 96% |
+| altar-under-ash | shrine | 8 | 195g | 98% |
 | throne-that-waits | omen | 14 | 192g | 100% |
 | trial-of-pride | omen | 11 | 189g | 98% |
 | the-unwound-soul | ruin | 6 | 184g | 96% |
@@ -44,13 +54,13 @@ for review, not flagged as broken:
 | bones-on-stake | ruin | 1 | 158g | 99% |
 | wine-merchant | bargain | 2 | 156g | 98% |
 | cracked-mirror | omen | 1 | 152g | 95% |
+| drow-priestess-test | shrine | 4 | 144g | 91% |
 | cowled-recruiter | stranger | 2 | 135g | 86% |
 | beggar-at-the-gate | stranger | 2 | 125g | 96% |
 | eilistraee-shrine | shrine | 4 | 110g | 87% |
 | forgotten-offering-table | ruin | 3 | 106g | 98% |
 | pilgrim-turned-back | stranger | 5 | 101g | 95% |
 | masked-hosts-invitation | bargain | 9 | 100g | 96% |
-| altar-under-ash | shrine | 8 | 99g | 97% |
 | pale-cleric-shrine | shrine | 1 | 95g | 96% |
 | whispering-door | omen | 1 | 91g | 100% |
 | dropped-ledger | treasure | 2 | 90g | 98% |
@@ -60,46 +70,46 @@ for review, not flagged as broken:
 
 ## All events (best-choice EV)
 
-| event | type | minCh | best EV | best choice | flat% | maxDC | maxDC reward |
-|---|---|--:|--:|---|--:|--:|--:|
-| bones-on-stake | ruin | 1 | 158g | Pluck the jaw from the stake | 99% | 12 | 7 |
-| cracked-mirror | omen | 1 | 152g | Press your palm to the glass | 95% | 11 | 130 |
-| pale-cleric-shrine | shrine | 1 | 95g | [Persuasion] Speak gently with her | 96% | 12 | 138 |
-| whispering-door | omen | 1 | 91g | [Athletics] Put your shoulder to it | 100% | 12 | 130 |
-| dead-mans-steel | treasure | 1 | 74g | Pry the weapon from his grip | 93% | 12 | 18 |
-| wounded-captain | stranger | 1 | 30g | Loot him where he sits | 98% | 12 | 25 |
-| soldier-left-to-die | stranger | 1 | 18g | [Medicine] Bind the wound | 0% | 12 | 28 |
-| rats-in-the-grain | beast | 1 | 7g | [Perception] Scan the area for somet | 0% | 12 | 4 |
-| wine-merchant | bargain | 2 | 156g | Accept the free cup | 98% | 13 | 14 |
-| cowled-recruiter | stranger | 2 | 135g | Pay the Cowl their tax | 86% | 13 | 160 |
-| beggar-at-the-gate | stranger | 2 | 125g | Drop a silver in his hand | 96% | 13 | 15 |
-| dropped-ledger | treasure | 2 | 90g | [History] Name the merchant house | 98% | 12 | 28 |
-| pilgrim-road-smith | bargain | 2 | 36g | [Persuasion] Talk him round | 77% | 13 | 59 |
-| oghma-scribe | lore | 2 | 14g | [Deception] Sell him a better story | 0% | 13 | 25 |
-| street-orphan | stranger | 2 | 7g | [Medicine] Tend the cut on his hand | 0% | 13 | 2 |
-| forgotten-offering-table | ruin | 3 | 106g | [Arcana] Read the residual enchantme | 98% | 13 | 130 |
-| hollow-library | lore | 3 | 75g | [Arcana] Parse the script before you | 96% | 14 | 130 |
-| mad-prisoner-bargain | bargain | 3 | 67g | [Athletics] Pry the bars open | 95% | 14 | 58 |
-| warden-deal | treasure | 3 | 50g | Buy the hour | 0% | 14 | 90 |
-| drow-priestess-test | shrine | 4 | 304g | Cut yourself for the Spider | 95% | 15 | 130 |
-| eilistraee-shrine | shrine | 4 | 110g | Leave a coin for the keeper | 87% | 15 | 130 |
-| pilgrim-turned-back | stranger | 5 | 101g | [Insight] Read what the climb has le | 95% | 16 | 130 |
-| choir-of-first-light | omen | 5 | 79g | [Religion] Answer the hymn with a tr | 91% | 16 | 160 |
-| the-unwound-soul | ruin | 6 | 184g | [Arcana] Gather what spills off it | 96% | 16 | 130 |
-| loose-thread-on-the-loom | omen | 6 | 90g | [Investigation] Read where the patte | 98% | 16 | 18 |
-| page-that-will-not-drown | lore | 7 | 70g | [Arcana] Parse the script before you | 91% | 16 | 130 |
-| flooded-reliquary-dive | treasure | 7 | 65g | [Survival] Read the water before you | 0% | 16 | 110 |
-| soldier-in-the-ash | stranger | 8 | 104g | [Intimidation] Give it the order to  | 65% | 16 | 220 |
-| altar-under-ash | shrine | 8 | 99g | [Religion] Clear the bowl and guess  | 97% | 16 | 173 |
-| face-that-is-not-yours | omen | 9 | 182g | [Insight] Name which of you is the l | 97% | 17 | 98 |
-| masked-hosts-invitation | bargain | 9 | 100g | [Perception] Look under the silver b | 96% | 16 | 68 |
-| elf-at-the-last-stair | stranger | 10 | 206g | [Persuasion] Convince her you can fi | 99% | 16 | 320 |
-| burning-bough | ruin | 10 | 85g | [Medicine] Splint the broken limb | 100% | 16 | 143 |
-| trial-of-pride | omen | 11 | 189g | [Athletics] Carry your pride across  | 98% | 17 | 333 |
-| trial-of-greed | bargain | 11 | 71g | [Insight] Take only what you can tru | 0% | 16 | 120 |
-| breach-in-the-wall | ruin | 12 | 219g | [Investigation] Read the siege-lines | 98% | 17 | 230 |
-| marauders-bargain | stranger | 12 | 45g | [Insight] Read whether he means to d | 0% | 16 | 90 |
-| bhaalspawn-shrine | shrine | 13 | 208g | [Religion] Take the essence on your  | 100% | 17 | 335 |
-| dragons-hoard-toll | bargain | 13 | 87g | [Deception] Convince it you are alre | 92% | 17 | 171 |
-| voice-in-the-pocket-plane | stranger | 14 | 200g | [Arcana] Read what the solar truly i | 96% | 17 | 148 |
-| throne-that-waits | omen | 14 | 192g | [Insight] See the Throne for the tra | 100% | 18 | 340 |
+| event | type | minCh | best EV | best success | best choice | flat% | maxDC | maxDC reward |
+|---|---|--:|--:|--:|---|--:|--:|--:|
+| bones-on-stake | ruin | 1 | 158g | 158g | Pluck the jaw from the stake | 99% | 12 | 7 |
+| cracked-mirror | omen | 1 | 152g | 152g | Press your palm to the glass | 95% | 11 | 130 |
+| pale-cleric-shrine | shrine | 1 | 95g | 138g | [Persuasion] Speak gently with her | 96% | 12 | 138 |
+| whispering-door | omen | 1 | 91g | 160g | [Athletics] Put your shoulder to it | 100% | 12 | 130 |
+| dead-mans-steel | treasure | 1 | 74g | 74g | Pry the weapon from his grip | 93% | 12 | 18 |
+| wounded-captain | stranger | 1 | 30g | 50g | Loot him where he sits | 98% | 12 | 25 |
+| soldier-left-to-die | stranger | 1 | 18g | 28g | [Medicine] Bind the wound | 0% | 12 | 28 |
+| rats-in-the-grain | beast | 1 | 7g | 11g | [Perception] Scan the area for somet | 0% | 12 | 4 |
+| wine-merchant | bargain | 2 | 156g | 156g | Accept the free cup | 98% | 13 | 14 |
+| cowled-recruiter | stranger | 2 | 135g | 160g | Pay the Cowl their tax | 86% | 13 | 160 |
+| beggar-at-the-gate | stranger | 2 | 125g | 130g | Drop a silver in his hand | 96% | 13 | 15 |
+| dropped-ledger | treasure | 2 | 90g | 130g | [History] Name the merchant house | 98% | 12 | 28 |
+| pilgrim-road-smith | bargain | 2 | 36g | 59g | [Persuasion] Talk him round | 77% | 13 | 59 |
+| oghma-scribe | lore | 2 | 14g | 25g | [Deception] Sell him a better story | 0% | 13 | 25 |
+| street-orphan | stranger | 2 | 7g | 12g | [Medicine] Tend the cut on his hand | 0% | 13 | 2 |
+| forgotten-offering-table | ruin | 3 | 106g | 169g | [Arcana] Read the residual enchantme | 98% | 13 | 130 |
+| hollow-library | lore | 3 | 75g | 130g | [Arcana] Parse the script before you | 96% | 14 | 130 |
+| mad-prisoner-bargain | bargain | 3 | 67g | 145g | [Athletics] Pry the bars open | 95% | 14 | 58 |
+| warden-deal | treasure | 3 | 50g | 90g | Buy the hour | 0% | 14 | 90 |
+| drow-priestess-test | shrine | 4 | 144g | 145g | Cut yourself for the Spider | 91% | 15 | 145 |
+| eilistraee-shrine | shrine | 4 | 110g | 141g | Leave a coin for the keeper | 87% | 15 | 141 |
+| pilgrim-turned-back | stranger | 5 | 101g | 173g | [Insight] Read what the climb has le | 95% | 16 | 130 |
+| choir-of-first-light | omen | 5 | 79g | 160g | [Religion] Answer the hymn with a tr | 91% | 16 | 160 |
+| the-unwound-soul | ruin | 6 | 184g | 320g | [Arcana] Gather what spills off it | 96% | 16 | 130 |
+| loose-thread-on-the-loom | omen | 6 | 90g | 178g | [Investigation] Read where the patte | 98% | 16 | 178 |
+| page-that-will-not-drown | lore | 7 | 70g | 130g | [Arcana] Parse the script before you | 91% | 16 | 130 |
+| flooded-reliquary-dive | treasure | 7 | 65g | 110g | [Survival] Read the water before you | 0% | 16 | 110 |
+| altar-under-ash | shrine | 8 | 195g | 333g | [Religion] Clear the bowl and guess  | 98% | 16 | 333 |
+| soldier-in-the-ash | stranger | 8 | 104g | 220g | [Intimidation] Give it the order to  | 65% | 16 | 220 |
+| face-that-is-not-yours | omen | 9 | 182g | 290g | [Insight] Name which of you is the l | 97% | 17 | 98 |
+| masked-hosts-invitation | bargain | 9 | 100g | 160g | [Perception] Look under the silver b | 96% | 16 | 68 |
+| elf-at-the-last-stair | stranger | 10 | 206g | 320g | [Persuasion] Convince her you can fi | 99% | 16 | 320 |
+| burning-bough | ruin | 10 | 85g | 143g | [Medicine] Splint the broken limb | 100% | 16 | 143 |
+| trial-of-pride | omen | 11 | 189g | 333g | [Athletics] Carry your pride across  | 98% | 17 | 333 |
+| trial-of-greed | bargain | 11 | 71g | 120g | [Insight] Take only what you can tru | 0% | 16 | 120 |
+| breach-in-the-wall | ruin | 12 | 219g | 320g | [Investigation] Read the siege-lines | 98% | 17 | 230 |
+| marauders-bargain | stranger | 12 | 45g | 90g | [Insight] Read whether he means to d | 0% | 16 | 90 |
+| bhaalspawn-shrine | shrine | 13 | 208g | 335g | [Religion] Take the essence on your  | 100% | 17 | 335 |
+| dragons-hoard-toll | bargain | 13 | 87g | 171g | [Deception] Convince it you are alre | 92% | 17 | 171 |
+| voice-in-the-pocket-plane | stranger | 14 | 200g | 320g | [Arcana] Read what the solar truly i | 96% | 17 | 148 |
+| throne-that-waits | omen | 14 | 192g | 340g | [Insight] See the Throne for the tra | 100% | 18 | 340 |
