@@ -413,8 +413,8 @@ const POOL: EventTemplate[] = [
           effects: [{ kind: 'gold_delta', amount: 8 }, { kind: 'temp_hp', amount: 3 }],
         },
         failureOutcome: {
-          resolution: 'You turn once, see what you expected, and stop looking. The corridor holds its secrets.',
-          effects: [],
+          resolution: 'You turn once, see what you expected, and crouch to dig anyway — and while your head is down a rat takes the chance to sink its teeth into your ankle before you can kick it loose. The corridor keeps the rest of its secrets.',
+          effects: [{ kind: 'hp_delta', amount: -2 }],
         },
       },
       {
@@ -440,15 +440,16 @@ const POOL: EventTemplate[] = [
       {
         id: 'take-blade',
         label: 'Pry the weapon from his grip',
-        hint: 'Good steel asks no questions. Yours now.',
+        hint: "Good steel asks no questions — but a dead grip does not give it up clean.",
         outcome: {
           resolution:
-            'Rigor has set his fingers and they give one at a time, dry as old rope. The weapon comes free and sits true in your hand — whoever he was, he kept his edge. You leave him the wall and take his road.',
+            'Rigor has set his fingers and they give one at a time, dry as old rope. The weapon comes free and sits true in your hand — whoever he was, he kept his edge — but the edge, turned wrong in the dead clench, opens your palm as it slides loose. You leave him the wall and take his road, his good steel in a stinging, bleeding hand.',
           effects: [
             {
               kind: 'grant_item',
               randomFrom: ['greatsword', 'warhammer', 'rapier', 'longsword', 'shortbow'],
             },
+            { kind: 'hp_delta', amount: -3 },
           ],
         },
       },
@@ -532,8 +533,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You reach for the prayer and come up empty. He watches you quietly and folds his hands. You leave him to his bowl.',
-          effects: [],
+            'You reach for the prayer and come up empty — the words tangle and die on your tongue. He watches you quietly and folds his hands. You press a coin into his bowl to cover the silence and leave him to it, poorer and no holier.',
+          effects: [{ kind: 'gold_delta', amount: -6 }],
         },
       },
       {
@@ -674,8 +675,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'Your tale wanders and his smile thins to courtesy. "Charming, walker. But my children eat Sudrian red same as you." The price stays full and you have no stomach to pay it. You leave with the cork still in the bottle and your purse intact.',
-          effects: [],
+            'Your tale wanders and his smile thins to courtesy. "Charming, walker. But my children eat Sudrian red same as you." The price holds. To save face you buy a lesser draught you did not want and leave a few coins lighter, the good bottle still on his shelf.',
+          effects: [{ kind: 'gold_delta', amount: -5 }],
         },
       },
       {
@@ -862,8 +863,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'He lets you talk yourself out, then sights down the blade and shakes his head. "Fair words, walker. But fifty\'s the price and fifty stays." He lays the rapier back on the roll and turns to the anvil. You keep your coin and your old steel both.',
-          effects: [],
+            'He lets you talk yourself out, then sights down the blade and shakes his head. "Fair words, walker. But fifty\'s the price and fifty stays — and I\'ll thank you not to work me again." To leave on better terms you buy a whetstone you did not need. The rapier stays on the roll.',
+          effects: [{ kind: 'gold_delta', amount: -6 }],
         },
       },
       {
@@ -906,16 +907,13 @@ const POOL: EventTemplate[] = [
       {
         id: 'take-the-purse',
         label: 'Take the purse',
-        hint: 'He says it weighs on him. He may not be wrong.',
+        hint: 'He says it weighs on him. He may not be wrong — and weight passed on is still weight.',
         outcome: {
           resolution:
-            "The purse is heavier than it should be. Inside: coin, and something else that goes still in your pocket. The man laughs once and you cannot say what is funny.",
+            "The purse is heavier than it should be. Inside: coin, and something else that goes cold and still against your hip and stays cold. The man laughs once and you cannot say what is funny — only that the laugh follows you out of the cell-block, and the chill in your pocket follows it.",
           effects: [
             { kind: 'gold_delta', amount: 40 },
-            {
-              kind: 'grant_quirk_reroll',
-              fallbackText: 'The asylum finds no bane to shake from you — only a small laugh from the cell at your back.',
-            },
+            { kind: 'hp_delta', amount: -4 },
           ],
         },
       },
@@ -934,8 +932,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'Something in your voice catches wrong and his eyes go wide and white. He snatches the purse back through the bars and folds himself around it in the corner. "No. No — the Director\'s. The Director\'s. You\'re one of his." He will not look at you again, and the purse goes with him into the dark of the cell.',
-          effects: [],
+            'Something in your voice catches wrong and his eyes go wide and white. "No. No — the Director\'s. The Director\'s. You\'re one of his." He snatches the purse back through the bars, and as you reach to steady him his nails rake deep across your wrist before he folds into the corner around his prize. The purse goes with him into the dark of the cell.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
@@ -983,11 +981,17 @@ const POOL: EventTemplate[] = [
       {
         id: 'read-the-line',
         label: 'Read the line aloud',
-        hint: 'Hecate hears.',
+        hint: 'The Weft hears — and a binding-line read blind is as likely to bite the tongue that speaks it as to bless it.',
+        successChance: 0.6,
         outcome: {
           resolution:
-            'You speak the syllables. The page goes warm. Something coils into your chest — a small thread of the Weft, willing to ride with you the rest of the road.',
+            'You speak the syllables and they fall true. The page goes warm. Something coils into your chest — a small thread of the Weft, willing to ride with you the rest of the road.',
           effects: [{ kind: 'grant_blessing', random: true }],
+        },
+        failureOutcome: {
+          resolution:
+            'The syllables turn in your mouth halfway through — a clause you never saw coming, barbed and hungry. The page does not warm; it bites. The binding-script closes on the careless tongue that fed it, and you reel back with the taste of copper and a cold hook set somewhere behind the ribs.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -1204,16 +1208,13 @@ const POOL: EventTemplate[] = [
       {
         id: 'take-the-silver',
         label: 'Take the silver figure',
-        hint: 'A handful of coin, a candle gone out.',
+        hint: 'A handful of coin, a candle gone out — and a stolen grace sits cold.',
         outcome: {
           resolution:
-            'The figure goes cold in your palm the moment it leaves the niche. You pocket it anyway. The candle gutters. Something small and silvered closes in the dark of the cleft, and your shoulders go heavy.',
+            'The figure goes cold in your palm the moment it leaves the niche. You pocket it anyway. The candle gutters. Something small and silvered closes in the dark of the cleft, and the cold of the stolen silver climbs your arm and settles heavy across the shoulders — a weight that does not lift with the miles.',
           effects: [
             { kind: 'gold_delta', amount: 25 },
-            {
-              kind: 'grant_quirk_reroll',
-              fallbackText: 'Eilistraee finds no bane to shake from you — her silver weighs only what you have given.',
-            },
+            { kind: 'hp_delta', amount: -4 },
           ],
         },
       },
@@ -1265,8 +1266,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            "You look, find nothing you didn't already know, and walk on. He does not call after you.",
-          effects: [],
+            "You lean in close to read his clutched hand — and he startles, a dying man's reflex, his elbow cracking into your jaw before he sags back. You find nothing you didn't already know, and walk on the worse for looking.",
+          effects: [{ kind: 'hp_delta', amount: -2 }],
         },
       },
       {
@@ -1281,18 +1282,18 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You pack the wound but it finds a way around. He takes over with his own hands, patient, and you step back. He does not offer what he has. Some things you have to earn.',
-          effects: [],
+            'You pack the wound but it finds a way around your fingers, slick and fast. He takes over with his own hands, patient, and you step back with his blood to the elbow and nothing to show for it — wrung out from the trying. Some things you have to earn.',
+          effects: [{ kind: 'hp_delta', amount: -2 }],
         },
       },
       {
         id: 'take-his-kit',
         label: 'Take his kit',
-        hint: "He won't need it where this road leads.",
+        hint: "He won't need it where this road leads — but a robbed man's last words have weight.",
         outcome: {
           resolution:
-            "He watches you go through the pack without stopping you. \"At least someone gets the road out of it.\" You pocket the coin and the hard bread and leave him the wall.",
-          effects: [{ kind: 'gold_delta', amount: 8 }],
+            'He watches you go through the pack without stopping you. "At least someone gets the road out of it." You pocket the coin and the hard bread — and as you rise his hand finds your sleeve, and what he breathes after you is not thanks. The chill of a dying man\'s curse rides with you down the corridor.',
+          effects: [{ kind: 'gold_delta', amount: 8 }, { kind: 'hp_delta', amount: -2 }],
         },
       },
     ],
@@ -1335,8 +1336,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The crest is familiar the way a word mispronounced once becomes unfamiliar — you reach for it and find nothing solid. You leave the folio where it fell.',
-          effects: [],
+            'The crest is familiar the way a word mispronounced once becomes unfamiliar — you reach for it and find nothing solid. You leave the folio where it fell, and only later, three alleys on, notice the purse-string cut clean: a hand you never felt, while your eyes were on the cover.',
+          effects: [{ kind: 'gold_delta', amount: -5 }],
         },
       },
       {
@@ -1351,8 +1352,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The marginal scrawl is just scrawl — a tired clerk who hated the job. You read three pages of it and put the folio down none the richer.',
-          effects: [],
+            'The marginal scrawl is just scrawl — a tired clerk who hated the job. You hunch over it in the cold gutter long enough that when you finally put the folio down you rise stiff and chilled, none the richer and a little the worse.',
+          effects: [{ kind: 'hp_delta', amount: -2 }],
         },
       },
       {
@@ -1428,13 +1429,13 @@ const POOL: EventTemplate[] = [
       {
         id: 'take-the-offerings',
         label: 'Take the obvious offerings',
-        hint: "Whatever bargain the last keeper made is not yours to keep.",
+        hint: "Whatever bargain the last keeper made is not yours to keep — and the Rider notices a debt walked out on.",
         outcome: {
           resolution:
-            "You pocket the copper figure and the bowl and step back into the corridor. Two alleys later your boot catches a stone that was flush with the floor a moment ago, and your shin rings hard. The figure is lighter than it should be.",
+            "You pocket the copper figure and the bowl and step back into the corridor. Two alleys later your boot catches a stone that was flush with the floor a moment ago and your shin rings hard — and the cold that follows the blow settles into the leg and does not lift with the next step. The figure is lighter than it should be, and so, somehow, are you.",
           effects: [
             { kind: 'gold_delta', amount: 20 },
-            { kind: 'grant_quirk_reroll', fallbackText: "Shaundakul finds no bane to shake from you — only the wind at your back for a moment." },
+            { kind: 'hp_delta', amount: -4 },
           ],
         },
       },
@@ -1466,18 +1467,18 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            "You search its face and find nothing climbing behind the eyes — only the habit of climbing, worn smooth. It keeps talking past you, to a stair you cannot see, and the words are no road at all.",
-          effects: [],
+            "You search its face and find nothing climbing behind the eyes — only the habit of climbing, worn smooth. It keeps talking past you, to a stair you cannot see, and the longer you lean in for a road that is not there, the more the morning's bleaching brushes you — a cold that climbs the spine and stays.",
+          effects: [{ kind: 'hp_delta', amount: -4 }],
         },
       },
       {
         id: 'take-the-castoffs',
         label: 'Take what it sets down',
-        hint: 'A dead pilgrim carries dead pilgrim coin. It will not turn the wheel for it.',
+        hint: 'A dead pilgrim carries dead pilgrim coin — soft with the cycle, and the cycle is catching.',
         outcome: {
           resolution:
-            "You gather the cast-offs heaped at its feet — coin gone soft at the edges, a phial of light long cold. It watches without grief. \"Lighter,\" it says, almost grateful. \"Lighter for the next turn.\"",
-          effects: [{ kind: 'gold_delta', amount: 70 }],
+            "You gather the cast-offs heaped at its feet — coin gone soft at the edges, a phial of light long cold. It watches without grief. \"Lighter,\" it says, almost grateful. \"Lighter for the next turn.\" The coin is cold in a way coin should not be, and the chill of it works up your arm and settles behind the breastbone — the cycle's touch, paid forward in the taking.",
+          effects: [{ kind: 'gold_delta', amount: 70 }, { kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -1620,8 +1621,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The pattern is too vast and too patient to read at the pace you have. You trace a false row, lose it, and step back none the wiser, the loose thread still hanging, the Loom still deciding.',
-          effects: [],
+            'The pattern is too vast and too patient to read at the pace you have. You trace a false row, lose it — and the Loom, feeling your thread loose and your attention spent, gives it a tug, a cold pull toward the weave that you wrench free of, but not without leaving something of yourself snagged in it.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -1725,8 +1726,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The hand is familiar the way a drowned face is familiar — close enough to ache, too far gone to name. You watch it write three more lines and recognise none of them, and you leave the page to its endless sentence.',
-          effects: [],
+            'The hand is familiar the way a drowned face is familiar — close enough to ache, too far gone to name. You watch it write three more lines and recognise none of them — and the longer you lean into the drowned hand, the more the room\'s cold reaches up your arms, a dead chill that follows you out when you finally leave the page to its endless sentence.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -1787,8 +1788,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You read the water still and safe. It is neither. Something cold turns under the surface as you wade in, and you back out fast, the reliquary still glinting on the floor below, untaken.',
-          effects: [],
+            'You read the water still and safe. It is neither. Something cold turns under the surface as you wade in — and the drag takes your feet before you feel it, pulling you down so the black closes over your head once, hard, before you fight back to the ledge spitting and shaken. The reliquary still glints on the floor below, untaken.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -1847,11 +1848,11 @@ const POOL: EventTemplate[] = [
       {
         id: 'take-the-kit',
         label: 'Strip its kit and leave it standing',
-        hint: "It will not stop you. It is waiting for a different enemy.",
+        hint: "It will not stop you — but the standing dead remember a thief.",
         outcome: {
           resolution:
-            "You work the field-kit and coin-pouch off the burnt frame while it holds its guard, eyes fixed on a charge that will never come. It lets you. You walk off down the ash-lane with the dead soldier's pay and the dead soldier still standing.",
-          effects: [{ kind: 'gold_delta', amount: 45 }],
+            "You work the field-kit and coin-pouch off the burnt frame while it holds its guard, eyes fixed on a charge that will never come. It lets you — and then, as you turn to go, its head comes round just once and the dead eyes find you, knowing, and the cold of being marked by the standing dead rides the ash-lane at your back and will not be shaken.",
+          effects: [{ kind: 'gold_delta', amount: 45 }, { kind: 'hp_delta', amount: -5 }],
         },
       },
       {
@@ -1886,8 +1887,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            "You clear the bowl and offer up the wrong god's words. The ash drifts back over the stone as you speak, slow and final, burying the offering and the asking both. The shrine keeps its silence and its god keeps its name.",
-          effects: [],
+            "You clear the bowl and offer up the wrong god's words. The ash drifts back over the stone as you speak, slow and final, burying the offering and the asking both — and the breath you drew to name it was full of dead grey ash that sits in the chest like a swallowed coal the rest of the climb. The shrine keeps its silence and its god keeps its name.",
+          effects: [{ kind: 'hp_delta', amount: -6 }],
         },
       },
       {
@@ -2108,8 +2109,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            "She listens, and somewhere in your words hears only another walker climbing to die at the top of her stair. \"Go on then,\" she says, and turns back to the smoke. You climb with nothing she could have told you.",
-          effects: [],
+            "She listens, and somewhere in your words hears only another walker climbing to die at the top of her stair. \"Go on then,\" she says, and turns back to the smoke. You climb with nothing she could have told you — and her flat certainty that you are already dead rides up the stair on your shoulders, a cold weight you cannot set down before the Tree.",
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
@@ -2124,8 +2125,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You reach for the wound and she catches your wrist with the old reflex of a duelist. "Leave it. It is the only thing holding me up." You take your hand back. She keeps her wound and her counsel both, and you climb.',
-          effects: [],
+            'You reach for the wound and she catches your wrist with the old reflex of a duelist — fast and hard enough that the grip wrenches it before she lets go. "Leave it. It is the only thing holding me up." You take your hand back, aching. She keeps her wound and her counsel both, and you climb.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
@@ -2286,11 +2287,11 @@ const POOL: EventTemplate[] = [
       {
         id: 'loot-the-fallen',
         label: 'Strip the fallen at the breach and go',
-        hint: 'The dead in the gap are past needing it. The defenders are too busy dying to stop you.',
+        hint: 'The dead in the gap are past needing it — but a collapsing breach does not care who is looting it.',
         outcome: {
           resolution:
-            "You work fast among the bodies wedged in the rubble while the two defenders strain at the breach they cannot hold — coin, a fire-blackened ring, a captain's purse. The living are too spent to curse you properly. You climb away from a wall that falls behind you.",
-          effects: [{ kind: 'gold_delta', amount: 55 }],
+            "You work fast among the bodies wedged in the rubble while the two defenders strain at the breach they cannot hold — coin, a fire-blackened ring, a captain's purse. The living are too spent to curse you properly. You climb away from a wall that falls behind you — but not clear of it: a slab catches you across the back on its way down, and you stagger out of the dust with the purse and a deep, grinding ache to show for it.",
+          effects: [{ kind: 'gold_delta', amount: 55 }, { kind: 'hp_delta', amount: -6 }],
         },
       },
       {
@@ -2540,8 +2541,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You reach for the truth and find a flinch where it should be — some last reluctance the solar reads in the half-second before you speak. It steps aside without judgement and without grace. "Pass, then. We will both learn what you are at the door." You go on unblessed.',
-          effects: [],
+            'You reach for the truth and find a flinch where it should be — some last reluctance the solar reads in the half-second before you speak. It steps aside without judgement and without grace. "Pass, then. We will both learn what you are at the door." You go on unblessed — and the flinch it named does not leave you, riding to the last door as a doubt that weighs, found out and festering in the chest.',
+          effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },
       {
