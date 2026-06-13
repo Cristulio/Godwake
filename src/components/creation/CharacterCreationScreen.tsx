@@ -262,7 +262,7 @@ export function CharacterCreationScreen() {
                 key={o.classId}
                 className="relative p-4 border-2 border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] opacity-60 flex flex-col gap-2"
               >
-                <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
+                <div className="absolute top-0 right-0 bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
                   {t('screens.charCreation.sealed')}
                 </div>
                 <div

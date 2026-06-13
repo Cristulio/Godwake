@@ -91,17 +91,19 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
   const isVoiceLine = scene.speaker !== undefined;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-8 [background:radial-gradient(ellipse_at_center,#1a0e08_0%,#080404_100%)]">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-6 gap-8 [background:radial-gradient(ellipse_at_center,#1a0e08_0%,#080404_100%)]"
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onMouseDown={() => setHolding(true)}
+      onMouseUp={() => setHolding(false)}
+      onMouseLeave={() => setHolding(false)}
+      onTouchStart={() => setHolding(true)}
+      onTouchEnd={() => setHolding(false)}
+      style={{ cursor: 'pointer' }}
+    >
       <div
         className="max-w-2xl w-full bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.6)] animate-fade-in select-none"
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-        onMouseDown={() => setHolding(true)}
-        onMouseUp={() => setHolding(false)}
-        onMouseLeave={() => setHolding(false)}
-        onTouchStart={() => setHolding(true)}
-        onTouchEnd={() => setHolding(false)}
-        style={{ cursor: 'pointer' }}
       >
         {isVoiceLine && (
           <div className="text-[var(--color-accent-blood)] text-xs uppercase tracking-[0.4em] mb-3 font-bold">
@@ -133,7 +135,10 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
       </div>
       <button
         type="button"
-        onClick={onComplete}
+        onClick={(e) => {
+          e.stopPropagation();
+          onComplete();
+        }}
         className="text-[var(--color-text-dim)] text-xs uppercase tracking-widest hover:text-[var(--color-text-secondary)]"
       >
         {t('screens.intro.skip')}
