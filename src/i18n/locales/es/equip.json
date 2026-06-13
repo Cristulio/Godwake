@@ -7,7 +7,7 @@
   "cantWear": "Un {class} no puede vestir esto",
   "requiresAbility": "Requiere {ability} {value}",
   "requiresStrength": "Requiere {ability} {value}",
-  "monkWeaponKeepsKit": "Forjada en las formas: el Ki, la ráfaga y las posturas mantienen el paso. El precio: tus golpes de mano vacía de {die} +{edge} se apartan por el acero de este brazo.",
-  "monkWeaponStillsKit": "El acero acalla las formas: sin Ki, sin ráfaga, sin posturas mientras esto esté en la mano, y los {die} +{edge} de la mano vacía se van con ellas. La mano vacía no pide nada.",
+  "monkWeaponKeepsKit": "Un arma de monje —tu Ki, la Ráfaga y las posturas fluyen tanto si la empuñas como si peleas con las manos desnudas. El único intercambio es el golpe en sí: el dado, el encantamiento y los afijos de esta arma en mano, frente al mayor {die} +{edge} de tus manos desnudas y sin equipo.",
+  "monkWeaponStillsKit": "No es un arma de monje —empúñala y las formas callan: sin Ki, sin Ráfaga, sin posturas, y el {die} +{edge} de tus manos desnudas se aparta con ellas. Pelea con las manos desnudas para conservar todo el repertorio; sostén esto y no eres más que un cuerpo con una hoja.",
   "fistsNotAnItem": "La mano vacía no es un objeto: nunca se va."
 }
