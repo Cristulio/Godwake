@@ -216,7 +216,12 @@ export function HubScreen() {
             {t('hub.descentBody')}
           </p>
           <div className="flex items-center gap-4 flex-wrap">
-            <Button variant="primary" size="lg" onClick={handleEnterDungeon}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleEnterDungeon}
+              className="min-w-[18rem] text-center"
+            >
               {selectedAscension > 0
                 ? t('hub.descendAscension', { n: selectedAscension })
                 : t('hub.descend')}
