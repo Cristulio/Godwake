@@ -241,5 +241,39 @@ export const BARD: Class = ClassSchema.parse({
         ],
       },
     },
+    {
+      id: 'whispers',
+      name: 'College of Whispers',
+      description:
+        'The dread-singer — a bard who unmakes the enemy rather than out-trading it. Best with caster gear (a spell-focus orb, spell-DC affixes): while your Song plays the terror in it sings on its own, and a frightened foe throws its blows wild. You win the deep delve by control — make the room afraid to strike you, then punish the ones too rattled to guard.',
+      bottomLine: {
+        archetype: 'Controller',
+        levers: [
+          'While your Song plays (it always plays): each round the deadliest foe must save or be frightened — its next blow comes at disadvantage.',
+          'A frightened foe swings wild and wide; you weather the storm it cannot land.',
+          'L10: the dread grips EVERY foe each round, and frightened foes take +4 from all you deal — growing to +5.',
+        ],
+      },
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'words-of-terror',
+            name: 'Bard College: College of Whispers',
+            description:
+              'You learn the tunes beneath the tunes — the dread woven into the music that only the marrow hears. While a Song plays, and yours never stops, the terror sings on its own: each round the deadliest foe still standing must steel itself against your craft or be gripped by fright, and a frightened thing throws its next blow wild. No action, no cost — the horror rides the song you are already playing.',
+            mechanicKey: 'words-of-terror',
+          },
+        ],
+        '10': [
+          {
+            id: 'mantle-of-dread',
+            name: 'Mantle of Dread',
+            description:
+              'The dread overflows the one and floods the many — now every foe on the field must steel itself against the terror each round, not just the deadliest. And the fear you sow you reap: a frightened enemy takes your every blow and working the deeper, the rattled guard too slow to keep the edge out. You stand in the eye of a panic of your own making, and cut the shaking crowd apart.',
+            mechanicKey: 'mantle-of-dread',
+          },
+        ],
+      },
+    },
   ],
 });

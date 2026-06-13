@@ -24,6 +24,7 @@ export const ARCHETYPE_ACCENTS: Record<string, string> = {
   Mirage: '#4ECDC4',
   Shapeshifter: '#8FBF6E',
   Stormcaller: '#56B6E6',
+  Controller: '#6C5CE0',
 };
 
 const DEFAULT_ACCENT = '#F4A742';

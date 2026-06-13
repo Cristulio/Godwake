@@ -13,7 +13,7 @@ import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
 import { useMetaStore } from '../../../stores/metaStore';
 import { wearsHeavierThanLight } from '../../character/equip';
 import { paladinAuraDamageReduction, reconcileVow } from '../paladin';
-import { bardSteelReduction } from '../bard';
+import { bardSteelReduction, dreadTerrorBonus } from '../bard';
 import { t } from '../../../i18n';
 
 const UNCANNY_DODGE_LEVEL = 5;
@@ -70,6 +70,17 @@ export function applyDamage(
                   label: gate.wardLabel,
                 }),
         });
+      }
+    }
+    // College of Whispers — Mantle of Dread (L10): the bard's blows + workings
+    // bite a frightened foe deeper. At the single damage chokepoint, so it rides
+    // spells, Vicious Mockery and the Spite pulse alike — only when damage is
+    // already landing, so a full boss ward-hold stays held. No-op for any build
+    // without the L10 beat or against an unfrightened foe.
+    if (effectiveAmount > 0) {
+      const terror = dreadTerrorBonus(nextCharacter);
+      if (terror > 0 && mc.instance.conditions.some((c) => c.name === 'frightened')) {
+        effectiveAmount += terror;
       }
     }
     const remainingTemp = Math.max(0, mc.instance.hp.temp - effectiveAmount);
