@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
   chapterGoldRamp,
+  chapterHpRamp,
   eventGoldScale,
+  eventHpScale,
   scaleGold,
   EVENT_GOLD_CH14_MULTIPLE,
+  EVENT_HP_CH14_MULTIPLE,
 } from './eventGoldScale';
 
 describe('chapterGoldRamp', () => {
@@ -79,6 +82,34 @@ describe('eventGoldScale — anchored at the event floor', () => {
         expect(eventGoldScale(ch, base)).toBeGreaterThanOrEqual(1);
       }
     }
+  });
+});
+
+describe('chapterHpRamp / eventHpScale — HP rides the same shape, a hotter height', () => {
+  it('is ×1 at Ch1 and the HP multiple at Ch14', () => {
+    expect(chapterHpRamp(1)).toBe(1);
+    expect(chapterHpRamp(14)).toBeCloseTo(EVENT_HP_CH14_MULTIPLE, 6);
+  });
+
+  it('climbs monotonically and hotter than gold (HP pools climb harder)', () => {
+    for (let ch = 1; ch < 14; ch++) {
+      expect(chapterHpRamp(ch + 1)).toBeGreaterThan(chapterHpRamp(ch));
+    }
+    expect(EVENT_HP_CH14_MULTIPLE).toBeGreaterThan(EVENT_GOLD_CH14_MULTIPLE);
+    expect(chapterHpRamp(14)).toBeGreaterThan(chapterGoldRamp(14));
+  });
+
+  it('anchors at the event floor exactly like gold (no double-count for deep events)', () => {
+    expect(eventHpScale(1, 1)).toBe(1);
+    expect(eventHpScale(11, 11)).toBe(1);
+    expect(eventHpScale(14, 1)).toBeCloseTo(EVENT_HP_CH14_MULTIPLE, 6);
+    expect(eventHpScale(14, 11)).toBeLessThan(1.5);
+  });
+
+  it('keeps a Ch1 heal a meaningful slice deep instead of going stale', () => {
+    // A flat +5 Ch1 heal grows several-fold by the endgame rather than staying +5.
+    expect(eventHpScale(12, 1)).toBeGreaterThan(3);
+    expect(eventHpScale(12, 1)).toBeGreaterThan(eventHpScale(2, 1));
   });
 });
 

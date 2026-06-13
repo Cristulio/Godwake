@@ -19,7 +19,7 @@
  */
 import { writeFileSync } from 'node:fs';
 import { listEvents } from '../src/content/events';
-import { chapterGoldRamp, eventGoldScale } from '../src/engine/delve/eventGoldScale';
+import { chapterGoldRamp, chapterHpRamp, eventGoldScale } from '../src/engine/delve/eventGoldScale';
 import { proficiencyBonus } from '../src/engine/character/derived';
 import type { EventTemplate, EventChoice, EventEffect, EventChoiceOutcome } from '../src/schemas/event';
 
@@ -63,17 +63,21 @@ interface Valued {
 const ZERO: Valued = { gold: 0, flat: 0 };
 const add = (a: Valued, b: Valued): Valued => ({ gold: a.gold + b.gold, flat: a.flat + b.flat });
 
-/** Value one effect, splitting chapter-scaling gold from flat (stale-prone) value. */
+/** Value one effect, splitting depth-scaling value (gold + HP) from flat,
+ *  chapter-invariant value (qualitative rewards: blessings, buffs, items). */
 function valueEffect(e: EventEffect, goldScale: number): Valued {
   switch (e.kind) {
     case 'gold_delta':
       return { gold: e.amount * goldScale, flat: 0 };
     case 'cha_scaled_gold':
       return { gold: e.perPoint * CHA_MOD_PROXY * goldScale, flat: 0 };
+    // HP and temp-HP now chapter-scale on their own ramp (eventHpScale), so they
+    // count as scaling value, not stale flat — same bucket as gold for the
+    // staleness metric (both grow with depth; only qualitative effects stay flat).
     case 'hp_delta':
-      return { gold: 0, flat: e.amount * GOLD_PER_HP };
+      return { gold: e.amount * GOLD_PER_HP, flat: 0 };
     case 'temp_hp':
-      return { gold: 0, flat: e.amount * GOLD_PER_HP * TEMP_HP_FACTOR };
+      return { gold: e.amount * GOLD_PER_HP * TEMP_HP_FACTOR, flat: 0 };
     case 'grant_blessing':
     case 'grant_blessing_id':
       return { gold: 0, flat: BLESSING_GOLD };
@@ -228,19 +232,26 @@ function main() {
   }
   lines.push('', '_If hard gates do not out-reward easy ones, risk is not paying (principle 3)._', '');
 
-  // Principle 1 — staleness: value that won't chapter-scale.
-  const stale = rows.filter((r) => r.flatShare >= 0.8).sort((a, b) => b.bestTotal - a.bestTotal);
-  lines.push('## Principle 1 — chapter-relevance (staleness risk)', '');
+  // Principle 1 — value composition. After the tuning pass, every NUMERIC reward
+  // scales with depth: gold (eventGoldScale) and HP/temp-HP (eventHpScale). The
+  // only value left flat is QUALITATIVE — blessings, run buffs, items, quirk
+  // rerolls — which are chapter-invariant by nature (a blessing is a blessing at
+  // any depth). So a high flat-share is now EXPECTED, not a staleness bug; the
+  // genuine "+5 heal goes stale by the Throne" problem is fixed.
+  const qualitative = rows.filter((r) => r.flatShare >= 0.8).sort((a, b) => b.bestTotal - a.bestTotal);
+  lines.push('## Principle 1 — chapter-relevance (gold + HP now scale; flat = qualitative)', '');
   lines.push(
-    `${stale.length} of ${rows.length} events draw ≥80% of their best-choice value from`,
-    'FLAT (non-gold) effects — HP, temp-HP, blessings, run buffs — which do NOT',
-    'chapter-scale (only gold does, via eventGoldScale). These go stale when they',
-    'appear deep:',
+    `${qualitative.length} of ${rows.length} events draw ≥80% of their best-choice value from`,
+    'QUALITATIVE effects (blessings/buffs/items/rerolls) — chapter-invariant by',
+    'design. Numeric value (gold + HP/temp-HP) now ramps with depth, so the genuine',
+    'staleness — a flat heal/cost worth a quarter-bar in Ch1 and a rounding error by',
+    'the Throne — is closed. The events below are qualitative-reward beats, listed',
+    'for review, not flagged as broken:',
     '',
   );
-  lines.push('| event | type | minCh | best EV | flat-share |');
+  lines.push('| event | type | minCh | best EV | qualitative-share |');
   lines.push('|---|---|--:|--:|--:|');
-  for (const r of stale.slice(0, 25)) {
+  for (const r of qualitative.slice(0, 25)) {
     lines.push(`| ${r.id} | ${r.type} | ${r.minChapter} | ${r.bestTotal}g | ${(r.flatShare * 100).toFixed(0)}% |`);
   }
   lines.push('');
@@ -263,8 +274,8 @@ function main() {
   console.log(`shrine-omen audit: ${rows.length} events (${shrines.length} shrine / ${omens.length} omen)`);
   console.log(`  shrine mean EV ${mean(shrines.map((r) => r.bestTotal)).toFixed(0)}g  vs  omen ${mean(omens.map((r) => r.bestTotal)).toFixed(0)}g  (ratio ${ratio.toFixed(2)}×)`);
   console.log(`  DC reward by band: easy ${byBand(1, 11).toFixed(0)}g · medium ${byBand(12, 14).toFixed(0)}g · hard ${byBand(15, 30).toFixed(0)}g`);
-  console.log(`  staleness: ${stale.length}/${rows.length} events ≥80% flat (won't chapter-scale)`);
-  console.log(`  chapter ramp sanity: Ch1 ×${chapterGoldRamp(1).toFixed(2)} · Ch7 ×${chapterGoldRamp(7).toFixed(2)} · Ch14 ×${chapterGoldRamp(14).toFixed(2)}`);
+  console.log(`  qualitative-reward share: ${qualitative.length}/${rows.length} events ≥80% qualitative (blessings/buffs — scale-invariant by design)`);
+  console.log(`  numeric value now scales: gold ×${chapterGoldRamp(14).toFixed(1)} + HP ×${chapterHpRamp(14).toFixed(1)} by Ch14 (was: HP flat = stale)`);
   console.log('  → docs/sim-findings/shrine-omen-audit.md');
 }
 

@@ -10,6 +10,7 @@ import {
   applyEventOutcome,
   canTakeChoice,
   eventGoldScale,
+  eventHpScale,
   resolveChoiceOutcome,
   rollChoiceCheck,
   scaleGold,
@@ -167,6 +168,11 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
   const goldScale = isBossIntelRoom
     ? 1
     : eventGoldScale(room.chapter ?? 1, template.minChapter ?? 1);
+  // HP heals/costs scale on their own (hotter) ramp so they stay a constant slice
+  // of the chapter's pool instead of going stale deep. Same minChapter anchor.
+  const hpScale = isBossIntelRoom
+    ? 1
+    : eventHpScale(room.chapter ?? 1, template.minChapter ?? 1);
 
   // Boss-intel rooms carry their Spanish in the bossIntel overlay (keyed by boss
   // def id); ordinary events in the events overlay (keyed by template id).
@@ -207,7 +213,7 @@ export function EventRoom({ room, onContinue, onAmbush }: EventRoomProps) {
     const roller = getActiveRoller();
     const checked = rollChoiceCheck(choice, roller, character);
     const outcome = resolveChoiceOutcome(checked.outcome, roller);
-    const result = applyEventOutcome(character, outcome, roller, goldScale);
+    const result = applyEventOutcome(character, outcome, roller, goldScale, hpScale);
     setCharacter(result.character);
     const turn: ResolvedTurn = {
       choiceId: choice.id,

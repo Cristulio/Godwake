@@ -266,14 +266,19 @@ function rerollOneBaneQuirk(
  * both signs, `cha_scaled_gold`) by the same chapter factor, so a flat authored
  * payout stays proportional to the chapter economy and a "pay X for Y" trade
  * scales as a unit. 1 = unscaled (Ch1 baseline / boss-intel, whose fees already
- * scale). See `eventGoldScale`. HP and non-gold effects are depth-agnostic and
- * stay flat.
+ * scale). See `eventGoldScale`.
+ *
+ * `hpScale` does the same for `hp_delta` and `temp_hp` — a flat heal/cost grows
+ * with the chapter's HP pool (the hotter `eventHpScale` ramp) so it stays a
+ * constant slice of the bar instead of going stale deep. Qualitative effects
+ * (blessings, run buffs, items, quirk rerolls) are depth-agnostic and stay flat.
  */
 export function applyEventOutcome(
   character: Character,
   outcome: EventOutcome,
   roller: DiceRoller,
   goldScale = 1,
+  hpScale = 1,
 ): EventOutcomeResult {
   let next: Character = { ...character };
   const effectsApplied: AppliedEffect[] = [];
@@ -290,26 +295,32 @@ export function applyEventOutcome(
     switch (effect.kind) {
       case 'hp_delta': {
         const before = next.hp.current;
+        // Scale the authored amount by depth (heals AND costs together) so it
+        // stays a constant slice of the chapter's HP pool — a +5 Ch1 heal is a
+        // quarter-bar; unscaled it's a rounding error by the Throne.
+        const amount = scaleGold(effect.amount, hpScale);
         // Event HP costs must NEVER be lethal — a non-combat choice ("cut your
         // hand") can wound you but not kill you. Costs floor at 1; only combat
         // drops you to 0. Without this floor, an event could leave you at 0 HP
         // and dump you into the next room already slain.
-        const floor = effect.amount < 0 ? 1 : 0;
-        const after = Math.max(floor, Math.min(next.hp.max, before + effect.amount));
+        const floor = amount < 0 ? 1 : 0;
+        const after = Math.max(floor, Math.min(next.hp.max, before + amount));
         next = { ...next, hp: { ...next.hp, current: after } };
         effectsApplied.push({
           kind: effect.kind,
-          detail: `${effect.amount >= 0 ? '+' : ''}${after - before} HP`,
+          detail: `${amount >= 0 ? '+' : ''}${after - before} HP`,
         });
         break;
       }
       case 'temp_hp': {
+        // Depth-scaled like hp_delta: the beast's cushion grows with the pool.
+        const granted = scaleGold(effect.amount, hpScale);
         // Temp HP doesn't stack — take the higher of current and granted.
-        const newTemp = Math.max(next.hp.temp, effect.amount);
+        const newTemp = Math.max(next.hp.temp, granted);
         next = { ...next, hp: { ...next.hp, temp: newTemp } };
         effectsApplied.push({
           kind: effect.kind,
-          detail: `+${effect.amount} temp HP`,
+          detail: `+${granted} temp HP`,
         });
         break;
       }

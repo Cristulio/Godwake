@@ -581,16 +581,79 @@ describe('chapter gold scaling — applyEventOutcome goldScale', () => {
     expect(r.character.goldInPocket - before).toBe(30); // 3 × 5 × 2
   });
 
-  it('leaves non-gold effects flat under scaling (hp_delta unaffected)', () => {
+  it('leaves HP flat under goldScale — HP rides its own hpScale, not the gold one', () => {
     const char = makeChar();
     char.hp = { current: 5, max: 40, temp: 0 };
     const r = applyEventOutcome(
       char,
       outcome({ effects: [{ kind: 'hp_delta', amount: 6 }] }),
       createDiceRoller(1),
-      5,
+      5, // goldScale — must NOT touch HP
     );
     expect(r.character.hp.current).toBe(11); // +6, not +30
+  });
+});
+
+describe('chapter HP scaling — applyEventOutcome hpScale', () => {
+  it('defaults to ×1: omitting hpScale leaves authored HP untouched', () => {
+    const char = makeChar();
+    char.hp = { current: 5, max: 100, temp: 0 };
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'hp_delta', amount: 5 }] }),
+      createDiceRoller(1),
+    );
+    expect(r.character.hp.current).toBe(10); // +5, unscaled
+  });
+
+  it('scales a heal by hpScale so it stays a slice of the deeper pool', () => {
+    const char = makeChar();
+    char.hp = { current: 5, max: 100, temp: 0 };
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'hp_delta', amount: 5 }] }),
+      createDiceRoller(1),
+      1, // goldScale
+      3, // hpScale
+    );
+    expect(r.character.hp.current).toBe(20); // +5 × 3 = +15
+  });
+
+  it('scales an HP cost by the SAME factor (still floors at 1, never lethal)', () => {
+    const char = makeChar();
+    char.hp = { current: 50, max: 100, temp: 0 };
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'hp_delta', amount: -4 }] }),
+      createDiceRoller(1),
+      1,
+      3,
+    );
+    expect(r.character.hp.current).toBe(38); // -4 × 3 = -12
+
+    const frail = makeChar();
+    frail.hp = { current: 3, max: 100, temp: 0 };
+    const rf = applyEventOutcome(
+      frail,
+      outcome({ effects: [{ kind: 'hp_delta', amount: -4 }] }),
+      createDiceRoller(1),
+      1,
+      3,
+    );
+    expect(rf.character.hp.current).toBe(1); // -12 would be lethal → floors at 1
+  });
+
+  it('scales temp_hp by hpScale', () => {
+    const char = makeChar();
+    char.hp = { current: 30, max: 100, temp: 0 };
+    const r = applyEventOutcome(
+      char,
+      outcome({ effects: [{ kind: 'temp_hp', amount: 6 }] }),
+      createDiceRoller(1),
+      1,
+      2,
+    );
+    expect(r.character.hp.temp).toBe(12); // +6 × 2
   });
 });
 

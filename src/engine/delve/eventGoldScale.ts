@@ -28,6 +28,17 @@ const MAX_CHAPTER = 14;
 export const EVENT_GOLD_CH14_MULTIPLE = 6;
 
 /**
+ * Multiple a Ch1-authored HP / temp-HP amount reaches at the deepest chapter.
+ * Tuned hotter than gold's ×6 because HP POOLS climb harder than the gold
+ * economy across the chain (~×8–10 from L1 to L20), so a flat +5 heal that was
+ * a quarter of a Ch1 pool is a rounding error by the Throne unless it grows with
+ * it. Set a touch UNDER the pool curve so a scaled heal stays a worthwhile slice,
+ * never a full top-up. This is the lever the shrine/omen sim tunes (see
+ * `scripts/sim-shrine-omen.ts`).
+ */
+export const EVENT_HP_CH14_MULTIPLE = 8;
+
+/**
  * Chapter the linear ramp anchors at. From here to Ch14 the multiplier climbs
  * the plain linear ramp (the sim found this band in-band at ~0.6× a fight);
  * below it the sub-ramp is bowed flat so early events don't out-earn a
@@ -35,26 +46,38 @@ export const EVENT_GOLD_CH14_MULTIPLE = 6;
  */
 const RAMP_KNEE_CHAPTER = 5;
 
-/** The plain linear multiplier: ×1 at Ch1 → ×EVENT_GOLD_CH14_MULTIPLE at Ch14. */
-function linearRamp(chapter: number): number {
-  return 1 + (chapter - 1) * ((EVENT_GOLD_CH14_MULTIPLE - 1) / (MAX_CHAPTER - MIN_CHAPTER));
+/** The plain linear multiplier: ×1 at Ch1 → ×ch14Multiple at Ch14. */
+function linearRamp(chapter: number, ch14Multiple: number): number {
+  return 1 + (chapter - 1) * ((ch14Multiple - 1) / (MAX_CHAPTER - MIN_CHAPTER));
 }
 
 /**
- * Gold multiplier for a chapter, clamped to Ch1..Ch14.
+ * Generic chapter multiplier for an authored event magnitude, clamped to
+ * Ch1..Ch14.
  *
  * Ch5..Ch14 follow the plain linear ramp. Ch1..Ch5 are bowed DOWN below that
  * line: early-game fights pay almost nothing by design, so a linearly-scaled
  * event read as >1× a fight (Ch3 ~1.35×). A convex (quadratic) sub-ramp keeps
  * the Ch1 and Ch5 endpoints exact while pulling Ch2-4 under the line, so an
- * early event stays a slice of a fight, not a jackpot.
+ * early event stays a slice of a fight, not a jackpot. `ch14Multiple` is the
+ * only lever — gold and HP climb the same SHAPE at different heights.
  */
-export function chapterGoldRamp(chapter: number): number {
+function chapterRamp(chapter: number, ch14Multiple: number): number {
   const c = Math.max(MIN_CHAPTER, Math.min(MAX_CHAPTER, chapter));
-  if (c >= RAMP_KNEE_CHAPTER) return linearRamp(c);
-  const kneeValue = linearRamp(RAMP_KNEE_CHAPTER);
+  if (c >= RAMP_KNEE_CHAPTER) return linearRamp(c, ch14Multiple);
+  const kneeValue = linearRamp(RAMP_KNEE_CHAPTER, ch14Multiple);
   const t = (c - MIN_CHAPTER) / (RAMP_KNEE_CHAPTER - MIN_CHAPTER);
   return 1 + (kneeValue - 1) * t * t;
+}
+
+/** Gold multiplier for a chapter (the conservative ×6-by-Ch14 ramp). */
+export function chapterGoldRamp(chapter: number): number {
+  return chapterRamp(chapter, EVENT_GOLD_CH14_MULTIPLE);
+}
+
+/** HP / temp-HP multiplier for a chapter (the hotter ×8-by-Ch14 ramp). */
+export function chapterHpRamp(chapter: number): number {
+  return chapterRamp(chapter, EVENT_HP_CH14_MULTIPLE);
 }
 
 /**
@@ -74,7 +97,19 @@ export function eventGoldScale(chapter: number, baseChapter: number = MIN_CHAPTE
   return chapterGoldRamp(chapter) / chapterGoldRamp(baseChapter);
 }
 
-/** Apply a gold scale to an authored amount, rounded to whole gold. Sign-preserving. */
-export function scaleGold(amount: number, goldScale: number): number {
-  return Math.round(amount * goldScale);
+/**
+ * HP / temp-HP multiplier for an event's authored amount, anchored at the
+ * event's own `baseChapter` (its `minChapter`) exactly like {@link eventGoldScale}
+ * — a flat heal/cost grows only by how much DEEPER than its authoring chapter it
+ * appears, so deep-authored events (already balanced for their pool) don't
+ * double-count. Always >= 1 for a valid placement.
+ */
+export function eventHpScale(chapter: number, baseChapter: number = MIN_CHAPTER): number {
+  return chapterHpRamp(chapter) / chapterHpRamp(baseChapter);
+}
+
+/** Apply a scale to an authored amount, rounded to whole units. Sign-preserving.
+ *  Used for gold AND HP — both are flat authored magnitudes scaled by depth. */
+export function scaleGold(amount: number, scale: number): number {
+  return Math.round(amount * scale);
 }
