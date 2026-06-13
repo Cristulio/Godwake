@@ -41,7 +41,7 @@ export function AchievementToast({ id, onDismiss }: AchievementToastProps) {
 
   return (
     <div
-      className="fixed inset-x-0 top-0 z-[60] flex justify-center px-4 pt-3 pointer-events-none"
+      className="fixed inset-x-0 top-0 z-[60] flex justify-end px-4 pt-16 pointer-events-none"
       role="status"
       aria-live="polite"
     >

@@ -374,6 +374,16 @@ export function CombatScreen({
     coachStep,
   ]);
 
+  // If AUTO is engaged while a manual enemy-target pick is still open (player
+  // tapped Attack, then flipped AUTO), cancel the pick so the AUTO loop — which
+  // bails on an open target picker — takes over and chooses its own target,
+  // instead of stranding the turn in "choose your target".
+  useEffect(() => {
+    if (!autoBattle) return;
+    if (selectingTarget) setSelectingTarget(false);
+    if (markingTarget) setMarkingTarget(false);
+  }, [autoBattle, selectingTarget, markingTarget]);
+
   // Auto-Battle: when on, the shared action policy plays the player's turn one
   // timed step at a time (paced by the speed multiplier so 2× + AUTO fast-
   // forwards). The player can toggle it off any turn to resume manual control.
