@@ -171,12 +171,12 @@
     }
   },
   "cowled-enforcer": {
-    "name": "Ejecutor Encapuchado",
+    "name": "Ejecutor Velado",
     "flavorText": "Una capucha gris, un cuello alto, una máscara de plata batida con forma de rostro sin rasgos. La Corte Velada de Sudria no saquea: recauda. Sus patrullas preguntan una sola vez.",
     "actions": {
       "Force Bolt": {
         "name": "Descarga de Fuerza",
-        "desc": "Una línea de pálida luz violeta abandona la palma abierta del ejecutor y llega sin sonido. Los Encapuchados gravan a su competencia sin licencia con pulcritud."
+        "desc": "Una línea de pálida luz violeta abandona la palma abierta del ejecutor y llega sin sonido. Los Velados gravan a su competencia sin licencia con pulcritud."
       }
     }
   },
@@ -289,7 +289,7 @@
   },
   "hollow-sage": {
     "name": "Sabio Hueco",
-    "flavorText": "Fue un erudito encapuchado. La mente se ha ido —fregada por un experimento que el guardián ya no recuerda haber encargado—, pero los conjuros remachados en el hueso aún disparan cuando alguien camina a su alcance.",
+    "flavorText": "Fue un erudito de la Corte Velada. La mente se ha ido —fregada por un experimento que el guardián ya no recuerda haber encargado—, pero los conjuros remachados en el hueso aún disparan cuando alguien camina a su alcance.",
     "actions": {
       "Hollow Gaze": {
         "name": "Mirada Hueca",
@@ -497,7 +497,7 @@
     }
   },
   "cowled-conjurer": {
-    "name": "Conjurador Encapuchado",
+    "name": "Conjurador Velado",
     "flavorText": "El cuello plateado de la Corte Velada, la máscara pulida en blanco. No duela; delega. Lo que sea que invoca le responde solo mientras le resulte interesante, lo cual viene a ser solo mientras esté vivo.",
     "actions": {
       "Bind Servitor": {
@@ -525,7 +525,7 @@
     }
   },
   "cowled-wardpriest": {
-    "name": "Sacerdotisa de Guarda Encapuchada",
+    "name": "Sacerdotisa de Guarda Velada",
     "flavorText": "Donde los ejecutores de la Corte Velada rompen, las sacerdotisas de guarda remiendan… pero solo a los suyos. Nunca una vez escudó a un prisionero y nunca una vez dejó de escudar a un colega. La aritmética del gremio es muy sencilla para ella.",
     "actions": {
       "Cowl-Ward": {
@@ -933,7 +933,7 @@
     }
   },
   "cowled-houndmaster": {
-    "name": "Sabuesero Encapuchado",
+    "name": "Sabuesero Velado",
     "flavorText": "La Corte Velada guardan cosas peores que prisioneros en sus perreras, y alguien tiene que alimentarlas. Ha dejado de estremecerse ante la oscuridad de su correa; la oscuridad ha dejado, casi del todo, de morderlo. Todo lo que vaya más allá es problema tuyo.",
     "actions": {
       "Loose the Pack": {

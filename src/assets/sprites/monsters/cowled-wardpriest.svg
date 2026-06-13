@@ -2,7 +2,7 @@
       viewBox="0 0 30 46"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Cowled Wardpriest"
+      aria-label="Veiled Wardpriest"
     >
       <!-- Cool ward backlight + ground shadow -->
       <ellipse cx="15" cy="22" rx="14" ry="20" fill="#7a8aaa" opacity="0.07" />

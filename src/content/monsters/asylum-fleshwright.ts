@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Asylum Fleshwright — Ch3 ELITE summoner. The Cowled surgeon who built the
+ * Asylum Fleshwright — Ch3 ELITE summoner. The Veiled Court surgeon who built the
  * Glassreach test-subjects, and still does, mid-fight. Demonstrates `summon`
  * raising a `bonebound-test-subject` (maxActive 2, cooldown 3) while carving
  * with the bone-saw. A grinder: the longer it lives, the more stitched bodies

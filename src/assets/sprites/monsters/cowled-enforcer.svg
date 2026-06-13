@@ -2,7 +2,7 @@
       viewBox="0 0 30 49"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Cowled Enforcer"
+      aria-label="Veiled Enforcer"
     >
       <!-- Arcane backlight + ground shadow -->
       <ellipse cx="15" cy="23" rx="15" ry="22" fill="#8a6ad0" opacity="0.07" />

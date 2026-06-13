@@ -60,5 +60,5 @@ export const FIRE_GIANT_WARLORD: Monster = MonsterSchema.parse({
     },
   ],
   flavorText:
-    "Hargan-Vor does not command the siege stroke by stroke; he keeps captains for that, and this is one of them — a fire giant grown old and huge in the mountain-wars, set over a whole wing of the ring around Karthen. It is everything the line is, made worse: it hits from further, it does not tire, and what you do to it it undoes with a breath, banking its own heat back into the wound. Beat it, and you have broken a finger of the siege. There are more fingers. And there is the hand.",
+    "Hargan-Vor does not command the siege stroke by stroke; he keeps captains for that, and this is one of them — a fire giant grown old and huge in the mountain-wars, set over a whole wing of the ring around Karthen. It is everything the line is, made worse: it hits from further, it does not tire, and what you do to it, it undoes with a breath, banking its own heat back into the wound. Beat it, and you have broken a finger of the siege. There are more fingers. And there is the hand.",
 });

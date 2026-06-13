@@ -1,13 +1,13 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Enforcer — a junior Veiled Magus on patrol. They tax unlicensed
+ * Veiled Enforcer — a junior Veiled Magus on patrol. They tax unlicensed
  * magic with a thrown bolt of force; not yet senior enough for the
  * Magistrate's Hold Person trick. Caster archetype: thin armor, ranged.
  */
 export const COWLED_ENFORCER: Monster = MonsterSchema.parse({
   id: 'cowled-enforcer',
-  name: 'Cowled Enforcer',
+  name: 'Veiled Enforcer',
   cr: '2',
   size: 'medium',
   creatureType: 'humanoid (human)',
@@ -25,7 +25,7 @@ export const COWLED_ENFORCER: Monster = MonsterSchema.parse({
       damageType: 'force',
       range: [60, 120],
       description:
-        'A line of pale violet light leaves the enforcer\'s open palm and arrives without sound. The Cowled tax their unlicensed competition cleanly.',
+        'A line of pale violet light leaves the enforcer\'s open palm and arrives without sound. The Veiled Court tax their unlicensed competition cleanly.',
     },
   ],
   resistances: ['fire'],

@@ -2,7 +2,7 @@
       viewBox="0 0 30 46"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Cowled Conjurer"
+      aria-label="Veiled Conjurer"
     >
       <!-- Cold conjuring backlight + ground shadow -->
       <ellipse cx="15" cy="22" rx="15" ry="21" fill="#4a6ad0" opacity="0.08" />

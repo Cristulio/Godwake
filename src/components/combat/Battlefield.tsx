@@ -567,7 +567,7 @@ function UstNathaThroneBackdrop() {
 }
 
 function SpellholdCorridorBackdrop() {
-  // Pale, watery corridor — bone-white stone, faint silver Cowled sigils on
+  // Pale, watery corridor — bone-white stone, faint silver Veiled Court sigils on
   // the wall, cell-bar shadows striping the floor. Reads colder than Iron
   // Cells (asylum, not torture lab).
   return (
@@ -629,7 +629,7 @@ function SpellholdCorridorBackdrop() {
         <line x1="297" y1="60" x2="297" y2="114" />
         <line x1="306" y1="60" x2="306" y2="114" />
       </g>
-      {/* Silver Cowled sigil scratched between cells — circle with cross */}
+      {/* Silver Veiled Court sigil scratched between cells — circle with cross */}
       <g stroke="#9ec3ff" strokeWidth="0.8" fill="none" opacity="0.55">
         <circle cx="115" cy="76" r="9" />
         <line x1="115" y1="67" x2="115" y2="85" />
@@ -656,7 +656,7 @@ function SpellholdCorridorBackdrop() {
 }
 
 function SpellholdWardenChamberBackdrop() {
-  // The Asylum Director's chamber — deep blue-violet, silver Cowled disc on
+  // The Asylum Director's chamber — deep blue-violet, silver Veiled Court disc on
   // the wall, an austere desk silhouette, banners trimmed in grey. Reads as
   // a polished bureaucratic horror — different from Magistrate's Hall (which
   // is Athkatlan / marble / civic). This one is colder and emptier.
@@ -702,7 +702,7 @@ function SpellholdWardenChamberBackdrop() {
       {/* Vaulted arched recess behind the desk */}
       <path d="M 100 96 L 100 50 Q 200 0 300 50 L 300 96 Z" fill="#06060e" stroke="#2a2a48" strokeWidth="1" />
       <path d="M 110 50 Q 200 6 290 50" fill="none" stroke="#3a3a60" strokeWidth="0.8" opacity="0.6" />
-      {/* Silver Cowled disc on the back wall — concentric rings with cross-line */}
+      {/* Silver Veiled Court disc on the back wall — concentric rings with cross-line */}
       <circle cx="200" cy="44" r="18" fill="#1a1a32" stroke="#b5b5e0" strokeWidth="1.4" />
       <circle cx="200" cy="44" r="12" fill="#06060e" stroke="#7a7aa0" strokeWidth="0.8" />
       <line x1="200" y1="30" x2="200" y2="58" stroke="#b5b5e0" strokeWidth="0.8" opacity="0.8" />
@@ -729,7 +729,7 @@ function SpellholdWardenChamberBackdrop() {
       <rect x="208" y="124" width="2" height="8" fill="#06060e" />
       <line x1="209" y1="124" x2="216" y2="112" stroke="#e8dcc4" strokeWidth="0.6" />
       <rect x="204" y="128" width="6" height="4" fill="#06060e" />
-      {/* Two pale wall-sconces flanking the disc — Cowled mage-light, not flame */}
+      {/* Two pale wall-sconces flanking the disc — Veiled Court mage-light, not flame */}
       <circle cx="135" cy="60" r="4" fill="#9ec3ff" opacity="0.7" />
       <circle cx="135" cy="60" r="2" fill="#dcefff" opacity="0.95" />
       <circle cx="265" cy="60" r="4" fill="#9ec3ff" opacity="0.7" />
@@ -1052,7 +1052,7 @@ function AthkatlaStreetBackdrop() {
           <rect x="336" y="100" width="6" height="10" />
           <rect x="376" y="100" width="6" height="10" />
         </g>
-        {/* A high arched window — Cowled-wizard tax sigil */}
+        {/* A high arched window — Veiled Court tax sigil */}
         <rect x="324" y="64" width="22" height="36" fill="#3a2a10" stroke="#5a3a1c" strokeWidth="1" />
         <polygon points="324,64 335,54 346,64" fill="#3a2a10" stroke="#5a3a1c" strokeWidth="1" />
         <rect x="332" y="78" width="6" height="14" fill="#7a82a0" opacity="0.4" />
@@ -1129,7 +1129,7 @@ function MagistrateHallBackdrop() {
         <path d="M 60 0 L 60 110 Q 200 0 340 110 L 340 0 Z" fill="#080814" />
         <path d="M 60 110 Q 200 0 340 110" fill="none" stroke="#3a3a60" strokeWidth="2" />
         <path d="M 80 110 Q 200 20 320 110" fill="none" stroke="#3a3a60" strokeWidth="1" opacity="0.6" />
-        {/* Heraldic seal at the keystone — Cowled disc */}
+        {/* Heraldic seal at the keystone — Veiled Court disc */}
         <circle cx="200" cy="32" r="14" fill="#3a3a60" stroke="#b5b5c8" strokeWidth="1" />
         <circle cx="200" cy="32" r="9" fill="#1a1a38" />
         <rect x="198" y="20" width="4" height="24" fill="#b5b5c8" opacity="0.6" />
@@ -1165,7 +1165,7 @@ function MagistrateHallBackdrop() {
         <polygon points="167,108 165,114 169,114" fill="#ffd870" />
         <rect x="232" y="112" width="2" height="6" fill="#e8dcc4" />
         <polygon points="233,108 231,114 235,114" fill="#ffd870" />
-        {/* Banners hanging from the rafters — silver Cowled livery */}
+        {/* Banners hanging from the rafters — silver Veiled Court livery */}
         <rect x="100" y="0" width="14" height="60" fill="#1a2050" stroke="#0a0a18" strokeWidth="0.5" />
         <polygon points="100,60 114,60 107,74" fill="#1a2050" stroke="#0a0a18" strokeWidth="0.5" />
         <rect x="105" y="18" width="4" height="14" fill="#b5b5c8" opacity="0.7" />

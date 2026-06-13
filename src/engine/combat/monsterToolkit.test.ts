@@ -308,7 +308,7 @@ describe('monster sustain action', () => {
     expect(r.state.log.some((l) => /Reknit/.test(l.text))).toBe(true);
   });
 
-  it('Cowled Wardpriest wards an ally with temp HP', () => {
+  it('Veiled Wardpriest wards an ally with temp HP', () => {
     const roller = createDiceRoller(9);
     const init = createCombat({
       roller,
