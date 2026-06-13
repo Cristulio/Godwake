@@ -86,6 +86,10 @@
     "song": "song",
     "oil": "oil"
   },
+  "phase": {
+    "transformed": "Transformed",
+    "enraged": "Enraged"
+  },
   "cond": {
     "name": {
       "paralyzed": "paralyzed",

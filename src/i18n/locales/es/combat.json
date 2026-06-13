@@ -86,6 +86,10 @@
     "song": "canción",
     "oil": "aceite"
   },
+  "phase": {
+    "transformed": "Transformado",
+    "enraged": "Enfurecido"
+  },
   "cond": {
     "name": {
       "paralyzed": "paralizado",
