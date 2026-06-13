@@ -51,10 +51,17 @@ export function DelveSummary({ delve, outcome, onReturn }: DelveSummaryProps) {
       </div>
 
       <Panel className="w-full">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+        <div className="flex flex-wrap justify-center gap-6 sm:gap-12 text-center">
           <Stat label={t('ui.summary.roomsCleared')} value={String(delve.roomsCleared)} />
-          <Stat label={t('ui.summary.goldEarned')} value={String(delve.goldEarned)} color="gold" />
-          <Stat label={t('ui.summary.xpEarned')} value={String(delve.xpEarned)} color="amber" />
+          {/* Gold + XP die with the body — on a failed run they read 0, which is
+              jarring next to the renown that DID return. Show them only on a win;
+              on death the renown line carries the "only renown returns" point. */}
+          {victorious && (
+            <Stat label={t('ui.summary.goldEarned')} value={String(delve.goldEarned)} color="gold" />
+          )}
+          {victorious && (
+            <Stat label={t('ui.summary.xpEarned')} value={String(delve.xpEarned)} color="amber" />
+          )}
           <Stat label={victorious ? t('ui.summary.renown') : t('ui.summary.renownLost')} value={`+${renownEarned}`} color="amber" />
         </div>
         {renown && (
