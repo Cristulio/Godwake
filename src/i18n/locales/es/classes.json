@@ -970,6 +970,22 @@
     "name": "Aura Inquebrantable",
     "description": "El aura del muro de escudos corre más honda que nunca —sus puntos de golpe protectores se hinchan, y un colchón firme ahora resta algo de cada golpe que aterriza sobre ti. Cuanto más tiempo te sostienes, más difícil eres de derribar."
   },
+  "paladin.vengeance": {
+    "name": "Juramento de Venganza",
+    "description": "La inclinación ofensiva —un Paladín que jura venganza sobre el enemigo más letal y lo caza hasta el final. Mejor con un arma y equipo de precisión/crítico: el voto golpea a su presa jurada con ventaja, lo que alimenta los críticos que avivan sus castigos. Un atacante implacable de un solo objetivo —forjado para quebrar al jefe, no para sostener el muro.",
+    "archetype": "Atacante",
+    "lever0": "Jura venganza sobre el enemigo más letal en cada combate — golpea a tu presa con ventaja.",
+    "lever1": "Tus golpes contra la presa jurada muerden por +3 de daño.",
+    "lever2": "Nivel 10: cuando la presa cae el voto salta a la siguiente, mordiendo por +6."
+  },
+  "paladin.vengeance.vow-of-enmity": {
+    "name": "Juramento Sagrado: Juramento de Venganza",
+    "description": "Juras el juramento del vengador, y al inicio de cada combate marcas al enemigo más letal del campo como tu presa jurada. Contra ese enemigo golpeas con foco implacable —cada ataque tira con ventaja, y cada golpe que aterriza muerde más hondo. La ventaja alimenta tus críticos, y tus críticos alimentan tus castigos."
+  },
+  "paladin.vengeance.relentless-avenger": {
+    "name": "Vengador Implacable",
+    "description": "La caza ya no termina con una sola muerte. En el instante en que tu presa jurada cae, el voto salta de inmediato al siguiente enemigo más letal en pie —y la venganza que portas muerde más fuerte que nunca. Siempre hay otro que debe responder."
+  },
   "bard.leaden-dirge": {
     "name": "La Endecha de Plomo",
     "description": "Una tercera Canción se suma al libro: una marcha fúnebre, lenta como la tumba, que cuelga de los miembros enemigos como soga mojada. Mientras la Endecha suena, toda hoja alzada contra ti llega pesada y tardía — sus tiradas de ataque lo sufren. Tócala cuando los enemigos que quedan golpean más fuerte."

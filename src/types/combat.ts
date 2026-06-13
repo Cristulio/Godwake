@@ -434,6 +434,16 @@ export interface CombatState {
    * mark; combat starts unmarked. Optional so legacy saves rehydrate.
    */
   huntersMarkTargetId?: string;
+  /**
+   * Paladin Oath of Vengeance — Vow of Enmity: the combatant id of the sworn
+   * quarry, set at combat start to the living monster with the highest max HP
+   * (the boss/biggest, ties → first). The paladin strikes this target with
+   * advantage and for bonus damage (resolved in playerAttack). With Relentless
+   * Avenger (L10) the vow leaps to the next-deadliest living foe the moment the
+   * quarry falls (re-set in applyDamage). Absent when the paladin lacks the
+   * oath, and on legacy saves (treated as no vow).
+   */
+  vowedTargetId?: string;
   /** Ranger (Hunter) Colossus Slayer already fired this turn. Reset on turn change. Optional so legacy saves rehydrate. */
   colossusSlayerUsedThisTurn?: boolean;
   /**

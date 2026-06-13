@@ -41,7 +41,12 @@ import { wildShapeUsesMax } from './wildShape';
 import { monkKiMax } from './monk';
 import { martialPoolMax } from './martialResource';
 import { bardActiveSongs, bardInspirationMax, bardKnownSongs } from './bard';
-import { layOnHandsMax, paladinAuraTempHp } from './paladin';
+import {
+  layOnHandsMax,
+  paladinAuraTempHp,
+  hasVowOfEnmity,
+  deadliestLivingMonsterId,
+} from './paladin';
 
 // MAX_COMBAT_LOG now lives in the leaf log module (breaking the createCombat ⇄
 // log import cycle); re-exported here so existing importers keep working.
@@ -545,6 +550,15 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
     ...(twist.cursedGroundChipPct ? resolveCursedGround(nextCharacter.hp.max, twist.cursedGroundChipPct) : {}),
     ...(twist.firstAttackDisadvantage ? { gloomActive: true } : {}),
     ...(twist.suppressBlessings ? { blessingsSealed: true } : {}),
+    // Paladin Oath of Vengeance — Vow of Enmity: swear vengeance on the deadliest
+    // foe (highest max HP, ties → spawn order) as the fight opens. Omitted for any
+    // other build so non-Vengeance fights carry no extra state weight.
+    ...(hasVowOfEnmity(nextCharacter)
+      ? (() => {
+          const vow = deadliestLivingMonsterId(monsterCombatants);
+          return vow ? { vowedTargetId: vow } : {};
+        })()
+      : {}),
   };
 
   // The entry player-turn resolutions below assume the hero acts first. Under

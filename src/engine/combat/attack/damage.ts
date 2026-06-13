@@ -12,7 +12,7 @@ import { appendLog } from '../log';
 import { patchActionEconomy, patchDelveBudgets, patchHp } from '../types';
 import { useMetaStore } from '../../../stores/metaStore';
 import { wearsHeavierThanLight } from '../../character/equip';
-import { paladinAuraDamageReduction } from '../paladin';
+import { paladinAuraDamageReduction, reconcileVow } from '../paladin';
 import { bardSteelReduction } from '../bard';
 import { t } from '../../../i18n';
 
@@ -92,6 +92,12 @@ export function applyDamage(
       } catch {
         /* meta store unavailable — non-fatal */
       }
+      // Paladin Oath of Vengeance — Relentless Avenger (L10): the single death
+      // chokepoint for player-dealt damage, so a kill by any source (weapon,
+      // smite, splash/cleave, spell) leaps the vow the same turn to the next-
+      // deadliest living foe. The just-felled monster is at 0 HP, so the scan
+      // skips it; no-op for any build without the L10 mechanic.
+      next = reconcileVow(next, nextCharacter);
     }
     return { state: next, character: nextCharacter };
   }
