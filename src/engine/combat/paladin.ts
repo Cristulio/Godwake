@@ -1,6 +1,6 @@
 import type { DiceRoller } from '../dice';
 import type { Character, SpellSlotLevel } from '../../types/character';
-import type { CombatState, CombatLogEntry } from '../../types/combat';
+import type { CombatState, CombatLogEntry, MonsterCombatant } from '../../types/combat';
 import { abilityModifier } from '../../types/abilities';
 import { characterHasMechanic, effectiveAbilityScores } from '../character/derived';
 import {
@@ -212,4 +212,91 @@ export function paladinAuraTempHp(character: Readonly<Character>): number {
 export function paladinAuraDamageReduction(character: Readonly<Character>): number {
   if (!isPaladin(character)) return 0;
   return characterHasMechanic(character as Character, 'unbreakable-aura') ? 3 : 0;
+}
+
+// ─── Oath of Vengeance — Vow of Enmity ───────────────────────────────────────
+//
+// The striker oath's signature: at the start of each fight the paladin swears
+// vengeance on the deadliest foe (the living monster with the highest max HP —
+// the boss/biggest), and against that sworn quarry every blow lands with
+// ADVANTAGE and for flat bonus damage. Relentless Avenger (L10) deepens the bite
+// AND leaps the vow to the next-deadliest living foe the instant the quarry
+// falls, so the hunt never ends. The vowed-target id lives on the combat state
+// ({@link CombatState.vowedTargetId}); the advantage + damage rider resolve in
+// playerAttack, the re-mark on a kill in applyDamage. SIM-TUNED — the bonus
+// knobs below are the band, not hand-picked win-rate numbers.
+
+/** Flat bonus damage a strike on the sworn quarry deals at L3 (Vow of Enmity).
+ *  The advantage itself is the larger part of the striker's edge (more crits →
+ *  more smite fuel); this is the steady on-type top-up. */
+export const VOW_BONUS_DAMAGE = 3;
+
+/** Flat bonus damage on the sworn quarry once Relentless Avenger (L10) deepens
+ *  the vow — the hunt bites harder as it leaps from corpse to corpse. Replaces
+ *  (does not stack with) {@link VOW_BONUS_DAMAGE}. */
+export const VOW_BONUS_DAMAGE_L10 = 6;
+
+/** True for an Oath of Vengeance paladin who has sworn the L3 vow. */
+export function hasVowOfEnmity(character: Readonly<Character>): boolean {
+  return isPaladin(character) && characterHasMechanic(character as Character, 'vow-of-enmity');
+}
+
+/** Flat bonus damage the vow adds to a strike on the sworn quarry — deeper once
+ *  Relentless Avenger (L10) is online. Zero for a paladin without the oath. */
+export function vowBonusDamage(character: Readonly<Character>): number {
+  if (!hasVowOfEnmity(character)) return 0;
+  return characterHasMechanic(character as Character, 'relentless-avenger')
+    ? VOW_BONUS_DAMAGE_L10
+    : VOW_BONUS_DAMAGE;
+}
+
+/**
+ * The combatant id the Vow of Enmity swears at the start of a fight: the living
+ * monster with the highest max HP (the boss/biggest), ties broken by spawn order
+ * (the first such monster). Undefined when no monster lives — the caller then
+ * leaves the vow unset. Shared by createCombat (initial vow) and the Relentless
+ * re-mark in applyDamage (next quarry after the current one falls), so both pick
+ * the quarry the same way.
+ */
+export function deadliestLivingMonsterId(combatants: readonly MonsterCombatant[]): string | undefined {
+  let best: MonsterCombatant | undefined;
+  for (const c of combatants) {
+    if (c.instance.hp.current <= 0) continue;
+    if (!best || c.instance.hp.max > best.instance.hp.max) best = c;
+  }
+  return best?.id;
+}
+
+/**
+ * Relentless Avenger (L10) re-mark: when the sworn quarry is dead or gone, leap
+ * the vow to the next-deadliest LIVING foe — or clear it when none remain. A
+ * no-op unless the char has the L10 mechanic AND the current vowed target is
+ * down, so it is safe to call after ANY damage settle (the attack chokepoint in
+ * applyDamage, the DOT ticks in turn.ts) and stays idempotent: once the vow
+ * points at a living foe again it does nothing. Without L10 the vow never leaps
+ * — it stays on the fallen id (dead, so it simply stops biting) until the next
+ * fight. Logs the leap when it happens; returns the (possibly) patched state.
+ */
+export function reconcileVow(state: CombatState, character: Readonly<Character>): CombatState {
+  if (!characterHasMechanic(character as Character, 'relentless-avenger')) return state;
+  const vowed = state.vowedTargetId;
+  if (!vowed) return state;
+  const stillAlive = state.combatants.some(
+    (c) => c.kind === 'monster' && c.id === vowed && c.instance.hp.current > 0,
+  );
+  if (stillAlive) return state;
+  const monsterCombatants = state.combatants.filter(
+    (c): c is MonsterCombatant => c.kind === 'monster',
+  );
+  const nextQuarry = deadliestLivingMonsterId(monsterCombatants);
+  let next: CombatState = { ...state, vowedTargetId: nextQuarry };
+  if (nextQuarry) {
+    const nextName = monsterCombatants.find((c) => c.id === nextQuarry)?.instance.displayName;
+    next = appendLog(next, {
+      id: next.log.length + 1,
+      kind: 'system',
+      text: t('combat.log.vowLeaps', { name: character.name, target: nextName ?? '' }),
+    });
+  }
+  return next;
 }

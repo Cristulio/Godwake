@@ -210,5 +210,39 @@ export const PALADIN: Class = ClassSchema.parse({
         ],
       },
     },
+    {
+      id: 'vengeance',
+      name: 'Oath of Vengeance',
+      description:
+        'The offense lean — a Paladin who swears vengeance on the deadliest foe and hunts it down. Best with a weapon and accuracy/crit gear: the vow strikes its sworn quarry with advantage, which feeds the crits that fuel its smites. A relentless single-foe striker — built to break the boss, not hold the wall.',
+      bottomLine: {
+        archetype: 'Striker',
+        levers: [
+          'Swear vengeance on the deadliest foe each fight — strike your quarry with advantage.',
+          'Your blows against the sworn quarry bite for +3 damage.',
+          'L10: when the quarry falls the vow leaps to the next, biting for +6.',
+        ],
+      },
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'vow-of-enmity',
+            name: 'Sacred Oath: Oath of Vengeance',
+            description:
+              'You swear the oath of the avenger, and at the start of every fight you mark the deadliest foe on the field as your sworn quarry. Against that enemy you strike with relentless focus — every attack rolls with advantage, and each blow that lands bites deeper. The advantage feeds your crits, and your crits feed your smites.',
+            mechanicKey: 'vow-of-enmity',
+          },
+        ],
+        '10': [
+          {
+            id: 'relentless-avenger',
+            name: 'Relentless Avenger',
+            description:
+              'The hunt no longer ends with a single kill. The moment your sworn quarry falls, the vow leaps the same instant to the next-deadliest foe still standing — and the vengeance you carry bites harder than ever. There is always another to answer for.',
+            mechanicKey: 'relentless-avenger',
+          },
+        ],
+      },
+    },
   ],
 });

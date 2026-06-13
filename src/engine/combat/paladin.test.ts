@@ -14,6 +14,7 @@ import { paladinSpellSlots } from '../character/actions';
 import { classUnlockRenown, isClassUnlocked } from '../progression/unlocks';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack } from './attack/playerAttack';
+import { applyDamage } from './attack/damage';
 import { rollPlayerSave } from './holdPerson';
 import {
   isPaladin,
@@ -27,6 +28,11 @@ import {
   paladinAuraSaveBonus,
   paladinAuraTempHp,
   paladinAuraDamageReduction,
+  hasVowOfEnmity,
+  vowBonusDamage,
+  VOW_BONUS_DAMAGE,
+  VOW_BONUS_DAMAGE_L10,
+  reconcileVow,
 } from './paladin';
 import { parseDiceExpression, type DiceRoller } from '../dice';
 import { getItem } from '../../content/items';
@@ -129,9 +135,9 @@ describe('Paladin — class shape', () => {
     expect(isClassUnlocked('paladin', 1000, 'fighter')).toBe(true);
   });
 
-  it('offers two oaths: a Radiant (caster) fork and a Bulwark (martial) fork', () => {
+  it('offers three oaths: Radiant (caster), Bulwark (tank) and Vengeance (striker)', () => {
     const cls = getClass('paladin');
-    expect(cls.subclasses.map((s) => s.id).sort()).toEqual(['bulwark', 'radiant']);
+    expect(cls.subclasses.map((s) => s.id).sort()).toEqual(['bulwark', 'radiant', 'vengeance']);
   });
 });
 
@@ -261,5 +267,192 @@ describe('Paladin — self-buff auras', () => {
   it("the Bulwark L10 Unbreakable Aura adds a flat damage cushion; lower levels do not", () => {
     expect(paladinAuraDamageReduction(makePaladin(5, 'bulwark'))).toBe(0);
     expect(paladinAuraDamageReduction(makePaladin(10, 'bulwark'))).toBeGreaterThan(0);
+  });
+});
+
+describe('Paladin — Oath of Vengeance (Vow of Enmity)', () => {
+  // A small/large pair: the vow always swears the highest-max-HP foe.
+  const SMALL = 'goblin'; // 14 max HP
+  const BIG = 'cinderwake-hound'; // 80 max HP
+  const MID = 'blue-wyrmling'; // 186 max HP — distinct third tier for the re-mark
+
+  function monstersOf(state: CombatState): MonsterCombatant[] {
+    return state.combatants.filter((c): c is MonsterCombatant => c.kind === 'monster');
+  }
+  function withMainHand(c: Character, itemId: string): Character {
+    return { ...c, equipped: { ...c.equipped, mainHand: { itemId } } };
+  }
+
+  it('only the Vengeance oath swears the vow; Radiant/Bulwark/un-sworn do not', () => {
+    expect(hasVowOfEnmity(makePaladin(3, 'vengeance'))).toBe(true);
+    expect(hasVowOfEnmity(makePaladin(3, 'radiant'))).toBe(false);
+    expect(hasVowOfEnmity(makePaladin(3, 'bulwark'))).toBe(false);
+    expect(hasVowOfEnmity(makePaladin(3, null))).toBe(false);
+    // The vow is gated at L3 — an L2 Vengeance soul (pre-pick) has no vow yet.
+    expect(hasVowOfEnmity({ ...makePaladin(2, 'vengeance') })).toBe(false);
+  });
+
+  it('marks the deadliest (highest-max-HP) foe at combat start, regardless of spawn order', () => {
+    const pal = makePaladin(3, 'vengeance');
+    _resetMonsterInstanceCounter();
+    const a = createCombat({ character: pal, monsters: [{ def: getMonster(SMALL) }, { def: getMonster(BIG) }] });
+    const bigA = monstersOf(a.state).find((m) => m.instance.defId === BIG)!;
+    expect(a.state.vowedTargetId).toBe(bigA.id);
+
+    // Order flipped — still the big foe, proving it picks by HP not by index.
+    _resetMonsterInstanceCounter();
+    const b = createCombat({ character: pal, monsters: [{ def: getMonster(BIG) }, { def: getMonster(SMALL) }] });
+    const bigB = monstersOf(b.state).find((m) => m.instance.defId === BIG)!;
+    expect(b.state.vowedTargetId).toBe(bigB.id);
+  });
+
+  it('a non-Vengeance paladin sets no vow', () => {
+    _resetMonsterInstanceCounter();
+    const { state } = createCombat({
+      character: makePaladin(3, 'bulwark'),
+      monsters: [{ def: getMonster(SMALL) }, { def: getMonster(BIG) }],
+    });
+    expect(state.vowedTargetId).toBeUndefined();
+  });
+
+  // A roller that records the `advantage` mode every d20 was called with, so a
+  // test can prove the engine requested advantage on the attack roll (the
+  // scriptRoller can't show this — it ignores the mode). All d20s land at 18.
+  function captureRoller(): DiceRoller & { modes: string[] } {
+    const modes: string[] = [];
+    const base = scriptRoller([18]);
+    const wrapped = {
+      ...base,
+      modes,
+      d20(advantage: 'normal' | 'advantage' | 'disadvantage' = 'normal', modifier = 0) {
+        modes.push(advantage);
+        return base.d20(advantage, modifier);
+      },
+    } as DiceRoller & { modes: string[] };
+    return wrapped;
+  }
+
+  it('strikes the sworn quarry with advantage and bonus damage — and NOT a non-vowed foe', () => {
+    const pal = withMainHand(makePaladin(3, 'vengeance'), 'longsword');
+    _resetMonsterInstanceCounter();
+    const init = createCombat({ character: pal, monsters: [{ def: getMonster(SMALL) }, { def: getMonster(BIG) }] });
+    const big = monstersOf(init.state).find((m) => m.instance.defId === BIG)!;
+    const small = monstersOf(init.state).find((m) => m.instance.defId === SMALL)!;
+    expect(init.state.vowedTargetId).toBe(big.id);
+
+    // The attack roll against the quarry is made with advantage. Disarm smite so
+    // only the vow colours the damage.
+    const vowRoller = captureRoller();
+    const vowed = playerAttack(
+      { roller: vowRoller, character: { ...init.character, smiteArmed: false }, state: init.state },
+      big.id,
+      'longsword',
+    );
+    expect(vowRoller.modes[0]).toBe('advantage');
+    expect(vowed.state.lastAttack?.hit).toBe(true);
+    // The vow's flat bite shows in the damage breakdown against the quarry.
+    const vowedLine = vowed.state.log.filter((e) => e.kind === 'damage').pop()?.text ?? '';
+    expect(vowedLine).toMatch(new RegExp(`\\+ ${VOW_BONUS_DAMAGE} vow`));
+
+    // The same swing against the NON-vowed small foe rolls a straight (normal) d20
+    // and carries no vow line in its damage breakdown.
+    const otherRoller = captureRoller();
+    const other = playerAttack(
+      { roller: otherRoller, character: { ...init.character, smiteArmed: false }, state: init.state },
+      small.id,
+      'longsword',
+    );
+    expect(otherRoller.modes[0]).toBe('normal');
+    const otherDamageLines = other.state.log.filter((e) => e.kind === 'damage');
+    expect(otherDamageLines.some((e) => /vow/.test(e.text))).toBe(false);
+  });
+
+  it('the vow bonus deepens at L10 (Relentless Avenger)', () => {
+    expect(vowBonusDamage(makePaladin(3, 'vengeance'))).toBe(VOW_BONUS_DAMAGE);
+    expect(vowBonusDamage(makePaladin(10, 'vengeance'))).toBe(VOW_BONUS_DAMAGE_L10);
+    expect(VOW_BONUS_DAMAGE_L10).toBeGreaterThan(VOW_BONUS_DAMAGE);
+  });
+
+  it('L10 Relentless Avenger leaps the vow to the next-deadliest foe when the quarry falls', () => {
+    const pal = makePaladin(10, 'vengeance');
+    _resetMonsterInstanceCounter();
+    const init = createCombat({
+      character: pal,
+      monsters: [{ def: getMonster(SMALL) }, { def: getMonster(BIG) }, { def: getMonster(MID) }],
+    });
+    const mid = monstersOf(init.state).find((m) => m.instance.defId === MID)!; // 186 HP — the first quarry
+    const big = monstersOf(init.state).find((m) => m.instance.defId === BIG)!; // 80 HP — the next
+    expect(init.state.vowedTargetId).toBe(mid.id);
+
+    // Fell the sworn quarry outright; the vow leaps to the next-deadliest LIVING foe.
+    const killed = applyDamage(init.state, mid.id, 10_000, init.character);
+    expect(monstersOf(killed.state).find((m) => m.id === mid.id)!.instance.hp.current).toBe(0);
+    expect(killed.state.vowedTargetId).toBe(big.id);
+    expect(killed.state.log.some((e) => /vow leaps|salta/i.test(e.text))).toBe(true);
+  });
+
+  it('the L3 vow does NOT leap on a kill (no Relentless Avenger before L10)', () => {
+    const pal = makePaladin(3, 'vengeance');
+    _resetMonsterInstanceCounter();
+    const init = createCombat({
+      character: pal,
+      monsters: [{ def: getMonster(SMALL) }, { def: getMonster(BIG) }],
+    });
+    const big = monstersOf(init.state).find((m) => m.instance.defId === BIG)!;
+    expect(init.state.vowedTargetId).toBe(big.id);
+    const killed = applyDamage(init.state, big.id, 10_000, init.character);
+    // No leap: the vow stays on the (now-dead) quarry id until the next fight.
+    expect(killed.state.vowedTargetId).toBe(big.id);
+  });
+
+  it('when the last foe falls under Relentless Avenger, the vow clears', () => {
+    const pal = makePaladin(10, 'vengeance');
+    _resetMonsterInstanceCounter();
+    const init = createCombat({ character: pal, monsters: [{ def: getMonster(BIG) }] });
+    const big = monstersOf(init.state)[0];
+    expect(init.state.vowedTargetId).toBe(big.id);
+    const killed = applyDamage(init.state, big.id, 10_000, init.character);
+    expect(killed.state.vowedTargetId).toBeUndefined();
+  });
+
+  // reconcileVow is the shared re-mark the DOT path (turn.ts) and the attack path
+  // (applyDamage) both call when the quarry dies — covered directly so a quarry
+  // that bleeds out leaps the vow exactly like an attack kill.
+  describe('reconcileVow (the shared DOT/attack re-mark)', () => {
+    function combatWith(level: number, sub: string, defs: string[]) {
+      _resetMonsterInstanceCounter();
+      return createCombat({ character: makePaladin(level, sub), monsters: defs.map((d) => ({ def: getMonster(d) })) });
+    }
+    function kill(state: CombatState, id: string): CombatState {
+      return {
+        ...state,
+        combatants: state.combatants.map((c) =>
+          c.kind === 'monster' && c.id === id
+            ? { ...c, instance: { ...c.instance, hp: { ...c.instance.hp, current: 0 } } }
+            : c,
+        ),
+      };
+    }
+
+    it('leaps to the next-deadliest foe when the L10 quarry is dead', () => {
+      const { state, character } = combatWith(10, 'vengeance', [SMALL, BIG, MID]);
+      const mid = monstersOf(state).find((m) => m.instance.defId === MID)!;
+      const big = monstersOf(state).find((m) => m.instance.defId === BIG)!;
+      expect(state.vowedTargetId).toBe(mid.id);
+      const after = reconcileVow(kill(state, mid.id), character);
+      expect(after.vowedTargetId).toBe(big.id);
+    });
+
+    it('is a no-op while the quarry still lives', () => {
+      const { state, character } = combatWith(10, 'vengeance', [SMALL, BIG]);
+      expect(reconcileVow(state, character).vowedTargetId).toBe(state.vowedTargetId);
+    });
+
+    it('does not leap without Relentless Avenger (pre-L10)', () => {
+      const { state, character } = combatWith(3, 'vengeance', [SMALL, BIG]);
+      const big = monstersOf(state).find((m) => m.instance.defId === BIG)!;
+      const after = reconcileVow(kill(state, big.id), character);
+      expect(after.vowedTargetId).toBe(big.id); // unchanged — dead id stays
+    });
   });
 });

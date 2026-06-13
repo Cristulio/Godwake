@@ -9,7 +9,7 @@ export type CombatLean = 'martial' | 'caster';
  *
  *  - fighter / rogue / barbarian / ranger / monk — martial, always.
  *  - wizard — caster, always.
- *  - paladin — Oath of the Radiant casts; Bulwark and the un-sworn swing.
+ *  - paladin — Oath of the Radiant casts; Bulwark, Vengeance and the un-sworn swing.
  *  - bard — College of Valor swings; Lore and the un-chosen cast.
  *  - druid — Circle of the Moon fights in the beast; the circle-less cast.
  *
@@ -24,6 +24,8 @@ export function combatLean(c: Pick<Character, 'classId' | 'subclassId'>): Combat
     case 'cleric': // no playable cleric yet; if one ever lands, it casts
       return 'caster';
     case 'paladin':
+      // Radiant alone casts; Bulwark (tank) and Vengeance (striker) both swing,
+      // as does the un-sworn paladin.
       return c.subclassId === 'radiant' ? 'caster' : 'martial';
     case 'bard':
       return c.subclassId === 'valor' ? 'martial' : 'caster';

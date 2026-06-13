@@ -34,6 +34,7 @@ import { isRageUnlimited } from '../character/actions';
 import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './martialResource';
 import { regenCunningActionForRound } from './cunningAction';
 import { monkHasPendingTurnAction } from './monk';
+import { reconcileVow } from './paladin';
 import { t } from '../../i18n';
 
 function resetActionEconomyForCurrent(
@@ -572,6 +573,14 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     const beastEnded = evaluateCombatEnd(nextState, nextCharacter);
     nextState = beastEnded.state;
     nextCharacter = beastEnded.character;
+  }
+
+  // Paladin Oath of Vengeance — Relentless Avenger (L10): a turn-start DOT
+  // (a Bloodletting affix bleed) can fell the sworn quarry between swings; the
+  // vow leaps here the same as it does on an attack kill (applyDamage). No-op
+  // for any build without the L10 mechanic or a living-quarry vow.
+  if (order[nextIndex] === 'player' && nextState.status === 'active') {
+    nextState = reconcileVow(nextState, nextCharacter);
   }
 
   // Bard: the playing Song pulses at the start of the player's turn — Spite

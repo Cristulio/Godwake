@@ -28,7 +28,7 @@ import {
   PRIMAL_STRIKE_DAMAGE_BONUS,
 } from '../wildShape';
 import { bardWarSongDie } from '../bard';
-import { paladinSmiteOnHit } from '../paladin';
+import { paladinSmiteOnHit, hasVowOfEnmity, vowBonusDamage } from '../paladin';
 import { rageDamageBonus } from '../../character/actions';
 import {
   martialOffenseDamage,
@@ -117,6 +117,7 @@ const PART_KEY: Record<string, string> = {
   maneuver: 'maneuver',
   Shadowed: 'shadowed',
   Quarry: 'quarry',
+  vow: 'vow',
   song: 'song',
   oil: 'oil',
 };
@@ -455,12 +456,18 @@ function resolveSwing(
   // strike of the fight lands with advantage (and extra Sneak dice, below).
   const assassinateOpener =
     isFirstAttack && characterHasMechanic(nextCharacter, 'assassinate');
+  // Paladin Oath of Vengeance — Vow of Enmity: a blow against the sworn quarry
+  // (the deadliest foe, marked at combat start; re-marked on a kill at L10) lands
+  // with advantage and for bonus damage (folded in below). The advantage is the
+  // larger half of the edge — more crits means more Divine Smite fuel.
+  const vowStrike = state.vowedTargetId === targetId && hasVowOfEnmity(nextCharacter);
   const hasAdvantage =
     (isFirstAttack && !!blessingMods.firstAttackAdvantage) ||
     hideAdvantage ||
     recklessAdvantage ||
     shadowOpener ||
-    assassinateOpener;
+    assassinateOpener ||
+    vowStrike;
   // Gloom twist: the first attack of the fight rolls at disadvantage (one-shot —
   // gated on isFirstAttack, which flips off once the player has swung).
   const gloomDisadvantage = isFirstAttack && state.gloomActive === true;
@@ -939,6 +946,18 @@ function resolveSwing(
       if (affixMods.markDamageBonus > 0) {
         bonusDamage += affixMods.markDamageBonus;
         onTypeParts.push({ amount: affixMods.markDamageBonus, label: 'Quarry' });
+      }
+    }
+
+    // Paladin Oath of Vengeance — Vow of Enmity: a flat bite on every blow against
+    // the sworn quarry (the advantage rode the attack roll above). Deeper once
+    // Relentless Avenger (L10) is online (vowBonusDamage reads the milestone). On-
+    // type, so it sums into the weapon-type breakdown like the Quarry affix.
+    if (vowStrike) {
+      const vow = vowBonusDamage(nextCharacter);
+      if (vow > 0) {
+        bonusDamage += vow;
+        onTypeParts.push({ amount: vow, label: 'vow' });
       }
     }
 
