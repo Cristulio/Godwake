@@ -58,6 +58,9 @@ import { CombatCoach, combatIntroEligible, type CoachStep } from './CombatCoach'
 import { useMetaStore } from '../../stores/metaStore';
 import { COMBAT_INTRO_TUTORIAL_ID } from '../../content/tutorials';
 import { useT } from '../../i18n/useT';
+import { getItem } from '../../content/items';
+import { weaponDamageDice } from '../../engine/combat/attack/playerAttack';
+import { localizedDamageType } from '../inventory/itemDisplay';
 
 interface CombatScreenProps {
   character: Character;
@@ -712,6 +715,13 @@ export function CombatScreen({
   // so below `lg` it only appears — as a compact overlay pinned to the
   // battlefield's top-right — while a roll is actually resolving.
   const diceRolling = overlayActive && state.lastAttack != null;
+  // Idle dice panel previews the base swing you'll roll (the main-hand weapon's
+  // dice + type) so the side column isn't dead space between turns. Accurate to
+  // the weapon (versatile two-handed rolls the larger die); situational riders
+  // — sneak, rage, affixes — still add on the actual roll.
+  const mhItem = character.equipped?.mainHand ? getItem(character.equipped.mainHand.itemId) : null;
+  const swingWeapon = mhItem && mhItem.kind === 'weapon' ? mhItem : null;
+  const swingDice = swingWeapon ? weaponDamageDice(swingWeapon, !character.equipped?.offHand) : null;
 
   return (
     <div
@@ -841,6 +851,13 @@ export function CombatScreen({
               graze={state.lastAttack.graze === true}
               onDismiss={() => setOverlayActive(false)}
             />
+          ) : swingWeapon && swingDice ? (
+            <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] text-center px-2">
+              {t('combat.screen.yourSwing')}
+              <div className="text-[var(--color-accent-amber)] text-sm tracking-normal normal-case mt-1 font-mono">
+                {swingDice} {localizedDamageType(swingWeapon.damageType)}
+              </div>
+            </div>
           ) : (
             <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] text-center px-2">
               {t('combat.screen.dicePool')}

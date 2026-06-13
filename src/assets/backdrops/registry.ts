@@ -75,7 +75,7 @@ export type BackdropKind = 'combat' | 'elite' | 'boss' | 'event';
  * art; this deepens the color without touching the authored files. One knob:
  * retune here, all 56 scenes follow.
  */
-export const BACKDROP_GRADE = 'saturate(1.16) contrast(1.05)';
+export const BACKDROP_GRADE = 'saturate(1.16) brightness(1.24) contrast(1.0)';
 
 const SCENES: Record<number, Partial<Record<BackdropKind, string>>> = {
   1: { combat: ch1Combat, elite: ch1Elite, boss: ch1Boss, event: ch1Event },
