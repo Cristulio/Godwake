@@ -505,3 +505,69 @@ describe('dual wield — Sneak Attack interplay', () => {
     expect(sneaks.length).toBe(1);
   });
 });
+
+// ─── ranger Blade Dancer: dual-wield melee + Twin Rend ───────────────────────
+
+describe('ranger Blade Dancer — the two-blade conclave', () => {
+  it('a Blade Dancer seats a light blade in the off-hand; other ranger conclaves cannot', () => {
+    const dancer = makeSchooled('ranger', 'blade-dancer', 3, 'shortsword', null, ['dagger']);
+    expect(canOffHandWeapon(dancer, 'dagger')).toBe(true);
+    const next = equipItemToSlot(dancer, invIdx(dancer, 'dagger'), 'offHand');
+    expect(next.equipped.offHand?.itemId).toBe('dagger');
+
+    const hunter = makeSchooled('ranger', 'hunter', 3, 'shortsword', null, ['dagger']);
+    expect(canOffHandWeapon(hunter, 'dagger')).toBe(false);
+  });
+
+  it('the Attack action resolves the main blade then the automatic off-hand follow', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('ranger', 'blade-dancer', 3, 'shortsword', 'dagger'),
+      { mainHit: true, offHit: true },
+      { toughenTo: 200 },
+    );
+    expect(pair.mainLine.text).toContain('with Shortsword');
+    expect(pair.offLine.text).toContain('off-hand follows — Dagger');
+    expect(pair.state.attackEvents?.length).toBe(2);
+  });
+
+  it('Twin Rend (L10): BOTH blades bite the Hunter\'s Mark quarry the deeper', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('ranger', 'blade-dancer', 10, 'shortsword', 'dagger'),
+      { mainHit: true, offHit: true },
+      {
+        toughenTo: 300,
+        mutate: (state) => ({
+          ...state,
+          huntersMarkTargetId: monsterByName(state, 'Goblin A').id,
+        }),
+      },
+    );
+    // The rend rider rode both the main and the off-hand swing on the marked foe.
+    expect(damageLineAfter(pair.state, pair.mainLine)!.text).toContain('rend');
+    expect(damageLineAfter(pair.state, pair.offLine)!.text).toContain('rend');
+  });
+
+  it('Twin Rend never fires on an UNMARKED foe', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('ranger', 'blade-dancer', 10, 'shortsword', 'dagger'),
+      { mainHit: true, offHit: true },
+      { toughenTo: 300 }, // no mark set
+    );
+    expect(damageLineAfter(pair.state, pair.mainLine)!.text).not.toContain('rend');
+  });
+
+  it('a pre-L10 Blade Dancer gets no Twin Rend even on the marked quarry', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('ranger', 'blade-dancer', 3, 'shortsword', 'dagger'),
+      { mainHit: true, offHit: true },
+      {
+        toughenTo: 200,
+        mutate: (state) => ({
+          ...state,
+          huntersMarkTargetId: monsterByName(state, 'Goblin A').id,
+        }),
+      },
+    );
+    expect(damageLineAfter(pair.state, pair.mainLine)!.text).not.toContain('rend');
+  });
+});

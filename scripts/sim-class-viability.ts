@@ -614,6 +614,24 @@ function descend(roller: DiceRoller, soul: SoulState): Character {
     c = { ...c, inventory: [...c.inventory, { itemId: 'monk-war-staff' }] };
     c = equipItem(c, idx);
   }
+  // Blade Dancer ranger: the dual-wield melee conclave throws down the bow for two
+  // blades. The preset seats a longbow (the archer default) and the loadout
+  // heuristic won't switch to dual light weapons on its own — so seat the matched
+  // fangs directly and drop the bow from the kit (rolled drops still upgrade the
+  // blades via the off-hand routing). Without this the bot sims an archer and the
+  // conclave's whole identity (off-hand follow + Twin Rend on the mark) goes
+  // unmeasured — the MONK_WEAPON gear-path precedent.
+  if (c.classId === 'ranger' && c.subclassId === 'blade-dancer') {
+    c = {
+      ...c,
+      equipped: {
+        ...c.equipped,
+        mainHand: { itemId: 'shortsword' },
+        offHand: { itemId: 'shortsword' },
+      },
+      inventory: c.inventory.filter((r) => r.itemId !== 'longbow'),
+    };
+  }
   return longRest(c);
 }
 

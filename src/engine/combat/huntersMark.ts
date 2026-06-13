@@ -19,6 +19,13 @@ export interface HuntersMarkContext {
 /** Bonus damage dice a marked target takes per hit. Doubled on a crit. */
 export const HUNTERS_MARK_DICE = '1d6';
 
+/** Ranger Blade Dancer — Twin Rend (L10): flat bonus damage EACH blade deals to
+ *  the Hunter's Mark quarry. The off-hand follow runs the same swing path, so a
+ *  dual-wielding blade dancer lands it twice on the marked foe. Sim-tuned — a
+ *  per-blade bite set ~half the other conclaves' single-hit L10 (it applies
+ *  twice). Read in playerAttack beside the mark dice. */
+export const RANGER_TWIN_REND_BONUS = 3;
+
 /**
  * Ranger Hunter's Mark. Bonus action: brand a living enemy as the quarry. Every
  * weapon hit the ranger lands on the marked target deals an extra {@link

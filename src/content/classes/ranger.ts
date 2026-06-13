@@ -245,5 +245,39 @@ export const RANGER: Class = ClassSchema.parse({
         ],
       },
     },
+    {
+      id: 'blade-dancer',
+      name: 'Blade Dancer',
+      description:
+        'The melee lean — a ranger who throws down the bow and takes a blade in each hand. Best with two light weapons (matched fangs) and on-hit/lifesteal affix gear: you mark a quarry and shred it up close, every Hunter’s Mark biting twice because both blades carry the brand. A dual-wield striker — the close fight the longbow conclaves never wanted.',
+      bottomLine: {
+        archetype: 'Two-Blades',
+        levers: [
+          'Drop the bow for two blades — every turn lands an automatic off-hand follow-swing.',
+          'Your Hunter’s Mark brands through BOTH blades, so a marked quarry bleeds twice over.',
+          'L10: your blades bite your marked quarry for +3 more apiece — the twin-fang flurry that ends the branded foe.',
+        ],
+      },
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'blade-dancer',
+            name: 'Ranger Conclave: Blade Dancer',
+            description:
+              'You forsake the bow and fight with a blade in each fist — a matched pair of fangs. Each turn your off-hand follows your main with a strike of its own, and your Hunter’s Mark brands through both, so the quarry you mark bleeds from twice the blades. The close, fast, two-bladed fight the longbow Hunters never learned.',
+            mechanicKey: 'dual-wielder',
+          },
+        ],
+        '10': [
+          {
+            id: 'twin-rend',
+            name: 'Twin Rend',
+            description:
+              'You have learned where the marked thing comes apart. Every blade you land on your Hunter’s Mark quarry bites the deeper now — both fangs worrying the same wound, rending the branded foe far faster than the mark alone until it gives.',
+            mechanicKey: 'twin-rend',
+          },
+        ],
+      },
+    },
   ],
 });

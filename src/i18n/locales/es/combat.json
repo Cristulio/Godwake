@@ -81,6 +81,7 @@
     "shadowed": "Sombrío",
     "quarry": "Presa",
     "vow": "voto",
+    "rend": "desgarro",
     "sneak": "sigilo ({dice})",
     "mark": "marca ({dice})",
     "colossus": "coloso ({dice})",
@@ -135,8 +136,10 @@
     "ranger": {
       "pool": "Concentración",
       "offense": "Disparo Certero",
+      "offenseBlade": "Tajo Desgarrador",
       "defense": "Postura Firme",
-      "disrupt": "Disparo Lisiante"
+      "disrupt": "Disparo Lisiante",
+      "disruptBlade": "Corte de Corva"
     }
   },
   "log": {

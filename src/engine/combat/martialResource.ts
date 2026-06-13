@@ -123,13 +123,22 @@ export function martialFlavor(character: Readonly<Character>): MartialFlavor | n
   // with a shield up, a Pommel Strike when both hands hold steel (dual wield) or
   // a two-hander. Same staggering effect — it never gated on a shield, only the
   // name did. Barbarian (Knockdown) / Ranger (Crippling Shot) read gear-neutral.
+  // The Blade Dancer ranger fights melee, so its Focus spends read as blade-work
+  // (Rending Strike / Hamstring) rather than the bow-flavored Aimed Shot /
+  // Crippling Shot — same Focus mechanics, only the names change (the dual-wielder
+  // mechanic uniquely tags the conclave; Set Stance reads fine for melee).
+  const isBladeDancer = cls === 'ranger' && characterHasMechanic(character as Character, 'dual-wielder');
   const disrupt =
     cls === 'fighter' && !hasShieldEquipped(character)
       ? t('combat.martial.fighter.disruptNoShield')
-      : t(`combat.martial.${cls}.disrupt`);
+      : isBladeDancer
+        ? t('combat.martial.ranger.disruptBlade')
+        : t(`combat.martial.${cls}.disrupt`);
   return {
     pool: t(`combat.martial.${cls}.pool`),
-    offense: t(`combat.martial.${cls}.offense`),
+    offense: isBladeDancer
+      ? t('combat.martial.ranger.offenseBlade')
+      : t(`combat.martial.${cls}.offense`),
     defense: t(`combat.martial.${cls}.defense`),
     disrupt,
   };
