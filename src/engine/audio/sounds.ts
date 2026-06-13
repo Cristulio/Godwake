@@ -1789,7 +1789,7 @@ const HUB_SPEC: SongSpec = {
   trim: 1.19,
   setup: (ctx, out) => {
     const echo = makeEcho(ctx, out, 0.33, 0.22, 0.16);
-    const wind = makeWind(ctx, out, 380, 0.13);
+    const wind = makeWind(ctx, out, 380, 0.09);
     const drone = makeDrone(
       ctx, out,
       [{ hz: midiHz(midi('A1')), type: 'sine', level: 0.07 }],
@@ -1908,7 +1908,7 @@ const GROVE_SPEC: SongSpec = {
       800,
       { hz: 0.045, depth: 200 },
     );
-    const wind = makeWind(ctx, out, 620, 0.07);
+    const wind = makeWind(ctx, out, 620, 0.05);
     return {
       input: echo.input,
       stop: () => {
