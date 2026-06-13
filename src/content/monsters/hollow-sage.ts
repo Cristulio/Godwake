@@ -40,5 +40,5 @@ export const HOLLOW_SAGE: Monster = MonsterSchema.parse({
   ],
   resistances: ['psychic', 'necrotic'],
   flavorText:
-    "Once a Cowled scholar. The mind is gone — scoured out by an experiment the warden no longer remembers commissioning — but the spells that were riveted into the bone still fire when someone walks within range.",
+    "Once a Veiled Court scholar. The mind is gone — scoured out by an experiment the warden no longer remembers commissioning — but the spells that were riveted into the bone still fire when someone walks within range.",
 });

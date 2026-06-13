@@ -1,7 +1,7 @@
 {
   "pale-cleric-shrine": {
     "title": "Una clériga pálida en un altar del camino",
-    "flavor": "Una mujer de gris ilmatari apolillado se sienta en el borde de una pila agrietada, las manos plegadas en el regazo. No alza la vista cuando te acercas. «¿Te sentarás? El Dios que Llora escucha mejor cuando dos corazones se detienen juntos.»",
+    "flavor": "Una mujer de gris apolillado, el gris de los dolientes de Atlas, se sienta en el borde de una pila agrietada, las manos plegadas en el regazo. No alza la vista cuando te acercas. «¿Te sentarás? El Dios que Llora escucha mejor cuando dos corazones se detienen juntos.»",
     "choice.sit.label": "Sentarte con ella",
     "choice.sit.hint": "Una moneda en la pila, un aliento compartido.",
     "choice.sit.resolution": "Dejas caer un cobre en la pila. Ella cierra los ojos. Algo en tu pecho se aquieta por primera vez en una larga marcha.",
@@ -139,18 +139,18 @@
     "choice.palm-the-takings.failureResolution": "Tus dedos rozan el borde medio compás demasiado tarde y el cuenco resuena contra los adoquines. El silbato de un aduanero responde desde el arco: dos manos te toman por los hombros y una tercera por las costillas antes de que puedas correr. Te vas magullado y no más rico."
   },
   "cowled-recruiter": {
-    "title": "Un reclutador encapuchado a la sombra de un arco",
-    "flavor": "Una figura con el gris y azul de la Corte Velada sale de un arco como de la propia piedra. «Caminas ruidoso, caminante. La Capucha licencia el talento. Un pequeño pago, y una pequeña protección… di tu apuesta.»",
-    "choice.pay-the-cowl.label": "Pagar a la Capucha su impuesto",
+    "title": "Un reclutador velado a la sombra de un arco",
+    "flavor": "Una figura con el gris y azul de la Corte Velada sale de un arco como de la propia piedra. «Caminas ruidoso, caminante. El Velo licencia el talento. Un pequeño pago, y una pequeña protección… di tu apuesta.»",
+    "choice.pay-the-cowl.label": "Pagar al Velo su impuesto",
     "choice.pay-the-cowl.hint": "Una bolsa pesada, una mano firme.",
     "choice.pay-the-cowl.resolution": "Guardan la moneda en una manga bordada con marcas de mago y te aprietan un sello de tiza en el dorso de la mano. Tu agarre de la hoja se siente más seguro el resto del camino.",
     "choice.wave-them-off.label": "Despacharlos con un gesto",
-    "choice.wave-them-off.hint": "La Capucha tiene larga memoria.",
+    "choice.wave-them-off.hint": "El Velo tiene larga memoria.",
     "choice.wave-them-off.resolution": "Retroceden hacia el arco. La piedra se cierra sin costura tras ellos. La calle queda muy callada.",
-    "choice.bluff-the-cowl.label": "[Engaño] Nombrar a un superior encapuchado",
-    "choice.bluff-the-cowl.hint": "Reclama un rango que nunca tuviste. Véndelo y pasarás libre; resbala y la Capucha te corrige.",
-    "choice.bluff-the-cowl.resolution": "Sueltas un nombre con la calma de quien ha estado en cámaras por encima de esta. Los ojos de la Capucha vacilan —la más breve reevaluación— y el sello de tiza se aprieta en tu mano sin pedir moneda. Retroceden hacia el arco, la piedra se sella tras ellos, y sigues adelante con la marca de un mago y la bolsa de un mago intactas.",
-    "choice.bluff-the-cowl.failureResolution": "El nombre sale de tu boca medio compás demasiado fluido. La Capucha ladea la cabeza. «Ese murió en las purgas, caminante. Prueba la verdad en la próxima vida.» Un chasquido de dedos, un olor a ozono, y los adoquines suben a recibirte. Se han ido antes de que cese el zumbido.",
+    "choice.bluff-the-cowl.label": "[Engaño] Nombrar a un superior velado",
+    "choice.bluff-the-cowl.hint": "Reclama un rango que nunca tuviste. Véndelo y pasarás libre; resbala y el Velo te corrige.",
+    "choice.bluff-the-cowl.resolution": "Sueltas un nombre con la calma de quien ha estado en cámaras por encima de esta. Los ojos del Velo vacilan —la más breve reevaluación— y el sello de tiza se aprieta en tu mano sin pedir moneda. Retroceden hacia el arco, la piedra se sella tras ellos, y sigues adelante con la marca de un mago y la bolsa de un mago intactas.",
+    "choice.bluff-the-cowl.failureResolution": "El nombre sale de tu boca medio compás demasiado fluido. El Velo ladea la cabeza. «Ese murió en las purgas, caminante. Prueba la verdad en la próxima vida.» Un chasquido de dedos, un olor a ozono, y los adoquines suben a recibirte. Se han ido antes de que cese el zumbido.",
     "choice.draw-on-them.label": "Desenvainar contra ellos",
     "choice.draw-on-them.hint": "Un mago es un mago.",
     "choice.draw-on-them.resolution": "Un chasquido de dedos, un olor a ozono, y estás en los adoquines con el aire arrancado del pecho. Se han ido antes de que puedas levantarte. «Lección uno», dice el arco, «se paga por adelantado.»"

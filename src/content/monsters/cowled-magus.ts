@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Magus — Ch2 ELITE caster, the senior Veiled Magus behind the audits,
+ * Veiled Magus — Ch2 ELITE caster, the senior Veiled Magus behind the audits,
  * the rooftop chase and the twin-cowl ambush. Above bloodied he trades dismissive
  * Arcane Bolts; once you cut him to half a half-HP PHASE takes him and he stops
  * being patient — winding up a single telegraphed Shatterbolt the player gets one
@@ -12,7 +12,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const COWLED_MAGUS: Monster = MonsterSchema.parse({
   id: 'cowled-magus',
-  name: 'Cowled Magus',
+  name: 'Veiled Magus',
   cr: '3',
   size: 'medium',
   creatureType: 'humanoid (human)',

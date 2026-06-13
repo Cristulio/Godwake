@@ -1,14 +1,14 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Conjurer — Ch2 summoner. A Veiled Magus who fights from behind a
+ * Veiled Conjurer — Ch2 summoner. A Veiled Magus who fights from behind a
  * bound servitor. Once per fight it binds an imp to the field (`summon`, once),
  * then settles into ranged arcane bolts. Kill the imp and the conjurer is
  * exposed; kill the conjurer and the imp keeps coming.
  */
 export const COWLED_CONJURER: Monster = MonsterSchema.parse({
   id: 'cowled-conjurer',
-  name: 'Cowled Conjurer',
+  name: 'Veiled Conjurer',
   cr: '3',
   size: 'medium',
   creatureType: 'humanoid (human)',

@@ -156,9 +156,9 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
 
 export const MID_POOL: EncounterEntry[] = [
   {
-    title: 'The Cowled Patrol',
+    title: 'The Veiled Patrol',
     flavorText:
-      "A silver-masked Cowled enforcer walks the lane with two cuirassiers a step behind. He raises one gloved hand without looking at you — a polite warning, the only one you'll get.",
+      "A silver-masked Veiled enforcer walks the lane with two cuirassiers a step behind. He raises one gloved hand without looking at you — a polite warning, the only one you'll get.",
     monsters: [
       { defId: 'cowled-enforcer', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },
@@ -240,9 +240,9 @@ export const MID_POOL: EncounterEntry[] = [
 
 export const ELITE_POOL: EncounterEntry[] = [
   {
-    title: 'A Cowled Audit',
+    title: 'A Veiled Audit',
     flavorText:
-      "A senior Cowled magus has been waiting for you — robe trim a shade lighter than the rest, mask polished to a mirror. A cuirassier stands at his elbow like a clerk who knows where the ledgers are kept. The magus would rather have processed you; bleed him pale and he stops being careful, and the air in front of his hands begins to fold.",
+      "A senior Veiled magus has been waiting for you — robe trim a shade lighter than the rest, mask polished to a mirror. A cuirassier stands at his elbow like a clerk who knows where the ledgers are kept. The magus would rather have processed you; bleed him pale and he stops being careful, and the air in front of his hands begins to fold.",
     monsters: [
       { defId: 'cowled-magus', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },
@@ -251,7 +251,7 @@ export const ELITE_POOL: EncounterEntry[] = [
     goldReward: 28,
   },
   {
-    title: 'The Twin Cowls',
+    title: 'The Twin Veils',
     flavorText:
       "Two Veiled Court have come down the lane in unison — a magus a step ahead, an enforcer at his shoulder. They do not speak. They do not need to. Where one looks, the other does not; and when the magus is hurt enough to stop economising, the lane-light starts to lean toward his hands.",
     monsters: [
@@ -275,7 +275,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Rooftop Chase',
     flavorText:
-      "You catch them on the tiled roof above the Trade Road — a Cowled magus in a hurry, a hobgoblin lieutenant holding the line. The magus does not turn; he keeps moving and lobbing grey force back over his shoulder, and when you finally cut him he stops running and turns to settle it in one cast. The hobgoblin smiles.",
+      "You catch them on the tiled roof above the Trade Road — a Veiled magus in a hurry, a hobgoblin lieutenant holding the line. The magus does not turn; he keeps moving and lobbing grey force back over his shoulder, and when you finally cut him he stops running and turns to settle it in one cast. The hobgoblin smiles.",
     monsters: [
       { defId: 'cowled-magus', count: 1 },
       { defId: 'hobgoblin', count: 1 },
@@ -295,9 +295,9 @@ export const ELITE_POOL: EncounterEntry[] = [
     goldReward: 32,
   },
   {
-    title: 'The Cowled Kennel-Master',
+    title: 'The Veiled Kennel-Master',
     flavorText:
-      "A Cowled houndmaster in silver-trim robes walks the lane with a shadow-hound at heel. The hound is not chained. He does not look at it — he only opens his hand when the first one falls, and another seam of the dark detaches and lands running. Put him down or the kennel never empties.",
+      "A Veiled houndmaster in silver-trim robes walks the lane with a shadow-hound at heel. The hound is not chained. He does not look at it — he only opens his hand when the first one falls, and another seam of the dark detaches and lands running. Put him down or the kennel never empties.",
     monsters: [
       { defId: 'cowled-houndmaster', count: 1 },
       { defId: 'shadow-hound', count: 1 },
@@ -308,7 +308,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Conjurer and His Brute',
     flavorText:
-      "A Cowled conjurer keeps a cuirassier between himself and the door, and binds a winged servitor the moment you cross it. Kill the brute and the imp keeps coming; kill the conjurer and the bindings unravel mid-air.",
+      "A Veiled conjurer keeps a cuirassier between himself and the door, and binds a winged servitor the moment you cross it. Kill the brute and the imp keeps coming; kill the conjurer and the bindings unravel mid-air.",
     monsters: [
       { defId: 'cowled-conjurer', count: 1 },
       { defId: 'slaver-cuirassier', count: 1 },

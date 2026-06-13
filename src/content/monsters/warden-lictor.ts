@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Warden Lictor — Ch3 ELITE leader, the senior Cowled warden who runs the
+ * Warden Lictor — Ch3 ELITE leader, the senior Veiled Court warden who runs the
  * gallery patrols (with a slayer-hound at heel) and walks the graded prisoners.
  * Where the apprentice just dispels, the lictor SUPPRESSES: a Suppression Brand
  * that `debuff`s (weakened — a flat bite out of the player's weapon damage while

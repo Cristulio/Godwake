@@ -3,7 +3,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
 /**
  * Shadow Hound — a fey beast that walks the Stormhaven lamp-corners. Eats
  * light, hunts in pairs, vanishes when it loses sight of its prey. The
- * hounds the slaver houses turn loose at night and the Cowled politely
+ * hounds the slaver houses turn loose at night and the Veiled Court politely
  * pretend not to see.
  */
 export const SHADOW_HOUND: Monster = MonsterSchema.parse({

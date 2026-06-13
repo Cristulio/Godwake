@@ -46,7 +46,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: 'The Reciting Inmate',
     flavorText:
-      "Three cells down, a man in a Cowled apprentice's stained robe is reciting a memorised cantrip in perfect cadence. He has been reciting it for a long time. He has not stopped to eat.",
+      "Three cells down, a man in a Veiled apprentice's stained robe is reciting a memorised cantrip in perfect cadence. He has been reciting it for a long time. He has not stopped to eat.",
     monsters: [{ defId: 'mad-mage-prisoner', count: 1 }],
     xpReward: 200,
   },
@@ -61,7 +61,7 @@ export const WARMUP_POOL: EncounterEntry[] = [
   {
     title: "An Apprentice's First Patrol",
     flavorText:
-      "A young Cowled apprentice in a uniform two sizes too crisp steps into the corridor with the wand-grip her mistress drilled into her wrong-side-up. She is going to die here, but she does not know it yet.",
+      "A young Veiled apprentice in a uniform two sizes too crisp steps into the corridor with the wand-grip her mistress drilled into her wrong-side-up. She is going to die here, but she does not know it yet.",
     monsters: [{ defId: 'wardens-apprentice', count: 1 }],
     xpReward: 250,
     goldReward: 16,
@@ -165,7 +165,7 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Warden\'s Apprentice',
     flavorText:
-      "A young Cowled apprentice in silver-trim livery steps into the corridor with a wand half-raised. She is not surprised to see you. She is annoyed that you made it this far.",
+      "A young Veiled apprentice in silver-trim livery steps into the corridor with a wand half-raised. She is not surprised to see you. She is annoyed that you made it this far.",
     monsters: [{ defId: 'wardens-apprentice', count: 1 }],
     xpReward: 560,
     goldReward: 36,
@@ -316,7 +316,7 @@ export const ELITE_POOL: EncounterEntry[] = [
   {
     title: 'The Fleshwright at Work',
     flavorText:
-      "The Cowled surgeon does not stop working when you enter. Aprons stiff with old work, saw already moving — and every time you think you have him, he claps the dust off his gloves and the thing on the slab behind him sits up.",
+      "The Veiled surgeon does not stop working when you enter. Aprons stiff with old work, saw already moving — and every time you think you have him, he claps the dust off his gloves and the thing on the slab behind him sits up.",
     monsters: [{ defId: 'asylum-fleshwright', count: 1 }],
     xpReward: 760,
     goldReward: 46,

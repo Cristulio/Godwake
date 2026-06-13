@@ -2,7 +2,7 @@
       viewBox="0 0 38 62"
       shape-rendering="crispEdges"
       preserveAspectRatio="xMidYMax meet"
-      aria-label="Cowled Magus"
+      aria-label="Veiled Magus"
     >
       <!-- Arcane backlight + ground shadow -->
       <ellipse cx="19" cy="30" rx="18" ry="27" fill="#9a5ad0" opacity="0.16" />

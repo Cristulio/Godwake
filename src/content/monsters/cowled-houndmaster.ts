@@ -1,7 +1,7 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Houndmaster — Ch2 ELITE leader of "The Cowled Kennel-Master". The
+ * Veiled Houndmaster — Ch2 ELITE leader of "The Veiled Kennel-Master". The
  * taskmaster pattern in a silver collar: rather than fight you himself he keeps
  * the lane stocked with shadow-hounds (`summon`, reusing the `shadow-hound`
  * bestiary def), never more than two on the field, on a cooldown so he alternates
@@ -10,7 +10,7 @@ import { MonsterSchema, type Monster } from '../../schemas/monster';
  */
 export const COWLED_HOUNDMASTER: Monster = MonsterSchema.parse({
   id: 'cowled-houndmaster',
-  name: 'Cowled Houndmaster',
+  name: 'Veiled Houndmaster',
   cr: '3',
   size: 'medium',
   creatureType: 'humanoid (human)',

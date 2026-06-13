@@ -8,7 +8,7 @@ const POOL: EventTemplate[] = [
     eventType: 'shrine',
     title: 'A Pale Cleric at a Roadside Shrine',
     flavor:
-      "A woman in moth-eaten Ilmatari grey sits on the lip of a cracked basin, hands folded in her lap. She does not look up when you approach. \"Will you sit? The Crying God listens better when two hearts pause together.\"",
+      "A woman in moth-eaten grey, the grey of Atlas's mourners, sits on the lip of a cracked basin, hands folded in her lap. She does not look up when you approach. \"Will you sit? The Crying God listens better when two hearts pause together.\"",
     minChapter: 1,
     choices: [
       {
@@ -566,14 +566,14 @@ const POOL: EventTemplate[] = [
   EventTemplateSchema.parse({
     id: 'cowled-recruiter',
     eventType: 'stranger',
-    title: 'A Cowled Recruiter in the Shadow of an Arch',
+    title: 'A Veiled Recruiter in the Shadow of an Arch',
     flavor:
-      "A figure in the grey-and-blue of the Veiled Court steps out of an arch as if from the stone itself. \"You walk loud, walker. The Cowl licenses talent. A small payment, and a small protection — name your wager.\"",
+      "A figure in the grey-and-blue of the Veiled Court steps out of an arch as if from the stone itself. \"You walk loud, walker. The Veil licenses talent. A small payment, and a small protection — name your wager.\"",
     minChapter: 2,
     choices: [
       {
         id: 'pay-the-cowl',
-        label: 'Pay the Cowl their tax',
+        label: 'Pay the Veil their tax',
         hint: 'A heavy purse, a steady hand.',
         requiresGold: 25,
         outcome: {
@@ -588,7 +588,7 @@ const POOL: EventTemplate[] = [
       {
         id: 'wave-them-off',
         label: 'Wave them off',
-        hint: 'The Cowl is a long memory.',
+        hint: 'The Veil is a long memory.',
         outcome: {
           resolution: 'They step back into the arch. The stone closes seamless behind them. The street goes very quiet.',
           effects: [],
@@ -596,17 +596,17 @@ const POOL: EventTemplate[] = [
       },
       {
         id: 'bluff-the-cowl',
-        label: '[Deception] Name-drop a Cowled superior',
-        hint: 'Claim a rank you have never held. Sell it and walk free — slip and the Cowl corrects you.',
+        label: '[Deception] Name-drop a Veiled superior',
+        hint: 'Claim a rank you have never held. Sell it and walk free — slip and the Veil corrects you.',
         skillCheck: { skill: 'deception', dc: 13 },
         outcome: {
           resolution:
-            'You drop a name with the calm of a man who has stood in chambers above this one. The Cowl\'s eyes flicker — the briefest re-evaluation — and the chalk-sigil presses onto your hand without a coin asked. They step back into the arch, the stone sealing behind them, and you walk on with a wizard\'s mark and a wizard\'s purse intact.',
+            'You drop a name with the calm of a man who has stood in chambers above this one. The Veil\'s eyes flicker — the briefest re-evaluation — and the chalk-sigil presses onto your hand without a coin asked. They step back into the arch, the stone sealing behind them, and you walk on with a wizard\'s mark and a wizard\'s purse intact.',
           effects: [{ kind: 'apply_attack_bonus_run', amount: 1 }],
         },
         failureOutcome: {
           resolution:
-            'The name leaves your mouth a half-beat too smooth. The Cowl tilts their head. "That one died in the purges, walker. Try the truth next life." A snap of fingers, a smell of ozone, and the cobbles come up to meet you. They are gone before the ringing stops.',
+            'The name leaves your mouth a half-beat too smooth. The Veil tilts their head. "That one died in the purges, walker. Try the truth next life." A snap of fingers, a smell of ozone, and the cobbles come up to meet you. They are gone before the ringing stops.',
           effects: [{ kind: 'hp_delta', amount: -5 }],
         },
       },

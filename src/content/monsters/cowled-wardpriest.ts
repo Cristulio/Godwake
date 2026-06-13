@@ -1,14 +1,14 @@
 import { MonsterSchema, type Monster } from '../../schemas/monster';
 
 /**
- * Cowled Wardpriest — Ch2 support caster. The "cult-leader that wards an ally"
+ * Veiled Wardpriest — Ch2 support caster. The "cult-leader that wards an ally"
  * archetype. Demonstrates the `sustain` kind (target: ally): each time an ally
  * is exposed it lays a 10-point ward of temp HP on it, turning an otherwise
  * killable escort into a wall. Focus it down first or the fight never ends.
  */
 export const COWLED_WARDPRIEST: Monster = MonsterSchema.parse({
   id: 'cowled-wardpriest',
-  name: 'Cowled Wardpriest',
+  name: 'Veiled Wardpriest',
   cr: '3',
   size: 'medium',
   creatureType: 'humanoid (human)',
