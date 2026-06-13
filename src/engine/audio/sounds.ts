@@ -13,6 +13,8 @@ export type SfxId =
   | 'swing_whoosh_blunt'
   | 'swing_whoosh_bow'
   | 'swing_whoosh_dagger'
+  | 'swing_claw_tear'
+  | 'swing_claw_tear_heavy'
   | 'hit_thud'
   | 'crit_hit'
   | 'miss_whiff'
@@ -469,6 +471,94 @@ const renderSwingDagger: SfxRenderer = (ctx, out, now) => {
   src.start(now);
   // A tiny steel snick at the top of the flick.
   blip(ctx, out, jitter(3400, 25), now + 0.01, 0.05, 0.06, 'triangle');
+};
+
+// One ragged rip line for the claw tears: noise through a falling bandpass
+// whose loudness is chopped by a square LFO. The chop is what reads as
+// fibers tearing rather than air parting — the blade whoosh is the same
+// sweep WITHOUT it. Rate and band scale with claw mass.
+function tearRip(
+  ctx: AudioContext,
+  out: AudioNode,
+  start: number,
+  opts: { fromHz: number; toHz: number; durS: number; level: number; chopHz: number; bufMs: number },
+) {
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuffer(ctx, opts.bufMs);
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.Q.value = 3;
+  filter.frequency.setValueAtTime(jitter(opts.fromHz), start);
+  filter.frequency.exponentialRampToValueAtTime(opts.toHz, start + opts.durS);
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0.0001, start);
+  env.gain.linearRampToValueAtTime(opts.level, start + 0.02);
+  env.gain.exponentialRampToValueAtTime(0.0001, start + opts.durS);
+  // Chop sits at 0.55 and the LFO swings ±0.45, so the rip flickers between
+  // a tenth and full level instead of falling smoothly.
+  const chop = ctx.createGain();
+  chop.gain.value = 0.55;
+  const lfo = ctx.createOscillator();
+  lfo.type = 'square';
+  lfo.frequency.value = jitter(opts.chopHz, 80);
+  const depth = ctx.createGain();
+  depth.gain.value = 0.45;
+  lfo.connect(depth).connect(chop.gain);
+  src.connect(filter).connect(env).connect(chop).connect(out);
+  src.start(start);
+  lfo.start(start);
+  lfo.stop(start + opts.durS + 0.02);
+}
+
+const renderClawTear: SfxRenderer = (ctx, out, now) => {
+  // Flesh-rending rake: three ragged rips at the claw-rake VFX's 60ms
+  // tear-line stagger, landing on a soft wet body drop. No metallic ring —
+  // that's the blade's signature, and its absence is what sells claws.
+  tearRip(ctx, out, now, { fromHz: 2600, toHz: 640, durS: 0.2, level: 0.23, chopHz: 46, bufMs: 220 });
+  tearRip(ctx, out, now + 0.06, { fromHz: 2100, toHz: 520, durS: 0.18, level: 0.17, chopHz: 52, bufMs: 220 });
+  tearRip(ctx, out, now + 0.12, { fromHz: 1700, toHz: 430, durS: 0.16, level: 0.12, chopHz: 40, bufMs: 220 });
+  const give = ctx.createOscillator();
+  give.type = 'sine';
+  give.frequency.setValueAtTime(150, now + 0.04);
+  give.frequency.exponentialRampToValueAtTime(55, now + 0.24);
+  const gg = ctx.createGain();
+  gg.gain.setValueAtTime(0.0001, now + 0.04);
+  gg.gain.linearRampToValueAtTime(0.11, now + 0.08);
+  gg.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+  give.connect(gg).connect(out);
+  give.start(now + 0.04);
+  give.stop(now + 0.28);
+};
+
+const renderClawTearHeavy: SfxRenderer = (ctx, out, now) => {
+  // Dragon variant: the same three-line identity with more mass — lower
+  // bands, slower chunkier chop, a sawtooth snarl under the swipe and a
+  // deeper gouge drop, matching the 1.35x dragon-rake VFX.
+  tearRip(ctx, out, now, { fromHz: 2000, toHz: 420, durS: 0.26, level: 0.3, chopHz: 30, bufMs: 280 });
+  tearRip(ctx, out, now + 0.07, { fromHz: 1500, toHz: 340, durS: 0.24, level: 0.23, chopHz: 34, bufMs: 280 });
+  tearRip(ctx, out, now + 0.14, { fromHz: 1150, toHz: 280, durS: 0.22, level: 0.17, chopHz: 26, bufMs: 280 });
+  const snarl = ctx.createOscillator();
+  snarl.type = 'sawtooth';
+  snarl.frequency.setValueAtTime(jitter(85, 40), now);
+  snarl.frequency.exponentialRampToValueAtTime(48, now + 0.3);
+  const sg = ctx.createGain();
+  sg.gain.setValueAtTime(0.0001, now);
+  sg.gain.linearRampToValueAtTime(0.09, now + 0.05);
+  sg.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+  snarl.connect(sg).connect(out);
+  snarl.start(now);
+  snarl.stop(now + 0.34);
+  const gouge = ctx.createOscillator();
+  gouge.type = 'sine';
+  gouge.frequency.setValueAtTime(110, now + 0.08);
+  gouge.frequency.exponentialRampToValueAtTime(40, now + 0.34);
+  const gg = ctx.createGain();
+  gg.gain.setValueAtTime(0.0001, now + 0.08);
+  gg.gain.linearRampToValueAtTime(0.15, now + 0.13);
+  gg.gain.exponentialRampToValueAtTime(0.0001, now + 0.36);
+  gouge.connect(gg).connect(out);
+  gouge.start(now + 0.08);
+  gouge.stop(now + 0.38);
 };
 
 const renderMonsterDeath: SfxRenderer = (ctx, out, now) => {
@@ -946,6 +1036,8 @@ const SFX: Record<SfxId, SfxRenderer> = {
   swing_whoosh_blunt: renderSwingBlunt,
   swing_whoosh_bow: renderSwingBow,
   swing_whoosh_dagger: renderSwingDagger,
+  swing_claw_tear: renderClawTear,
+  swing_claw_tear_heavy: renderClawTearHeavy,
   hit_thud: renderHitThud,
   crit_hit: renderCritHit,
   miss_whiff: renderMissWhiff,

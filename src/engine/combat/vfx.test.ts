@@ -219,7 +219,7 @@ describe('claw VFX wiring (claw-vfx)', () => {
     expect(r.state.spellEffectEvent?.kind).toBe('dragon-rake');
   });
 
-  it('every claw tier swings the blade whoosh, never the dagger flick', () => {
+  it('every claw tier tears flesh, never steel whoosh or dagger flick', () => {
     for (const id of [
       'beast-claws',
       'beast-claws-elder',
@@ -227,10 +227,10 @@ describe('claw VFX wiring (claw-vfx)', () => {
       'dire-claws',
       'dire-claws-savage',
       'dire-claws-apex',
-      'dragon-claws',
     ]) {
-      expect(swingSfxForWeapon(weapon(id)), id).toBe('swing_whoosh_blade');
+      expect(swingSfxForWeapon(weapon(id)), id).toBe('swing_claw_tear');
     }
+    expect(swingSfxForWeapon(weapon('dragon-claws'))).toBe('swing_claw_tear_heavy');
   });
 });
 
