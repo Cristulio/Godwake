@@ -40,8 +40,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'The words come out too eager, too rehearsed. She hears the want in them and folds back into herself, hands in her lap, eyes down. The basin between you stays cold. You walk on with nothing but the echo of your own voice.',
-          effects: [],
+            'The words come out too eager, too rehearsed. She hears the want in them and folds back into herself, hands in her lap, eyes down. The basin between you stays cold — and its cold finds you, settling into the shoulders, a chill that rides the next mile.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
@@ -181,8 +181,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            "You pack the wound wrong and the bleeding finds a way around your fingers. He shoves you off with a curse, knots the binding himself, and flicks a few coins at your feet for the trouble. \"Should've let a real chirurgeon at it.\" He crawls off greyer than he was.",
-          effects: [{ kind: 'gold_delta', amount: 5 }],
+            "You pack the wound wrong and the bleeding finds a way around your fingers. He shoves you off with a curse — his elbow-blade opens your forearm on the way down — knots the binding himself, and crawls off greyer than he was. \"Should've let a real chirurgeon at it.\"",
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
@@ -807,8 +807,8 @@ const POOL: EventTemplate[] = [
         },
         failureOutcome: {
           resolution:
-            'You reach for grand and land on hollow. He sets the pen down halfway through. "That is not your road, walker. I have inked ten thousand — I know the false ones by the weight." The folio closes. No coin for a liar caught.',
-          effects: [],
+            'You reach for grand and land on hollow. He sets the pen down halfway through. "That is not your road, walker. I have inked ten thousand — I know the false ones by the weight." The folio closes. No coin for a liar caught — and the false road took more breath to walk than the true one would have. You go on wrung out, a step slower.',
+          effects: [{ kind: 'hp_delta', amount: -3 }],
         },
       },
       {
