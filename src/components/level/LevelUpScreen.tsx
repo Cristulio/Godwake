@@ -280,7 +280,7 @@ export function LevelUpScreen() {
                   <button
                     key={sub.id}
                     onClick={() => setPickedArchetypeId(selected ? null : sub.id)}
-                    className={`text-left px-3 py-2 border text-sm transition-all hover:brightness-110 ${
+                    className={`flex flex-col text-left px-3 py-2 border text-sm transition-all hover:brightness-110 ${
                       selected
                         ? 'bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
                         : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]'
@@ -326,7 +326,7 @@ export function LevelUpScreen() {
                   <button
                     key={sp.id}
                     onClick={() => setPickedSpellId(selected ? null : sp.id)}
-                    className={`text-left px-3 py-2 border text-sm transition-colors ${
+                    className={`flex flex-col text-left px-3 py-2 border text-sm transition-colors ${
                       selected
                         ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
                         : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
