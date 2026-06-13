@@ -22,7 +22,11 @@ import {
   spellcastingAbility,
   spellcastingMod,
 } from '../../character/derived';
-import { beastWeaponId } from '../wildShape';
+import {
+  beastWeaponId,
+  PRIMAL_STRIKE_HIT_BONUS,
+  PRIMAL_STRIKE_DAMAGE_BONUS,
+} from '../wildShape';
 import { bardWarSongDie } from '../bard';
 import { paladinSmiteOnHit } from '../paladin';
 import { rageDamageBonus } from '../../character/actions';
@@ -98,6 +102,7 @@ const PART_KEY: Record<string, string> = {
   shadow: 'shadow',
   ascendant: 'ascendant',
   dragon: 'dragon',
+  primal: 'primal',
   'First Cut': 'firstCut',
   'Bleed-Out': 'bleedOut',
   Fellfast: 'fellfast',
@@ -356,6 +361,11 @@ function resolveSwing(
   // Shape Change (dragon form): the dragon's claws strike like a +3 enchanted
   // weapon — flat to-hit here, flat damage in the hit block.
   if (isDragonForm(nextCharacter)) attackBonus += DRAGON_CLAW_HIT_BONUS;
+  // Druid Primal Strike (L6): the shapeshifted beast's claws bite past hide and
+  // ward — a flat to-hit edge on every form attack (damage half in the hit block).
+  if (isWildShaped(nextCharacter) && characterHasMechanic(nextCharacter, 'primal-strike')) {
+    attackBonus += PRIMAL_STRIKE_HIT_BONUS;
+  }
   // Martial OFFENSE: a heavy/aimed strike. For the Barbarian (Savage Cleave) and
   // Ranger (Aimed Shot) it lands for flat bonus damage only (applied in the hit
   // block), no accuracy cost. The Fighter's Power Attack also SHARPENS the swing
@@ -702,6 +712,11 @@ function resolveSwing(
     if (isDragonForm(nextCharacter)) {
       bonusDamage += DRAGON_CLAW_DAMAGE_BONUS;
       onTypeParts.push({ amount: DRAGON_CLAW_DAMAGE_BONUS, label: 'dragon' });
+    }
+    // Druid Primal Strike (L6): each claw bites deeper — nothing shrugs off the predator.
+    if (isWildShaped(nextCharacter) && characterHasMechanic(nextCharacter, 'primal-strike')) {
+      bonusDamage += PRIMAL_STRIKE_DAMAGE_BONUS;
+      onTypeParts.push({ amount: PRIMAL_STRIKE_DAMAGE_BONUS, label: 'primal' });
     }
     // Paladin Divine Smite: an armed smite (or a Bulwark Smite of the Crusader on
     // a crit) sears the landing hit with radiant damage, spending the cheapest

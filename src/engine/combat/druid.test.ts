@@ -3,7 +3,13 @@ import { buildPlayerCharacter, presetCreationInput } from '../character/defaultC
 import { getClass, listClasses } from '../../content/classes';
 import { spellSaveDC } from './spells';
 import { isWildShaped, characterHasMechanic, spellcastingMod } from '../character/derived';
-import { wildShapeUsesMax, beastWeaponId, wildShapeTempHp, WILD_SHAPE_ROUNDS } from './wildShape';
+import {
+  wildShapeUsesMax,
+  beastWeaponId,
+  wildShapeTempHp,
+  WILD_SHAPE_ROUNDS,
+  PRIMAL_STRIKE_DAMAGE_BONUS,
+} from './wildShape';
 import { spellDamageMultiplier } from './spells/scaling';
 import { magicMissileDartCount } from './spells/magicMissile';
 import { getItem } from '../../content/items';
@@ -270,5 +276,59 @@ describe('Druid — at-will spells wear a nature look, not the wizard arcane VFX
       { kind: 'cast', spellId: 'magic-missile', targetId: mid },
     );
     expect(mm.state.spellEffectEvent?.kind).toBe('magic-missile');
+  });
+});
+
+describe('Druid — Primal Strike (L6 Moon)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  it('is gated to the L6 Circle of the Moon', () => {
+    expect(characterHasMechanic(makeDruid(6, 'circle-of-the-moon'), 'primal-strike')).toBe(true);
+    expect(characterHasMechanic(makeDruid(5, 'circle-of-the-moon'), 'primal-strike')).toBe(false);
+    expect(characterHasMechanic(makeDruid(6, null), 'primal-strike')).toBe(false);
+  });
+
+  it('adds a flat edge to a shapeshifted claw hit, tagged "primal", only at L6', () => {
+    // L5 and L6 Moon both swing plain dire-claws (the tier climbs at L9) with the
+    // same prof (+3) and WIS, so a shared seed isolates Primal Strike's flat edge:
+    // identical d20 + damage dice, L6 simply lands surer and bites +2 deeper.
+    function clawOnce(level: number, seed: number) {
+      const roller = createDiceRoller(seed);
+      const druid = makeDruid(level, 'circle-of-the-moon');
+      const init = createCombat({
+        roller,
+        character: druid,
+        monsters: [{ def: getMonster('goblin') }],
+      });
+      const shaped = applyPlannedAction(
+        { roller, state: init.state, character: init.character },
+        { kind: 'wild-shape' },
+      );
+      const mid = monsterId(shaped.state);
+      const before = monsterHp(shaped.state, mid);
+      const hit = applyPlannedAction(
+        { roller, state: shaped.state, character: shaped.character },
+        { kind: 'attack', targetId: mid },
+      );
+      return {
+        dealt: before - monsterHp(hit.state, mid),
+        log: hit.state.log.map((l) => l.text).join('\n'),
+      };
+    }
+
+    let proven = false;
+    for (let seed = 1; seed <= 60 && !proven; seed++) {
+      const l5 = clawOnce(5, seed);
+      if (l5.dealt <= 0) continue; // need an L5 connection to compare against
+      const l6 = clawOnce(6, seed);
+      // Same seed → same claw dice and same d20: the only delta is the primal edge
+      // (a flat +2, doubled on a shared crit), so the hit lands strictly harder.
+      expect(l6.dealt).toBeGreaterThanOrEqual(l5.dealt + PRIMAL_STRIKE_DAMAGE_BONUS);
+      // The flat edge is tagged in the breakdown at L6, and is absent one level below.
+      expect(/primal/i.test(l6.log)).toBe(true);
+      expect(/primal/i.test(l5.log)).toBe(false);
+      proven = true;
+    }
+    expect(proven).toBe(true);
   });
 });

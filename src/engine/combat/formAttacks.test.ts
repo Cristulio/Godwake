@@ -3,7 +3,11 @@ import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../character/defaultCharacter';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { playerAttack, attackWeaponId } from './attack/playerAttack';
-import { beastWeaponId } from './wildShape';
+import {
+  beastWeaponId,
+  PRIMAL_STRIKE_HIT_BONUS,
+  PRIMAL_STRIKE_DAMAGE_BONUS,
+} from './wildShape';
 import {
   DRAGON_CLAW_HIT_BONUS,
   DRAGON_CLAW_DAMAGE_BONUS,
@@ -287,7 +291,9 @@ describe('beast form — to-hit and damage off Wisdom, not the dumped STR/DEX', 
     const expected =
       spellcastingMod(druid) +
       proficiencyBonus(druid.level) +
-      (claw.kind === 'weapon' ? (claw.attackMod ?? 0) : 0);
+      (claw.kind === 'weapon' ? (claw.attackMod ?? 0) : 0) +
+      // L9 Moon carries Primal Strike (L6): a flat to-hit edge on every form swing.
+      PRIMAL_STRIKE_HIT_BONUS;
     expect(r.state.lastAttack?.attackBonus).toBe(expected);
   });
 
@@ -333,7 +339,14 @@ describe('beast form — to-hit and damage off Wisdom, not the dumped STR/DEX', 
     expect(r.state.lastAttack?.hit).toBe(true);
     expect(r.state.lastAttack?.crit).toBe(false);
     const dice = parseDiceExpression(claw.damage);
-    const expected = dice.count * face + spellcastingMod(druid) + (claw.damageMod ?? 0) + 1;
+    // L9 Moon carries Primal Strike (L6): each form hit bites a flat +2 deeper
+    // (non-crit here, so the flat edge isn't doubled).
+    const expected =
+      dice.count * face +
+      spellcastingMod(druid) +
+      (claw.damageMod ?? 0) +
+      1 +
+      PRIMAL_STRIKE_DAMAGE_BONUS;
     expect(r.state.lastAttack?.damageDealt).toBe(expected);
   });
 });

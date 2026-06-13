@@ -654,7 +654,8 @@
     "archetype": "Cambiaformas",
     "lever0": "Forma Salvaje dos veces por combate en lugar de una.",
     "lever1": "La bestia carga 8 + 3 por nivel de puntos de golpe temporales, no los 4 + 2 del druida sin círculo.",
-    "lever2": "Garras Atroces — una escalera de golpes más pesada (1d10, luego 2d6, luego 2d8)."
+    "lever2": "Garras Atroces — una escalera de golpes más pesada (1d10, luego 2d6, luego 2d8).",
+    "lever3": "Nivel 6: en forma de bestia, tus garras golpean con +2 al ataque y +2 al daño (Golpe Primigenio)."
   },
   "druid.circle-of-the-moon.circle-of-the-moon": {
     "name": "Círculo Druídico: Círculo de la Luna",
@@ -662,7 +663,7 @@
   },
   "druid.circle-of-the-moon.primal-strike": {
     "name": "Golpe Primigenio",
-    "description": "Las garras de tu forma de bestia muerden más allá del pellejo y la guarda por igual —nada se sacude de encima al depredador en que te has convertido."
+    "description": "Las garras de tu forma de bestia muerden más allá del pellejo y la guarda por igual —nada se sacude de encima al depredador en que te has convertido. Cada golpe en la forma acierta más certero y desgarra más hondo."
   },
   "druid.circle-of-the-moon.moonbound": {
     "name": "Vitalidad Sellada por la Luna",
