@@ -177,6 +177,14 @@ export const BARBARIAN: Class = ClassSchema.parse({
       name: 'Path of the Berserker',
       description:
         'Rage as a means to an end — that end being violence. Best with lifesteal and aggressive gear that turns extra damage into staying power.',
+      bottomLine: {
+        archetype: 'Two-Blades',
+        levers: [
+          'Raging melee hits land an extra 1d6, every swing.',
+          'A second light weapon rides the shield hand — every Attack is followed by an off-hand swing.',
+          'L10: entering Rage frightens the deadliest foe for 2 rounds.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -210,6 +218,13 @@ export const BARBARIAN: Class = ClassSchema.parse({
       name: 'Path of the Totem Warrior (Bear)',
       description:
         'The bear-spirit lends its hide to those who walk into the worst of it. Best with tank gear that stacks atop the hardened guard.',
+      bottomLine: {
+        archetype: 'Tank',
+        levers: [
+          'Start every combat with 2 + level temporary HP.',
+          'L10: Rage also halves fire, cold, and lightning — and entering it grants temporary HP equal to your level.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {

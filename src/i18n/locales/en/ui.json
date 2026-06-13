@@ -175,6 +175,7 @@
     "asiHint": "+2 to one ability, or +1 to two — but a score already at 18+ costs 2 per point. ({spent}/{budget} spent)",
     "archetypeTitle": "Choose your Archetype — pick 1 ({n}/1)",
     "archetypeHint": "A lasting path — it shapes which gear and playstyle reward you. This choice sticks for the run.",
+    "leanContrast": "One of these roads walks with steel, the other with the working — they play out very differently.",
     "spellTitle": "Learn a New Spell — pick 1 ({n}/1)",
     "slotOpens": "Your first level-{n} slot opens — a working to fill it.",
     "chooseArchetype": "Choose an archetype",

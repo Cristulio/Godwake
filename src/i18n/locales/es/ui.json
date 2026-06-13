@@ -175,6 +175,7 @@
     "asiHint": "+2 a una característica, o +1 a dos — pero una puntuación que ya esté en 18+ cuesta 2 por punto. ({spent}/{budget} gastados)",
     "archetypeTitle": "Elige tu Arquetipo — elige 1 ({n}/1)",
     "archetypeHint": "Un camino duradero — moldea qué equipo y estilo de juego te recompensan. Esta elección permanece toda la partida.",
+    "leanContrast": "Uno de estos caminos anda con el acero, el otro con la obra — se juegan de maneras muy distintas.",
     "spellTitle": "Aprende un Nuevo Conjuro — elige 1 ({n}/1)",
     "slotOpens": "Se abre tu primer espacio de nivel {n} — un conjuro para llenarlo.",
     "chooseArchetype": "Elige un arquetipo",

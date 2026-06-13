@@ -40,6 +40,52 @@ describe('LevelUpScreen — skills removed', () => {
   });
 });
 
+describe('LevelUpScreen — school chooser bottom lines', () => {
+  function unchosenAt(classId: 'fighter' | 'bard' | 'paladin', level: number): Character {
+    const c = createCharacter({
+      id: 'pick',
+      name: 'Pick',
+      raceId: 'human',
+      classId,
+      baseAbilityScores: LOW,
+    });
+    return { ...c, level };
+  }
+
+  it('fighter chooser renders every school with its archetype chip + levers, no contrast header', () => {
+    useGameStore.setState({ character: unchosenAt('fighter', 1) });
+    render(<LevelUpScreen />);
+
+    expect(screen.getByText('Striker')).toBeInTheDocument();
+    expect(screen.getByText('Two-Blades')).toBeInTheDocument();
+    expect(screen.getByText('Tank')).toBeInTheDocument();
+    // One lever per school, numbers intact through the highlighter.
+    expect(screen.getByText(/Crits land on/)).toBeInTheDocument();
+    expect(screen.getByText(/followed by an off-hand swing/)).toBeInTheDocument();
+    // (the leading "3" sits in its own highlight span, so match the plain tail)
+    expect(screen.getByText(/\+ level temporary HP/)).toBeInTheDocument();
+    // All schools share the martial lean — no contrast header.
+    expect(screen.queryByText(/play out very differently/)).not.toBeInTheDocument();
+  });
+
+  it('bard chooser shows both schools’ levers and the cross-lean contrast header', () => {
+    useGameStore.setState({ character: unchosenAt('bard', 2) });
+    render(<LevelUpScreen />);
+
+    expect(screen.getByText('Caster')).toBeInTheDocument();
+    expect(screen.getByText('Striker')).toBeInTheDocument();
+    expect(screen.getByText(/Cutting Words: spend an Inspiration die/)).toBeInTheDocument();
+    expect(screen.getByText(/attack twice per Attack action/)).toBeInTheDocument();
+    expect(screen.getByText(/play out very differently/)).toBeInTheDocument();
+  });
+
+  it('paladin chooser shows the cross-lean contrast header', () => {
+    useGameStore.setState({ character: unchosenAt('paladin', 2) });
+    render(<LevelUpScreen />);
+    expect(screen.getByText(/play out very differently/)).toBeInTheDocument();
+  });
+});
+
 describe('LevelUpScreen — ASI costs 2 points per +1 above 18', () => {
   it('surfaces the 18+ cost in the panel copy', () => {
     useGameStore.setState({ character: fighterAtAsi(LOW) });

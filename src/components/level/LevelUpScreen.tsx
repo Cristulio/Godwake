@@ -18,6 +18,8 @@ import type { Character } from '../../types/character';
 import type { Spell, SpellLevel } from '../../schemas/spell';
 import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
+import { combatLean } from '../../engine/character/combatLean';
+import { SchoolBottomLine, archetypeAccent } from './SchoolBottomLine';
 
 const ABILITY_ORDER: AbilityName[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
@@ -92,6 +94,11 @@ export function LevelUpScreen() {
   const needsArchetypePick =
     nextLevel >= cls.subclassLevel && !c.subclassId && cls.subclasses.length > 1;
   const archetypeValid = !needsArchetypePick || pickedArchetypeId !== null;
+  // A martial-vs-caster fork (bard, paladin): the schools aren't two flavors of
+  // one playstyle but two different games — call that out above the cards.
+  const crossLeanFork =
+    needsArchetypePick &&
+    new Set(cls.subclasses.map((s) => combatLean({ classId: cls.id, subclassId: s.id }))).size > 1;
 
   function bump(ability: AbilityName, delta: number) {
     setAsiPlan((prev) => {
@@ -256,19 +263,34 @@ export function LevelUpScreen() {
             <div className="text-[var(--color-text-dim)] text-xs mb-3 uppercase tracking-widest">
               {t('ui.level.archetypeHint')}
             </div>
+            {crossLeanFork && (
+              <div
+                className="text-center font-narrative italic text-sm mb-3 text-[var(--color-accent-amber)]"
+                style={{ textShadow: '0 0 12px rgba(244,167,66,0.45)' }}
+              >
+                {t('ui.level.leanContrast')}
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {cls.subclasses.map((sub) => {
                 const selected = pickedArchetypeId === sub.id;
+                const accent = archetypeAccent(sub.bottomLine.archetype);
                 const feat = sub.featuresByLevel[String(cls.subclassLevel)]?.[0];
                 return (
                   <button
                     key={sub.id}
                     onClick={() => setPickedArchetypeId(selected ? null : sub.id)}
-                    className={`text-left px-3 py-2 border text-sm transition-colors ${
+                    className={`text-left px-3 py-2 border text-sm transition-all hover:brightness-110 ${
                       selected
-                        ? 'border-[var(--color-accent-amber)] bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
-                        : 'border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)] hover:border-[var(--color-border-warm)]'
+                        ? 'bg-[var(--color-bg-panel-hover)] text-[var(--color-text-primary)]'
+                        : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-secondary)]'
                     }`}
+                    style={{
+                      borderColor: selected ? accent : `${accent}66`,
+                      boxShadow: selected
+                        ? `0 0 14px ${accent}40, inset 0 0 22px ${accent}14`
+                        : undefined,
+                    }}
                   >
                     <div className="font-display text-[var(--color-text-primary)] text-[12px] uppercase tracking-[0.18em]">
                       {tc('classes', `${cls.id}.${sub.id}`, 'name', sub.name)}
@@ -281,6 +303,7 @@ export function LevelUpScreen() {
                     <div className="text-[var(--color-text-dim)] text-[11px] mt-1.5 italic normal-case tracking-normal">
                       {tc('classes', `${cls.id}.${sub.id}`, 'description', sub.description)}
                     </div>
+                    <SchoolBottomLine classId={cls.id} sub={sub} />
                   </button>
                 );
               })}

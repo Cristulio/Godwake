@@ -78,7 +78,10 @@
   },
   "fighter.champion": {
     "name": "Campeón",
-    "description": "Poder físico bruto pulido hasta la perfección letal. Mejor con equipo de rango de crítico y armas de dado grande que convierten una ventana de crítico ampliada en picos fiables."
+    "description": "Poder físico bruto pulido hasta la perfección letal. Mejor con equipo de rango de crítico y armas de dado grande que convierten una ventana de crítico ampliada en picos fiables.",
+    "archetype": "Atacante",
+    "lever0": "Los críticos caen con 19–20.",
+    "lever1": "Nivel 10: los críticos caen con 18–20."
   },
   "fighter.champion.improved-critical": {
     "name": "Arquetipo Marcial: Campeón",
@@ -90,7 +93,11 @@
   },
   "fighter.battle-master": {
     "name": "Maestro de Batalla",
-    "description": "Un estudioso de las maniobras que abre los combates con un golpe medido y lisiante. Mejor con equipo de efecto al impactar que se acumula sobre las heridas que abres."
+    "description": "Un estudioso de las maniobras que abre los combates con un golpe medido y lisiante. Mejor con equipo de efecto al impactar que se acumula sobre las heridas que abres.",
+    "archetype": "Dos Filos",
+    "lever0": "Una vez por combate, tu primer impacto añade tus dados de arma + un sangrado (3 de daño por turno, 3 turnos).",
+    "lever1": "Una hoja ligera puede ocupar la mano del escudo — cada Ataque va seguido de un corte de la mano izquierda.",
+    "lever2": "Nivel 10: +1 de Temple, recuperado cada ronda al principio del combate."
   },
   "fighter.battle-master.battle-master": {
     "name": "Arquetipo Marcial: Maestro de Batalla",
@@ -106,7 +113,10 @@
   },
   "fighter.defender": {
     "name": "Defensor",
-    "description": "Un baluarte que se afianza ante el primer golpe de cada combate. Mejor con equipo de tanque y mucha vida que profundiza el colchón con el que entra."
+    "description": "Un baluarte que se afianza ante el primer golpe de cada combate. Mejor con equipo de tanque y mucha vida que profundiza el colchón con el que entra.",
+    "archetype": "Muralla",
+    "lever0": "Empiezas cada combate con 3 + nivel puntos de golpe temporales.",
+    "lever1": "Nivel 10: la primera caída por debajo de media vida otorga puntos de golpe temporales iguales a tu nivel."
   },
   "fighter.defender.defender": {
     "name": "Arquetipo Marcial: Defensor",
@@ -174,7 +184,10 @@
   },
   "rogue.thief": {
     "name": "Ladrón",
-    "description": "Un especialista en cerraduras, repechos y la salida rápida. Mejor con equipo de tempo y utilidad que convierte Acciones Astutas extra en control del campo."
+    "description": "Un especialista en cerraduras, repechos y la salida rápida. Mejor con equipo de tempo y utilidad que convierte Acciones Astutas extra en control del campo.",
+    "archetype": "Dos Filos",
+    "lever0": "2 Acciones Astutas por combate (nivel 11: 3).",
+    "lever1": "Una daga en la mano izquierda persigue tu primer golpe cada turno — una segunda oportunidad de asestar el Ataque Furtivo."
   },
   "rogue.thief.fast-hands": {
     "name": "Arquetipo Pícaro: Ladrón",
@@ -190,7 +203,10 @@
   },
   "rogue.assassin": {
     "name": "Asesino",
-    "description": "Un matador que termina los combates en el primer aliento. Mejor con equipo de estallido y primer golpe que lo adelanta todo al primer corte."
+    "description": "Un matador que termina los combates en el primer aliento. Mejor con equipo de estallido y primer golpe que lo adelanta todo al primer corte.",
+    "archetype": "Emboscador",
+    "lever0": "Los impactos sobre un enemigo con la vida completa siempre asestan el Ataque Furtivo, +2d6 encima.",
+    "lever1": "Nivel 11: tu golpe de apertura sobre un enemigo con la vida completa es un crítico automático."
   },
   "rogue.assassin.assassin": {
     "name": "Arquetipo Pícaro: Asesino",
@@ -202,7 +218,10 @@
   },
   "rogue.swashbuckler": {
     "name": "Espadachín",
-    "description": "Un duelista que no necesita sombra para encontrar el hueco. Mejor con equipo de daño fijo y constante que rinde cada turno."
+    "description": "Un duelista que no necesita sombra para encontrar el hueco. Mejor con equipo de daño fijo y constante que rinde cada turno.",
+    "archetype": "Duelista",
+    "lever0": "El Ataque Furtivo se dispara cada turno — sin ventaja, sin preparación, siempre activo.",
+    "lever1": "Nivel 11: un solo enemigo en pie = +2 al ataque y Ataque Furtivo garantizado."
   },
   "rogue.swashbuckler.swashbuckler": {
     "name": "Arquetipo Pícaro: Espadachín",
@@ -295,7 +314,10 @@
   },
   "wizard.evocation": {
     "name": "Escuela de Evocación",
-    "description": "Doblas la fuerza arcana en bruto hacia una ruina dirigida. Mejor con equipo de daño de conjuro y CD de conjuro que afila cada descarga que arrojas."
+    "description": "Doblas la fuerza arcana en bruto hacia una ruina dirigida. Mejor con equipo de daño de conjuro y CD de conjuro que afila cada descarga que arrojas.",
+    "archetype": "Devastador",
+    "lever0": "+1 dado en cada evocación — tus Manos Ardientes rugen 4d6 donde otros reúnen 3d6.",
+    "lever1": "Nivel 10: cada conjuro dañino añade la mitad de tu nivel como daño plano."
   },
   "wizard.evocation.sculpt-spells": {
     "name": "Tradición Arcana: Evocación",
@@ -307,7 +329,10 @@
   },
   "wizard.abjuration": {
     "name": "Escuela de Abjuración",
-    "description": "Tejes una guarda que bebe los primeros golpes de cada combate. Mejor con equipo de supervivencia que compra más turnos al frágil lanzador."
+    "description": "Tejes una guarda que bebe los primeros golpes de cada combate. Mejor con equipo de supervivencia que compra más turnos al frágil lanzador.",
+    "archetype": "Guardián",
+    "lever0": "Empiezas cada combate tras una Guarda de 2 + nivel puntos de golpe temporales.",
+    "lever1": "Nivel 10: la Guarda se engrosa a 5 + nivel."
   },
   "wizard.abjuration.abjurer": {
     "name": "Tradición Arcana: Abjuración",
@@ -319,7 +344,10 @@
   },
   "wizard.illusion": {
     "name": "Escuela de Ilusión",
-    "description": "Te ocultas tras un velo de imágenes falsas en cuanto se desenvaina el acero. Mejor con una construcción evasiva que convierte los casi-fallos en intangibilidad."
+    "description": "Te ocultas tras un velo de imágenes falsas en cuanto se desenvaina el acero. Mejor con una construcción evasiva que convierte los casi-fallos en intangibilidad.",
+    "archetype": "Espejismo",
+    "lever0": "Empiezas cada combate desenfocado — los atacantes golpean con desventaja.",
+    "lever1": "Una imagen especular absorbe un golpe entrante (nivel 10: dos imágenes)."
   },
   "wizard.illusion.illusionist": {
     "name": "Tradición Arcana: Ilusión",
@@ -404,7 +432,11 @@
   },
   "barbarian.berserker": {
     "name": "Senda del Berserker",
-    "description": "La furia como medio para un fin —siendo ese fin la violencia. Mejor con equipo de robo de vida y agresivo que convierte el daño extra en aguante."
+    "description": "La furia como medio para un fin —siendo ese fin la violencia. Mejor con equipo de robo de vida y agresivo que convierte el daño extra en aguante.",
+    "archetype": "Dos Filos",
+    "lever0": "En Furia, cada impacto cuerpo a cuerpo asesta 1d6 extra, en cada tajo.",
+    "lever1": "Una segunda arma ligera ocupa la mano del escudo — cada Ataque va seguido de un tajo de la mano izquierda.",
+    "lever2": "Nivel 10: entrar en Furia aterroriza al enemigo más letal durante 2 rondas."
   },
   "barbarian.berserker.frenzy": {
     "name": "Senda Primigenia: Berserker",
@@ -420,7 +452,10 @@
   },
   "barbarian.totem-warrior": {
     "name": "Senda del Guerrero Tótem (Oso)",
-    "description": "El espíritu del oso presta su pellejo a quienes se meten en lo peor. Mejor con equipo de tanque que se apila sobre la guardia endurecida."
+    "description": "El espíritu del oso presta su pellejo a quienes se meten en lo peor. Mejor con equipo de tanque que se apila sobre la guardia endurecida.",
+    "archetype": "Muralla",
+    "lever0": "Empiezas cada combate con 2 + nivel puntos de golpe temporales.",
+    "lever1": "Nivel 10: la Furia también reduce a la mitad fuego, frío y rayo — y entrar en ella otorga puntos de golpe temporales iguales a tu nivel."
   },
   "barbarian.totem-warrior.totem-warrior": {
     "name": "Senda Primigenia: Guerrero Tótem",
@@ -493,7 +528,10 @@
   },
   "ranger.hunter": {
     "name": "Cazador — Matacolosos",
-    "description": "Aprendes la matanza de presas mayores: termina lo que la marca empieza. Mejor con equipo de un solo objetivo y alto crítico que amontona daño sobre un único enemigo herido."
+    "description": "Aprendes la matanza de presas mayores: termina lo que la marca empieza. Mejor con equipo de un solo objetivo y alto crítico que amontona daño sobre un único enemigo herido.",
+    "archetype": "Atacante",
+    "lever0": "Una vez por turno, un impacto sobre un enemigo herido muerde 1d8 extra.",
+    "lever1": "Nivel 10: la herida se ahonda — 2d8."
   },
   "ranger.hunter.colossus-slayer": {
     "name": "Presa del Cazador: Matacolosos",
@@ -505,7 +543,10 @@
   },
   "ranger.horde-breaker": {
     "name": "Cazador — Rompehordas",
-    "description": "Aprendes a disparar contra una marea, no contra una sola garganta. Mejor con equipo de daño fijo y efecto al impactar que rinde el doble cuando tu disparo continúa."
+    "description": "Aprendes a disparar contra una marea, no contra una sola garganta. Mejor con equipo de daño fijo y efecto al impactar que rinde el doble cuando tu disparo continúa.",
+    "archetype": "Segador",
+    "lever0": "Una vez por turno, tu impacto se prolonga a un segundo enemigo — dados de arma + tus bonificadores planos.",
+    "lever1": "Nivel 10: se prolonga hasta a dos enemigos más."
   },
   "ranger.horde-breaker.horde-breaker": {
     "name": "Presa del Cazador: Rompehordas",
@@ -517,7 +558,10 @@
   },
   "ranger.giant-killer": {
     "name": "Cazador — Matagigantes",
-    "description": "Cazas las cosas que se alzan sobre las presas menores. Mejor con una construcción mata-jefes equipada para la élite y el monstruo con nombre."
+    "description": "Cazas las cosas que se alzan sobre las presas menores. Mejor con una construcción mata-jefes equipada para la élite y el monstruo con nombre.",
+    "archetype": "Matajefes",
+    "lever0": "Cada impacto sobre una élite o un jefe muerde 1d10 extra.",
+    "lever1": "Nivel 10: 2d10 — el monstruo con nombre sangra el doble de rápido."
   },
   "ranger.giant-killer.giant-killer": {
     "name": "Presa del Cazador: Matagigantes",
@@ -606,7 +650,11 @@
   },
   "druid.circle-of-the-moon": {
     "name": "Círculo de la Luna",
-    "description": "El Círculo que se mete en el combate vistiendo la bestia. Mejor con una construcción que se apoya en la Forma Salvaje —una forma más recia, un segundo cambio cada combate y las más pesadas Garras Atroces."
+    "description": "El Círculo que se mete en el combate vistiendo la bestia. Mejor con una construcción que se apoya en la Forma Salvaje —una forma más recia, un segundo cambio cada combate y las más pesadas Garras Atroces.",
+    "archetype": "Cambiaformas",
+    "lever0": "Forma Salvaje dos veces por combate en lugar de una.",
+    "lever1": "La bestia carga 8 + 3 por nivel de puntos de golpe temporales, no los 4 + 2 del druida sin círculo.",
+    "lever2": "Garras Atroces — una escalera de golpes más pesada (1d10, luego 2d6, luego 2d8)."
   },
   "druid.circle-of-the-moon.circle-of-the-moon": {
     "name": "Círculo Druídico: Círculo de la Luna",
@@ -695,7 +743,11 @@
   },
   "monk.way-of-the-open-hand": {
     "name": "Camino de la Mano Abierta",
-    "description": "La tradición del golpeador puro —cada diluvio puede quitarle el aliento a un enemigo. Mejor con una construcción que se inclina hacia el diluvio de golpes sin armas."
+    "description": "La tradición del golpeador puro —cada diluvio puede quitarle el aliento a un enemigo. Mejor con una construcción que se inclina hacia el diluvio de golpes sin armas.",
+    "archetype": "Atacante",
+    "lever0": "Mientras una Lluvia de Golpes se derrama, cada golpe sin armas pega +2 más fuerte (nivel 10: +4).",
+    "lever1": "Nivel 6: una vez por combate, te afianzas con puntos de golpe temporales iguales a tu nivel.",
+    "lever2": "Nivel 10: el Golpe Aturdidor se arma por 2 de Ki, en lugar de 3."
   },
   "monk.way-of-the-open-hand.open-hand-technique": {
     "name": "Tradición Monástica: Mano Abierta",
@@ -711,7 +763,10 @@
   },
   "monk.way-of-shadow": {
     "name": "Camino de la Sombra",
-    "description": "La tradición de la sombra —el primer golpe de un combate es siempre uno mortal. Mejor con una construcción que quiere que su apertura aterrice con la mayor fuerza."
+    "description": "La tradición de la sombra —el primer golpe de un combate es siempre uno mortal. Mejor con una construcción que quiere que su apertura aterrice con la mayor fuerza.",
+    "archetype": "Emboscador",
+    "lever0": "El primer golpe sin armas de cada combate cae con ventaja, +3 de daño.",
+    "lever1": "Nivel 10: la apertura clava +6 en su lugar."
   },
   "monk.way-of-shadow.shadow-strike": {
     "name": "Tradición Monástica: Sombra",
@@ -776,7 +831,11 @@
   },
   "bard.lore": {
     "name": "Colegio del Saber",
-    "description": "El verdadero lanzador: un bardo cuya música amplifica la obra. Mejor con equipo de lanzador (el Laúd de Guerra, un orbe de foco, afijos de CD de conjuro); la Canción que suena endurece cada maldición y afila cada estallido, y las Palabras Cortantes mantienen en pie al frágil apoyo."
+    "description": "El verdadero lanzador: un bardo cuya música amplifica la obra. Mejor con equipo de lanzador (el Laúd de Guerra, un orbe de foco, afijos de CD de conjuro); la Canción que suena endurece cada maldición y afila cada estallido, y las Palabras Cortantes mantienen en pie al frágil apoyo.",
+    "archetype": "Lanzador",
+    "lever0": "Mientras tu Canción suena (siempre suena): CD de salvación +1, cada conjuro +2 de daño, creciendo hasta +5.",
+    "lever1": "Palabras Cortantes: gasta un dado de Inspiración para restarlo del ataque de un enemigo.",
+    "lever2": "Nivel 10: DOS Canciones a la vez, +1 dado de Inspiración."
   },
   "bard.lore.cutting-words": {
     "name": "Colegio de Bardo: Colegio del Saber",
@@ -784,7 +843,11 @@
   },
   "bard.valor": {
     "name": "Colegio del Valor",
-    "description": "El verdadero marcial: un bardo que pelea en primera línea y deja que la música empuje la hoja. Mejor con equipo de arma (un estoque o un arma marcial más fina, armadura intermedia); cada golpe bajo una Canción lleva el dado de canción, el canto de guerra te protege ronda a ronda, y golpeas dos veces desde el nivel 6."
+    "description": "El verdadero marcial: un bardo que pelea en primera línea y deja que la música empuje la hoja. Mejor con equipo de arma (un estoque o un arma marcial más fina, armadura intermedia); cada golpe bajo una Canción lleva el dado de canción, el canto de guerra te protege ronda a ronda, y golpeas dos veces desde el nivel 6.",
+    "archetype": "Atacante",
+    "lever0": "Armadura media, escudos y todo el arsenal marcial.",
+    "lever1": "Cada impacto de arma añade el dado de canción (d6, creciendo a d12) — y el canto te ciñe con puntos de golpe temporales cada ronda.",
+    "lever2": "Nivel 6: atacas dos veces por acción de Ataque."
   },
   "bard.valor.martial-training": {
     "name": "Colegio de Bardo: Colegio del Valor",
@@ -853,7 +916,10 @@
   },
   "paladin.radiant": {
     "name": "Juramento del Resplandor",
-    "description": "La inclinación lanzadora —un Paladín cuyos castigos arden más vivos y cuya fe responde en luz abrasadora. Mejor con equipo de Carisma (afijos de CD de conjuro, una mano secundaria de lanzador) para impulsar sus castigos mayores y su palabra de atadura. Más ligero con el arma, más pesado con el fuego sagrado."
+    "description": "La inclinación lanzadora —un Paladín cuyos castigos arden más vivos y cuya fe responde en luz abrasadora. Mejor con equipo de Carisma (afijos de CD de conjuro, una mano secundaria de lanzador) para impulsar sus castigos mayores y su palabra de atadura. Más ligero con el arma, más pesado con el fuego sagrado.",
+    "archetype": "Lanzador",
+    "lever0": "Cada Castigo Divino arde +1d8 más fuerte.",
+    "lever1": "Nivel 10: +2d8 — dos dados más ardiente que cualquier otro juramento."
   },
   "paladin.radiant.radiant-smite": {
     "name": "Juramento Sagrado: Juramento del Resplandor",
@@ -865,7 +931,11 @@
   },
   "paladin.bulwark": {
     "name": "Juramento del Baluarte",
-    "description": "La inclinación marcial —un Paladín que se planta al frente y se niega a caer. Mejor con equipo de arma y de tanque: su aura lo ciñe con puntos de golpe temporales en cada combate, y sus castigos responden a cada crítico gratis. El muro autopotenciador que el juramento fue forjado para ser."
+    "description": "La inclinación marcial —un Paladín que se planta al frente y se niega a caer. Mejor con equipo de arma y de tanque: su aura lo ciñe con puntos de golpe temporales en cada combate, y sus castigos responden a cada crítico gratis. El muro autopotenciador que el juramento fue forjado para ser.",
+    "archetype": "Muralla",
+    "lever0": "Empiezas cada combate envuelto en 4 + nivel puntos de golpe temporales.",
+    "lever1": "Cada crítico que asestas dispara un Castigo Divino gratuito.",
+    "lever2": "Nivel 10: la envoltura se ahonda a 6 + nivel, y cada golpe que recibes se rebaja en 3."
   },
   "paladin.bulwark.aura-of-the-bulwark": {
     "name": "Juramento Sagrado: Juramento del Baluarte",

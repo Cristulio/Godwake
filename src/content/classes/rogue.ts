@@ -144,6 +144,13 @@ export const ROGUE: Class = ClassSchema.parse({
       name: 'Thief',
       description:
         'A specialist of locks, ledges, and the quick exit. Best with tempo and utility gear that turns extra Cunning Actions into board control.',
+      bottomLine: {
+        archetype: 'Two-Blades',
+        levers: [
+          '2 Cunning Actions per combat (L11: 3).',
+          'An off-hand knife chases your first strike every turn — a second chance to land Sneak Attack.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -177,6 +184,13 @@ export const ROGUE: Class = ClassSchema.parse({
       name: 'Assassin',
       description:
         'A killer who ends fights on the opening breath. Best with burst and first-strike gear that front-loads everything into the first cut.',
+      bottomLine: {
+        archetype: 'Ambusher',
+        levers: [
+          'Hits on a full-health foe always land Sneak Attack, +2d6 on top.',
+          'L11: your opening strike on a full-health foe is an automatic crit.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {
@@ -203,6 +217,13 @@ export const ROGUE: Class = ClassSchema.parse({
       name: 'Swashbuckler',
       description:
         'A duelist who needs no shadow to find the gap. Best with consistent flat-damage gear that pays out every single turn.',
+      bottomLine: {
+        archetype: 'Duelist',
+        levers: [
+          'Sneak Attack triggers every turn — no advantage, no setup, always on.',
+          'L11: one foe left standing = +2 to hit and a guaranteed Sneak Attack.',
+        ],
+      },
       featuresByLevel: {
         '3': [
           {

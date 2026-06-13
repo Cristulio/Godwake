@@ -191,6 +191,13 @@ export const WIZARD: Class = ClassSchema.parse({
       name: 'School of Evocation',
       description:
         'You bend raw arcane force into directed ruin. Best with spell-damage and spell-DC gear that sharpens every blast you throw.',
+      bottomLine: {
+        archetype: 'Blaster',
+        levers: [
+          '+1 die on every evocation — Burning Hands roars 4d6 where others muster 3d6.',
+          'L10: every damaging spell adds half your level, flat.',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {
@@ -217,6 +224,13 @@ export const WIZARD: Class = ClassSchema.parse({
       name: 'School of Abjuration',
       description:
         'You weave a ward that drinks the first blows of every fight. Best with survivability gear that buys the squishy caster more turns.',
+      bottomLine: {
+        archetype: 'Warden',
+        levers: [
+          'Start every combat behind a ward of 2 + level temporary HP.',
+          'L10: the ward thickens to 5 + level.',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {
@@ -243,6 +257,13 @@ export const WIZARD: Class = ClassSchema.parse({
       name: 'School of Illusion',
       description:
         'You step behind a veil of false images the moment steel is drawn. Best with an evasive build that turns near-misses into untouchability.',
+      bottomLine: {
+        archetype: 'Mirage',
+        levers: [
+          'Start every combat Blurred — attackers swing at disadvantage.',
+          'A mirror image soaks one incoming blow (L10: two images).',
+        ],
+      },
       featuresByLevel: {
         '2': [
           {
