@@ -1,7 +1,10 @@
+import type { ItemRef } from '../../schemas/item';
+import type { Character } from '../../types/character';
 import { useGameStore } from '../../stores/gameStore';
 import { Button } from '../ui/Button';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
-import { localizedItemName, localizedItemDescription, gearRarityLabel } from '../inventory/itemDisplay';
+import { localizedItemName, localizedItemDescription, localizedAffixEffect, gearRarityLabel } from '../inventory/itemDisplay';
+import { affixRelevanceById } from '../inventory/affixRelevance';
 import { getLegendary } from '../../content/legendaries';
 import { getSetPiece, setForPiece, setProgress } from '../../content/sets';
 import { hasPendingLevelUp } from '../../engine/character/leveling';
@@ -123,7 +126,6 @@ export function SpoilsScreen() {
             <div className="px-3 py-2 space-y-2">
               {lastLoot.items.map((ref, i) => {
                 const rarity = ref.rolled?.rarity ?? 'white';
-                const description = localizedItemDescription(ref);
                 return (
                   <div key={`${ref.itemId}-${i}`} className="flex flex-col gap-0.5">
                     <div className="flex items-center gap-2">
@@ -140,11 +142,7 @@ export function SpoilsScreen() {
                         {gearRarityLabel(rarity)}
                       </span>
                     </div>
-                    {description && (
-                      <div className="text-[var(--color-text-dim)] text-[10px] leading-relaxed pl-4">
-                        {description}
-                      </div>
-                    )}
+                    <SpoilsItemEffects itemRef={ref} character={character} />
                   </div>
                 );
               })}
@@ -242,6 +240,49 @@ export function SpoilsScreen() {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * The per-affix effect lines under a dropped item. Rolled loot lists each affix
+ * on its own line so an off-archetype one can dim with its "(weapon only — …)"
+ * tell; white / un-rolled items fall back to the plain base stat one-liner.
+ */
+function SpoilsItemEffects({
+  itemRef,
+  character,
+}: {
+  itemRef: ItemRef;
+  character: Character | null;
+}) {
+  const affixes = itemRef.rolled?.affixes ?? [];
+  if (affixes.length === 0) {
+    const description = localizedItemDescription(itemRef);
+    if (!description) return null;
+    return (
+      <div className="text-[var(--color-text-dim)] text-[10px] leading-relaxed pl-4">
+        {description}
+      </div>
+    );
+  }
+  return (
+    <div className="pl-4 space-y-0.5">
+      {affixes.map((id) => {
+        const rel = affixRelevanceById(id, character);
+        return (
+          <div
+            key={id}
+            className="text-[var(--color-text-dim)] text-[10px] leading-relaxed"
+            style={{ opacity: rel.relevant ? 1 : 0.45 }}
+          >
+            {localizedAffixEffect(id)}
+            {rel.tag && (
+              <span className="ml-1 uppercase tracking-wider text-[9px] opacity-80">({rel.tag})</span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

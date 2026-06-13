@@ -10,11 +10,21 @@ import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { ItemTooltip } from '../inventory/ItemTooltip';
 import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel, twoHandedPremiumLine } from '../inventory/itemDisplay';
+import { affixRelevanceById, enhancementRelevanceFor } from '../inventory/affixRelevance';
 import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
 type TcFn = (namespace: string, id: string, field: string, fallbackEnglish: string) => string;
+
+/** The muted "(weapon only — …)" tell appended to an off-archetype affix line. */
+function RelevanceTag({ tag }: { tag: string }) {
+  return (
+    <span className="ml-1 not-italic text-[9px] uppercase tracking-wider text-[var(--color-text-dim)]">
+      ({tag})
+    </span>
+  );
+}
 
 /** Most wares carry their own flavour; synthesise a short line for the rest. */
 export function consumableBlurb(item: Item, t: TFn, tc: TcFn): string {
@@ -121,16 +131,31 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
           </div>
         )}
         <div className="mt-1 space-y-0.5">
-          {!!rolled?.enhancement && enhancementLine(base, rolled.enhancement) && (
-            <div className="text-[11px] italic leading-snug" style={{ color }}>
-              ◆ {enhancementLine(base, rolled.enhancement)}
-            </div>
-          )}
-          {(rolled?.affixes ?? []).map((id) => (
-            <div key={id} className="text-[11px] italic leading-snug" style={{ color }}>
-              ◆ {localizedAffixEffect(id)}
-            </div>
-          ))}
+          {!!rolled?.enhancement && enhancementLine(base, rolled.enhancement) && (() => {
+            const rel = enhancementRelevanceFor(base.kind, character);
+            return (
+              <div
+                className="text-[11px] italic leading-snug"
+                style={{ color, opacity: rel.relevant ? 1 : 0.4 }}
+              >
+                ◆ {enhancementLine(base, rolled.enhancement)}
+                {rel.tag && <RelevanceTag tag={rel.tag} />}
+              </div>
+            );
+          })()}
+          {(rolled?.affixes ?? []).map((id) => {
+            const rel = affixRelevanceById(id, character);
+            return (
+              <div
+                key={id}
+                className="text-[11px] italic leading-snug"
+                style={{ color, opacity: rel.relevant ? 1 : 0.4 }}
+              >
+                ◆ {localizedAffixEffect(id)}
+                {rel.tag && <RelevanceTag tag={rel.tag} />}
+              </div>
+            );
+          })}
           {twoHandedPremiumLine(base, rolled) && (
             <div className="text-[var(--color-accent-amber)] text-[11px] italic leading-snug">
               ◆ {twoHandedPremiumLine(base, rolled)}
