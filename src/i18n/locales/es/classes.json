@@ -882,6 +882,22 @@
     "name": "Magia de Batalla",
     "description": "Curtido en primera línea, tu canto de guerra corre más hondo: el pozo de inspiración gana un dado, más música que cambiar según pida la marea."
   },
+  "bard.whispers": {
+    "name": "Colegio de los Susurros",
+    "description": "El cantor del pavor: un bardo que deshace al enemigo en vez de medirse con él. Mejor con equipo lanzador (un orbe de foco, afijos de CD de conjuro): mientras suena tu Canción, el terror que lleva dentro canta por sí solo, y un enemigo aterrado lanza sus golpes a ciegas. Ganas la sima profunda por control —haz que la sala tema golpearte, y castiga a los que tiemblan demasiado para defenderse.",
+    "archetype": "Controlador",
+    "lever0": "Mientras suena tu Canción (siempre suena): cada ronda el enemigo más letal debe salvar o quedar aterrado — su próximo golpe llega con desventaja.",
+    "lever1": "Un enemigo aterrado golpea a ciegas y errante; tú capeas la tormenta que no logra acertarte.",
+    "lever2": "Nivel 10: el pavor atrapa a TODOS los enemigos cada ronda, y los aterrados reciben +4 de todo lo que infliges — creciendo a +5."
+  },
+  "bard.whispers.words-of-terror": {
+    "name": "Colegio de Bardo: Colegio de los Susurros",
+    "description": "Aprendes las melodías bajo las melodías —el pavor tejido en la música que solo el tuétano oye. Mientras suena una Canción, y la tuya nunca cesa, el terror canta por sí solo: cada ronda el enemigo más letal en pie debe armarse contra tu arte o quedar preso del miedo, y una cosa aterrada lanza su próximo golpe a ciegas. Sin acción, sin coste —el horror cabalga la canción que ya estás tocando."
+  },
+  "bard.whispers.mantle-of-dread": {
+    "name": "Manto del Pavor",
+    "description": "El pavor desborda al uno e inunda a los muchos —ahora cada enemigo del campo debe armarse contra el terror cada ronda, no solo el más letal. Y la siembra del miedo la cosechas: un enemigo aterrado recibe más hondo cada uno de tus golpes y conjuros, la guardia estremecida demasiado lenta para apartar el filo. Te yergues en el ojo de un pánico de tu propia hechura, y despedazas a la turba temblorosa."
+  },
   "paladin": {
     "name": "Paladín",
     "characterName": "Halvar (y Pip)",

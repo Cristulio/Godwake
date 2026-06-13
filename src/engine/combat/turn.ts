@@ -35,6 +35,7 @@ import { isMartialClass, martialFlavor, regenMartialPoolForRound } from './marti
 import { regenCunningActionForRound } from './cunningAction';
 import { monkHasPendingTurnAction } from './monk';
 import { reconcileVow } from './paladin';
+import { applyDread } from './whispers';
 import { t } from '../../i18n';
 
 function resetActionEconomyForCurrent(
@@ -662,6 +663,11 @@ export function applyBardSongPulse(
   if (bardReelActive(nextCharacter) && nextCharacter.nextAttackAdvantage !== true) {
     nextCharacter = { ...nextCharacter, nextAttackAdvantage: true };
   }
+
+  // College of Whispers — the dread rides the playing Song: each round it
+  // frightens the deadliest foe (every foe at L10), so frightened things throw
+  // their blows wild. No-op for any non-Whispers bard.
+  nextState = applyDread(nextState, nextCharacter);
 
   return { state: nextState, character: nextCharacter };
 }

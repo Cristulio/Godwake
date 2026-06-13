@@ -27,7 +27,12 @@ import {
   bardWarSongDie,
   bardViciousMockeryDice,
   startBardSong,
+  hasWordsOfTerror,
+  hasMantleOfDread,
+  WHISPERS_FEAR_DURATION,
 } from './bard';
+import { applyDread } from './whispers';
+import { applyDamage } from './attack';
 import { chooseCombatAction } from './actionPolicy';
 import { classUnlockRenown, isClassUnlocked } from '../progression/unlocks';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
@@ -142,9 +147,9 @@ describe('Bard — class definition + registry', () => {
     expect(spellcastingAbility(makeBard())).toBe('cha');
   });
 
-  it('offers exactly two colleges — Lore and Valor', () => {
+  it('offers three colleges — Lore, Valor and Whispers', () => {
     const ids = getClass('bard').subclasses.map((s) => s.id).sort();
-    expect(ids).toEqual(['lore', 'valor']);
+    expect(ids).toEqual(['lore', 'valor', 'whispers']);
   });
 });
 
@@ -642,5 +647,155 @@ describe('bard bot — Hold Person crowd gate (owner directive, matches the wiza
     if (soloAction.kind === 'cast') {
       expect(['bard-hold-person']).toContain(soloAction.spellId);
     }
+  });
+});
+
+describe('Bard — College of Whispers (the dread that rides the song)', () => {
+  // applyDread reads the active roller in production; these tests inject a
+  // scripted one. createCombat now runs an opening dread (the song pulse), so
+  // each test starts from a frightened-free slate to assert applyDread's own work.
+  function clearFright(state: CombatState): CombatState {
+    return {
+      ...state,
+      combatants: state.combatants.map((c) =>
+        c.kind === 'monster'
+          ? {
+              ...c,
+              instance: {
+                ...c.instance,
+                conditions: c.instance.conditions.filter((x) => x.name !== 'frightened'),
+              },
+            }
+          : c,
+      ),
+    };
+  }
+  function monstersOf(state: CombatState): MonsterCombatant[] {
+    return state.combatants.filter((c): c is MonsterCombatant => c.kind === 'monster');
+  }
+  const isFright = (m: MonsterCombatant) =>
+    m.instance.conditions.some((c) => c.name === 'frightened');
+
+  it('only a Whispers bard sows the dread; the mantle is the L10 beat', () => {
+    expect(hasWordsOfTerror(makeBard(3, 'whispers'))).toBe(true);
+    expect(hasWordsOfTerror(makeBard(3, 'lore'))).toBe(false);
+    expect(hasWordsOfTerror(makeBard(3, 'valor'))).toBe(false);
+    expect(hasWordsOfTerror(makeBard(3, null))).toBe(false);
+    // Gated at L3 — an L2 pre-pick whispers soul has no dread yet.
+    expect(hasWordsOfTerror(makeBard(2, 'whispers'))).toBe(false);
+    expect(hasMantleOfDread(makeBard(3, 'whispers'))).toBe(false);
+    expect(hasMantleOfDread(makeBard(10, 'whispers'))).toBe(true);
+  });
+
+  it('L3 grips only the DEADLIEST foe on a failed save; a non-whispers bard sows nothing', () => {
+    const setup = createCombat({
+      character: makeBard(3, 'whispers'),
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('ghoul') }],
+    });
+    const clean = clearFright(setup.state);
+    const deadliest = monstersOf(clean).reduce((a, b) =>
+      b.instance.hp.max > a.instance.hp.max ? b : a,
+    );
+    // d20=1 → the deadliest fails its save → frightened; the weaker foe is never
+    // rolled at L3 (Words of Terror grips one).
+    const after = applyDread(clean, setup.character, scriptRoller([1]));
+    const am = monstersOf(after);
+    expect(isFright(am.find((m) => m.id === deadliest.id)!)).toBe(true);
+    expect(am.filter(isFright).length).toBe(1);
+
+    // A Lore bard with the same song sows nothing.
+    const lore = createCombat({ character: makeBard(3, 'lore'), monsters: [{ def: getMonster('ghoul') }] });
+    const lr = applyDread(clearFright(lore.state), lore.character, scriptRoller([1]));
+    expect(monstersOf(lr).some(isFright)).toBe(false);
+  });
+
+  it('a made save leaves the foe unfrightened', () => {
+    const setup = createCombat({ character: makeBard(3, 'whispers'), monsters: [{ def: getMonster('ghoul') }] });
+    const after = applyDread(clearFright(setup.state), setup.character, scriptRoller([20]));
+    expect(monstersOf(after).some(isFright)).toBe(false);
+  });
+
+  it('L10 Mantle of Dread grips EVERY foe that fails, not just the deadliest', () => {
+    const setup = createCombat({
+      character: makeBard(10, 'whispers'),
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('ghoul') }],
+    });
+    const after = applyDread(clearFright(setup.state), setup.character, scriptRoller([1, 1]));
+    expect(monstersOf(after).every(isFright)).toBe(true);
+    expect(monstersOf(after).filter(isFright).length).toBe(2);
+  });
+
+  it('a boss/elite (legendary resistance) saves with ADVANTAGE — softened, never auto-locked', () => {
+    const setup = createCombat({ character: makeBard(3, 'whispers'), monsters: [{ def: getMonster('ghoul') }] });
+    const bossState: CombatState = {
+      ...setup.state,
+      combatants: setup.state.combatants.map((c) =>
+        c.kind === 'monster'
+          ? { ...c, instance: { ...c.instance, legendaryResistances: 1, conditions: [] } }
+          : c,
+      ),
+    };
+    const modes: string[] = [];
+    const base = scriptRoller([1]);
+    const captureRoller: DiceRoller = {
+      ...base,
+      d20(advantage = 'normal', modifier = 0) {
+        modes.push(advantage);
+        return base.d20(advantage, modifier);
+      },
+    };
+    applyDread(bossState, setup.character, captureRoller);
+    expect(modes[0]).toBe('advantage');
+  });
+
+  it('a silent bard (no song) sows no dread', () => {
+    const setup = createCombat({ character: makeBard(3, 'whispers'), monsters: [{ def: getMonster('ghoul') }] });
+    const silent: Character = { ...setup.character, activeSongIds: [] };
+    const after = applyDread(clearFright(setup.state), silent, scriptRoller([1]));
+    expect(monstersOf(after).some(isFright)).toBe(false);
+  });
+
+  it('frightens for the configured duration, refreshed each round', () => {
+    const setup = createCombat({ character: makeBard(3, 'whispers'), monsters: [{ def: getMonster('ghoul') }] });
+    const after = applyDread(clearFright(setup.state), setup.character, scriptRoller([1]));
+    const fr = monstersOf(after)[0].instance.conditions.find((c) => c.name === 'frightened');
+    expect(fr?.duration).toEqual({ kind: 'rounds', value: WHISPERS_FEAR_DURATION });
+  });
+
+  function frighten(state: CombatState, id: string): CombatState {
+    return {
+      ...state,
+      combatants: state.combatants.map((c) =>
+        c.kind === 'monster' && c.id === id
+          ? { ...c, instance: { ...c.instance, conditions: [{ name: 'frightened' as const, duration: { kind: 'rounds' as const, value: 1 } }] } }
+          : c,
+      ),
+    };
+  }
+
+  it('L10 Mantle of Dread bites a FRIGHTENED foe for the song-tier bonus; unfrightened foes + pre-L10 bards take base', () => {
+    const l10 = createCombat({ character: makeBard(10, 'whispers'), monsters: [{ def: getMonster('ghoul') }] });
+    const id = monsterOf(l10.state).id;
+    const power = bardSongPower(l10.character); // the +4→+5 song-tier ladder
+
+    // Frightened: 10 lands as 10 + power.
+    const fr = frighten(clearFright(l10.state), id);
+    const hpFr = monstersOf(fr)[0].instance.hp.current;
+    const hitFr = applyDamage(fr, id, 10, l10.character);
+    expect(hpFr - monstersOf(hitFr.state)[0].instance.hp.current).toBe(10 + power);
+
+    // Unfrightened: exactly 10 (no terror).
+    const clean = clearFright(l10.state);
+    const hpCl = monstersOf(clean)[0].instance.hp.current;
+    const hitCl = applyDamage(clean, id, 10, l10.character);
+    expect(hpCl - monstersOf(hitCl.state)[0].instance.hp.current).toBe(10);
+
+    // A pre-L10 whispers bard (no Mantle): a frightened foe still takes only base.
+    const l3 = createCombat({ character: makeBard(3, 'whispers'), monsters: [{ def: getMonster('ghoul') }] });
+    const id3 = monsterOf(l3.state).id;
+    const fr3 = frighten(clearFright(l3.state), id3);
+    const hp3 = monstersOf(fr3)[0].instance.hp.current;
+    const hit3 = applyDamage(fr3, id3, 10, l3.character);
+    expect(hp3 - monstersOf(hit3.state)[0].instance.hp.current).toBe(10);
   });
 });

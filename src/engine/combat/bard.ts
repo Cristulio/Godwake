@@ -178,6 +178,43 @@ export function bardLoreAmpDc(character: Readonly<Character>): number {
   return bardSongPlaying(character) ? 1 : 0;
 }
 
+// ---- College of Whispers — the dread-singer (the Controller) ----------------
+//
+// While a Song plays (a bard is never silent), the terror in it sings on its own
+// and frightens the enemy — a frightened foe throws its blows at disadvantage
+// (resolveSingleAttack / monsterAttack), so the controller wins by mitigation.
+// The SAVE + frighten application lives in whispers.ts (it needs the roller and
+// the spell save DC, which would cycle through here); these are the cheap
+// predicates + the sim knobs. PROVISIONAL magnitudes — the sim owns the finals.
+
+/** Bonus the dread save adds on top of the bard's spell save DC. 0 = a straight
+ *  spell-DC save; raise if the fear sticks too rarely to define the build. */
+export const WHISPERS_FEAR_DC_BONUS = 0;
+
+/** Rounds a gripped foe stays frightened. Re-applied every player turn-start, so
+ *  1 already keeps the foe shaken when it next acts; the knob is the safety dial. */
+export const WHISPERS_FEAR_DURATION = 1;
+
+/** College of Whispers — Words of Terror (L3): the song frightens on its own. */
+export function hasWordsOfTerror(character: Readonly<Character>): boolean {
+  return isBard(character) && characterHasMechanic(character as Character, 'words-of-terror');
+}
+
+/** College of Whispers — Mantle of Dread (L10): the dread grips EVERY living foe
+ *  each round, not just the deadliest — mass control, the whole room at bay. */
+export function hasMantleOfDread(character: Readonly<Character>): boolean {
+  return isBard(character) && characterHasMechanic(character as Character, 'mantle-of-dread');
+}
+
+/** Mantle of Dread (L10): flat bonus damage the bard's every blow and working
+ *  deals to a FRIGHTENED foe — the lever that turns the controller's fear into
+ *  kills, the offense its siblings get from spell/weapon amps. Scales on the song
+ *  tier (the shared +2→+5 ladder) like Lore's amp, so it grows with the soul.
+ *  Read at the single damage chokepoint (applyDamage). Zero without the L10 beat. */
+export function dreadTerrorBonus(character: Readonly<Character>): number {
+  return hasMantleOfDread(character) ? bardSongPower(character) : 0;
+}
+
 /**
  * Vicious Mockery's dice count at the standard cantrip breakpoints —
  * 1d4 → 2d4 (L5) → 3d4 (L11) → 4d4 (L17). The dice ARE the level scaling (VM
