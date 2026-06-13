@@ -20,7 +20,8 @@ import { createDiceRoller, parseDiceExpression } from '../src/engine/dice';
 import { getItem } from '../src/content/items';
 import { rollItem } from '../src/engine/items/rollItem';
 import { rollGearDrop } from '../src/engine/items/drops';
-import { aggregateAffixMods, enhancementOf } from '../src/engine/items/affixMods';
+import { aggregateAffixMods, enhancementOf, type AffixMods } from '../src/engine/items/affixMods';
+import { affixScaleForRef, scaleAffixMagnitude } from '../src/engine/items/twoHandedPremium';
 import { rollGearStock } from '../src/components/delve/shopStock';
 import type { ItemRef, GearRarity } from '../src/schemas/item';
 import type { ClassId } from '../src/schemas/ids';
@@ -31,6 +32,29 @@ const num = (n: number, d = 2) => n.toFixed(d);
 function avgDice(expr: string): number {
   const { count, die, modifier } = parseDiceExpression(expr);
   return (count * (die + 1)) / 2 + modifier;
+}
+
+/**
+ * Per-ref affix mods at the scale the live engine reads them. characterAffixMods
+ * applies the two-handed premium PER AFFIX (affixScaleForRef → scaleAffixMagnitude,
+ * ceil with a +1 floor) — aggregate-then-scale would round differently, so mirror
+ * the per-affix order exactly. A bare aggregateAffixMods read is premium-blind and
+ * understates every true two-hander's roll.
+ */
+function refAffixMods(ref: ItemRef): AffixMods {
+  const ids = ref.rolled?.affixes ?? [];
+  const scale = affixScaleForRef(ref);
+  if (scale === 1) return aggregateAffixMods(ids);
+  const acc = aggregateAffixMods([]);
+  for (const id of ids) {
+    const one = aggregateAffixMods([id]);
+    for (const key of Object.keys(acc) as (keyof AffixMods)[]) {
+      if (key === 'resists') continue;
+      (acc[key] as number) += scaleAffixMagnitude(one[key] as number, scale);
+    }
+    for (const r of one.resists) if (!acc.resists.includes(r)) acc.resists.push(r);
+  }
+  return acc;
 }
 
 // ─── Representative profiles (mid-game martial) ──────────────────────────────
@@ -52,7 +76,7 @@ function weaponDpr(ref: ItemRef, attacks: number): number {
   const item = getItem(ref.itemId);
   if (item.kind !== 'weapon') return 0;
   const base = avgDice(item.damage);
-  const m = aggregateAffixMods(ref.rolled?.affixes ?? []);
+  const m = refAffixMods(ref);
   const enh = enhancementOf(ref);
   const atk = ATK.attackMod + m.attackBonus + enh + (item.attackMod ?? 0);
   const flat = m.damageBonus + enh + (item.damageMod ?? 0);
@@ -71,7 +95,7 @@ function weaponDpr(ref: ItemRef, attacks: number): number {
 function damageTaken(ref: ItemRef, incoming: number): number {
   const item = getItem(ref.itemId);
   if (item.kind !== 'armor') return 0;
-  const m = aggregateAffixMods(ref.rolled?.affixes ?? []);
+  const m = refAffixMods(ref);
   const enh = enhancementOf(ref);
   const ac = (item.category === 'robe' ? 10 : item.baseAC) + enh + m.acBonus;
   const raw = hitChance(DEF.enemyAtk, ac) * DEF.enemyDmg * incoming;
@@ -82,7 +106,7 @@ function damageTaken(ref: ItemRef, incoming: number): number {
  * drop-vs-store means. Conditional channels are discounted, base power included. */
 function itemPower(ref: ItemRef): number {
   const item = getItem(ref.itemId);
-  const m = aggregateAffixMods(ref.rolled?.affixes ?? []);
+  const m = refAffixMods(ref);
   const enh = enhancementOf(ref);
   let p = 0;
   if (item.kind === 'weapon') {
@@ -92,7 +116,7 @@ function itemPower(ref: ItemRef): number {
   }
   p += m.acBonus * 2.5 + m.acBonusWhileFull * 1.2 + m.acBonusWhileBloodied * 1.2;
   p += m.attackBonus * 2.5 + m.damageBonus * 1.6 + m.critRangeBonus * 1.8;
-  p += m.bleedDamage * 1.3 + m.lifestealPct * 0.06 + m.tempHpPerCombat * 0.35 + m.regenPerTurn * 0.5;
+  p += m.bleedDamage * 1.3 + m.lifestealPct * 0.06 + m.spellLifestealPct * 0.06 + m.tempHpPerCombat * 0.35 + m.regenPerTurn * 0.5;
   p += (m.rageDamageBonus + m.markDamageBonus + m.sneakDamageBonus + m.followupDamageBonus) * 0.6;
   p += m.resists.length * 1.0;
   p += m.spellDcBonus * 2.6 + m.spellDamageBonus * 1.6 + m.spellAttackBonus * 2.6 + m.bonusSpellSlotsL1 * 3;
