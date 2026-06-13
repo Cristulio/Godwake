@@ -1038,8 +1038,8 @@ img, svg.pixel {
 .enemy-intent-badge {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 1px 4px;
+  gap: 3px;
+  padding: 2px 5px;
   border: 1px solid;
   border-radius: 2px;
   background: rgba(8, 6, 5, 0.92);
@@ -1051,15 +1051,31 @@ img, svg.pixel {
   cursor: help;
 }
 .enemy-intent-icon {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   display: block;
 }
 .enemy-intent-value {
   font-family: var(--font-mono, monospace);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+/* boss-framework: a charging wind-up names the move (so the player reads + braces)
+   — uppercase, truncating if long so the badge never runs off the sprite. */
+.enemy-intent-label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  max-width: 104px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* A still-CHARGING wind-up carries a steady glow + thicker border so the
+   telegraph catches the eye before it escalates to the imminent (red pulse). */
+.enemy-intent-windup {
+  border-width: 1.5px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 9px currentColor;
 }
 /* High-threat intents (incoming damage / paralyze) breathe so the eye catches
    them across the battlefield; buffs/summons stay static. */

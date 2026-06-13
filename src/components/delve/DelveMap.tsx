@@ -41,9 +41,10 @@ interface Placed {
 }
 
 /**
- * The branching route map: the current chapter's nodes laid out left-to-right
- * by layer, the road already walked lit, the reachable next nodes glowing and
- * clickable, the rest dark. Picking a reachable node steps the run into it.
+ * The branching route map: the current chapter's nodes laid out as a climb,
+ * bottom-to-top by layer (you stand at the bottom, the boss waits at the top),
+ * the road already walked lit, the reachable next nodes glowing and clickable,
+ * the rest dark. Picking a reachable node steps the run into it.
  */
 export function DelveMap({ delve, character }: { delve: DelveState; character: Character }) {
   const { t, tc, lr } = useT();
@@ -69,15 +70,19 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
     }
     const maxLayer = Math.max(0, ...nodes.map((n) => n.layer ?? 0));
     const maxRows = Math.max(1, ...[...byLayer.values()].map((r) => r.length));
-    const w = PAD_X * 2 + maxLayer * COL_W + NODE;
-    const h = PAD_Y * 2 + (maxRows - 1) * ROW_H + NODE;
-    const cy0 = h / 2;
+    // The map CLIMBS bottom-to-top: each layer is a rung stacked upward — layer 0
+    // at the bottom (where you stand), the chapter boss at the top. Siblings in a
+    // layer spread horizontally and centred. (Vertical fills the tall viewport
+    // that the old left-to-right layout left empty below it.)
+    const w = PAD_X * 2 + (maxRows - 1) * COL_W + NODE;
+    const h = PAD_Y * 2 + maxLayer * ROW_H + NODE;
+    const cx0 = w / 2;
     const out: Placed[] = [];
     const idMap = new Map<string, Placed>();
     for (const [layer, row] of byLayer) {
       row.forEach((room, k) => {
-        const cx = PAD_X + layer * COL_W + NODE / 2;
-        const cy = cy0 + (k - (row.length - 1) / 2) * ROW_H;
+        const cx = cx0 + (k - (row.length - 1) / 2) * COL_W;
+        const cy = PAD_Y + (maxLayer - layer) * ROW_H + NODE / 2;
         const p = { room, cx, cy };
         out.push(p);
         idMap.set(room.id, p);
@@ -205,10 +210,10 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                       ? 'var(--color-accent-gold)'
                       : 'var(--color-border-dim)'
                 }
-                strokeWidth={e.open ? 3 : e.lit ? 2.5 : 1.5}
-                strokeDasharray={e.locked ? '1 7' : e.open || e.lit ? undefined : '3 5'}
+                strokeWidth={e.open ? 3.5 : e.lit ? 2.5 : 2}
+                strokeDasharray={e.locked ? '1 7' : e.open || e.lit ? undefined : '4 5'}
                 strokeLinecap={e.locked ? 'round' : undefined}
-                opacity={e.open ? 0.95 : e.lit ? 0.7 : e.locked ? 0.18 : 0.35}
+                opacity={e.open ? 0.95 : e.lit ? 0.7 : e.locked ? 0.2 : 0.5}
               />
             ))}
           </svg>

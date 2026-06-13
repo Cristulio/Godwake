@@ -213,9 +213,21 @@ function IntentBadgeImpl({ intent, monsterId }: IntentBadgeProps) {
     // charging is a heads-up, not yet a pulse.
     (intent.kind === 'windup' && intent.imminent === true);
 
+  // boss-framework: a charging wind-up shows the move's NAME (so the player can
+  // read it and brace) and carries a steady glow even before it's imminent — the
+  // heads-up used to be too quiet to catch across the dark battlefield.
+  const windupName =
+    intent.kind === 'windup'
+      ? monsterId
+        ? getLocalizedMonsterActionName(monsterId, intent.actionName)
+        : intent.actionName
+      : null;
+  const charging = intent.kind === 'windup' && !intent.imminent;
+  const label = windupName ?? value;
+
   return (
     <div
-      className={`enemy-intent-badge ${urgent ? 'enemy-intent-urgent' : ''}`}
+      className={`enemy-intent-badge ${urgent ? 'enemy-intent-urgent' : ''} ${charging ? 'enemy-intent-windup' : ''}`}
       style={{ color, borderColor: color }}
       title={describe}
       aria-label={describe}
@@ -223,7 +235,9 @@ function IntentBadgeImpl({ intent, monsterId }: IntentBadgeProps) {
       <svg viewBox="0 0 16 16" className="enemy-intent-icon" aria-hidden="true">
         {style.icon}
       </svg>
-      {value && <span className="enemy-intent-value">{value}</span>}
+      {label && (
+        <span className={`enemy-intent-value ${windupName ? 'enemy-intent-label' : ''}`}>{label}</span>
+      )}
     </div>
   );
 }
