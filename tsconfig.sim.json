@@ -31,6 +31,7 @@
     "scripts/sim-gear-rebalance.ts",
     "scripts/sim-structural-integrity.ts",
     "scripts/sim-difficulty-arc.ts",
+    "scripts/sim-shrine-omen.ts",
     "scripts/render-audio-preview.ts"
   ]
 }
