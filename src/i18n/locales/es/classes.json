@@ -435,7 +435,7 @@
     "description": "La furia como medio para un fin —siendo ese fin la violencia. Mejor con equipo de robo de vida y agresivo que convierte el daño extra en aguante.",
     "archetype": "Dos Filos",
     "lever0": "En Furia, cada impacto cuerpo a cuerpo asesta 1d6 extra, en cada tajo.",
-    "lever1": "Una segunda arma ligera ocupa la mano del escudo — cada Ataque va seguido de un tajo de la mano izquierda.",
+    "lever1": "Una segunda arma a dos manos ocupa la otra mano — cada Ataque va seguido de un tajo de gran arma de la mano izquierda.",
     "lever2": "Nivel 10: entrar en Furia aterroriza al enemigo más letal durante 2 rondas."
   },
   "barbarian.berserker.frenzy": {
@@ -444,7 +444,7 @@
   },
   "barbarian.berserker.twin-fury": {
     "name": "Furia Gemela",
-    "description": "Un escudo solo frenaría la tormenta —tu mano izquierda lleva una segunda arma ligera en su lugar. Cada turno, tu primer golpe arrastra detrás la hoja de esa mano: su propia tirada de ataque, su propio dado más tu modificador de característica, y con la mitad del filo de su equipo. La Furia no cuenta manos —cabalga ambas hojas."
+    "description": "Ni escudo ni segunda hoja —una SEGUNDA gran arma, una en cada puño. Empuñas un arma a dos manos en ambas manos a la vez, y cada turno tu primer golpe arrastra detrás la gran arma de la otra mano: su propia tirada de ataque, su dado completo más la mitad de tu modificador de característica, y con la mitad del filo de su equipo. La Furia no cuenta manos —cabalga ambas grandes armas."
   },
   "barbarian.berserker.intimidating-presence": {
     "name": "Presencia Intimidante",

@@ -181,7 +181,7 @@ export const BARBARIAN: Class = ClassSchema.parse({
         archetype: 'Two-Blades',
         levers: [
           'Raging melee hits land an extra 1d6, every swing.',
-          'A second light weapon rides the shield hand — every Attack is followed by an off-hand swing.',
+          'A second two-handed weapon rides the off-hand — every Attack is followed by a great-weapon off-hand swing.',
           'L10: entering Rage frightens the deadliest foe for 2 rounds.',
         ],
       },
@@ -198,7 +198,7 @@ export const BARBARIAN: Class = ClassSchema.parse({
             id: 'twin-fury',
             name: 'Twin Fury',
             description:
-              'A shield would only slow the storm — your off-hand carries a second light weapon instead. Each turn your first strike drags the off-hand blade through behind it: its own attack roll, its own die plus your ability modifier, and half its gear’s edge. The Rage doesn’t count hands — its fury rides both blades.',
+              'No shield, no second blade — a SECOND great weapon, one in each fist. You wield a two-handed weapon in both hands at once, and each turn your first strike drags the off-hand great weapon through behind it: its own attack roll, its full die plus half your ability modifier, and half its gear’s edge. The Rage doesn’t count hands — its fury rides both great weapons.',
             mechanicKey: 'dual-wielder',
           },
         ],

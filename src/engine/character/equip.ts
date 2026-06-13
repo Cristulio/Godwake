@@ -110,21 +110,40 @@ export function canDualWield(character: Character): boolean {
 }
 
 /**
- * A weapon the off-hand can carry: `light` and one-handed. The slot trade is
- * the cost — it sits where a shield would (shield XOR off-hand weapon), and a
- * two-handed main-hand leaves no hand to carry it.
+ * The barbarian's Twin Fury (Berserker) is the savage-titan exception to the
+ * light-off-hand rule: instead of a single light blade in the shield hand it
+ * hauls a SECOND two-handed melee weapon — a greatsword/greataxe in each fist.
+ * Gated to the barbarian class so the other dual-wield schools (Battle Master,
+ * Thief) stay strictly light-off-hand. The follow-swing's size is reined in on
+ * the combat side (a steeper ability-mod denom + a damage scale for the 2H
+ * off-hand follow), not here.
  */
-export function isOffHandWeapon(item: Item): boolean {
-  return (
-    item.kind === 'weapon' &&
-    item.properties.includes('light') &&
-    !item.properties.includes('two-handed')
-  );
+export function canTwoHandOffHand(character: Character): boolean {
+  return character.classId === 'barbarian' && canDualWield(character);
+}
+
+/**
+ * A weapon the off-hand can carry, given who's wielding it. For the ordinary
+ * dual-wield schools (Battle Master, Thief) the off-hand takes a `light`
+ * one-handed weapon — it sits where a shield would (shield XOR off-hand weapon),
+ * and a two-handed main-hand leaves no hand to carry it. The barbarian's Twin
+ * Fury ({@link canTwoHandOffHand}) is the opposite kit: it hauls a SECOND
+ * two-handed great weapon in the off-hand, so for that wielder the off-hand
+ * takes a two-handed weapon and NOT a light one. Ranged two-handers
+ * (bows/crossbows) need ammunition logic the off-hand follow doesn't model, so
+ * they're excluded from the 2H off-hand.
+ */
+export function isOffHandWeaponFor(character: Character, item: Item): boolean {
+  if (item.kind !== 'weapon') return false;
+  if (canTwoHandOffHand(character)) {
+    return item.properties.includes('two-handed') && !item.properties.includes('ammunition');
+  }
+  return item.properties.includes('light') && !item.properties.includes('two-handed');
 }
 
 /** True when {@link character} may seat this specific item in the off-hand slot. */
 export function canOffHandWeapon(character: Character, itemId: string): boolean {
-  return canDualWield(character) && isOffHandWeapon(getItem(itemId));
+  return canDualWield(character) && isOffHandWeaponFor(character, getItem(itemId));
 }
 
 /** The off-hand slot's ref when it holds a WEAPON (dual wielding); else null. */
@@ -426,24 +445,36 @@ export function equipItem(character: Character, inventoryIdx: number): Character
 
   const equipped: EquipmentSlots = { ...character.equipped };
 
-  // Dual-wielder tap routing: a light weapon fills an EMPTY off-hand when the
-  // main hand already holds a one-handed weapon — the natural second pick-up.
+  // Dual-wielder tap routing: a qualifying off-hand weapon fills an EMPTY
+  // off-hand when the main hand already holds a weapon — the natural second
+  // pick-up. The main hand must itself be one-handed UNLESS this is a barbarian
+  // Twin Fury two-hander seating beside a two-handed main (two great weapons).
   // A worn shield is never displaced implicitly; trading it for a blade is an
   // explicit drop on the off-hand slot (equipItemToSlot).
+  const mainIsWeapon =
+    equipped.mainHand != null && getItem(equipped.mainHand.itemId).kind === 'weapon';
+  const mainAllowsOffHand =
+    mainIsWeapon &&
+    (!isTwoHanded(equipped.mainHand!.itemId) || canTwoHandOffHand(character));
   const dualOffHandFill =
     slot === 'mainHand' &&
     !equipped.offHand &&
-    equipped.mainHand != null &&
-    !isTwoHanded(equipped.mainHand.itemId) &&
-    getItem(equipped.mainHand.itemId).kind === 'weapon' &&
+    mainAllowsOffHand &&
     canOffHandWeapon(character, ref.itemId);
 
   if (dualOffHandFill) {
     equipped.offHand = ref;
   } else if (slot === 'mainHand') {
     equipped.mainHand = ref;
+    // A two-handed main normally needs both hands, clearing the off-hand —
+    // except a barbarian Twin Fury that's holding a valid two-handed off-hand
+    // keeps it (two great weapons, one in each fist).
     if (isTwoHanded(ref.itemId)) {
-      equipped.offHand = null;
+      const keepsTwoHandOff =
+        canTwoHandOffHand(character) &&
+        equipped.offHand != null &&
+        isOffHandWeaponFor(character, getItem(equipped.offHand.itemId));
+      if (!keepsTwoHandOff) equipped.offHand = null;
     }
   } else if (slot === 'offHand') {
     if (equipped.mainHand && isTwoHanded(equipped.mainHand.itemId)) {
@@ -507,7 +538,12 @@ export function equipItemToSlot(
       return character;
     }
     const equipped: EquipmentSlots = { ...character.equipped };
-    if (equipped.mainHand && isTwoHanded(equipped.mainHand.itemId)) {
+    // A two-handed main-hand normally yields the second hand to the off-hand
+    // weapon — except a barbarian Twin Fury seating a two-handed off-hand keeps
+    // its two-handed main (two great weapons, one per fist).
+    const keepsTwoHandMain =
+      canTwoHandOffHand(character) && isOffHandWeaponFor(character, item);
+    if (equipped.mainHand && isTwoHanded(equipped.mainHand.itemId) && !keepsTwoHandMain) {
       equipped.mainHand = null;
     }
     equipped.offHand = ref;

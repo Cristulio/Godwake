@@ -345,10 +345,15 @@ function loadoutScore(c: Character): number {
       score += avgDice(weaponDamageDice(w, offEmpty)) * 1.6;
     }
   }
-  // Dual-wield off-hand weapon: one extra swing a turn, the die alone (no
-  // ability mod, halved gear edge) — priced at HALF the main-hand die weight.
-  // The AC side of the trade prices itself: a displaced shield's +2 drops out
-  // of computeAC below, so "shield vs second blade" is a real comparison.
+  // Dual-wield off-hand weapon: one extra swing a turn, priced at HALF the
+  // main-hand die weight. A light off-hand adds the die alone (full ability mod,
+  // halved gear edge in-engine); the barbarian Twin Fury's TWO-HANDED off-hand
+  // adds a far bigger die plus half the ability mod, which its larger
+  // avgDice(ow.damage) already captures monotonically (2d6 ≫ a light 1d4). The
+  // AC side of the trade prices itself: a displaced shield's +2 drops out of
+  // computeAC below, so "shield vs second blade" stays a real comparison. The
+  // off-hand drop routing for a 2H off-hand rides canOffHandWeapon, now true for
+  // a barbarian dual-wielder (tryEquipDrop / reEquipFromInventory below).
   const oh = c.equipped.offHand;
   if (oh) {
     const ow = getItem(oh.itemId);

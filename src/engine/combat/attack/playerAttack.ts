@@ -148,6 +148,34 @@ const ENVENOM_BLEED_TURNS = 2;
  *  unaffected. */
 const DUAL_WIELD_OFFHAND_ABIL_MOD_DENOM = 1;
 
+/** Two-handed off-hand ability-modifier denominator — the heavier dial for the
+ *  barbarian's Twin Fury, which dual-wields TWO two-handed weapons (greatsword /
+ *  greataxe), not a light off-hand blade. The 2H off-hand follow takes only HALF
+ *  the ability modifier (denom 2) where a light off-hand takes the full mod
+ *  (denom 1 above). */
+const DUAL_WIELD_OFFHAND_2H_ABIL_MOD_DENOM = 2;
+
+/** Two-handed off-hand follow DAMAGE scale — the damage brake on the barbarian
+ *  Twin Fury's second great-weapon swing, alongside two structural brakes (the
+ *  off-hand follow can't crit and doesn't lifesteal — both gated on
+ *  offHandIsTwoHanded). WITHOUT any brake the off-hand lands a near-full second
+ *  heavy swing: the big 2H die (2d6 / 1d12) PLUS the entire Rage stack (rage
+ *  bonus, Frenzy 1d6, Furious affix, heavy-haft +2) PLUS the blessing/gear stack,
+ *  roughly DOUBLING the raging barbarian's per-turn output (and its sustain) and
+ *  spiking bot-clear far past the band. This scale (floored) hits the off-hand
+ *  follow's weapon dice, its raging melee riders, and its flat blessing bonus, so
+ *  each damage part stays an honest summand and the breakdown still sums; the
+ *  per-hit gear edge is halved on top via scaleExtraEdge, the ability mod by the
+ *  2H denom. SIM-TUNED FINDING (sim-class-viability, 120×120): a guaranteed extra
+ *  attack a turn on the barbarian's rage base is worth ~5 clear-points of pure
+ *  STRUCTURE — pure damage scaling floored at ~14.6% clear at scale 0 — so the
+ *  band fit comes mostly from the no-crit + no-lifesteal gates, with this kept low
+ *  (a real but secondary ~quarter-swing) for the two-greatswords feel. Curve at
+ *  full bonuses: 1.0→21%, 0.5→17.5%, 0.25→15.9%, 0→14.6%; the two structural
+ *  gates take off another ~1.7. Lower toward 0 if the pair climbs out of band;
+ *  raise toward 0.5 for a punchier off-hand if balance allows. */
+const DUAL_WIELD_OFFHAND_2H_FOLLOW_SCALE = 0.25;
+
 /**
  * Which damage dice a weapon rolls. A versatile weapon swung two-handed — i.e.
  * with the off-hand empty (no shield, no second weapon) — rolls its larger
@@ -288,6 +316,15 @@ function resolveSwing(
 
   const scores = effectiveAbilityScores(nextCharacter);
   const w = weapon as Weapon;
+  // Barbarian Twin Fury's TWO-HANDED off-hand follow — the trailing great swing.
+  // It is reined in three ways vs a main swing / a light off-hand: it cannot land
+  // a crit (a committed trailing swing, not an aimed one — no Brutal Critical
+  // spike), its weapon dice + raging riders are damage-scaled (scale2hFollow
+  // below), and its ability modifier is halved (the 2H denom). The crit brake is
+  // the structural lever: a guaranteed extra attack a turn on the barbarian's
+  // rage-boosted base is strong even at low per-hit damage, and the doubled-dice
+  // crit chance was the largest part of that edge (sim-class-viability).
+  const offHandIsTwoHanded = isOffHandSwing && w.properties.includes('two-handed');
   const isFinesse = w.properties.includes('finesse');
   // Ranged weapons (bows, crossbows) are flagged by the `ammunition` property.
   // Thrown daggers stay in the finesse branch — they're melee that can fly.
@@ -440,7 +477,11 @@ function resolveSwing(
   // foe is an automatic critical — front-load the kill before it can guard.
   const mortalStrikeOpener =
     isFirstAttack && targetFullHp && characterHasMechanic(nextCharacter, 'mortal-strike');
-  let crit = mortalStrikeOpener || critRange(nextCharacter).includes(toHit.rolls[0]);
+  // The 2H off-hand follow never crits (see offHandIsTwoHanded) — the structural
+  // brake on Twin Fury. Every other swing crits on its range as usual.
+  let crit =
+    !offHandIsTwoHanded &&
+    (mortalStrikeOpener || critRange(nextCharacter).includes(toHit.rolls[0]));
   let hit = crit || (toHit.total >= ac && !toHit.natural1);
 
   const logEntries: CombatLogEntry[] = [];
@@ -486,7 +527,7 @@ function resolveSwing(
       if (source === 'encounter') usedEncounterReroll = 1;
       else usedDelveReroll = 1;
       toHit = roller.d20(advantage, attackBonus);
-      crit = critRange(nextCharacter).includes(toHit.rolls[0]);
+      crit = !offHandIsTwoHanded && critRange(nextCharacter).includes(toHit.rolls[0]);
       hit = crit || (toHit.total >= ac && !toHit.natural1);
       const sourceLabel = source === 'encounter' ? "Tyche's Coin" : "Tyche's Eye";
       logEntries.push({
@@ -574,6 +615,18 @@ function resolveSwing(
       bladeOfVowUsed = true;
     }
 
+    // Barbarian Twin Fury's two-handed off-hand follow: a glancing second great
+    // swing. Scale its weapon dice (and, below, its raging melee riders) by the
+    // follow-scale knob so the second heavy swing doesn't roughly double the
+    // raging barbarian's output. Each scaled part stays an honest summand in the
+    // breakdown. A light off-hand and every main swing are untouched.
+    // (offHandIsTwoHanded is hoisted above for the no-crit brake.)
+    const scale2hFollow = (v: number): number =>
+      offHandIsTwoHanded ? Math.floor(v * DUAL_WIELD_OFFHAND_2H_FOLLOW_SCALE) : v;
+    if (offHandIsTwoHanded) {
+      damageRoll.total = Math.max(1, scale2hFollow(damageRoll.total));
+    }
+
     let bonusDamage = 0;
     let sneakDamage = 0;
     let sneakDice = 0;
@@ -602,7 +655,7 @@ function resolveSwing(
     const scaleExtraEdge = (v: number): number =>
       diminishedExtraEdge ? Math.floor(v / 2) : v;
 
-    const flatBonus = blessingMods.damageBonus ?? 0;
+    const flatBonus = scale2hFollow(blessingMods.damageBonus ?? 0);
     if (flatBonus) {
       bonusDamage += flatBonus;
       onTypeParts.push({ amount: flatBonus, label: 'blessing' });
@@ -771,20 +824,29 @@ function resolveSwing(
     // smothers the fury — no bonus rides plate (defense-in-depth: rage also
     // ends on donning heavy and can't be entered while worn).
     if (isRaging(nextCharacter) && !isRanged && !rageBrokenByArmor(nextCharacter)) {
-      const rd = rageDamageBonus(nextCharacter);
+      // The fury rides both great weapons, but its full weight is behind the
+      // lead blade: Twin Fury's trailing 2H off-hand takes the raging riders at
+      // the follow scale (the brake that keeps the double-rage-swing in band).
+      const rd = scale2hFollow(rageDamageBonus(nextCharacter));
       if (rd > 0) {
         bonusDamage += rd;
         onTypeParts.push({ amount: rd, label: 'Rage' });
       }
       // Furious weapon affix: extra melee damage while the fury burns.
       if (affixMods.rageDamageBonus > 0) {
-        bonusDamage += affixMods.rageDamageBonus;
-        onTypeParts.push({ amount: affixMods.rageDamageBonus, label: 'Furious' });
+        const furious = scale2hFollow(affixMods.rageDamageBonus);
+        if (furious > 0) {
+          bonusDamage += furious;
+          onTypeParts.push({ amount: furious, label: 'Furious' });
+        }
       }
       // Heavy two-handed synergy: a great weapon swung in a rage hits harder.
       if (w.properties.includes('heavy') && w.properties.includes('two-handed')) {
-        bonusDamage += 2;
-        onTypeParts.push({ amount: 2, label: 'heavy haft' });
+        const heavyHaft = scale2hFollow(2);
+        if (heavyHaft > 0) {
+          bonusDamage += heavyHaft;
+          onTypeParts.push({ amount: heavyHaft, label: 'heavy haft' });
+        }
       }
     }
     // Relentless fighter affix: extra damage on each follow-up swing of a
@@ -956,10 +1018,17 @@ function resolveSwing(
     }
     // The off-hand follow lands the weapon's die PLUS the wielder's ability
     // modifier (5e Two-Weapon Fighting), divided by the dual-wield denom so the
-    // share is tunable — full at 1. The gear edge is still halved via
-    // scaleExtraEdge above, so only the base bite scales up, not the loot edge.
+    // share is tunable. A light off-hand keeps the full mod (denom 1); the
+    // barbarian Twin Fury's TWO-HANDED off-hand takes only half (the 2H denom).
+    // The weapon dice + raging riders are scaled separately (scale2hFollow), and
+    // the gear edge is halved via scaleExtraEdge, so each axis is reined in.
     const damageAbilMod = isOffHandSwing
-      ? Math.floor(abilMod / DUAL_WIELD_OFFHAND_ABIL_MOD_DENOM)
+      ? Math.floor(
+          abilMod /
+            (offHandIsTwoHanded
+              ? DUAL_WIELD_OFFHAND_2H_ABIL_MOD_DENOM
+              : DUAL_WIELD_OFFHAND_ABIL_MOD_DENOM),
+        )
       : abilMod;
     const totalDamage = Math.max(
       1,
@@ -1034,8 +1103,16 @@ function resolveSwing(
 
     // Lifesteal (Vampiric weapon affix, Leeching accessory, Heartwood Talisman
     // legendary, etc.): heal for a fraction of the damage dealt, capped at max
-    // HP. Rage halves the drink (rounded up), it no longer shuts it off.
-    if (affixMods.lifestealPct > 0 && nextCharacter.hp.current < nextCharacter.hp.max) {
+    // HP. Rage halves the drink (rounded up), it no longer shuts it off. The
+    // barbarian Twin Fury's 2H off-hand follow draws no essence — a second
+    // raging drink a turn roughly doubled the sustain and was the largest driver
+    // of the dual-wield clear-rate spike (sim-class-viability); the lead blade
+    // does the drinking.
+    if (
+      affixMods.lifestealPct > 0 &&
+      !offHandIsTwoHanded &&
+      nextCharacter.hp.current < nextCharacter.hp.max
+    ) {
       const healed = ragedHealAmount(
         nextCharacter,
         // A tiny pct on a small hit floors to 0 — a vampiric weapon always drinks at least 1.
