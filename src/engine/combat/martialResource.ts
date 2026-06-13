@@ -2,6 +2,7 @@ import type { Character } from '../../types/character';
 import type { CombatState, CombatLogEntry } from '../../types/combat';
 import type { ClassId } from '../../schemas/ids';
 import { characterHasMechanic } from '../character/derived';
+import { hasShieldEquipped } from '../character/equip';
 import {
   combatResult,
   patchResources,
@@ -118,11 +119,19 @@ const FLAVOR_CLASSES: ReadonlySet<ClassId> = new Set(['fighter', 'barbarian', 'r
 export function martialFlavor(character: Readonly<Character>): MartialFlavor | null {
   const cls = character.classId;
   if (!FLAVOR_CLASSES.has(cls)) return null;
+  // The Fighter's disrupt is named for the gear that drives it: a Shield Bash
+  // with a shield up, a Pommel Strike when both hands hold steel (dual wield) or
+  // a two-hander. Same staggering effect — it never gated on a shield, only the
+  // name did. Barbarian (Knockdown) / Ranger (Crippling Shot) read gear-neutral.
+  const disrupt =
+    cls === 'fighter' && !hasShieldEquipped(character)
+      ? t('combat.martial.fighter.disruptNoShield')
+      : t(`combat.martial.${cls}.disrupt`);
   return {
     pool: t(`combat.martial.${cls}.pool`),
     offense: t(`combat.martial.${cls}.offense`),
     defense: t(`combat.martial.${cls}.defense`),
-    disrupt: t(`combat.martial.${cls}.disrupt`),
+    disrupt,
   };
 }
 

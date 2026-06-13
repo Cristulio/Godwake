@@ -46,7 +46,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'brace',
         name: 'Brace',
         description:
-          'Read the incoming blow and plant the shield against it. Spend 1 Resolve and your bonus action to set your guard — the next hit you take is blunted by 4 plus half your level. Hold it for the swing you can see coming.',
+          'Read the incoming blow and set your guard against it — shield, blade, or braced haft. Spend 1 Resolve and your bonus action; the next hit you take is blunted by 4 plus half your level. Hold it for the swing you can see coming.',
         mechanicKey: 'martial-defense',
       },
     ],
@@ -55,7 +55,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'shield-bash',
         name: 'Shield Bash',
         description:
-          'Drive the shield into a foe mid-wind-up. Spend 2 Resolve to arm a staggering strike — the next hit knocks the target down and costs it its next turn. Save it for the blow you least want answered.',
+          'Slam a foe mid-wind-up — shield boss, sword pommel, or staff-butt, whatever your off-hand holds. Spend 2 Resolve to arm a staggering strike — the next hit knocks the target down and costs it its next turn. (Dual-wielding, it reads as a Pommel Strike — same stagger.) Save it for the blow you least want answered.',
         mechanicKey: 'martial-disrupt',
       },
     ],
