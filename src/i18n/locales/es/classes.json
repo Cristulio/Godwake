@@ -105,7 +105,7 @@
   },
   "fighter.battle-master.paired-steel": {
     "name": "Aceros Gemelos",
-    "description": "Adiestras la segunda hoja hasta que responde sola. Tu mano izquierda puede llevar un arma ligera en lugar de un escudo; cada turno, tu primer golpe va seguido de un corte medido de esa mano —su propia tirada de ataque, el dado del arma a solas sin bonificador de característica, y la mitad del filo de su equipo. El muro que cedes responde en acero."
+    "description": "Adiestras la segunda hoja hasta que responde sola. Tu mano izquierda puede llevar un arma ligera en lugar de un escudo; cada turno, tu primer golpe va seguido de un corte medido de esa mano —su propia tirada de ataque, el dado del arma más tu modificador de característica, y la mitad del filo de su equipo. El muro que cedes responde en acero."
   },
   "fighter.battle-master.tactical-reserve": {
     "name": "Reserva Táctica",
@@ -195,7 +195,7 @@
   },
   "rogue.thief.second-knife": {
     "name": "Segunda Daga",
-    "description": "La otra mano nunca fue solo para el equilibrio. Una hoja ligera viaja donde un escudo no cabría: cada turno, tu primer golpe va perseguido por un corte de esa mano con su propia tirada de ataque —el dado de la hoja a solas, sin bonificador de característica, la mitad del filo de su equipo. El Ataque Furtivo sigue cayendo una vez por turno, pero si la primera daga pierde el hueco, la segunda lo caza."
+    "description": "La otra mano nunca fue solo para el equilibrio. Una hoja ligera viaja donde un escudo no cabría: cada turno, tu primer golpe va perseguido por un corte de esa mano con su propia tirada de ataque —el dado de la hoja más tu modificador de característica, la mitad del filo de su equipo. El Ataque Furtivo sigue cayendo una vez por turno, pero si la primera daga pierde el hueco, la segunda lo caza."
   },
   "rogue.thief.deft-hands": {
     "name": "Manos Diestras",
@@ -444,7 +444,7 @@
   },
   "barbarian.berserker.twin-fury": {
     "name": "Furia Gemela",
-    "description": "Un escudo solo frenaría la tormenta —tu mano izquierda lleva una segunda arma ligera en su lugar. Cada turno, tu primer golpe arrastra detrás la hoja de esa mano: su propia tirada de ataque, su propio dado, sin bonificador de característica tras el acero y con la mitad del filo de su equipo. La Furia no cuenta manos —cabalga ambas hojas."
+    "description": "Un escudo solo frenaría la tormenta —tu mano izquierda lleva una segunda arma ligera en su lugar. Cada turno, tu primer golpe arrastra detrás la hoja de esa mano: su propia tirada de ataque, su propio dado más tu modificador de característica, y con la mitad del filo de su equipo. La Furia no cuenta manos —cabalga ambas hojas."
   },
   "barbarian.berserker.intimidating-presence": {
     "name": "Presencia Intimidante",

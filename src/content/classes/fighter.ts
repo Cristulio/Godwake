@@ -237,7 +237,7 @@ export const FIGHTER: Class = ClassSchema.parse({
             id: 'paired-steel',
             name: 'Paired Steel',
             description:
-              'You drill the second blade until it answers on its own. Your off-hand may carry a light weapon in a shield’s place; each turn your first strike is followed by a measured off-hand cut — its own attack roll, the weapon’s die alone with no ability bonus, half its gear’s edge. The wall you give up answers in steel.',
+              'You drill the second blade until it answers on its own. Your off-hand may carry a light weapon in a shield’s place; each turn your first strike is followed by a measured off-hand cut — its own attack roll, the weapon’s die plus your ability modifier, half its gear’s edge. The wall you give up answers in steel.',
             mechanicKey: 'dual-wielder',
           },
         ],
