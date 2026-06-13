@@ -10,12 +10,15 @@ import {
   useFlurryOfBlows,
   usePatientDefense,
   useStunningStrike,
+  monkElementalBurstDice,
+  ELEMENTAL_BURST_KI_COST,
   monkHasPendingTurnAction,
   monkFightsUnarmed,
   monkKitActive,
   isUnarmedStrikeId,
   isMonkWeaponId,
 } from './monk';
+import { useElementalBurst } from './fourElements';
 import { equipItem, unequipSlot } from '../character/equip';
 import {
   classUnlockRenown,
@@ -636,5 +639,74 @@ describe('Monk — bot policy', () => {
     );
     // A connecting strike reads as the master fists in the damage log.
     expect(monsterHp(r.state, targetId)).toBeLessThanOrEqual(hpBefore);
+  });
+});
+
+describe('Monk — Way of the Four Elements (the ki-caster)', () => {
+  function monstersOf(state: CombatState): MonsterCombatant[] {
+    return state.combatants.filter((c): c is MonsterCombatant => c.kind === 'monster');
+  }
+
+  it('offers the conclave; only it grants the Elemental Burst (L3) + Mastery (L10)', () => {
+    expect(getClass('monk').subclasses.map((s) => s.id).sort()).toEqual([
+      'way-of-shadow',
+      'way-of-the-four-elements',
+      'way-of-the-open-hand',
+    ]);
+    expect(characterHasMechanic(makeMonk(3, 'way-of-the-four-elements'), 'elemental-burst')).toBe(true);
+    expect(characterHasMechanic(makeMonk(2, 'way-of-the-four-elements'), 'elemental-burst')).toBe(false);
+    expect(characterHasMechanic(makeMonk(3, 'way-of-the-open-hand'), 'elemental-burst')).toBe(false);
+    expect(characterHasMechanic(makeMonk(10, 'way-of-the-four-elements'), 'elemental-mastery')).toBe(true);
+    expect(characterHasMechanic(makeMonk(3, 'way-of-the-four-elements'), 'elemental-mastery')).toBe(false);
+  });
+
+  it('the burst dice climb with level, +1 once Elemental Mastery (L10) lands', () => {
+    expect(monkElementalBurstDice(makeMonk(3, 'way-of-the-four-elements'))).toBe(3);
+    expect(monkElementalBurstDice(makeMonk(5, 'way-of-the-four-elements'))).toBe(4);
+    expect(monkElementalBurstDice(makeMonk(10, 'way-of-the-four-elements'))).toBe(5); // 4 base + Mastery
+    expect(monkElementalBurstDice(makeMonk(17, 'way-of-the-four-elements'))).toBe(7); // 6 base + Mastery
+  });
+
+  it('Elemental Burst hits EVERY foe (full on a fail), spends the Ki + the bonus action', () => {
+    const setup = createCombat({
+      character: makeMonk(3, 'way-of-the-four-elements'),
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('goblin') }],
+    });
+    const before = monstersOf(setup.state).map((m) => m.instance.hp.current);
+    // 3d6 (each d6 → 4 in the script roller) = 12 to each; both foes fail (d20=1).
+    const r = useElementalBurst({ character: setup.character, state: setup.state }, scriptRoller([1, 1]));
+    const after = monstersOf(r.state).map((m) => m.instance.hp.current);
+    expect(after[0]).toBe(before[0] - 12);
+    expect(after[1]).toBe(before[1] - 12);
+    expect(r.character.resources.kiPointsRemaining).toBe(
+      (setup.character.resources.kiPointsRemaining ?? 0) - ELEMENTAL_BURST_KI_COST,
+    );
+    expect(r.character.actionEconomy.bonusActionUsed).toBe(true);
+  });
+
+  it('a made Dexterity save halves the burst', () => {
+    const setup = createCombat({
+      character: makeMonk(3, 'way-of-the-four-elements'),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const before = monsterOf(setup.state).instance.hp.current;
+    const r = useElementalBurst({ character: setup.character, state: setup.state }, scriptRoller([20]));
+    expect(monsterOf(r.state).instance.hp.current).toBe(before - 6); // floor(12/2)
+  });
+
+  it('no-ops without the conclave, without Ki, or with the bonus action spent', () => {
+    const foes = [{ def: getMonster('goblin') }];
+    // Wrong conclave.
+    const openHand = createCombat({ character: makeMonk(3, 'way-of-the-open-hand'), monsters: foes });
+    expect(useElementalBurst({ character: openHand.character, state: openHand.state }, scriptRoller([1])).state)
+      .toBe(openHand.state);
+    // No Ki.
+    const dry = createCombat({ character: makeMonk(3, 'way-of-the-four-elements'), monsters: foes });
+    const dryChar = { ...dry.character, resources: { ...dry.character.resources, kiPointsRemaining: 0 } };
+    expect(useElementalBurst({ character: dryChar, state: dry.state }, scriptRoller([1])).state).toBe(dry.state);
+    // Bonus action already spent.
+    const spent = createCombat({ character: makeMonk(3, 'way-of-the-four-elements'), monsters: foes });
+    const spentChar = { ...spent.character, actionEconomy: { ...spent.character.actionEconomy, bonusActionUsed: true } };
+    expect(useElementalBurst({ character: spentChar, state: spent.state }, scriptRoller([1])).state).toBe(spent.state);
   });
 });

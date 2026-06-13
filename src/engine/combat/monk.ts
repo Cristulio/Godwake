@@ -236,3 +236,20 @@ export function useStunningStrike(ctx: MonkActionContext): CombatActionResult {
   };
   return combatResult(attachCombatVfx(appendLog(state, log), 'ki-charge', 'player'), nextCharacter);
 }
+
+// ─── Way of the Four Elements — the ki-caster monk ───────────────────────────
+
+/** Ki spent to loose an Elemental Burst (L3). 1 — it competes with Flurry for the
+ *  bonus action AND the same Ki pool, which is the conclave's core turn-by-turn
+ *  choice: the single-target deluge vs the room-wide blast. */
+export const ELEMENTAL_BURST_KI_COST = 1;
+
+/** d6s the Elemental Burst rolls at the monk's level — a climb (3 → 4 at L5 → 5 at
+ *  L11 → 6 at L17), +1 once Elemental Mastery (L10) lands. It hits EVERY foe, but
+ *  the bot focus-fires (spread AoE under-clears), so the per-foe bite has to be
+ *  real to kill the priority foe — sim-tuned from a too-soft 2d6 to this band. */
+export function monkElementalBurstDice(character: Readonly<Character>): number {
+  const lvl = character.level;
+  const base = lvl >= 17 ? 6 : lvl >= 11 ? 5 : lvl >= 5 ? 4 : 3;
+  return base + (characterHasMechanic(character as Character, 'elemental-mastery') ? 1 : 0);
+}

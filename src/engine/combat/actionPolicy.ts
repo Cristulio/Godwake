@@ -42,6 +42,7 @@ import { useRage } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape } from './wildShape';
 import { isDragonForm } from './shapeChange';
+import { useElementalBurst } from './fourElements';
 import {
   useFlurryOfBlows,
   usePatientDefense,
@@ -82,6 +83,7 @@ export type PlannedAction =
   | { kind: 'hunters-mark'; targetId: string }
   | { kind: 'wild-shape' }
   | { kind: 'flurry-of-blows' }
+  | { kind: 'elemental-burst' }
   | { kind: 'patient-defense' }
   | { kind: 'stunning-strike' }
   | { kind: 'bard-song'; songId: BardSongId }
@@ -651,6 +653,14 @@ export function chooseCombatAction(
         hpPct <= profile.wizardDefensiveHp
       ) {
         return { kind: 'patient-defense' };
+      }
+      // Way of the Four Elements: the room-wide Elemental Burst out-values
+      // Flurry's single-target deluge only once a real crowd is on the field —
+      // against one or two foes, concentrating Flurry on the priority target
+      // clears faster (the bot focus-fires, so spread AoE just softens). Gate the
+      // bot on 3+ living foes; the player keeps the button free at any count.
+      if (characterHasMechanic(character, 'elemental-burst') && live.length >= 3) {
+        return { kind: 'elemental-burst' };
       }
       if (
         characterHasMechanic(character, 'flurry-of-blows') &&
@@ -1621,6 +1631,10 @@ export function applyPlannedAction(
     }
     case 'flurry-of-blows': {
       const r = useFlurryOfBlows({ character, state });
+      return { state: r.state, character: r.character };
+    }
+    case 'elemental-burst': {
+      const r = useElementalBurst({ character, state });
       return { state: r.state, character: r.character };
     }
     case 'patient-defense': {
