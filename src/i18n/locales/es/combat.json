@@ -122,7 +122,8 @@
       "pool": "Temple",
       "offense": "Golpe Potente",
       "defense": "Resguardo",
-      "disrupt": "Golpe de Escudo"
+      "disrupt": "Golpe de Escudo",
+      "disruptNoShield": "Golpe de Pomo"
     },
     "barbarian": {
       "pool": "Furia",

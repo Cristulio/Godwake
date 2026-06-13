@@ -22,11 +22,11 @@
   },
   "fighter.brace": {
     "name": "Afianzarse",
-    "description": "Lee el golpe entrante y planta el escudo contra él. Gasta 1 de Temple y tu acción adicional para asentar tu guardia —el siguiente impacto que recibas se mitiga en 4 más la mitad de tu nivel. Resérvalo para el golpe que ves venir."
+    "description": "Lee el golpe entrante y asienta tu guardia contra él —escudo, hoja o astil afirmado. Gasta 1 de Temple y tu acción adicional; el siguiente impacto que recibas se mitiga en 4 más la mitad de tu nivel. Resérvalo para el golpe que ves venir."
   },
   "fighter.shield-bash": {
     "name": "Golpe de Escudo",
-    "description": "Estrella el escudo contra un enemigo a mitad de su preparación. Gasta 2 de Temple para armar un golpe aturdidor —el siguiente impacto derriba al objetivo y le cuesta su siguiente turno. Resérvalo para el golpe que menos quieres que respondan."
+    "description": "Embiste a un enemigo a mitad de su preparación —brocha del escudo, pomo de la espada o cuento del bastón, lo que lleve tu mano izquierda. Gasta 2 de Temple para armar un golpe aturdidor —el siguiente impacto derriba al objetivo y le cuesta su siguiente turno. (Con dos armas, se lee como Golpe de Pomo —mismo aturdimiento.) Resérvalo para el golpe que menos quieres que respondan."
   },
   "fighter.asi-4": {
     "name": "Mejora de Puntuación de Característica",

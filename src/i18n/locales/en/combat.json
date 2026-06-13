@@ -122,7 +122,8 @@
       "pool": "Resolve",
       "offense": "Power Attack",
       "defense": "Brace",
-      "disrupt": "Shield Bash"
+      "disrupt": "Shield Bash",
+      "disruptNoShield": "Pommel Strike"
     },
     "barbarian": {
       "pool": "Fury",

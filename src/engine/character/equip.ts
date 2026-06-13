@@ -134,6 +134,14 @@ export function offHandWeaponRef(character: Character): ItemRef | null {
   return getItem(ref.itemId).kind === 'weapon' ? ref : null;
 }
 
+/** True when the off-hand slot holds a shield (the gear that flavors Shield Bash). */
+export function hasShieldEquipped(character: Readonly<Character>): boolean {
+  const ref = character.equipped?.offHand;
+  if (!ref) return false;
+  const item = getItem(ref.itemId);
+  return item.kind === 'armor' && item.category === 'shield';
+}
+
 /**
  * A weapon that strikes from a distance — bows and crossbows, flagged by the
  * `ammunition` property. This is the same notion `playerAttack` uses to roll
