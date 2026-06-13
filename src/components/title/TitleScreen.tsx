@@ -66,10 +66,10 @@ export function TitleScreen() {
         style={{ background: 'linear-gradient(180deg, #0b0908 0%, #15110d 45%, #0e0b09 100%)' }}
       />
       <div
-        className="absolute inset-0 pointer-events-none opacity-40"
+        className="absolute inset-0 pointer-events-none opacity-60"
         style={{
           background:
-            'repeating-linear-gradient(0deg, transparent 0 38px, rgba(0,0,0,0.35) 38px 40px), repeating-linear-gradient(90deg, transparent 0 120px, rgba(0,0,0,0.16) 120px 122px)',
+            'repeating-linear-gradient(0deg, rgba(255,206,150,0.03) 0 1px, transparent 1px 42px, rgba(0,0,0,0.5) 42px 44px), repeating-linear-gradient(90deg, transparent 0 116px, rgba(0,0,0,0.28) 116px 118px)',
         }}
       />
       {/* Far grove-green bleed from the top edge — the green you wake toward */}
@@ -80,16 +80,18 @@ export function TitleScreen() {
             'radial-gradient(ellipse 55% 32% at 50% -8%, rgba(96,168,104,0.11) 0%, rgba(60,120,72,0.04) 45%, transparent 72%)',
         }}
       />
-      {/* Iron cell bars — faded clear of the centre so the logo stays clean */}
+      {/* Iron cell bars — heavier iron with a torch-lit rim, faded clear of the
+          centre so the logo stays legible. Two coats: a wide shadow gutter, then
+          the rounded iron bar with a warm highlight down its torch-side edge. */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-70"
+        className="absolute inset-0 pointer-events-none opacity-[0.9]"
         style={{
           background:
-            'repeating-linear-gradient(90deg, transparent 0 70px, rgba(0,0,0,0.55) 70px 78px, rgba(150,110,70,0.10) 78px 79px)',
+            'repeating-linear-gradient(90deg, transparent 0 74px, rgba(0,0,0,0.45) 74px 76px, rgba(188,146,96,0.22) 76px 78px, rgba(10,7,5,0.9) 78px 90px, rgba(0,0,0,0.5) 90px 94px)',
           WebkitMaskImage:
-            'radial-gradient(ellipse 46% 52% at 50% 45%, transparent 0%, transparent 32%, black 78%)',
+            'radial-gradient(ellipse 44% 50% at 50% 44%, transparent 0%, transparent 24%, black 70%)',
           maskImage:
-            'radial-gradient(ellipse 46% 52% at 50% 45%, transparent 0%, transparent 32%, black 78%)',
+            'radial-gradient(ellipse 44% 50% at 50% 44%, transparent 0%, transparent 24%, black 70%)',
         }}
       />
       {/* Torch light-pools (flicker) */}
