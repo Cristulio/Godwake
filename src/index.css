@@ -1061,15 +1061,20 @@ img, svg.pixel {
   font-weight: 700;
   letter-spacing: 0.02em;
 }
-/* boss-framework: a charging wind-up names the move (so the player reads + braces)
-   — uppercase, truncating if long so the badge never runs off the sprite. */
+/* boss-framework: a charging wind-up names the move (so the player reads + braces).
+   Uppercase, a touch smaller, and allowed to wrap to two lines so the full move
+   name fits — boss names are the longest and the most important to read. */
 .enemy-intent-label {
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  max-width: 104px;
+  letter-spacing: 0.04em;
+  font-size: 9px;
+  line-height: 1.15;
+  max-width: 150px;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 /* A still-CHARGING wind-up carries a steady glow + thicker border so the
    telegraph catches the eye before it escalates to the imminent (red pulse). */

@@ -54,7 +54,6 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   const [hovered, setHovered] = useState<RoomSpec | null>(null);
   const [confirmAbandon, setConfirmAbandon] = useState(false);
 
-  const frameRef = useRef<HTMLDivElement>(null);
   const current = delve.rooms[delve.currentRoomIdx];
   const chapter = current?.chapter ?? 1;
   const visited = useMemo(() => new Set(delve.visitedRoomIds ?? []), [delve.visitedRoomIds]);
@@ -117,30 +116,23 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
   const { active: eliteCoachActive, dismiss: dismissEliteCoach } =
     useEliteIntroCoach(hasSelectableElite);
 
-  // Follow the run: scroll so the ROAD AHEAD is centred — the upcoming reachable
-  // nodes, not the node just cleared. (Centring on the current node hid the
-  // choices off to the right.) Falls back to the current node at a chapter's end
-  // when nothing reachable remains.
+  // Follow the run on the vertical climb: scroll the current node into the
+  // centre of the viewport so the road ahead — the reachable nodes rising
+  // above it — is in view. The bottom-to-top map overflows into the PAGE (not
+  // the frame's horizontal axis), so the old horizontal frame-scroll became a
+  // no-op; this scrolls the page to where you stand. Re-runs each step.
+  const currentNodeRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    const frame = frameRef.current;
-    if (!frame || !current) return;
-    const node = byId.get(current.id);
-    if (!node) return;
-    const max = frame.scrollWidth - frame.clientWidth;
-    if (max <= 0) return;
-    const aheadXs = (current.next ?? [])
-      .map((id) => byId.get(id)?.cx)
-      .filter((x): x is number => x !== undefined);
-    const targetCx = aheadXs.length > 0
-      ? aheadXs.reduce((sum, x) => sum + x, 0) / aheadXs.length
-      : node.cx;
-    const left = Math.max(0, Math.min(targetCx - frame.clientWidth / 2, max));
+    const el = currentNodeRef.current;
+    // Guard the call for JSDOM (no scrollIntoView) and very old browsers that
+    // lack the options overload; either way a missing scroll is harmless.
+    if (!el || typeof el.scrollIntoView !== 'function') return;
     try {
-      frame.scrollTo({ left, behavior: 'smooth' });
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } catch {
-      frame.scrollLeft = left;
+      /* options overload unsupported — skip the follow-scroll */
     }
-  }, [current?.id, byId, width]);
+  }, [current?.id]);
 
   const detail = hovered;
   const detailTwist = detail ? getTwist(detail.twistId) : undefined;
@@ -188,7 +180,7 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
         </div>
       </header>
 
-      <div ref={frameRef} className="bm-map-frame overflow-x-auto">
+      <div className="bm-map-frame overflow-x-auto">
         <div className="relative mx-auto" style={{ width, height }}>
           <svg
             className="absolute inset-0 pointer-events-none"
@@ -241,7 +233,12 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                     ? 'bm-node-visited'
                     : 'bm-node-locked';
             return (
-              <div key={room.id} className="bm-node-anchor" style={{ left: cx, top: cy }}>
+              <div
+                key={room.id}
+                ref={isCurrent ? currentNodeRef : null}
+                className="bm-node-anchor"
+                style={{ left: cx, top: cy }}
+              >
                 <button
                   type="button"
                   disabled={!isReachable}
