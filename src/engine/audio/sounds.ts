@@ -1519,12 +1519,26 @@ function makeDrone(
   lowpassHz: number,
   lfo?: { hz: number; depth: number },
 ): Fixture {
+  // Breathing master gain: the drone ebbs and swells over ~22s instead of
+  // sitting as one flat, constant tone (the monotone, fatiguing "horn"). A lower
+  // base level also pushes it further back in the mix.
+  const master = ctx.createGain();
+  master.gain.value = 0.8;
+  master.connect(out);
+  const breath = ctx.createOscillator();
+  breath.type = 'sine';
+  breath.frequency.value = 0.045;
+  const breathDepth = ctx.createGain();
+  breathDepth.gain.value = 0.2;
+  breath.connect(breathDepth).connect(master.gain);
+  breath.start();
+
   const filter = ctx.createBiquadFilter();
   filter.type = 'lowpass';
   filter.frequency.value = lowpassHz;
   filter.Q.value = 0.9;
-  filter.connect(out);
-  const stops: Array<() => void> = [];
+  filter.connect(master);
+  const stops: Array<() => void> = [() => breath.stop()];
   if (lfo) {
     const l = ctx.createOscillator();
     l.type = 'sine';
@@ -1977,6 +1991,9 @@ interface CombatKnob {
   swing: number;
   drums?: { verse: string; fill: string };
   trim?: number;
+  /** Route the whole track through a lowpass + echo for a muffled, distant,
+   *  "almost submerged" feel — drowns the bright square-wave edge in space. */
+  submerged?: boolean;
 }
 
 interface CombatCoreDef {
@@ -2005,13 +2022,42 @@ function makeCombatSpec(core: CombatCoreDef, knob: CombatKnob): SongSpec {
     bpm: core.bpm / knob.tempoMul,
     barsPerBlock: 8,
     trim: knob.trim,
-    setup: (ctx, out) =>
-      makeDrone(
+    setup: (ctx, out) => {
+      const stops: Array<() => void> = [];
+      let input: AudioNode = out;
+      if (knob.submerged) {
+        // Leads + drums pass through a lowpass (cuts the bright square-wave edge
+        // = underwater) into an echo (distance) before the mix — distant,
+        // forgotten, almost drowned. The drone still goes straight out.
+        const echo = makeEcho(ctx, out, 0.4, 0.32, 0.34);
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 1600;
+        lp.Q.value = 0.6;
+        lp.connect(echo.input);
+        input = lp;
+        stops.push(echo.stop);
+      }
+      const drone = makeDrone(
         ctx, out,
         core.drone(core.rootMidi + knob.semitones),
         core.droneLowpass,
         { hz: 0.14, depth: 90 },
-      ),
+      );
+      stops.push(drone.stop);
+      return {
+        input,
+        stop: () => {
+          for (const s of stops) {
+            try {
+              s();
+            } catch {
+              /* ignore */
+            }
+          }
+        },
+      };
+    },
     block: (ctx, out, t0, blockIdx) => {
       const beatS = (60 / core.bpm) * knob.tempoMul;
       core.block(
@@ -2235,7 +2281,7 @@ const SURGE_LEAD = mel([
 ]);
 
 const SURGE_CORE_DEF: CombatCoreDef = {
-  bpm: 150,
+  bpm: 132,
   rootMidi: midi('E2'),
   drone: (root) => [
     { hz: midiHz(root - 12), type: 'sawtooth', level: 0.045 },
@@ -2243,19 +2289,17 @@ const SURGE_CORE_DEF: CombatCoreDef = {
     { hz: midiHz(root + 7 - 12), type: 'sine', level: 0.03 },
   ],
   droneLowpass: 420,
-  drums: { verse: 'K.hkk.hks.hkk.hk', fill: 'K.hkk.hkS.S.S.S.' },
-  drumLevel: 0.9,
+  drums: { verse: 'k.h.s.h.k.h.s.h.', fill: 'k.h.s.h.k.h.ssss' },
+  drumLevel: 0.85,
   block: (ctx, out, t0, blockIdx, beatS, semi, swing, drums, drumLevel) => {
     const barS = 4 * beatS;
     for (let bar = 0; bar < 8; bar++) {
       const t = t0 + bar * barS;
       const root = SURGE_BASS_ROOTS[bar];
-      // Gallop bass: one-and-a, repeated.
-      const gallop: MStep[] = [];
-      for (let b = 0; b < 4; b++) {
-        gallop.push([root, 0.5], [root, 0.25], [root, 0.25]);
-      }
-      lineAt(ctx, out, mel(gallop), t, beatS, {
+      // Heavy on-beat tread — the old triplet gallop read as heroic drive; a
+      // slow half-note pulse keeps the intensity grim instead of peppy.
+      const pulse: MStep[] = [[root, 1], [root, 1], [root, 1], [root, 1]];
+      lineAt(ctx, out, mel(pulse), t, beatS, {
         level: 0.095,
         type: 'square',
         sustain: 0.5,
@@ -2328,7 +2372,14 @@ const COMBAT_VARIANTS: Record<CombatMusicId, SongSpec> = {
     trim: 1.06,
     drums: { verse: 'K.h.s.h.k.k.s.h.', fill: 'K.h.s.h.k.k.s.ss' },
   }),
-  combat_prowl: makeCombatSpec(STALK_CORE_DEF, { semitones: 2, tempoMul: 1.02, swing: 0.16, trim: 1.35 }),
+  combat_prowl: makeCombatSpec(STALK_CORE_DEF, {
+    semitones: -2,
+    tempoMul: 1.04,
+    swing: 0.04,
+    submerged: true,
+    trim: 1.35,
+    drums: { verse: 'k...h...s...h...', fill: 'k...h...s...ssss' },
+  }),
   combat_grim: makeCombatSpec(BROOD_CORE_DEF, {
     semitones: -5,
     tempoMul: 1.16,
@@ -2336,13 +2387,20 @@ const COMBAT_VARIANTS: Record<CombatMusicId, SongSpec> = {
     trim: 1.12,
     drums: { verse: 'K...t.t.s.......', fill: 'K...t.t.s...t.ts' },
   }),
-  combat_frenzy: makeCombatSpec(SURGE_CORE_DEF, { ...STRAIGHT, trim: 1.12 }),
+  combat_frenzy: makeCombatSpec(SURGE_CORE_DEF, {
+    semitones: -3,
+    tempoMul: 1.0,
+    swing: 0,
+    submerged: true,
+    trim: 1.12,
+    drums: { verse: 'k.h.s.h.k.h.s.h.', fill: 'k.h.s.h.k.h.ssss' },
+  }),
   combat_rally: makeCombatSpec(SURGE_CORE_DEF, {
-    semitones: 5,
-    tempoMul: 1.04,
+    semitones: -2,
+    tempoMul: 1.0,
     swing: 0.05,
     trim: 1.06,
-    drums: { verse: 'K.hkk.hks.hkk.hk', fill: 'K.hkS.hkS.hkS.S.' },
+    drums: { verse: 'k.h.s.h.k.k.s.h.', fill: 'k.h.s.h.k.k.s.ss' },
   }),
 };
 
