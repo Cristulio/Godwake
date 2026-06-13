@@ -26,6 +26,8 @@
     "sealedRemaining": " {n} more to spend and it is yours to wear.",
     "afterFirstOffering": "After your first offering",
     "unlocksAt": "Unlocks at {n} renown spent",
+    "maskedName": "???",
+    "maskedHint": "A soul sealed deeper than the wheel will show. Wake the one before it first.",
     "standsReady": "{name} stands ready.",
     "pickToContinue": "Pick a soul to continue.",
     "descendAs": "Descend as {name} ▸",

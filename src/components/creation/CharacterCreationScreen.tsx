@@ -251,10 +251,35 @@ export function CharacterCreationScreen() {
             </button>
           );
         })}
-        {/* Souls not yet open to this walker show as sealed placeholders, each
-            naming the renown it must be given at the Wellspring before it wakes —
-            and how much remains — so the path to it is never a mystery. */}
-        {sealedOptions.map((o) => {
+        {/* Only the NEXT soul to wake (the cheapest still-sealed, first in the
+            unlock ladder) shows its sprite + the renown price, so the immediate
+            goal is clear. Every soul sealed deeper than that masks to "???" like
+            the bestiary / deeds — the ladder reveals itself one rung at a time. */}
+        {sealedOptions.map((o, idx) => {
+          if (idx > 0) {
+            return (
+              <div
+                key={o.classId}
+                className="relative p-4 border-2 border-[var(--color-border-dim)] bg-[var(--color-bg-elevated)] opacity-60 flex flex-col gap-2"
+              >
+                <div className="absolute -top-px -right-px bg-[var(--color-border-warm)] text-[var(--color-bg-base)] font-display text-[9px] uppercase tracking-widest px-2 py-1">
+                  {t('screens.charCreation.sealed')}
+                </div>
+                <div
+                  aria-hidden
+                  className="relative h-28 flex items-center justify-center overflow-hidden border border-[var(--color-border-dim)] bg-[var(--color-bg-deep)]/60 text-5xl text-[var(--color-text-muted)] font-display animate-pulse"
+                >
+                  ?
+                </div>
+                <div className="font-display text-[var(--color-text-dim)] text-base tracking-wide">
+                  {t('screens.charCreation.maskedName')}
+                </div>
+                <p className="font-narrative text-[var(--color-text-dim)] text-xs italic leading-relaxed">
+                  {t('screens.charCreation.maskedHint')}
+                </p>
+              </div>
+            );
+          }
           const threshold = classUnlockRenown(o.classId, soulOrigin);
           const firstOffering = threshold === SLOT_RENOWN_THRESHOLDS[0];
           const remaining = Math.max(0, threshold - renownSpent);

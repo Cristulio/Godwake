@@ -26,6 +26,8 @@
     "sealedRemaining": " {n} más por gastar y será tuya para vestirla.",
     "afterFirstOffering": "Tras tu primera ofrenda",
     "unlocksAt": "Se abre con {n} de renombre gastado",
+    "maskedName": "???",
+    "maskedHint": "Un alma sellada más hondo de lo que la rueda revela. Despierta antes la anterior.",
     "standsReady": "{name} está lista.",
     "pickToContinue": "Elige un alma para continuar.",
     "descendAs": "Desciende como {name} ▸",
