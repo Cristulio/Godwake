@@ -191,6 +191,7 @@ export const DRUID: Class = ClassSchema.parse({
           'Wild Shape twice per combat instead of once.',
           'The beast carries 8 + 3 per level temporary HP, not the circle-less 4 + 2.',
           'Dire Claws — a heavier strike ladder (1d10, then 2d6, then 2d8).',
+          'Level 6: shapeshifted claws strike at +2 to hit and +2 damage (Primal Strike).',
         ],
       },
       featuresByLevel: {
@@ -208,7 +209,8 @@ export const DRUID: Class = ClassSchema.parse({
             id: 'primal-strike',
             name: 'Primal Strike',
             description:
-              'Your beast-form claws bite past hide and ward alike — nothing shrugs off the predator you have become.',
+              'Your beast-form claws bite past hide and ward alike — nothing shrugs off the predator you have become. Every strike in the form lands surer and carves deeper.',
+            mechanicKey: 'primal-strike',
           },
         ],
         '10': [

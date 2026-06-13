@@ -18,6 +18,23 @@ import { t } from '../../i18n';
 export const WILD_SHAPE_ROUNDS = 5;
 
 /**
+ * Druid L6 Primal Strike (Circle of the Moon): while shapeshifted, the beast's
+ * claws bite past hide and ward — a flat to-hit edge and bonus damage on every
+ * form attack, gated on the `primal-strike` mechanic. This is the contained,
+ * universal expression of the 5e feature: this engine has no live monster damage
+ * resistance to "overcome" (the resist arrays are codex/bot-only), and the one
+ * real mitigation — the boss `gate` ward — belongs to four endgame bosses a L6
+ * druid never meets and exists to gate a "kill the add" puzzle. So rather than a
+ * no-op resistance flag or an out-of-scope global-resistance rebalance, Primal
+ * Strike keeps the beast form relevant the way it must: the claws simply land
+ * surer and bite deeper. Mirrors the dragon-claw form-buff idiom in playerAttack.
+ * Magnitudes are CONSERVATIVE and provisional — the caster/druid sim pass
+ * calibrates them against the band.
+ */
+export const PRIMAL_STRIKE_HIT_BONUS = 2;
+export const PRIMAL_STRIKE_DAMAGE_BONUS = 2;
+
+/**
  * The beast's vitality, granted as temporary HP on the change. Scales with the
  * druid's level (the form grows with the soul). Circle of the Moon wears the
  * larger, sturdier predators — a deeper base cushion and a steeper level climb.
