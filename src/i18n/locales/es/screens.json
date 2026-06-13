@@ -215,6 +215,10 @@
     "accessoryKind": "{slot} · accesorio",
     "enhanceWeapon": "+{n} a las tiradas de ataque y daño",
     "enhanceArmor": "+{n} a la Clase de Armadura",
+    "relevance": {
+      "weaponOnly": "solo arma — tus hechizos no la usan",
+      "spellOnly": "solo conjuros — no afecta a tus golpes de arma"
+    },
     "category": {
       "light": "ligera",
       "medium": "media",

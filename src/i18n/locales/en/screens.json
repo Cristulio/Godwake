@@ -215,6 +215,10 @@
     "accessoryKind": "{slot} · accessory",
     "enhanceWeapon": "+{n} to attack and damage rolls",
     "enhanceArmor": "+{n} Armor Class",
+    "relevance": {
+      "weaponOnly": "weapon only — your spells don't use this",
+      "spellOnly": "spell only — doesn't touch your weapon hits"
+    },
     "category": {
       "light": "Light",
       "medium": "Medium",

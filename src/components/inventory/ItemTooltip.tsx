@@ -13,6 +13,8 @@ import {
   weaponPropertyLabel,
   twoHandedPremiumLine,
 } from './itemDisplay';
+import { affixRelevanceById } from './affixRelevance';
+import { useGameStore } from '../../stores/gameStore';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
@@ -40,6 +42,7 @@ const RARITY_COLOR: Record<Rarity, string> = {
 
 export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: ItemTooltipProps) {
   const { t, tc } = useT();
+  const character = useGameStore((s) => s.character);
   const isRolled = rolled !== undefined && rolled.rarity !== 'white';
   const borderColor = isRolled ? GEAR_RARITY_COLOR[rolled.rarity] : 'var(--color-accent-amber)';
   const displayName = localizedItemName({ itemId: item.id, rolled });
@@ -87,13 +90,19 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
             } catch {
               /* unknown affix id — show the raw id */
             }
+            const rel = affixRelevanceById(id, character);
             return (
               <div
                 key={id}
                 className="text-[10px] leading-snug"
-                style={{ color: GEAR_RARITY_COLOR[rolled.rarity] }}
+                style={{ color: GEAR_RARITY_COLOR[rolled.rarity], opacity: rel.relevant ? 1 : 0.4 }}
               >
                 ◆ {effect}
+                {rel.tag && (
+                  <span className="ml-1 not-italic text-[9px] uppercase tracking-wider text-[var(--color-text-dim)]">
+                    ({rel.tag})
+                  </span>
+                )}
               </div>
             );
           })}
