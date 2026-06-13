@@ -80,20 +80,68 @@ export function TitleScreen() {
             'radial-gradient(ellipse 55% 32% at 50% -8%, rgba(96,168,104,0.11) 0%, rgba(60,120,72,0.04) 45%, transparent 72%)',
         }}
       />
-      {/* Iron cell bars — heavier iron with a torch-lit rim, faded clear of the
-          centre so the logo stays legible. Two coats: a wide shadow gutter, then
-          the rounded iron bar with a warm highlight down its torch-side edge. */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.9]"
+      {/* Rusted iron cell grid — rust-toned vertical bars + two horizontal
+          cross-rails (top & bottom), top-lit, with a turbulence rust mottle.
+          Masked clear of the centre so the logo stays legible. */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        preserveAspectRatio="none"
+        viewBox="0 0 1200 720"
+        aria-hidden
         style={{
-          background:
-            'repeating-linear-gradient(90deg, transparent 0 64px, rgba(0,0,0,0.45) 64px 66px, rgba(188,146,96,0.24) 66px 68px, rgba(10,7,5,0.92) 68px 82px, rgba(0,0,0,0.5) 82px 86px)',
+          opacity: 0.92,
           WebkitMaskImage:
             'radial-gradient(ellipse 40% 40% at 50% 42%, transparent 0%, transparent 14%, black 60%)',
           maskImage:
             'radial-gradient(ellipse 40% 40% at 50% 42%, transparent 0%, transparent 14%, black 60%)',
         }}
-      />
+      >
+        <defs>
+          <linearGradient id="rustV" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#0c0704" />
+            <stop offset="16%" stopColor="#3a2313" />
+            <stop offset="40%" stopColor="#7e4d2c" />
+            <stop offset="52%" stopColor="#9c633a" />
+            <stop offset="72%" stopColor="#532f1c" />
+            <stop offset="100%" stopColor="#090503" />
+          </linearGradient>
+          <linearGradient id="rustH" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0c0704" />
+            <stop offset="22%" stopColor="#7e4d2c" />
+            <stop offset="46%" stopColor="#9c633a" />
+            <stop offset="72%" stopColor="#452a19" />
+            <stop offset="100%" stopColor="#090503" />
+          </linearGradient>
+          <linearGradient id="barLight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ffd9a0" stopOpacity="0.22" />
+            <stop offset="42%" stopColor="#ffd9a0" stopOpacity="0.05" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0.42" />
+          </linearGradient>
+          <filter id="rustMottle">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.16" numOctaves="2" seed="11" result="n" />
+            <feColorMatrix
+              in="n"
+              type="matrix"
+              values="0 0 0 0 0.42  0 0 0 0 0.26  0 0 0 0 0.13  0 0 0 0.55 0"
+            />
+          </filter>
+          <pattern id="vbars" width="92" height="720" patternUnits="userSpaceOnUse">
+            <rect x="39" y="0" width="15" height="720" fill="url(#rustV)" />
+            <rect x="39" y="0" width="15" height="720" filter="url(#rustMottle)" opacity="0.35" style={{ mixBlendMode: 'overlay' }} />
+          </pattern>
+        </defs>
+        {/* Vertical bars */}
+        <rect width="1200" height="720" fill="url(#vbars)" />
+        {/* Two horizontal cross-rails */}
+        <g>
+          <rect x="0" y="74" width="1200" height="18" fill="url(#rustH)" />
+          <rect x="0" y="74" width="1200" height="18" filter="url(#rustMottle)" opacity="0.35" style={{ mixBlendMode: 'overlay' }} />
+          <rect x="0" y="610" width="1200" height="18" fill="url(#rustH)" />
+          <rect x="0" y="610" width="1200" height="18" filter="url(#rustMottle)" opacity="0.35" style={{ mixBlendMode: 'overlay' }} />
+        </g>
+        {/* Whole-grid top lighting */}
+        <rect width="1200" height="720" fill="url(#barLight)" style={{ mixBlendMode: 'soft-light' }} />
+      </svg>
       {/* Torch light-pools (flicker) — tall warm washes down each torch column */}
       <div
         className="absolute inset-0 pointer-events-none animate-torch-flicker"
