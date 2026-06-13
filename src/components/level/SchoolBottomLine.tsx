@@ -23,6 +23,7 @@ export const ARCHETYPE_ACCENTS: Record<string, string> = {
   Warden: '#8AA8FF',
   Mirage: '#4ECDC4',
   Shapeshifter: '#8FBF6E',
+  Stormcaller: '#56B6E6',
 };
 
 const DEFAULT_ACCENT = '#F4A742';

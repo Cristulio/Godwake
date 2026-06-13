@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { buildPlayerCharacter, presetCreationInput } from '../character/defaultCharacter';
 import { getClass, listClasses } from '../../content/classes';
 import { spellSaveDC } from './spells';
+import { spellDamageBonus } from './spells/helpers';
+import { combatLean } from '../character/combatLean';
 import { isWildShaped, characterHasMechanic, spellcastingMod } from '../character/derived';
 import {
   wildShapeUsesMax,
@@ -330,5 +332,36 @@ describe('Druid — Primal Strike (L6 Moon)', () => {
       proven = true;
     }
     expect(proven).toBe(true);
+  });
+});
+
+describe('Druid — Circle of the Tempest (caster fork)', () => {
+  it('leans caster — the L2 fork: Moon = martial, Tempest = caster', () => {
+    expect(combatLean({ classId: 'druid', subclassId: 'circle-of-the-moon' })).toBe('martial');
+    expect(combatLean({ classId: 'druid', subclassId: 'circle-of-the-tempest' })).toBe('caster');
+  });
+
+  it('raises spell save DC: +1 at the L2 pick, +2 once Eye of the Storm lands (L10)', () => {
+    const plain2 = spellSaveDC(makeDruid(2, null));
+    expect(spellSaveDC(makeDruid(2, 'circle-of-the-tempest'))).toBe(plain2 + 1);
+    // L10 Tempest carries circle-of-the-tempest (L2) + eye-of-the-storm (L10) → +2.
+    const plain10 = spellSaveDC(makeDruid(10, null));
+    expect(spellSaveDC(makeDruid(10, 'circle-of-the-tempest'))).toBe(plain10 + 2);
+    // The Moon (martial) fork earns no caster DC.
+    expect(spellSaveDC(makeDruid(10, 'circle-of-the-moon'))).toBe(plain10);
+  });
+
+  it('Gathering Storm (L6) adds ⌊level/2⌋ flat spell damage, and only from L6', () => {
+    // Below L6 the circle grants no spell damage…
+    expect(spellDamageBonus(makeDruid(5, 'circle-of-the-tempest'))).toBe(
+      spellDamageBonus(makeDruid(5, null)),
+    );
+    // …from L6 on, every damaging working gains ⌊level/2⌋.
+    expect(spellDamageBonus(makeDruid(6, 'circle-of-the-tempest'))).toBe(
+      spellDamageBonus(makeDruid(6, null)) + 3,
+    );
+    expect(spellDamageBonus(makeDruid(12, 'circle-of-the-tempest'))).toBe(
+      spellDamageBonus(makeDruid(12, null)) + 6,
+    );
   });
 });

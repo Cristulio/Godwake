@@ -669,6 +669,26 @@
     "name": "Vitalidad Sellada por la Luna",
     "description": "Las formas que vistes se vuelven más viejas y fuertes aún —la vitalidad de la bestia se ahonda con cada nivel de tu propio poder."
   },
+  "druid.circle-of-the-tempest": {
+    "name": "Círculo de la Tempestad",
+    "description": "El Círculo que nunca viste la bestia —se convierte en la tormenta de la que la bestia huye. Mejor con una construcción de lanzador: el orbe en la otra mano, las túnicas, y el equipo de CD de conjuro y de daño de conjuro que afila cada trabajo que sueltas.",
+    "archetype": "Tempestuario",
+    "lever0": "+1 a la CD de salvación de tus conjuros —la llamada de lo silvestre cuesta más sacudirse.",
+    "lever1": "Nivel 6: cada conjuro dañino acierta por la mitad de tu nivel de más, plano.",
+    "lever2": "Nivel 10: +1 más a la CD de salvación (+2 en total) —nadie capea la tormenta."
+  },
+  "druid.circle-of-the-tempest.circle-of-the-tempest": {
+    "name": "Círculo Druídico: Círculo de la Tempestad",
+    "description": "Le das a la vieja furia una voz en lugar de un cuerpo. Tu CD de salvación de conjuro sube en 1, así que las salvaciones que exigen tus trabajos muerden más fuerte. Premia una construcción de lanzador —equipo de CD y de daño de conjuro, el orbe en la otra mano— por encima de la forma de bestia."
+  },
+  "druid.circle-of-the-tempest.gathering-storm": {
+    "name": "Tormenta Creciente",
+    "description": "Cuanto más habla lo silvestre a través de ti, más fuerte golpea —cada conjuro dañino que sueltas acierta por un daño adicional igual a la mitad de tu nivel, un filo plano encima de cada dado que ya tira el espacio."
+  },
+  "druid.circle-of-the-tempest.eye-of-the-storm": {
+    "name": "Ojo de la Tormenta",
+    "description": "Te yergues intacto en el corazón de la ruina que haces descender, y nada que se te oponga la capea —tu CD de salvación de conjuro sube en 1 otra vez, dos en total sobre el druida sin círculo."
+  },
   "monk": {
     "name": "Monje",
     "characterName": "Shen Raíz de Hierro",

@@ -12,6 +12,7 @@ import {
   consumeSlot,
   empoweredEvocationBonus,
   evaluateCombatEndFull,
+  gatheringStormBonus,
   markActionUsed,
   nextLogId,
   spellElement,
@@ -32,7 +33,10 @@ export function castFireball(ctx: CastSpellContext): CastResult {
   const dice = evoker ? 9 : 8;
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
   // Empowered Evocation rides the blast directly (Fireball bypasses spellDamageBonus).
-  const fullDmg = scaleSpellDamage(damageRoll.total, nextCharacter, 3) + empoweredEvocationBonus(nextCharacter);
+  const fullDmg =
+    scaleSpellDamage(damageRoll.total, nextCharacter, 3) +
+    empoweredEvocationBonus(nextCharacter) +
+    gatheringStormBonus(nextCharacter);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
