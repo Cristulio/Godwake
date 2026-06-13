@@ -7,7 +7,7 @@
   "cantWear": "A {class} can't wear this",
   "requiresAbility": "Requires {ability} {value}",
   "requiresStrength": "Requires Strength {value}",
-  "monkWeaponKeepsKit": "Drilled into the forms — Ki, the flurry, and the stances keep their footing. The price: your empty hand's {die} +{edge} strikes are set aside for this arm's own steel.",
-  "monkWeaponStillsKit": "Steel stills the forms — no Ki, no flurry, no stances while this is in hand, and the empty hand's {die} +{edge} goes with them. The empty hand asks for nothing.",
+  "monkWeaponKeepsKit": "A monk weapon — your Ki, Flurry, and stances flow whether it's in hand or you fight bare-handed. The only trade is the strike itself: this weapon's die, enchantment, and affixes in hand, against your bare hands' larger {die} +{edge} and no gear.",
+  "monkWeaponStillsKit": "Not a monk weapon — take it up and the forms fall silent: no Ki, no Flurry, no stances, and your bare hands' {die} +{edge} sets aside with them. Fight bare-handed to keep the whole kit; hold this and you're only a body with a blade.",
   "fistsNotAnItem": "The empty hand is not an item — it never leaves."
 }
