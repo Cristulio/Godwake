@@ -176,10 +176,47 @@ describe('dual wield — equip rules', () => {
   });
 
   it('dropping a light blade on the off-hand unequips a two-handed main (the shield rule)', () => {
-    const c = makeSchooled('barbarian', 'berserker', 3, 'greataxe', null, ['dagger']);
+    // Fighter/rogue dual-wield: a light off-hand needs a free hand, so a
+    // two-handed main yields (exactly as a shield drop would).
+    const c = makeSchooled('fighter', 'battle-master', 3, 'greatsword', null, ['dagger']);
     const next = equipItemToSlot(c, invIdx(c, 'dagger'), 'offHand');
     expect(next.equipped.offHand?.itemId).toBe('dagger');
     expect(next.equipped.mainHand).toBeNull();
+  });
+
+  // ─── barbarian Twin Fury: TWO two-handed weapons ──────────────────────────
+  it('Twin Fury off-hand takes a TWO-HANDED weapon, not a light one', () => {
+    const barb = makeSchooled('barbarian', 'berserker', 3, 'greataxe', null, [
+      'greatsword',
+      'dagger',
+    ]);
+    // The savage titan seats a second great weapon in the off-hand…
+    expect(canOffHandWeapon(barb, 'greatsword')).toBe(true);
+    // …and a light blade no longer qualifies for the off-hand at all.
+    expect(canOffHandWeapon(barb, 'dagger')).toBe(false);
+  });
+
+  it('Twin Fury keeps the two-handed main when a second great weapon drops on the off-hand', () => {
+    const barb = makeSchooled('barbarian', 'berserker', 3, 'greataxe', null, ['greatsword']);
+    const next = equipItemToSlot(barb, invIdx(barb, 'greatsword'), 'offHand');
+    expect(next.equipped.mainHand?.itemId).toBe('greataxe');
+    expect(next.equipped.offHand?.itemId).toBe('greatsword');
+  });
+
+  it('Twin Fury tap-equip fills an empty off-hand with a second two-hander beside a 2H main', () => {
+    const barb = makeSchooled('barbarian', 'berserker', 3, 'greataxe', null, ['greatsword']);
+    const next = equipItem(barb, invIdx(barb, 'greatsword'));
+    expect(next.equipped.mainHand?.itemId).toBe('greataxe');
+    expect(next.equipped.offHand?.itemId).toBe('greatsword');
+  });
+
+  it('a 2H off-hand is barbarian-only — a Battle Master still cannot off-hand a greatsword', () => {
+    const fighter = makeSchooled('fighter', 'battle-master', 3, 'longsword', null, ['greatsword']);
+    expect(canOffHandWeapon(fighter, 'greatsword')).toBe(false);
+    // Auto-routes to the main hand (clearing the off-hand as any 2H main does).
+    const next = equipItemToSlot(fighter, invIdx(fighter, 'greatsword'), 'offHand');
+    expect(next.equipped.mainHand?.itemId).toBe('greatsword');
+    expect(next.equipped.offHand).toBeNull();
   });
 
   it('classes and schools without the mechanic are unchanged', () => {
@@ -252,6 +289,60 @@ describe('dual wield — the off-hand swing', () => {
     // halved (covered by the next case), so only the base bite scaled up.
     expect(mainDmg!.text).toMatch(/\+ \d+ STR/);
     expect(offDmg!.text).toMatch(/\+ \d+ STR/);
+  });
+
+  it('the barbarian Twin Fury follow swings a SECOND two-hander for HALF the ability mod', () => {
+    const pair = findOpeningPair(
+      () => makeSchooled('barbarian', 'berserker', 3, 'greataxe', 'greatsword'),
+      { mainHit: true, offHit: true },
+      { toughenTo: 400 },
+    );
+    expect(pair.mainLine.text).toContain('with Greataxe');
+    // The off-hand follow is the second great weapon, not a light blade.
+    expect(pair.offLine.text).toContain('off-hand follows — Greatsword');
+    const strOf = (entry: CombatLogEntry): number => {
+      const m = entry.text.match(/\+ (\d+) STR/);
+      return m ? Number(m[1]) : 0;
+    };
+    const mainStr = strOf(damageLineAfter(pair.state, pair.mainLine)!);
+    const offStr = strOf(damageLineAfter(pair.state, pair.offLine)!);
+    // Main hand keeps the full STR mod; the heavy 2H off-hand takes only half
+    // (floored) — the brake on the savage-titan follow.
+    expect(mainStr).toBeGreaterThan(0);
+    expect(offStr).toBe(Math.floor(mainStr / 2));
+  });
+
+  it('the 2H off-hand follow never crits (the structural brake)', () => {
+    // Sweep many seeds: the off-hand follow must NEVER log a critical, while the
+    // main hand crits on its range as usual (a non-zero crit count confirms the
+    // sweep actually exercised crit-eligible rolls).
+    let mainCrits = 0;
+    let offLines = 0;
+    let offCrits = 0;
+    for (let seed = 1; seed <= 400; seed++) {
+      _resetMonsterInstanceCounter();
+      const roller = createDiceRoller(seed);
+      const character = makeSchooled('barbarian', 'berserker', 5, 'greataxe', 'greatsword');
+      const init = createCombat({
+        roller,
+        character,
+        monsters: [{ def: getMonster('goblin'), displayName: 'Goblin A' }],
+      });
+      const state = toughen(init.state, monsterByName(init.state, 'Goblin A').id, 600);
+      const targetId = monsterByName(state, 'Goblin A').id;
+      const r = playerAttack({ roller, character: init.character, state }, targetId, 'greataxe');
+      for (const l of rollLines(r.state)) {
+        if (/off-hand follows/.test(l.text)) {
+          offLines++;
+          if (/CRITICAL HIT\.$/.test(l.text)) offCrits++;
+        } else if (/CRITICAL HIT\.$/.test(l.text)) {
+          mainCrits++;
+        }
+      }
+    }
+    expect(offLines).toBeGreaterThan(0); // the follow actually fired
+    expect(mainCrits).toBeGreaterThan(0); // crits are reachable in the sweep
+    expect(offCrits).toBe(0); // …but never on the off-hand follow
   });
 
   it("the off-hand's gear edge is HALVED and never leaks onto main-hand swings", () => {
