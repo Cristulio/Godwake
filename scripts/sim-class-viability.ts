@@ -84,7 +84,7 @@ import {
   equipItemToSlot,
   slotForItem,
 } from '../src/engine/character/equip';
-import { monkFightsUnarmed } from '../src/engine/combat/monk';
+import { isMonkWeaponId } from '../src/engine/combat/monk';
 import { bardActiveSongs } from '../src/engine/combat/bard';
 import { characterAffixMods } from '../src/engine/items/affixMods';
 import { rollGearDrop, rollPotionDrop, rollLegendaryDrop } from '../src/engine/items/drops';
@@ -119,6 +119,12 @@ const MAX_LIVES = Number(process.env.MAX_LIVES ?? 150);
 // the non-default college/path (e.g. SUBCLASS=valor to play the martial Bard,
 // which subclasses[0]=lore otherwise hides). Applies to whatever classes run.
 const SUBCLASS_OVERRIDE = process.env.SUBCLASS || null;
+// MONK_WEAPON=1 plays the gear-path monk: the bot equips + keeps MONK weapons
+// (war staff / kama / glaive — the kit stays live) and starts with a base war
+// staff, instead of the default bare-handed monk. Lets a bare-vs-weapon monk
+// comparison run as two passes. Never equips an ordinary weapon (that stills the
+// kit). No-op for non-monk classes.
+const MONK_WEAPON = process.env.MONK_WEAPON === '1';
 const ARCHETYPE: Archetype = (ARCHETYPES as readonly string[]).includes(process.env.ARCHETYPE ?? '')
   ? (process.env.ARCHETYPE as Archetype)
   : 'balanced';
@@ -373,9 +379,12 @@ function tryEquipDrop(c: Character, ref: ItemRef): Character {
   // hand it a main-hand weapon; the gear-path monk is a human option the bot
   // doesn't model. (Armour/accessories still equip through the normal path.)
   if (
-    monkFightsUnarmed(c) &&
-    slotForItem(ref.itemId) === 'mainHand'
+    c.classId === 'monk' &&
+    slotForItem(ref.itemId) === 'mainHand' &&
+    !(MONK_WEAPON && isMonkWeaponId(ref.itemId))
   ) {
+    // Bare mode: never a main-hand. Weapon mode: ONLY monk weapons (kit kept) —
+    // never an ordinary weapon, which would still the kit and crater the bot.
     return c;
   }
   const idx = c.inventory.length;
@@ -409,7 +418,12 @@ function reEquipFromInventory(c: Character): Character {
   let best = c;
   for (let i = 0; i < best.inventory.length; i++) {
     const ref = best.inventory[i];
-    if (monkFightsUnarmed(best) && slotForItem(ref.itemId) === 'mainHand') continue;
+    if (
+      best.classId === 'monk' &&
+      slotForItem(ref.itemId) === 'mainHand' &&
+      !(MONK_WEAPON && isMonkWeaponId(ref.itemId))
+    )
+      continue;
     const equipped = equipItem(best, i);
     if (equipped !== best && loadoutScore(equipped) > loadoutScore(best) + 0.01) {
       best = equipped;
@@ -587,6 +601,14 @@ function descend(roller: DiceRoller, soul: SoulState): Character {
   const goldMult = getAscensionLevel(soul.ascension).startingGoldMult;
   const startingGold = Math.round((c.permanentBonuses?.startingGold ?? 0) * goldMult);
   c = { ...c, goldInPocket: startingGold, hp: { ...c.hp, current: c.hp.max } };
+  // Weapon-mode monk: seat a base War Staff (a monk weapon — kit stays live).
+  // Drops upgrade it via tryEquipDrop; the loadout-improvement check never seats
+  // a base weapon over bare hands, so seat it directly here.
+  if (MONK_WEAPON && c.classId === 'monk') {
+    const idx = c.inventory.length;
+    c = { ...c, inventory: [...c.inventory, { itemId: 'monk-war-staff' }] };
+    c = equipItem(c, idx);
+  }
   return longRest(c);
 }
 
