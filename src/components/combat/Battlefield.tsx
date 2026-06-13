@@ -1,6 +1,7 @@
 import type { Character } from '../../types/character';
 import type { CombatState, MonsterCombatant, MonsterInstance } from '../../types/combat';
 import { getMonster } from '../../content/monsters';
+import { t, getLocalizedMonsterPhaseName } from '../../i18n';
 import { backdropFor } from '../../assets/backdrops/registry';
 import { BattlefieldBackdrop } from './BattlefieldBackdrop';
 import { BattlefieldSprite } from './BattlefieldSprite';
@@ -29,8 +30,10 @@ function gateWardLabel(state: CombatState, instance: MonsterInstance): string | 
 function phaseLabel(instance: MonsterInstance): string | undefined {
   const entered = instance.phasesEntered;
   if (!entered?.length) return undefined;
-  const last = getMonster(instance.defId).phases?.[entered[entered.length - 1]];
-  return last?.name ?? (instance.transformed ? 'Transformed' : 'Enraged');
+  const idx = entered[entered.length - 1];
+  const last = getMonster(instance.defId).phases?.[idx];
+  if (last?.name) return getLocalizedMonsterPhaseName(instance.defId, idx, last.name);
+  return instance.transformed ? t('combat.phase.transformed') : t('combat.phase.enraged');
 }
 
 export type BattlefieldDecoration =

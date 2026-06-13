@@ -18,6 +18,7 @@ import { DUNGEON_TWISTS } from '../engine/delve';
 import { TUTORIALS, CLASS_TUTORIALS, STANDALONE_TUTORIALS } from '../content/tutorials';
 import type { TutorialContent } from '../content/tutorials';
 import type { EventChoiceOutcome } from '../schemas/event';
+import type { Monster, MonsterAction } from '../schemas/monster';
 
 import esMonsters from './locales/es/monsters.json';
 import esEvents from './locales/es/events.json';
@@ -65,6 +66,26 @@ function resolutionOf(outcome: EventChoiceOutcome | undefined): string | undefin
   return undefined;
 }
 
+type MonsterRow = {
+  actions?: Record<string, { name?: string; desc?: string; charge?: string }>;
+  phases?: Record<string, { name?: string; enterText?: string }>;
+};
+
+/**
+ * Every action the combat log can name — the base list PLUS the actions a phase
+ * grants on entry (`addActions`). Phase-added actions are localized by the engine
+ * the same way (getLocalizedMonsterActionName), so their names/descs/charges must
+ * be covered too. Deduped by the English action name, which is the overlay key.
+ */
+function allMonsterActions(m: Monster): MonsterAction[] {
+  const seen = new Map<string, MonsterAction>();
+  for (const a of m.actions) if (!seen.has(a.name)) seen.set(a.name, a);
+  for (const p of m.phases ?? []) {
+    for (const a of p.addActions ?? []) if (!seen.has(a.name)) seen.set(a.name, a);
+  }
+  return [...seen.values()];
+}
+
 describe('es/monsters.json completeness', () => {
   it('every monster has a Spanish name + flavorText overlay', () => {
     const missing: string[] = [];
@@ -82,13 +103,12 @@ describe('es/monsters.json completeness', () => {
     expect(orphans, `orphan monster overlays: ${orphans.join(', ')}`).toEqual([]);
   });
 
-  it('every monster action has a Spanish name overlay (combat log + Codex)', () => {
+  it('every monster action (base + phase-added) has a Spanish name overlay (combat log + Codex)', () => {
     const missing: string[] = [];
     for (const m of listMonsters()) {
-      const row = monsters[m.id] as unknown as { actions?: Record<string, { name?: string }> } | undefined;
-      const actions = row?.actions;
-      for (const a of m.actions) {
-        const esName = actions?.[a.name]?.name;
+      const row = monsters[m.id] as unknown as MonsterRow | undefined;
+      for (const a of allMonsterActions(m)) {
+        const esName = row?.actions?.[a.name]?.name;
         if (typeof esName !== 'string' || esName.trim().length === 0) {
           missing.push(`${m.id}.${a.name}`);
         }
@@ -100,19 +120,65 @@ describe('es/monsters.json completeness', () => {
   it('every monster action with an English description has a Spanish desc overlay (Codex)', () => {
     const missing: string[] = [];
     for (const m of listMonsters()) {
-      const row = monsters[m.id] as unknown as
-        | { actions?: Record<string, { desc?: string }> }
-        | undefined;
-      const actions = row?.actions;
-      for (const a of m.actions) {
+      const row = monsters[m.id] as unknown as MonsterRow | undefined;
+      for (const a of allMonsterActions(m)) {
         if (typeof a.description !== 'string' || a.description.trim().length === 0) continue;
-        const esDesc = actions?.[a.name]?.desc;
+        const esDesc = row?.actions?.[a.name]?.desc;
         if (typeof esDesc !== 'string' || esDesc.trim().length === 0) {
           missing.push(`${m.id}.${a.name}`);
         }
       }
     }
     expect(missing, `missing monster action-desc overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('every boss telegraph chargeText has a Spanish charge overlay (combat log + intent)', () => {
+    const missing: string[] = [];
+    for (const m of listMonsters()) {
+      const row = monsters[m.id] as unknown as MonsterRow | undefined;
+      for (const a of allMonsterActions(m)) {
+        if (!a.telegraph?.chargeText) continue;
+        const esCharge = row?.actions?.[a.name]?.charge;
+        if (typeof esCharge !== 'string' || esCharge.trim().length === 0) {
+          missing.push(`${m.id}.${a.name}`);
+        }
+      }
+    }
+    expect(missing, `missing telegraph charge overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('every boss phase enterText + name has a Spanish overlay keyed by phase index', () => {
+    const missing: string[] = [];
+    for (const m of listMonsters()) {
+      const row = monsters[m.id] as unknown as MonsterRow | undefined;
+      (m.phases ?? []).forEach((p, idx) => {
+        const esPhase = row?.phases?.[String(idx)];
+        if (p.enterText && (typeof esPhase?.enterText !== 'string' || esPhase.enterText.trim().length === 0)) {
+          missing.push(`${m.id}.phases[${idx}].enterText`);
+        }
+        if (p.name && (typeof esPhase?.name !== 'string' || esPhase.name.trim().length === 0)) {
+          missing.push(`${m.id}.phases[${idx}].name`);
+        }
+      });
+    }
+    expect(missing, `missing phase overlays: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('has no orphan phase indices (every es phase key is a real phase carrying text)', () => {
+    const orphans: string[] = [];
+    for (const m of listMonsters()) {
+      const row = monsters[m.id] as unknown as MonsterRow | undefined;
+      if (!row?.phases) continue;
+      const realIndices = new Set(
+        (m.phases ?? [])
+          .map((p, idx) => (p.enterText || p.name ? String(idx) : null))
+          .filter((x): x is string => x !== null),
+      );
+      for (const key of Object.keys(row.phases)) {
+        if (!realIndices.has(key)) orphans.push(`${m.id}.phases[${key}]`);
+      }
+    }
+    expect(orphans, `orphan phase overlays: ${orphans.join(', ')}`).toEqual([]);
   });
 });
 

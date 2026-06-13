@@ -151,14 +151,17 @@ export function getLocalized(
  * must stay English everywhere it's stored/looked-up, so localize ONLY at the
  * point of display). Falls back to the English source out of locale / untranslated.
  */
-function monsterActionRow(monsterId: string, englishName: string): { name?: Json; desc?: Json } | undefined {
+function monsterActionRow(
+  monsterId: string,
+  englishName: string,
+): { name?: Json; desc?: Json; charge?: Json } | undefined {
   const row = registry.es?.monsters?.[monsterId];
   if (!row || typeof row !== 'object' || Array.isArray(row)) return undefined;
   const actions = (row as { [k: string]: Json }).actions;
   if (!actions || typeof actions !== 'object' || Array.isArray(actions)) return undefined;
   const entry = (actions as { [k: string]: Json })[englishName];
   if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return undefined;
-  return entry as { name?: Json; desc?: Json };
+  return entry as { name?: Json; desc?: Json; charge?: Json };
 }
 
 export function getLocalizedMonsterActionName(monsterId: string, englishName: string): string {
@@ -175,6 +178,62 @@ export function getLocalizedMonsterActionDesc(
   if (getLocale() === DEFAULT_LOCALE) return englishDesc;
   const val = monsterActionRow(monsterId, englishName)?.desc;
   return typeof val === 'string' ? val : englishDesc;
+}
+
+/**
+ * Localize a boss action's telegraph CHARGE line — the in-world wind-up shown in
+ * the combat log + intent tooltip while a special is charging. It lives on the
+ * action's `telegraph.chargeText`, so the overlay nests it alongside the action's
+ * name/desc as `actions: { "<English action name>": { "charge": "…" } }`, keyed
+ * by the same stable English action name. Falls back to the English source.
+ */
+export function getLocalizedMonsterActionCharge(
+  monsterId: string,
+  englishName: string,
+  englishCharge: string,
+): string {
+  if (getLocale() === DEFAULT_LOCALE) return englishCharge;
+  const val = monsterActionRow(monsterId, englishName)?.charge;
+  return typeof val === 'string' ? val : englishCharge;
+}
+
+/**
+ * Localize a boss PHASE string — the transition `enterText` logged on entry and
+ * the short `name` shown on the phase chip. Phases live in an array with no ids,
+ * so the overlay is keyed by the phase's 0-based position in the def's `phases[]`
+ * (`phases: { "0": { "name": "…", "enterText": "…" } }`). The engine already
+ * addresses phases by index (it stores `phasesEntered` indices), so the index is
+ * the stable identifier — reordering phases is already a save-breaking change.
+ * Falls back to the English source out of locale / untranslated.
+ */
+function monsterPhaseRow(monsterId: string, index: number): { name?: Json; enterText?: Json } | undefined {
+  const row = registry.es?.monsters?.[monsterId];
+  if (!row || typeof row !== 'object' || Array.isArray(row)) return undefined;
+  const phases = (row as { [k: string]: Json }).phases;
+  if (!phases || typeof phases !== 'object' || Array.isArray(phases)) return undefined;
+  const entry = (phases as { [k: string]: Json })[String(index)];
+  if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return undefined;
+  return entry as { name?: Json; enterText?: Json };
+}
+
+export function getLocalizedMonsterPhaseEnterText(
+  monsterId: string,
+  index: number,
+  englishEnterText: string,
+): string {
+  if (getLocale() === DEFAULT_LOCALE) return englishEnterText;
+  const val = monsterPhaseRow(monsterId, index)?.enterText;
+  return typeof val === 'string' ? val : englishEnterText;
+}
+
+export function getLocalizedMonsterPhaseName(
+  monsterId: string,
+  index: number,
+  englishName: string,
+): string {
+  if (getLocale() === DEFAULT_LOCALE) return englishName;
+  const val = monsterPhaseRow(monsterId, index)?.name;
+  return typeof val === 'string' ? val : englishName;
 }
 
 /**

@@ -61,7 +61,13 @@ import {
 import { appendLog } from '../log';
 import { applyDamage, evaluateCombatEnd, nextLogId } from './damage';
 import { sneakAttackDiceForLevel } from './playerAttack';
-import { t, getLocalized, getLocalizedMonsterActionName } from '../../../i18n';
+import {
+  t,
+  getLocalized,
+  getLocalizedMonsterActionName,
+  getLocalizedMonsterActionCharge,
+  getLocalizedMonsterPhaseEnterText,
+} from '../../../i18n';
 import type { AttackContext } from './playerAttack';
 
 // Nimble Dodge: a low-level Rogue reads the first strike of the round and slips
@@ -200,7 +206,9 @@ function applyPhaseTransitions(
     s = appendLog(s, {
       id: nextLogId(s),
       kind: 'system',
-      text: phase.enterText ?? t('combat.log.phaseSurge', { name: inst.displayName, label }),
+      text: phase.enterText
+        ? getLocalizedMonsterPhaseEnterText(def.id, idx, phase.enterText)
+        : t('combat.log.phaseSurge', { name: inst.displayName, label }),
     });
     s = attachEnemyEffect(s, 'enemy-frenzy', attackerId);
   }
@@ -219,6 +227,7 @@ function beginTelegraphCharge(
   displayName: string,
   action: MonsterAction,
 ): CombatState {
+  const defId = monsterInstanceOf(state, attackerId)?.defId;
   let s = patchMonsterInstance(state, attackerId, (i) => ({
     ...i,
     pendingTelegraph: {
@@ -231,8 +240,10 @@ function beginTelegraphCharge(
     id: nextLogId(s),
     kind: 'system',
     text:
-      action.telegraph?.chargeText ??
-      t('combat.log.telegraphCharge', { name: displayName, action: locAction(state, attackerId, action.name) }),
+      action.telegraph?.chargeText && defId
+        ? getLocalizedMonsterActionCharge(defId, action.name, action.telegraph.chargeText)
+        : action.telegraph?.chargeText ??
+          t('combat.log.telegraphCharge', { name: displayName, action: locAction(state, attackerId, action.name) }),
   });
   return attachEnemyEffect(s, 'enemy-frenzy', attackerId);
 }

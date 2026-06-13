@@ -54,6 +54,17 @@
       "Heavy War Pick": {
         "name": "Pico de Guerra Pesado",
         "desc": "El enano de piel gris descarga su pico en un pesado arco a dos manos. Grita una maldición en infracomún cuando la punta muerde."
+      },
+      "Overhead Pick": {
+        "name": "Pico Descendente",
+        "desc": "El pico baja en un arco completo por encima de la cabeza, todo el peso de su mole pétrea hincando la púa a través de guardia y hueso por igual.",
+        "charge": "Karzok iza el pico de guerra por encima de la cabeza, ambas manos blancas sobre el astil, cada músculo tensándose: el próximo golpe caerá con todo su peso detrás."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "Furia de Sangre de Piedra",
+        "enterText": "Karzok echa la cabeza atrás y ruge: la furia de sangre de piedra lo posee. Planta las botas, abandona la guardia y alza el pico de guerra muy por encima de la cabeza."
       }
     }
   },
@@ -194,6 +205,17 @@
       "Mind Spike": {
         "name": "Punzada Mental",
         "desc": "Una barra de fría luz plateada cruza la sala y termina en tu cráneo. El Magistrado ni siquiera alza la voz."
+      },
+      "Sentence": {
+        "name": "Sentencia",
+        "desc": "Pronuncia la última palabra de la sentencia y esta detona tras tus ojos: un veredicto hecho de puro peso psíquico, ejecutado al instante.",
+        "charge": "El Magistrado alza el sello de su cargo por encima de la cabeza y empieza a leer la sentencia en voz alta: las palabras cayendo como plomos, el aire espesándose hasta volverse cristal en torno a tu cráneo."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "La Sentencia",
+        "enterText": "El Magistrado se alza del estrado, la toga cayendo recta. «La corte ya ha oído bastante. Se halla deficiente al acusado. Queda dictada sentencia.»"
       }
     }
   },
@@ -310,6 +332,21 @@
       "Director's Glaive": {
         "name": "Guja del Director",
         "desc": "Se mueve con la economía practicada de un hombre que lleva treinta años abriendo sujetos. La hoja entra baja, nivelada y desde una distancia que no acabas de cerrar."
+      },
+      "Sever Resolve": {
+        "name": "Cercenar la Voluntad",
+        "desc": "Alcanza más allá de tus ojos y halla la cosa que decide pelear. Con paciencia de cirujano cercena un poco de ella, y tus brazos se vuelven pesados, tus golpes inciertos."
+      },
+      "Psychic Lobotomy": {
+        "name": "Lobotomía Psíquica",
+        "desc": "La presión se resuelve de golpe, una limpia incisión psíquica que abre todo lo que hay tras tus ojos al frío del asilo.",
+        "charge": "El Director extiende ambas manos hacia tu cráneo, el aire entre ellas plegándose hacia dentro: la sala entera se inclina hacia el punto que está a punto de abrir en tu mente."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "La Lobotomía",
+        "enterText": "El Director deja a un lado la guja. «El cuerpo no fue nunca más que la antesala.» Algo tras su monóculo se abre, y una presión halla el interior de tu cráneo."
       }
     }
   },
@@ -394,6 +431,12 @@
       "Spider's Curse": {
         "name": "Maldición de la Araña",
         "desc": "La Madre Matrona alza la mano libre y traza un glifo de araña en el aire. La telaraña se enciende entre sus dedos y cae sobre ti en hebras ardientes: el castigo de Aracne por el fuego de la superficie robado por una cosa de la superficie."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "La Mirada de Aracne",
+        "enterText": "La Matrona Madre sangra, y se queda quieta, y sonríe; y en algún lugar vasto y ajeno una mirada se vuelve hacia el templo. «Ahora Ella observa», susurra. «Me has vuelto interesante a Sus ojos.» Sus golpes caen más duros tras eso, y benditos."
       }
     }
   },
@@ -797,6 +840,12 @@
         "name": "Hoja de la Primera Mañana",
         "desc": "Una espada de la primera luz que jamás hubo, antes de que hubiera nada sobre lo que caer. No es cálida. Es el frío más viejo que existe, y corta como cortará el fin de todo: por completo, y sin malicia."
       }
+    },
+    "phases": {
+      "0": {
+        "name": "La Última Mañana",
+        "enterText": "Las falsas auroras se apagan de golpe, y lo que queda ya no se molesta con ellas. «No habrá más mañanas», dice, y hay en ello algo casi parecido al alivio. «Solo esta. Que cuente.» Deja de tener paciencia."
+      }
     }
   },
   "bugbear-headsman": {
@@ -806,6 +855,17 @@
       "Spiked Maul": {
         "name": "Mazo con Púas",
         "desc": "Un largo travesaño de cerca tachonado, blandido a dos manos, la clase de golpe que rompe un escudo más a menudo de lo que encuentra a un hombre."
+      },
+      "Overhead Crush": {
+        "name": "Aplastamiento Descendente",
+        "desc": "Todo el peso del bruto se desploma a través de la cabeza del mazo en un solo arco por lo alto, guardia y clavícula cediendo a la vez.",
+        "charge": "El mazo se alza sobre su cabeza, ambos puños blancos sobre el astil, cada bloque de su mole tensándose tras él: el próximo mandoble cae con todo su ser detrás."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "Enloquecido de Sangre",
+        "enterText": "El verdugo se palpa la herida, mira el rojo en su mano y deja de aburrirse. Planta los pies, deja arrastrar el mazo y empieza a alzarlo por encima de la cabeza."
       }
     }
   },
@@ -858,6 +918,17 @@
       "Arcane Bolt": {
         "name": "Descarga Arcana",
         "desc": "Una lanza de fuerza gris violeta lanzada por debajo, el gesto de alguien que te archiva bajo «administrativo»."
+      },
+      "Shatterbolt": {
+        "name": "Rayo Astillador",
+        "desc": "La fuerza reunida se desliga en un solo chasquido seco de presión que pliega el aire y todo lo que se sostiene en él.",
+        "charge": "Separa ambas manos y un nudo de fuerza gris violácea se hincha entre ellas, la luz del callejón curvándose hacia él: al siguiente compás se deshace de golpe, contra ti."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "Desligadura",
+        "enterText": "El magus se aprieta la herida con dos dedos, mira su propia sangre como si fuera un error de oficina, y deja de economizar. El aire en torno a sus manos empieza a plegarse hacia dentro."
       }
     }
   },
@@ -1003,7 +1074,8 @@
     "actions": {
       "Unmaking": {
         "name": "Deshacer",
-        "desc": "No alza una mano. Simplemente retira su atención del hecho de ti por un momento, y en ese momento sientes cuán poco te mantiene unido, cuán recientemente fuiste nada y cuán dispuesta está la nada aún a recobrarte. El cuerpo olvida el argumento para moverse."
+        "desc": "No alza una mano. Simplemente retira su atención del hecho de ti por un momento, y en ese momento sientes cuán poco te mantiene unido, cuán recientemente fuiste nada y cuán dispuesta está la nada aún a recobrarte. El cuerpo olvida el argumento para moverse.",
+        "charge": "El Deshecho retira su atención del hecho de ti: despacio, deliberadamente, como una mano se retrae antes de dejar caer lo que sostiene. Por este turno aún sientes el suelo bajo los pies. El próximo turno pretende que hayas olvidado que lo había."
       },
       "Set the Anchor": {
         "name": "Fijar el Ancla",
@@ -1016,6 +1088,12 @@
       "Hand That Turns the Wheel": {
         "name": "Mano que Gira la Rueda",
         "desc": "La mano se cierra sobre la línea que te ata a la siguiente vida y tira. Donde toca, quedas brevemente in-decidido —ni aquí ni enviado de vuelta—, y el no-decidir te cuesta más que ninguna hoja."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "Rechazado",
+        "enterText": "Has herido a una cosa que nunca nació. Contempla la herida con lo que, en algo con rostro, habría sido asombro. «Conque», dice, con todo el peso del primer silencio tras la palabra. «No vas a volverte yo. Vas a rechazarme.» Y hace girar la rueda más rápido."
       }
     }
   },
@@ -1131,7 +1209,8 @@
       },
       "Tidal Surge": {
         "name": "Marejada",
-        "desc": "Trae la hondura sobre ti del modo en que una vez la trajo sobre la biblioteca: toda a la vez, un océano en un latido, y el agua negra se cierra en torno a tus piernas y tus brazos y te sujeta del modo en que sujeta todo lo que ha ahogado: pacientemente, por completo, hasta que te detienes."
+        "desc": "Trae la hondura sobre ti del modo en que una vez la trajo sobre la biblioteca: toda a la vez, un océano en un latido, y el agua negra se cierra en torno a tus piernas y tus brazos y te sujeta del modo en que sujeta todo lo que ha ahogado: pacientemente, por completo, hasta que te detienes.",
+        "charge": "El agua negra se retira del suelo en un largo silencio que se recoge —toda la cripta anegada inhalando— y comprendes, un instante demasiado tarde, que sus cuarenta brazas enteras están a punto de desplomarse sobre el lugar donde estás."
       },
       "Close the Volume": {
         "name": "Cerrar el Volumen",
@@ -1243,7 +1322,8 @@
       },
       "The Marshal's Horn": {
         "name": "El Cuerno del Mariscal",
-        "desc": "La llamada del cuerno rueda por el campo como rodó el día en que la línea aguantó y murió aguantando: una orden más vieja que tu coraje, dirigida no a tu mente sino a tu médula, y tu médula responde: quiere formar filas, o retroceder, cualquier cosa antes que plantarse ante el hombre que aún da órdenes a los muertos."
+        "desc": "La llamada del cuerno rueda por el campo como rodó el día en que la línea aguantó y murió aguantando: una orden más vieja que tu coraje, dirigida no a tu mente sino a tu médula, y tu médula responde: quiere formar filas, o retroceder, cualquier cosa antes que plantarse ante el hombre que aún da órdenes a los muertos.",
+        "charge": "Descuelga el cuerno de guerra agrietado de su arnés y lo lleva a lo que le queda de boca; y a lo largo de toda la línea diez mil muertos dejan de marchar de golpe para escuchar, porque la última vez que sonó este cuerno, cuanto lo oyó obedeció."
       },
       "The Line Answers": {
         "name": "La Línea Responde",
@@ -1260,6 +1340,12 @@
       "Cinder-Marshal's Blade": {
         "name": "Hoja del Mariscal de Ceniza",
         "desc": "La hoja tomó el fuego y lo guardó: una larga barra de calor apagado y sofocado que se enciende al naranja en el golpe. Donde aterriza abre la herida y la cauteriza en el mismo trazo, así que sangras calor en vez de sangre y el campo huele a ti."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "El Mariscal Llama a la Línea",
+        "enterText": "Dravok deja de pelear con economía. En algún punto bajo el carbón, un horno que había sofocado durante cien años vuelve a tomar aire —la guerra que no quiso dejar terminar se reaviva en él— y la disciplina se consume como escoria, dejando solo el ardor, y una guardia que ya no se molesta en mantener. Y hace lo que hace un mariscal cuando se presiona el centro: llama a la línea."
       }
     }
   },
@@ -1367,7 +1453,8 @@
       },
       "The Unmasking": {
         "name": "El Desenmascaramiento",
-        "desc": "La última máscara se retira y ahí está la ausencia entera —no la nada de un rostro, sino la de toda la Corte, cada gobernante que jamás vistió restado a la vez—, y estar ante tanta nada es sentirte empezar, calladamente, a ser restado también."
+        "desc": "La última máscara se retira y ahí está la ausencia entera —no la nada de un rostro, sino la de toda la Corte, cada gobernante que jamás vistió restado a la vez—, y estar ante tanta nada es sentirte empezar, calladamente, a ser restado también.",
+        "charge": "Alza ambas manos enguantadas a los bordes de la máscara, lento, ceremonioso, y empieza a levantarla: no el destello veloz de la apertura, sino el Desenmascaramiento entero, despegando los rostros prestados uno tras otro hacia la nada que los viste a todos."
       },
       "A Hundred Borrowed Hands": {
         "name": "Cien Manos Prestadas",
@@ -1376,6 +1463,17 @@
       "Sceptre of a Hundred Reigns": {
         "name": "Cetro de Cien Reinados",
         "desc": "El cetro es una vara de regalía fundida, la corona y el cetro y el sello de cada gobernante derretidos en un solo tramo de oro frío. Donde te toca no tanto abre la piel como presiona un veredicto a través de ella: no eres de esta corte, y la corte no conserva lo que no es suyo."
+      },
+      "Don Fresh Faces": {
+        "name": "Calzarse Rostros Nuevos",
+        "desc": "Una corte nueva acude, tu propio rostro el primero entre ellos, y las guardas se cierran. Derriba de nuevo los rostros falsos, o no llegues jamás al trono.",
+        "charge": "Barre con una mano enguantada los espejos rotos y toda la corte muerta acude a su rostro a la vez: una fila nueva de tus reflejos saliendo del cristal para interponerse entre ti y la nada en el trono."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "La Nada se Redobla",
+        "enterText": "Quiebras la máscara esperando la muerte y no hay rostro debajo al que matar: solo más disposición a ponerse otro. El Pretendiente no flaquea. Se calza rostros nuevos —la Corte miente hasta en su modo de morir— y las guardas que rompiste empiezan a cerrarse de nuevo."
       }
     }
   },
@@ -1497,7 +1595,8 @@
     "actions": {
       "Breath of the Defiled Grove": {
         "name": "Aliento de la Arboleda Profanada",
-        "desc": "Se yergue del altar y respira, y el templo del padre-árbol se llena de una rodante niebla verde que huele a cada cosa muerta y estancada que el bosque tragó alguna vez: se mete en tus ojos y tu garganta y el fondo de tus pulmones, y el mundo se vuelve nadador y enfermo y cada golpe tuyo llega lento a través de su bruma."
+        "desc": "Se yergue del altar y respira, y el templo del padre-árbol se llena de una rodante niebla verde que huele a cada cosa muerta y estancada que el bosque tragó alguna vez: se mete en tus ojos y tu garganta y el fondo de tus pulmones, y el mundo se vuelve nadador y enfermo y cada golpe tuyo llega lento a través de su bruma.",
+        "charge": "El gran cuello se retira del altar y la garganta se hincha con una luz verde enfermiza, el aire del templo curvándose hacia ella: está tomando aliento. El próximo turno suelta la arboleda de sus pulmones; un turno para abatirlo, o para estar donde la niebla no esté."
       },
       "Wing Buffet": {
         "name": "Aletazo",
@@ -1510,6 +1609,12 @@
       "Reaching Bite": {
         "name": "Mordisco Alargado",
         "desc": "La cabeza baja todo el largo del templo sobre un cuello como una columna al caer, y las fauces te toman donde estás a una clara arremetida de donde yacía el dragón, cerrándose con un sonido como las puertas del templo dando un portazo y un hedor a podredumbre de pantano soplado a través del oro."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "Sierpe Acorralada",
+        "enterText": "Algo en él cambia cuando las heridas calan lo bastante hondo: el viejo desdén se cuaja en la primera atención verdadera que te ha prestado. Nizidramanii'yt abandona al fin el altar, esparciendo los restos del santuario de Rillifane, ya sin holgazanear sino enroscándose y desenroscándose en una furia que olvida su propia guardia. Un dragón herido es el peor de todos, y acaba de decidir que vales la pena matar."
       }
     }
   },
@@ -1617,7 +1722,8 @@
     "actions": {
       "The Binding Word": {
         "name": "La Palabra que Ata",
-        "desc": "Habla, y es la Voz —la que ha estado en tu cráneo desde la jaula, paciente, cariñosa, segura de ti. Dice una sola palabra que te ha estado diciendo durante cien vidas, la palabra que te enseñó a estar quieto en la losa mientras él trabajaba, y tu cuerpo recuerda la lección antes de que tu mente pueda negarse, y te detienes, retenido en la cálida y espantosa atención del hombre que te hizo su sujeto."
+        "desc": "Habla, y es la Voz —la que ha estado en tu cráneo desde la jaula, paciente, cariñosa, segura de ti. Dice una sola palabra que te ha estado diciendo durante cien vidas, la palabra que te enseñó a estar quieto en la losa mientras él trabajaba, y tu cuerpo recuerda la lección antes de que tu mente pueda negarse, y te detienes, retenido en la cálida y espantosa atención del hombre que te hizo su sujeto.",
+        "charge": "Se detiene, ladea la cabeza y empieza a hablar: despacio, con cariño, como siempre abría una sesión sobre la losa. Es la Voz, reuniendo la única palabra que te lleva diciendo cien vidas, y sientes la vieja lección alzarse en tu propio cuerpo para salirle al encuentro. La palabra se completa en su próximo turno. Hasta entonces aún queda un poco de ti que podría moverse, o acallarlo, o estar dispuesto a rechazarla."
       },
       "The Leeching Word": {
         "name": "La Palabra Sanguijuela",
@@ -1630,6 +1736,20 @@
       "The Stolen Sun": {
         "name": "El Sol Robado",
         "desc": "Abre una mano y deja salir una medida de lo que tomó en el Árbol —tu alma, el dios en tu sangre, el propio fuego robado del Árbol de la Vida, todo ello fundido en un único peso blanco que presiona en ti del modo en que un hombre presiona un sello en la cera: esto es mío ahora, y tú, casi, también."
+      },
+      "The Slayer's Dread": {
+        "name": "El Pavor del Verdugo",
+        "desc": "El Verdugo vuelve hacia ti la ruina del rostro de Velnaris, y lo que mira desde ella es más viejo que él y más viejo que tú y es la cosa más antigua de tu sangre: el asesinato que te hizo. Algún suelo animal de ti que el robo del alma nunca alcanzó reconoce a su hacedor e intenta huir, y por un aliento no logras obligarte a cerrar con la cosa que viste el propósito de tu padre."
+      },
+      "Murderous Rending": {
+        "name": "Desgarro Homicida",
+        "desc": "Ya no hay hoja de hechizo, ni luz mesurada: solo el Verdugo hundiendo en ti ambas manos abiertas y tirando, tomando carne y calor y el delgado hilo restante del alma que nunca terminó de robar, y lo que arranca cierra sus propias heridas a su paso. Es el procedimiento abandonado por el hambre que siempre estuvo debajo."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "El Verdugo",
+        "enterText": "La luz blanca bajo su piel se desgarra. Por un instante el rostro del erudito tiene miedo de verdad —de ti, de la cosa que asciende de la herida— y entonces la mácula divina que talló fuera de ti decide que preferiría vestirlo a él, y Velnaris se deshace en la forma que tu padre dejó en la sangre. El Verdugo se yergue donde estaba el captor: sin más procedimiento, sin más cariñosa paciencia, solo el apetito que te robó dotado de manos. Olvida guardarse. No olvida alimentarse."
       }
     }
   },
@@ -1753,11 +1873,18 @@
       },
       "Hurled Pyre-Stone": {
         "name": "Piedra de Pira Arrojada",
-        "desc": "Arranca de los escombros un bloque del tamaño de un carro del propio muro de Karthen, lo prende en sus manos desnudas, y lo arroja a lo largo de la calle ardiente: la ciudad que vino a des-hacer cayendo sobre ti en un solo sol descendente."
+        "desc": "Arranca de los escombros un bloque del tamaño de un carro del propio muro de Karthen, lo prende en sus manos desnudas, y lo arroja a lo largo de la calle ardiente: la ciudad que vino a des-hacer cayendo sobre ti en un solo sol descendente.",
+        "charge": "Se vuelve a medias de ti y pone ambas manos bajo un bloque del tamaño de un carro, de la propia muralla de Karthen, que prende naranja blanquecino en sus manos: se está echando atrás para arrojarte la ciudad. Tienes este solo aliento para cerrar la distancia, para afianzarte, o para abatirlo antes de que salga de sus manos."
       },
       "Greatsword of the Burning March": {
         "name": "Mandoble de la Marcha Ardiente",
         "desc": "La hoja es más alta que un hombre e iluminada al naranja-blanco de una forja en la colada. Donde aterriza no tanto corta como derrite: carne, placa y la piedra a tu espalda yéndose todas a la vez en un baño de calor que huele a toda la ciudad ardiente."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "El Corazón Atizado",
+        "enterText": "Lo abres hasta el hueso y ríe: no hay corazón en la herida al que le importe. El fuego bajo su piel ruge al blanco, su guardia se reduce a nada, y arremete más rápido, más caliente, más contento: una cosa a la que hieren y que solo siente el calor de ello."
       }
     }
   },
@@ -1899,11 +2026,18 @@
       },
       "Arc-Lightning Breath": {
         "name": "Aliento de Rayo en Arco",
-        "desc": "Su pecho se hincha y se enciende desde dentro, azul-blanco a través de las escamas, y suelta la tormenta en una sola línea de rayos bifurcándose galería abajo: el mismo aliento que lo hizo, vuelto hacia afuera para des-hacerte."
+        "desc": "Su pecho se hincha y se enciende desde dentro, azul-blanco a través de las escamas, y suelta la tormenta en una sola línea de rayos bifurcándose galería abajo: el mismo aliento que lo hizo, vuelto hacia afuera para des-hacerte.",
+        "charge": "El pecho se le hincha y se enciende por dentro, el blanco azulado trepando por las junturas entre las escamas, la galería entera cobrando el olor de un rayo inminente: está alzando la tormenta para soltarla en una sola línea roca abajo, y tienes un aliento para estar donde ella no esté."
       },
       "Rending Bite and Claws": {
         "name": "Mordisco y Garras Desgarradoras",
         "desc": "Entra por encima del alcance de cualquier hoja que cargues, fauces y garras delanteras a la vez, el mordisco cargado de azul a lo largo de los dientes para que queme la herida mientras las garras la abren: un semidragón peleando como el dragón entero que ha decidido ser."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "El Dragón Desatado",
+        "enterText": "Corta lo bastante hondo y la forma de dragón deja de ser un disfraz. La cosa dentro del cobalto recuerda que estuvo a punto de ser un dios, arroja a un lado la lucha cauta y enroscada, y se abalanza sobre ti toda tormenta y apetito: más veloz, más pesada, y más allá de todo cuidado por lo que tú le devuelvas."
       }
     }
   },
@@ -2027,7 +2161,14 @@
       },
       "Scepter of the Unspoken God": {
         "name": "Cetro del Dios Innombrado",
-        "desc": "El cetro es la cosecha hecha herramienta: cada gota de esencia que ha reunido fundida en un solo tramo de regalía negra, y donde te toca presiona toda la cartera del dios muerto a través del contacto a la vez: que todo muere, que será ella quien lo decida, y que tu muerte en particular es un asunto administrativo zanjado del que ella simplemente se está ocupando en persona."
+        "desc": "El cetro es la cosecha hecha herramienta: cada gota de esencia que ha reunido fundida en un solo tramo de regalía negra, y donde te toca presiona toda la cartera del dios muerto a través del contacto a la vez: que todo muere, que será ella quien lo decida, y que tu muerte en particular es un asunto administrativo zanjado del que ella simplemente se está ocupando en persona.",
+        "charge": "Alza el cetro negro sin prisa y lo mantiene en alto, y la esencia reunida de cada muerte que jamás moriste empieza a correr a lo largo de él y a encharcarse en su cabeza: está enroscando la cosecha entera en un solo golpe descendente, y tienes un único aliento para cerrar la distancia, para afianzarte, o para quebrar su atención antes de que caiga."
+      }
+    },
+    "phases": {
+      "0": {
+        "name": "Ascendente",
+        "enterText": "Desgastas lo último de la mitad mortal de ella, y lo que hay debajo deja de fingir que viste cuerpo alguno. Los charcos a sus pies se alzan y entran en ella; el rostro amable ha quedado atrás, más allá incluso del desdén; y Maevra la del Corazón Negro da su tercera zancada hacia la divinidad en plena lucha: más veloz de lo que una cosa con miembros debería ser, y sin molestarse ya en permanecer dentro de la forma que tiene miembros."
       }
     }
   },
