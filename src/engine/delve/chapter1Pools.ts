@@ -125,8 +125,8 @@ export const EARLY_MID_POOL: EncounterEntry[] = [
   {
     title: 'The Feeding Pit',
     flavorText:
-      'A starved ghast crouches over a stripped ribcage, too far gone to stalk. It hears you, and the patience leaves it all at once.',
-    monsters: [{ defId: 'famished-ghast', count: 1 }],
+      'A ghoul crouches over a stripped ribcage, patient as the grave that fed it. It hears you, and sets the bone down with terrible care.',
+    monsters: [{ defId: 'ghoul', count: 1 }],
     xpReward: 102,
   },
   {
@@ -206,9 +206,9 @@ export const MID_POOL: EncounterEntry[] = [
   {
     title: 'The Hungry Dark',
     flavorText:
-      'A famished ghast and a single goblin share the same dead-end — the goblin keeping well clear of the ghast, both of them turning toward the warmer thing in the doorway.',
+      'A ghoul and a single goblin share the same dead-end — the goblin keeping well clear of the ghoul, both of them turning toward the warmer thing in the doorway.',
     monsters: [
-      { defId: 'famished-ghast', count: 1 },
+      { defId: 'ghoul', count: 1 },
       { defId: 'goblin', count: 1 },
     ],
     xpReward: 192,
