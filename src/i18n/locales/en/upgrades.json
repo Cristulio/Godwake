@@ -1,12 +1,12 @@
 {
   "pilgrims-boots": {
-    "effect": "+{n} maximum HP, permanent."
+    "effect": "+{n} maximum HP."
   },
   "iron-will": {
-    "effect": "+5 maximum HP, permanent."
+    "effect": "+5 maximum HP."
   },
   "mantle-of-the-wakened": {
-    "effect": "+{n} maximum HP, permanent across reincarnations."
+    "effect": "+{n} maximum HP."
   },
   "hardier-soul": {
     "effect": {
@@ -15,31 +15,31 @@
     }
   },
   "cloak-of-the-grove": {
-    "effect": "+{n} AC, permanent."
+    "effect": "+{n} AC."
   },
   "wellspring-depths": {
-    "effect": "+{n} maximum HP, permanent across reincarnations."
+    "effect": "+{n} maximum HP."
   },
   "first-cut": {
-    "effect": "+{n} damage on the first attack of each combat, permanent."
+    "effect": "+{n} damage on the first attack of each combat."
   },
   "bleed-out": {
-    "effect": "+{n} damage against wounded targets (HP at half or less), permanent."
+    "effect": "+{n} damage against wounded targets (HP at half or less)."
   },
   "fellfast-strike": {
-    "effect": "+{n} damage on critical hits, permanent."
+    "effect": "+{n} damage on critical hits."
   },
   "whetstone-resolve": {
-    "effect": "+{n} damage on all weapon hits, permanent."
+    "effect": "+{n} damage on all weapon hits."
   },
   "heirloom-blade": {
-    "effect": "+{n} to all attack rolls, permanent."
+    "effect": "+{n} to all attack rolls."
   },
   "killers-eye": {
-    "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n}), permanent."
+    "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n})."
   },
   "crown-of-the-returned": {
-    "effect": "+{n} to all attack rolls and spell-attack rolls, permanent."
+    "effect": "+{n} to all attack rolls and spell-attack rolls."
   },
   "quartermasters-stipend": {
     "effect": "Gain +{n} gold × the chapter's number each time a chapter boss falls (Ch1 pays {n}, Ch14 pays fourteen-fold)."
@@ -96,28 +96,28 @@
     }
   },
   "knife-in-the-dark": {
-    "effect": "+{n}d6 Sneak Attack damage, permanent."
+    "effect": "+{n}d6 Sneak Attack damage."
   },
   "arcane-focus": {
-    "effect": "+{n} to spell attack rolls, permanent."
+    "effect": "+{n} to spell attack rolls."
   },
   "burning-tongue": {
-    "effect": "+{n} damage to spells, permanent."
+    "effect": "+{n} damage to spells."
   },
   "sigil-of-the-wakened-mind": {
-    "effect": "+{n} spell save DC, permanent (enemies save harder against your spells)."
+    "effect": "+{n} spell save DC (enemies save harder against your spells)."
   },
   "brutal-scars": {
-    "effect": "+{n} damage on critical hits, permanent."
+    "effect": "+{n} damage on critical hits."
   },
   "reckless-eye": {
-    "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n}), permanent."
+    "effect": "Crit on {lo}-20 instead of 20 only (crit range +{n})."
   },
   "first-arrow": {
-    "effect": "+{n} damage on the first attack of each combat, permanent."
+    "effect": "+{n} damage on the first attack of each combat."
   },
   "colossus-slayer": {
-    "effect": "+{n} damage against wounded targets (HP at half or less), permanent."
+    "effect": "+{n} damage against wounded targets (HP at half or less)."
   },
   "primal-reservoir": {
     "effect": {
@@ -126,12 +126,12 @@
     }
   },
   "verdant-wrath": {
-    "effect": "+{n} damage to spells, permanent."
+    "effect": "+{n} damage to spells."
   },
   "deep-roots": {
     "effect": {
-      "one": "+{n} first-level spell slot each delve, permanent.",
-      "other": "+{n} first-level spell slots each delve, permanent."
+      "one": "+{n} first-level spell slot each delve.",
+      "other": "+{n} first-level spell slots each delve."
     }
   },
   "brimming-well": {
@@ -141,12 +141,12 @@
     }
   },
   "pressure-points": {
-    "effect": "+{n} damage on critical hits, permanent."
+    "effect": "+{n} damage on critical hits."
   },
   "wellspring-of-mysteries": {
     "effect": {
-      "one": "+{n} first-level spell slot each delve, permanent.",
-      "other": "+{n} first-level spell slots each delve, permanent."
+      "one": "+{n} first-level spell slot each delve.",
+      "other": "+{n} first-level spell slots each delve."
     }
   }
 }
