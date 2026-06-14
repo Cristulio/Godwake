@@ -188,6 +188,114 @@ export const SET_PIECES: SetPiece[] = [
     effects: { acBonus: 1 }, effectLine: '+1 AC',
   },
 
+  // --- Warlord's Panoply (Fighter, GRAND 9-piece full kit) -----------------
+  {
+    id: 'warlord-blade', setId: 'warlord', name: 'Warlord Blade', slot: 'mainHand',
+    flavor: 'A commander’s longsword, balanced for the killing stroke at the end of a charge.',
+    effects: { damageBonus: 2 }, effectLine: '+2 weapon damage on every hit',
+    enhancement: 2, classGate: 'fighter',
+  },
+  {
+    id: 'warlord-bulwark', setId: 'warlord', name: 'Warlord Bulwark', slot: 'offHand',
+    flavor: 'A tower shield blazoned with a sigil men learned not to charge.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+    enhancement: 1, classGate: 'fighter',
+  },
+  {
+    id: 'warlord-plate', setId: 'warlord', name: 'Warlord Plate', slot: 'armor',
+    flavor: 'Full plate dented at every seam and never once breached.',
+    effects: { tempHpPerCombat: 6 }, effectLine: 'Gain 6 temporary HP at the start of each fight',
+    enhancement: 2, classGate: 'fighter',
+  },
+  {
+    id: 'warlord-greathelm', setId: 'warlord', name: 'Warlord Greathelm', slot: 'helm',
+    flavor: 'A crowned greathelm; through its slit the killing opening always shows.',
+    effects: { critRangeBonus: 1 }, effectLine: 'Critical hits land on 19–20',
+    classGate: 'fighter',
+  },
+  {
+    id: 'warlord-torc', setId: 'warlord', name: 'Warlord Torc', slot: 'amulet',
+    flavor: 'A war-torc of twisted gold, weight enough to steady any second blow.',
+    effects: { followupDamageBonus: 3 }, effectLine: '+3 damage on each follow-up swing',
+    classGate: 'fighter',
+  },
+  {
+    id: 'warlord-ring-command', setId: 'warlord', name: 'Warlord Ring of Command', slot: 'ring1',
+    flavor: 'A signet that has ordered a thousand to hold the line — and they held.',
+    effects: { attackBonus: 1 }, effectLine: '+1 to attack rolls',
+    classGate: 'fighter',
+  },
+  {
+    id: 'warlord-ring-war', setId: 'warlord', name: 'Warlord Ring of War', slot: 'ring2',
+    flavor: 'A blood-iron band that hums when the killing work begins.',
+    effects: { damageBonus: 2 }, effectLine: '+2 weapon damage on every hit',
+    classGate: 'fighter',
+  },
+  {
+    id: 'warlord-warbelt', setId: 'warlord', name: 'Warlord War-Belt', slot: 'belt',
+    flavor: 'A broad campaign belt heavy with the trophies of held ground.',
+    effects: { tempHpPerCombat: 4 }, effectLine: 'Gain 4 temporary HP at the start of each fight',
+    classGate: 'fighter',
+  },
+  {
+    id: 'warlord-sabatons', setId: 'warlord', name: 'Warlord Sabatons', slot: 'boots',
+    flavor: 'Steel-shod sabatons that do not step back, whatever crosses the field.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+    classGate: 'fighter',
+  },
+
+  // --- Ruinhide (Barbarian, 4-piece — rage bruiser) ------------------------
+  {
+    id: 'ruinhide-fang', setId: 'ruinhide', name: 'Ruinhide Fang', slot: 'amulet',
+    flavor: 'A great predator’s fang on a thong of gut — the rage runs hotter for the wearing.',
+    effects: { rageDamageBonus: 3 }, effectLine: '+3 melee damage while Rage burns',
+    classGate: 'barbarian',
+  },
+  {
+    id: 'ruinhide-band', setId: 'ruinhide', name: 'Ruinhide Band', slot: 'ring1',
+    flavor: 'A bone band filed to a saw’s teeth; its wounds are slow to close.',
+    effects: { bleedDamage: 3 }, effectLine: 'Your blows rend for +3 bleed damage',
+    classGate: 'barbarian',
+  },
+  {
+    id: 'ruinhide-girdle', setId: 'ruinhide', name: 'Ruinhide Girdle', slot: 'belt',
+    flavor: 'A girdle of layered hide that drinks a little life back from each kill.',
+    effects: { lifestealPct: 4 }, effectLine: 'Heal 4% of the damage you deal',
+    classGate: 'barbarian',
+  },
+  {
+    id: 'ruinhide-treads', setId: 'ruinhide', name: 'Ruinhide Treads', slot: 'boots',
+    flavor: 'Wraps of dire-beast hide that carry the fury into the first exchange.',
+    effects: { tempHpPerCombat: 5 }, effectLine: 'Gain 5 temporary HP at the start of each fight',
+    classGate: 'barbarian',
+  },
+
+  // --- Nightveil (Rogue, 4-piece — sneak & crit) ---------------------------
+  {
+    id: 'nightveil-cowl', setId: 'nightveil', name: 'Nightveil Cowl', slot: 'helm',
+    flavor: 'A hood of light-eating cloth; the throat it finds never hears it come.',
+    effects: { sneakDamageBonus: 3 }, effectLine: '+3 sneak-attack damage',
+    classGate: 'rogue',
+  },
+  {
+    id: 'nightveil-pendant', setId: 'nightveil', name: 'Nightveil Pendant', slot: 'amulet',
+    flavor: 'A shard of black glass that shows the killing opening a heartbeat early.',
+    effects: { critRangeBonus: 1 }, effectLine: 'Critical hits land on 19–20',
+    classGate: 'rogue',
+  },
+  {
+    id: 'nightveil-ring', setId: 'nightveil', name: 'Nightveil Ring', slot: 'ring1',
+    flavor: 'A thief’s ring worn smooth, sure on hilt and lock alike.',
+    effects: { attackBonus: 1 }, effectLine: '+1 to attack rolls',
+    classGate: 'rogue',
+  },
+  {
+    id: 'nightveil-treads', setId: 'nightveil', name: 'Nightveil Treads', slot: 'boots',
+    flavor: 'Felt-soled treads that leave no sound for a mark to startle at.',
+    effects: { sneakDamageBonus: 2 }, effectLine: '+2 sneak-attack damage',
+    classGate: 'rogue',
+  },
+
   // --- Warsong (Fighter-bound) ---------------------------------------------
   {
     id: 'warsong-gauntlet', setId: 'warsong', name: 'Warsong Gauntlet', slot: 'belt',
@@ -486,6 +594,47 @@ export const GEAR_SETS: GearSet[] = [
         label: '6-piece: +10 temporary HP each fight, critical hits land on 19–20, and heal 5% of the damage you deal',
         bonuses: { tempHpPerCombat: 10, critRangeBonus: 1, lifestealPct: 5 },
       },
+    ],
+  },
+  {
+    id: 'warlord',
+    name: "Warlord's Panoply",
+    flavor: 'The full war-kit of a line-breaking commander — every piece worn, nothing left to chance.',
+    classGate: 'fighter',
+    pieceIds: [
+      'warlord-blade', 'warlord-bulwark', 'warlord-plate', 'warlord-greathelm', 'warlord-torc',
+      'warlord-ring-command', 'warlord-ring-war', 'warlord-warbelt', 'warlord-sabatons',
+    ],
+    bonuses: [
+      { piecesRequired: 3, label: '3-piece: +2 weapon damage on every hit', bonuses: { damageBonus: 2 } },
+      { piecesRequired: 6, label: '6-piece: +6 temporary HP each fight and +1 to attack rolls', bonuses: { tempHpPerCombat: 6, attackBonus: 1 } },
+      {
+        piecesRequired: 9,
+        label: '9-piece: critical hits land on 19–20, +4 damage on each follow-up swing, and +2 AC',
+        bonuses: { critRangeBonus: 1, followupDamageBonus: 4, acBonus: 2 },
+      },
+    ],
+  },
+  {
+    id: 'ruinhide',
+    name: 'Ruinhide Harness',
+    flavor: 'Trophy-hide and beast-bone, strapped on to carry the fury into the fight.',
+    classGate: 'barbarian',
+    pieceIds: ['ruinhide-fang', 'ruinhide-band', 'ruinhide-girdle', 'ruinhide-treads'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +3 melee damage while Rage burns', bonuses: { rageDamageBonus: 3 } },
+      { piecesRequired: 4, label: '4-piece: +4 bleed damage and heal 5% of the damage you deal', bonuses: { bleedDamage: 4, lifestealPct: 5 } },
+    ],
+  },
+  {
+    id: 'nightveil',
+    name: 'Nightveil Garb',
+    flavor: 'The soundless kit of a killer who is never seen until the blade is already in.',
+    classGate: 'rogue',
+    pieceIds: ['nightveil-cowl', 'nightveil-pendant', 'nightveil-ring', 'nightveil-treads'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 to attack rolls', bonuses: { attackBonus: 1 } },
+      { piecesRequired: 4, label: '4-piece: critical hits land on 19–20 and +4 sneak-attack damage', bonuses: { critRangeBonus: 1, sneakDamageBonus: 4 } },
     ],
   },
   {

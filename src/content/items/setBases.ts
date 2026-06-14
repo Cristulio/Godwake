@@ -37,7 +37,7 @@ function weapon(data: {
 function armor(data: {
   id: string;
   name: string;
-  category: 'light' | 'medium' | 'heavy' | 'robe' | 'orb';
+  category: 'light' | 'medium' | 'heavy' | 'shield' | 'robe' | 'orb';
   baseAC: number;
   cost: number;
 }): Item {
@@ -98,6 +98,39 @@ export const SET_BASE_ITEMS: Item[] = [
   accessory({ id: 'pilgrim-ring-vow', name: 'Pilgrim Ring of the Vow', accessorySlot: 'ring', cost: 240 }),
   accessory({ id: 'pilgrim-cincture', name: 'Pilgrim Cincture', accessorySlot: 'belt', cost: 240 }),
   accessory({ id: 'pilgrim-sandals', name: 'Pilgrim Sandals', accessorySlot: 'boots', cost: 240 }),
+
+  // --- Warlord's Panoply (fighter, 9-piece) — weapon + shield + armour + 6 -
+  weapon({
+    id: 'warlord-blade',
+    name: 'Warlord Blade',
+    category: 'martial',
+    damage: '1d8',
+    damageType: 'slashing',
+    properties: ['versatile'],
+    versatileDamage: '1d10',
+    affinity: 'fighter',
+    cost: 340,
+  }),
+  armor({ id: 'warlord-bulwark', name: 'Warlord Bulwark', category: 'shield', baseAC: 2, cost: 320 }),
+  armor({ id: 'warlord-plate', name: 'Warlord Plate', category: 'heavy', baseAC: 18, cost: 340 }),
+  accessory({ id: 'warlord-greathelm', name: 'Warlord Greathelm', accessorySlot: 'helm', cost: 300 }),
+  accessory({ id: 'warlord-torc', name: 'Warlord Torc', accessorySlot: 'amulet', cost: 300 }),
+  accessory({ id: 'warlord-ring-command', name: 'Warlord Ring of Command', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'warlord-ring-war', name: 'Warlord Ring of War', accessorySlot: 'ring', cost: 300 }),
+  accessory({ id: 'warlord-warbelt', name: 'Warlord War-Belt', accessorySlot: 'belt', cost: 300 }),
+  accessory({ id: 'warlord-sabatons', name: 'Warlord Sabatons', accessorySlot: 'boots', cost: 300 }),
+
+  // --- Ruinhide (barbarian, 4-piece accessories) ---------------------------
+  accessory({ id: 'ruinhide-fang', name: 'Ruinhide Fang', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'ruinhide-band', name: 'Ruinhide Band', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'ruinhide-girdle', name: 'Ruinhide Girdle', accessorySlot: 'belt', cost: 220 }),
+  accessory({ id: 'ruinhide-treads', name: 'Ruinhide Treads', accessorySlot: 'boots', cost: 220 }),
+
+  // --- Nightveil (rogue, 4-piece accessories) ------------------------------
+  accessory({ id: 'nightveil-cowl', name: 'Nightveil Cowl', accessorySlot: 'helm', cost: 220 }),
+  accessory({ id: 'nightveil-pendant', name: 'Nightveil Pendant', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'nightveil-ring', name: 'Nightveil Ring', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'nightveil-treads', name: 'Nightveil Treads', accessorySlot: 'boots', cost: 220 }),
 
   // --- Warsong (fighter, accessories) --------------------------------------
   accessory({ id: 'warsong-gauntlet', name: 'Warsong Gauntlet', accessorySlot: 'belt', cost: 240 }),
