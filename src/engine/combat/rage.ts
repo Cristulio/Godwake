@@ -132,6 +132,8 @@ export function useRage(ctx: RageContext): CombatActionResult {
           };
         }),
       };
+      // Land it with the frighten cue (spell_ice) + visual, not just a log line.
+      nextState = attachCombatVfx(nextState, 'debuff-frighten', 'player', prey.id, 'cold');
       nextState = appendLog(nextState, {
         id: nextState.log.length + 1,
         kind: 'system',
