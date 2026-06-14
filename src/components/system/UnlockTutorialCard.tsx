@@ -33,7 +33,7 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
       className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/85 p-4 animate-fade-in outline-none"
     >
       <div
-        className="max-w-xl w-full bg-[#1a140e] border-2 border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)] p-5 md:p-7 select-none"
+        className="max-w-xl w-full max-h-[90vh] overflow-y-auto bg-[#1a140e] border-2 border-[var(--color-accent-amber)] shadow-[0_0_32px_rgba(244,167,66,0.35)] p-5 md:p-7 select-none"
       >
         <div className="text-[var(--color-accent-amber)] text-xs uppercase tracking-[0.4em] font-bold mb-2 animate-pulse-glow">
           {t('screens.unlockTutorial.eyebrow')}

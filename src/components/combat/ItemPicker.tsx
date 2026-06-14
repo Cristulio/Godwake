@@ -44,10 +44,10 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
       onClick={onCancel}
     >
       <div
-        className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-amber)] p-5 max-w-md w-full"
+        className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-accent-amber)] p-5 max-w-md w-full max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.3em] text-sm mb-3">
+        <div className="text-[var(--color-accent-amber)] uppercase tracking-[0.3em] text-sm mb-3 shrink-0">
           {t('combat.itemPicker.title')}
         </div>
         {uniqueItems.length === 0 ? (
@@ -55,7 +55,7 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
             {t('combat.itemPicker.empty')}
           </div>
         ) : (
-          <div className="flex flex-col gap-2 mb-4">
+          <div className="flex flex-col gap-2 mb-4 flex-1 overflow-y-auto min-h-0 -mr-2 pr-2">
             {uniqueItems.map(({ id, count, item, firstIdx }) => {
               if (item.kind !== 'consumable') return null;
               return (
@@ -91,7 +91,7 @@ export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
             })}
           </div>
         )}
-        <div className="flex justify-end">
+        <div className="flex justify-end shrink-0">
           <Button variant="secondary" onClick={onCancel}>
             {t('combat.itemPicker.cancel')}
           </Button>
