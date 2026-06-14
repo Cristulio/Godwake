@@ -1,6 +1,5 @@
 import type { Postmortem } from '../../types/postmortem';
 import { Button } from '../ui/Button';
-import { useGameStore } from '../../stores/gameStore';
 import { MonsterPortrait } from '../combat/MonsterPortrait';
 import { localizedDamageType } from '../inventory/itemDisplay';
 import { useT } from '../../i18n/useT';
@@ -8,6 +7,9 @@ import { useT } from '../../i18n/useT';
 interface PostmortemModalProps {
   postmortem: Postmortem;
   onReincarnate: () => void;
+  /** The bestiary detour. Settles the death first (see DelveScreen) so it never
+   *  strands a lingering failed delve at the hub. */
+  onViewBestiary: () => void;
 }
 
 const ABILITY_FULL: Record<string, string> = {
@@ -19,9 +21,8 @@ const ABILITY_FULL: Record<string, string> = {
   cha: 'CHA',
 };
 
-export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalProps) {
+export function PostmortemModal({ postmortem, onReincarnate, onViewBestiary }: PostmortemModalProps) {
   const { t } = useT();
-  const goToCodex = useGameStore((s) => s.goToCodex);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 max-w-2xl mx-auto gap-6 animate-fade-in">
@@ -164,7 +165,7 @@ export function PostmortemModal({ postmortem, onReincarnate }: PostmortemModalPr
       {postmortem.killerDefId && (
         <button
           type="button"
-          onClick={goToCodex}
+          onClick={onViewBestiary}
           className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest italic hover:text-[var(--color-accent-amber)]"
         >
           {t('ui.postmortem.viewInBestiary', { name: postmortem.killerName })}
