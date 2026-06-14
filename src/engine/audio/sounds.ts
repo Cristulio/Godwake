@@ -1725,7 +1725,8 @@ const TITLE_SPEC: SongSpec = {
   barsPerBlock: 10,
   trim: 1.06,
   setup: (ctx, out) => {
-    const echo = makeEcho(ctx, out, 0.46, 0.38, 0.3);
+    // Longer, wetter tail = clair-obscur space around the lone voice.
+    const echo = makeEcho(ctx, out, 0.52, 0.44, 0.42);
     const drone = makeDrone(
       ctx, out,
       [
@@ -1733,8 +1734,8 @@ const TITLE_SPEC: SongSpec = {
         { hz: midiHz(midi('E2')), type: 'sine', level: 0.05 },
         { hz: midiHz(midi('A2')) * 1.003, type: 'triangle', level: 0.03 },
       ],
-      900,
-      { hz: 0.05, depth: 260 },
+      760, // darker — the horn sits warm and far back, no longer a flat blare
+      { hz: 0.05, depth: 220 },
     );
     return {
       input: echo.input,
@@ -1746,12 +1747,22 @@ const TITLE_SPEC: SongSpec = {
   },
   block: (ctx, out, t0, blockIdx) => {
     const beatS = 60 / 70;
+    // The lead sings on a TRIANGLE now, not a square — a reed/ocarina ache instead
+    // of the chiptune blare, the single biggest turn toward "longing". A faint
+    // octave-down triangle doubles it for body (the clair-obscur warmth).
     lineAt(ctx, out, TITLE_LEAD_A, t0, beatS, {
-      level: 0.085,
-      type: 'square',
-      sustain: 0.92,
-      attack: 0.02,
-      vibrato: { hz: 5.2, cents: 14, after: 0.25 },
+      level: 0.1,
+      type: 'triangle',
+      sustain: 0.96,
+      attack: 0.04,
+      vibrato: { hz: 4.6, cents: 11, after: 0.3 },
+    });
+    lineAt(ctx, out, TITLE_LEAD_A, t0, beatS, {
+      level: 0.03,
+      type: 'triangle',
+      sustain: 0.96,
+      attack: 0.06,
+      semitones: -12,
     });
     // Tolling bells, sparser than the lead.
     bellAt(ctx, out, midi('A4'), t0, 4 * beatS, 0.05);
@@ -1802,12 +1813,12 @@ const HUB_SPEC: SongSpec = {
   barsPerBlock: 16,
   trim: 1.19,
   setup: (ctx, out) => {
-    const echo = makeEcho(ctx, out, 0.33, 0.22, 0.16);
+    const echo = makeEcho(ctx, out, 0.42, 0.3, 0.26);
     const wind = makeWind(ctx, out, 380, 0.09);
     const drone = makeDrone(
       ctx, out,
       [{ hz: midiHz(midi('A1')), type: 'sine', level: 0.07 }],
-      700,
+      640, // warmer, the lone fire deeper in the dark
       { hz: 0.06, depth: 150 },
     );
     return {
@@ -1912,14 +1923,14 @@ const GROVE_SPEC: SongSpec = {
   barsPerBlock: 8,
   trim: 1.19,
   setup: (ctx, out) => {
-    const echo = makeEcho(ctx, out, 0.4, 0.3, 0.26);
+    const echo = makeEcho(ctx, out, 0.46, 0.34, 0.34);
     const drone = makeDrone(
       ctx, out,
       [
         { hz: midiHz(midi('E2')), type: 'sine', level: 0.06 },
         { hz: midiHz(midi('B2')), type: 'triangle', level: 0.028 },
       ],
-      800,
+      700, // warmer, darker forest floor
       { hz: 0.045, depth: 200 },
     );
     const wind = makeWind(ctx, out, 620, 0.05);
