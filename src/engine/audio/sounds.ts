@@ -1462,7 +1462,7 @@ function drumBarAt(
 }
 
 // ---------------------------------------------------------------------------
-// Continuous fixtures: echo, drones, wind. Built once per theme in `setup`,
+// Continuous fixtures: echo, drones. Built once per theme in `setup`,
 // torn down by the returned stop.
 // ---------------------------------------------------------------------------
 
@@ -1518,12 +1518,28 @@ function makeDrone(
   freqs: Array<{ hz: number; type: OscillatorType; level: number }>,
   lowpassHz: number,
   lfo?: { hz: number; depth: number },
+  opts?: {
+    /** Split each voice into a ±(cents/2) detuned pair for slow chorusing beat —
+     *  the warmth/shimmer that turns a dead test-tone into a living horn. */
+    chorusCents?: number;
+    /** Fade the whole drone in over this many seconds instead of slamming on —
+     *  a horn swells into the room, it does not just exist. */
+    swellS?: number;
+  },
 ): Fixture {
   // Breathing master gain: the drone ebbs and swells over ~22s instead of
   // sitting as one flat, constant tone (the monotone, fatiguing "horn"). A lower
   // base level also pushes it further back in the mix.
   const master = ctx.createGain();
-  master.gain.value = 0.8;
+  const t0 = ctx.currentTime;
+  const swellS = opts?.swellS ?? 0;
+  if (swellS > 0) {
+    // Base level ramps 0 -> 0.8; the breath LFOs sum on top of this timeline.
+    master.gain.setValueAtTime(0, t0);
+    master.gain.linearRampToValueAtTime(0.8, t0 + swellS);
+  } else {
+    master.gain.value = 0.8;
+  }
   master.connect(out);
   const breath = ctx.createOscillator();
   breath.type = 'sine';
@@ -1532,13 +1548,22 @@ function makeDrone(
   breathDepth.gain.value = 0.2;
   breath.connect(breathDepth).connect(master.gain);
   breath.start();
+  // A second, slower breath at an incommensurate rate so the swell never settles
+  // into one audible period — the difference between "alive" and "an LFO".
+  const breath2 = ctx.createOscillator();
+  breath2.type = 'sine';
+  breath2.frequency.value = 0.029;
+  const breath2Depth = ctx.createGain();
+  breath2Depth.gain.value = 0.1;
+  breath2.connect(breath2Depth).connect(master.gain);
+  breath2.start();
 
   const filter = ctx.createBiquadFilter();
   filter.type = 'lowpass';
   filter.frequency.value = lowpassHz;
   filter.Q.value = 0.9;
   filter.connect(master);
-  const stops: Array<() => void> = [() => breath.stop()];
+  const stops: Array<() => void> = [() => breath.stop(), () => breath2.stop()];
   if (lfo) {
     const l = ctx.createOscillator();
     l.type = 'sine';
@@ -1549,15 +1574,23 @@ function makeDrone(
     l.start();
     stops.push(() => l.stop());
   }
+  const chorus = opts?.chorusCents ?? 0;
   for (const f of freqs) {
-    const o = ctx.createOscillator();
-    o.type = f.type;
-    o.frequency.value = f.hz;
-    const g = ctx.createGain();
-    g.gain.value = f.level;
-    o.connect(g).connect(filter);
-    o.start();
-    stops.push(() => o.stop());
+    // Each voice is one osc, or a ±(chorus/2)-cent pair that beats slowly for
+    // warmth. The pair splits the level so total energy stays put.
+    const detunes = chorus > 0 ? [chorus / 2, -chorus / 2] : [0];
+    const voiceLevel = chorus > 0 ? f.level * 0.55 : f.level;
+    for (const dt of detunes) {
+      const o = ctx.createOscillator();
+      o.type = f.type;
+      o.frequency.value = f.hz;
+      if (dt !== 0) o.detune.value = dt;
+      const g = ctx.createGain();
+      g.gain.value = voiceLevel;
+      o.connect(g).connect(filter);
+      o.start();
+      stops.push(() => o.stop());
+    }
   }
   return {
     stop: () => {
@@ -1567,43 +1600,6 @@ function makeDrone(
         } catch {
           /* ignore */
         }
-      }
-    },
-  };
-}
-
-/** Looped filtered-noise wind with a slow swell. */
-function makeWind(
-  ctx: AudioContext,
-  out: AudioNode,
-  centerHz: number,
-  level: number,
-): Fixture {
-  const wind = ctx.createBufferSource();
-  wind.buffer = noiseBuffer(ctx, 4000);
-  wind.loop = true;
-  const f = ctx.createBiquadFilter();
-  f.type = 'bandpass';
-  f.frequency.value = centerHz;
-  f.Q.value = 0.6;
-  const g = ctx.createGain();
-  g.gain.value = level;
-  const lfo = ctx.createOscillator();
-  lfo.type = 'sine';
-  lfo.frequency.value = 0.07;
-  const lg = ctx.createGain();
-  lg.gain.value = level * 0.4;
-  lfo.connect(lg).connect(g.gain);
-  lfo.start();
-  wind.connect(f).connect(g).connect(out);
-  wind.start();
-  return {
-    stop: () => {
-      try {
-        wind.stop();
-        lfo.stop();
-      } catch {
-        /* ignore */
       }
     },
   };
@@ -1736,6 +1732,9 @@ const TITLE_SPEC: SongSpec = {
       ],
       760, // darker — the horn sits warm and far back, no longer a flat blare
       { hz: 0.05, depth: 220 },
+      // The lone title voice gets the widest chorus and a long swell-in: the horn
+      // breathes into the dark instead of being switched on.
+      { chorusCents: 8, swellS: 3.5 },
     );
     return {
       input: echo.input,
@@ -1814,23 +1813,25 @@ const HUB_SPEC: SongSpec = {
   trim: 1.19,
   setup: (ctx, out) => {
     const echo = makeEcho(ctx, out, 0.42, 0.3, 0.26);
-    const wind = makeWind(ctx, out, 380, 0.09);
+    // (Wind removed — owner: the noise-wash "waterfall" covered everything.)
     const drone = makeDrone(
       ctx, out,
       [{ hz: midiHz(midi('A1')), type: 'sine', level: 0.07 }],
       640, // warmer, the lone fire deeper in the dark
       { hz: 0.06, depth: 150 },
+      // A single sine reads deadest of all — give it a detuned twin to beat
+      // against, and let the fire's drone swell up rather than snap on.
+      { chorusCents: 6, swellS: 3 },
     );
     return {
       input: echo.input,
       stop: () => {
         echo.stop();
-        wind.stop();
         drone.stop();
       },
     };
   },
-  block: (ctx, out, t0, blockIdx) => {
+  block: (ctx, out, t0) => {
     const beatS = 60 / 84;
     const barS = 4 * beatS;
     // Pads + bass walk the Am–F–Dm–E wheel; the E bar's bass lifts to G#.
@@ -1855,10 +1856,8 @@ const HUB_SPEC: SongSpec = {
         t, beatS,
         { level: 0.085, type: 'triangle', sustain: 0.9 },
       );
-      // One soft hat tick per bar once the theme has settled in.
-      if (blockIdx > 0) {
-        drumBarAt(ctx, out, '............h...', t, beatS, 0.35);
-      }
+      // (Hat removed — owner: the synth hi-hat read too loud/weird; the hub now
+      // sits as pure ambient, like the grove, which has no percussion.)
     }
     // Lead: wistful verse, rising answer, motif cadence.
     lineAt(ctx, out, HUB_LEAD_A, t0, beatS, {
@@ -1879,18 +1878,21 @@ const HUB_SPEC: SongSpec = {
       sustain: 0.95,
       vibrato: { hz: 5, cents: 12, after: 0.2 },
     });
-    // Fire crackles, scattered through the block.
+    // Fire crackles, scattered through the block. Dulled (highpass 1800→700) and
+    // quietened (~half) so their echo reads as soft warm pops, not the ticky
+    // "delayed hi-hat" the owner flagged (the bright transient + echo tail was the
+    // culprit once the drum hat was removed). Fewer of them, too.
     const blockS = 16 * barS;
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       const t = t0 + Math.random() * blockS;
       const src = ctx.createBufferSource();
       src.buffer = noiseBuffer(ctx, 30 + Math.random() * 40);
       const f = ctx.createBiquadFilter();
       f.type = 'highpass';
-      f.frequency.value = 1800;
+      f.frequency.value = 700;
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.09 + Math.random() * 0.06, t + 0.005);
+      g.gain.linearRampToValueAtTime(0.045 + Math.random() * 0.025, t + 0.005);
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05 + Math.random() * 0.05);
       src.connect(f).connect(g).connect(out);
       src.start(t);
@@ -1932,14 +1934,16 @@ const GROVE_SPEC: SongSpec = {
       ],
       700, // warmer, darker forest floor
       { hz: 0.045, depth: 200 },
+      // Both grove voices beat gently against detuned twins — the green air
+      // shimmers rather than hums.
+      { chorusCents: 6, swellS: 3 },
     );
-    const wind = makeWind(ctx, out, 620, 0.05);
+    // (Wind removed — owner: the noise-wash "waterfall" covered everything.)
     return {
       input: echo.input,
       stop: () => {
         echo.stop();
         drone.stop();
-        wind.stop();
       },
     };
   },
@@ -2101,15 +2105,17 @@ const BROOD_BASS_BARS: ParsedStep[][] = [
 ];
 
 const BROOD_LEAD = mel([
-  // Bars 1-2: the rising D-minor call.
-  ['D4', 0.5], ['F4', 0.5], ['A4', 0.5], ['D5', 1], ['C5', 0.5], ['A4', 1],
-  ['F4', 0.5], ['A4', 0.5], ['C5', 0.5], ['A4', 1.5], [null, 1],
-  // Bars 3-4: the answer turns down through Bb — grief with its teeth out.
-  ['D4', 0.5], ['F4', 0.5], ['Bb4', 0.5], ['D5', 1], ['C5', 0.5], ['A4', 1],
-  ['F4', 0.5], ['G4', 0.5], ['F4', 0.5], ['D4', 1.5], [null, 1],
-  // Bars 5-6: the call again, higher tension.
-  ['D4', 0.5], ['F4', 0.5], ['A4', 0.5], ['D5', 1], ['E5', 0.5], ['D5', 1],
-  ['C5', 0.5], ['A4', 0.5], ['F4', 0.5], ['D4', 1.5], [null, 1],
+  // Dread / uncertainty (owner: "that worrying — could die at any moment"). Not
+  // grief (a clean descent resolves and consoles) but ANXIETY: a creeping, chromatic,
+  // UNRESOLVED line — phrygian Eb b2, half-step approaches, a brushed tritone — that
+  // circles the key and never lands on the tonic. The predator is always one step
+  // behind; the driving bass+drums keep the pulse, the lead keeps you off-balance.
+  // Bars 1-2: restless, won't settle.
+  ['D4', 1], ['Eb4', 0.5], ['D4', 0.5], ['A3', 1.5], ['Bb3', 0.5], ['A3', 1], ['G3', 1], ['A3', 1], [null, 1],
+  // Bars 3-4: a chromatic creep upward — the threat closing in, inexorable.
+  ['A3', 0.5], ['Bb3', 0.5], ['B3', 0.5], ['C4', 0.5], ['C#4', 1], ['D4', 1], ['Eb4', 1.5], ['D4', 1], [null, 1.5],
+  // Bars 5-6: descend, brush the tritone (Ab), end UNRESOLVED on the 5th — not safe.
+  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1], ['Ab3', 0.5], ['A3', 0.5], ['Bb3', 1], ['A3', 1.5], [null, 1.5],
 ]);
 
 const BROOD_STAB_CHORDS = [
@@ -2119,16 +2125,22 @@ const BROOD_STAB_CHORDS = [
 ];
 
 const BROOD_CORE_DEF: CombatCoreDef = {
-  bpm: 132,
+  // Slowed 132→110 (owner: combat must feel "could die at any moment", not peppy).
+  // The frantic action tempo was half the problem; a slower pulse breeds dread.
+  bpm: 110,
   rootMidi: midi('D2'),
   drone: (root) => [
-    { hz: midiHz(root - 12), type: 'sawtooth', level: 0.05 },
-    { hz: midiHz(root - 12) * 1.006, type: 'sawtooth', level: 0.05 },
+    // Triangle warmth carries the drone, a reduced sawtooth keeps an edge of grit —
+    // the buzzy brass "horn" turned grim/warm (owner liked these synths).
+    { hz: midiHz(root - 12), type: 'triangle', level: 0.055 },
+    { hz: midiHz(root - 12) * 1.006, type: 'sawtooth', level: 0.03 },
     { hz: midiHz(root - 5), type: 'sine', level: 0.04 },
   ],
   droneLowpass: 330,
-  drums: { verse: 'k.h.s.h.k.h.s.h.', fill: 'k.h.s.h.k.h.ssss' },
-  drumLevel: 1,
+  // Hat-less heavy pulse (owner hates the perky hi-hats; the steady kick-hat-snare
+  // backbeat read as "action/peppy"). Just a slow kick+snare tread = ominous, spacious.
+  drums: { verse: 'k.......s.......', fill: 'k.......s...k.s.' },
+  drumLevel: 0.92,
   block: (ctx, out, t0, blockIdx, beatS, semi, swing, drums, drumLevel) => {
     const barS = 4 * beatS;
     for (let bar = 0; bar < 8; bar++) {
@@ -2192,7 +2204,8 @@ const BROOD_CORE_DEF: CombatCoreDef = {
             ['D5', 0.25], ['F5', 0.25], ['Bb5', 0.25], ['F5', 0.25],
           ]),
           t0 + bar * barS, beatS,
-          { level: 0.032, type: 'square', sustain: 0.5, semitones: semi },
+          // Dimmed (owner: less peppy) — a faint ghost, not a bright sparkle.
+          { level: 0.016, type: 'square', sustain: 0.5, semitones: semi },
         );
       }
     }
@@ -2229,8 +2242,9 @@ const STALK_CORE_DEF: CombatCoreDef = {
   bpm: 120,
   rootMidi: midi('A2'),
   drone: (root) => [
-    { hz: midiHz(root - 12), type: 'sawtooth', level: 0.045 },
-    { hz: midiHz(root - 11), type: 'sawtooth', level: 0.035 },
+    // Triangle warmth + a faint dissonant sawtooth for unease (the liked synths).
+    { hz: midiHz(root - 12), type: 'triangle', level: 0.05 },
+    { hz: midiHz(root - 11), type: 'sawtooth', level: 0.022 },
     { hz: midiHz(root), type: 'sine', level: 0.03 },
   ],
   droneLowpass: 380,
@@ -2295,8 +2309,9 @@ const SURGE_CORE_DEF: CombatCoreDef = {
   bpm: 132,
   rootMidi: midi('E2'),
   drone: (root) => [
-    { hz: midiHz(root - 12), type: 'sawtooth', level: 0.045 },
-    { hz: midiHz(root - 12) * 1.007, type: 'sawtooth', level: 0.045 },
+    // Triangle warmth carries it, reduced sawtooth keeps an edge (the liked synths).
+    { hz: midiHz(root - 12), type: 'triangle', level: 0.05 },
+    { hz: midiHz(root - 12) * 1.007, type: 'sawtooth', level: 0.028 },
     { hz: midiHz(root + 7 - 12), type: 'sine', level: 0.03 },
   ],
   droneLowpass: 420,
