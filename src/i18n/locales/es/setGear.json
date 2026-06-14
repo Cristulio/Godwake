@@ -8,6 +8,48 @@
   "vigil-mantle": { "name": "Manto de la Vigilia", "effect": "Gana 4 PG temporales al inicio de cada combate" },
   "vigil-heart": { "name": "Corazón de la Vigilia", "effect": "Cúrate el 5% del daño que inflijas" },
 
+  "wayfarer": { "name": "Equipo del Caminante", "flavor": "El equipo curtido por el camino de quienes recorren toda provincia y a todas sobreviven." },
+  "wayfarer.bonus": {
+    "2": "2 piezas: +1 a las tiradas de ataque",
+    "3": "3 piezas: +2 de daño de arma y +1 a la CA"
+  },
+  "wayfarer-charm": { "name": "Amuleto del Caminante", "effect": "+1 de daño de arma en cada golpe" },
+  "wayfarer-belt": { "name": "Cinto del Caminante", "effect": "+1 a la CA" },
+  "wayfarer-treads": { "name": "Botas del Caminante", "effect": "+1 a las tiradas de ataque" },
+
+  "lanternkeeper": { "name": "Guardia del Farolero", "flavor": "El equipo de la guardia nocturna que defendió la muralla hasta el alba, y la defendió de nuevo." },
+  "lanternkeeper.bonus": {
+    "2": "2 piezas: +6 PG temporales por combate",
+    "4": "4 piezas: +2 a la CA y regenera 2 PG por turno"
+  },
+  "lanternkeeper-helm": { "name": "Yelmo del Farolero", "effect": "+1 a la CA" },
+  "lanternkeeper-charm": { "name": "Amuleto del Farolero", "effect": "Gana 5 PG temporales al inicio de cada combate" },
+  "lanternkeeper-signet": { "name": "Sello del Farolero", "effect": "Regenera 1 PG por turno" },
+  "lanternkeeper-cord": { "name": "Cordón del Farolero", "effect": "+2 a la CA mientras estés malherido" },
+
+  "gravewright": { "name": "Tributo del Sepulturero", "flavor": "Las herramientas de un sepulturero: lo que el campo derrama, ellas lo recogen en silencio." },
+  "gravewright.bonus": {
+    "2": "2 piezas: cúrate el 4% del daño que inflijas",
+    "4": "4 piezas: +4 de daño de sangrado y cúrate un 5% más"
+  },
+  "gravewright-locket": { "name": "Guardapelo del Sepulturero", "effect": "Cúrate el 4% del daño que inflijas" },
+  "gravewright-band": { "name": "Anillo del Sepulturero", "effect": "Tus golpes desgarran con +3 de daño de sangrado" },
+  "gravewright-seal": { "name": "Sello del Sepulturero", "effect": "Cúrate el 3% del daño que inflijas" },
+  "gravewright-girdle": { "name": "Faja del Sepulturero", "effect": "+2 de daño de arma en cada golpe" },
+
+  "pilgrim": { "name": "Relicario del Peregrino", "flavor": "Un relicario completo reunido santuario a santuario: la peregrinación entera hecha armadura." },
+  "pilgrim.bonus": {
+    "2": "2 piezas: +1 a la CA",
+    "4": "4 piezas: +2 de daño de arma y +1 a las tiradas de ataque",
+    "6": "6 piezas: +10 PG temporales por combate, los críticos aciertan con 19-20 y cúrate el 5% del daño que inflijas"
+  },
+  "pilgrim-circlet": { "name": "Diadema del Peregrino", "effect": "+1 a la CA" },
+  "pilgrim-reliquary": { "name": "Relicario del Peregrino", "effect": "Gana 4 PG temporales al inicio de cada combate" },
+  "pilgrim-ring-road": { "name": "Anillo del Peregrino: el Camino", "effect": "+1 a las tiradas de ataque" },
+  "pilgrim-ring-vow": { "name": "Anillo del Peregrino: el Voto", "effect": "+1 de daño de arma en cada golpe" },
+  "pilgrim-cincture": { "name": "Ceñidor del Peregrino", "effect": "Cúrate el 3% del daño que inflijas" },
+  "pilgrim-sandals": { "name": "Sandalias del Peregrino", "effect": "+1 a la CA" },
+
   "warsong": { "name": "Panoplia del Canto de Guerra", "flavor": "Las galas de un caudillo, forjadas para quienes encabezan la carga." },
   "warsong.bonus": {
     "2": "2 piezas: los críticos aciertan con 19-20, +2 de daño de seguimiento"
