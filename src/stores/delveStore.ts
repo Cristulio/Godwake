@@ -343,8 +343,13 @@ function reincarnateSoul(character: Character): Character {
   // is no longer delve-gated, see engine/progression/unlocks.ts). Seen-once via
   // seenTutorials; the `firstReincarnation` guard keeps veterans (already past
   // their first death) from ever re-triggering it.
+  // Onto the HUB-gated queue, not the in-delve one: this fires inside failDelve,
+  // a step BEFORE the reincarnation reveal renders. The in-delve queue paints
+  // over any screen, so the grove card would stomp the dramatic quirk reveal.
+  // hubUnlockQueue holds until screen === 'hub', so the card waits for the hub —
+  // exactly where its "Past the hub, on older ground..." copy reads right.
   if (firstReincarnation && !meta.seenTutorials.includes('grove')) {
-    useScreenStore.getState().enqueueTutorials(['grove']);
+    useScreenStore.getState().enqueueHubUnlocks(['grove']);
   }
   // The soul-bond name reveals are no longer wired to the wheel — they now ride
   // the progressive lore arc (content/loreBeats.ts): Inara introduces herself in

@@ -262,6 +262,17 @@ function DelveScreenBody() {
             useGameStore.getState().clearPostmortem();
             useGameStore.getState().goToReincarnation();
           }}
+          onViewBestiary={() => {
+            // The bestiary detour forgoes the reincarnation reveal, so SETTLE the
+            // death first: the soul already reincarnated in failDelve; finishDelve
+            // banks the run (chapter high-water, achievements) and clears the
+            // delve. Without this, codex → "back to hub" leaves a lingering
+            // phase='failed' delve that the autosave can persist as an incoherent
+            // (hub + failed-delve) state.
+            useGameStore.getState().clearPostmortem();
+            finishDelve();
+            useGameStore.getState().goToCodex();
+          }}
         />
       );
     }
