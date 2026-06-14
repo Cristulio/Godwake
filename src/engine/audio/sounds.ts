@@ -2089,17 +2089,16 @@ const BROOD_BASS_BARS: ParsedStep[][] = [
 ];
 
 const BROOD_LEAD = mel([
-  // Dread / uncertainty (owner: "that worrying — could die at any moment"). Not
-  // grief (a clean descent resolves and consoles) but ANXIETY: a creeping, chromatic,
-  // UNRESOLVED line — phrygian Eb b2, half-step approaches, a brushed tritone — that
-  // circles the key and never lands on the tonic. The predator is always one step
-  // behind; the driving bass+drums keep the pulse, the lead keeps you off-balance.
-  // Bars 1-2: restless, won't settle.
-  ['D4', 1], ['Eb4', 0.5], ['D4', 0.5], ['A3', 1.5], ['Bb3', 0.5], ['A3', 1], ['G3', 1], ['A3', 1], [null, 1],
-  // Bars 3-4: a chromatic creep upward — the threat closing in, inexorable.
-  ['A3', 0.5], ['Bb3', 0.5], ['B3', 0.5], ['C4', 0.5], ['C#4', 1], ['D4', 1], ['Eb4', 1.5], ['D4', 1], [null, 1.5],
-  // Bars 5-6: descend, brush the tritone (Ab), end UNRESOLVED on the 5th — not safe.
-  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1], ['Ab3', 0.5], ['A3', 0.5], ['Bb3', 1], ['A3', 1.5], [null, 1.5],
+  // Dread for the slow/sparse combat core. The menace is the low DESCENDING D-minor
+  // contour, the b6 (Bb) lean, and the unresolved ending on the 5th — over the slow
+  // sparse bass+drum tread. De-chromaticized (owner: "I don't like the chromaticism,
+  // everything else is good") — pure D natural minor, no Eb/B/C#/Ab creep.
+  // Bars 1-2: descend, low and brooding — pure D natural minor.
+  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1.5], ['Bb3', 0.5], ['A3', 1], ['G3', 1], ['A3', 1], [null, 1],
+  // Bars 3-4: a tense diatonic rise to the b3, leaning on the b6, then sinking back.
+  ['A3', 0.5], ['Bb3', 0.5], ['C4', 0.5], ['D4', 0.5], ['F4', 1], ['E4', 1], ['D4', 1.5], ['C4', 1], [null, 1.5],
+  // Bars 5-6: descend to the floor and end UNRESOLVED on the 5th (A) — not safe.
+  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1], ['G3', 0.5], ['F3', 0.5], ['G3', 1], ['A3', 1.5], [null, 1.5],
 ]);
 
 const BROOD_STAB_CHORDS = [
@@ -2210,16 +2209,19 @@ const STALK_BASS_BARS: ParsedStep[][] = [
 ];
 
 const STALK_LEAD = mel([
-  // The snake: minor seconds circling.
-  ['E4', 0.5], ['F4', 0.5], ['E4', 0.5], ['D4', 0.5], ['E4', 1], ['A4', 0.5], ['E4', 0.5],
-  ['E4', 0.5], ['F4', 0.5], ['E4', 0.5], ['D4', 0.5], ['C4', 1], ['Bb3', 1],
-  ['A3', 1.5], ['C4', 0.5], ['E4', 1], ['F4', 0.5], ['E4', 0.5],
-  ['D4', 0.5], ['E4', 0.5], ['F4', 0.5], ['G4', 0.5], ['F4', 1], ['E4', 1],
-  // The answer creeps higher before sliding home.
-  ['A4', 0.5], ['G4', 0.5], ['F4', 0.5], ['E4', 0.5], ['F4', 1], ['D4', 1],
-  ['E4', 0.5], ['F4', 0.5], ['G4', 0.5], ['A4', 0.5], ['Bb4', 1.5], ['A4', 0.5],
-  ['G4', 0.5], ['F4', 0.5], ['E4', 0.5], ['D4', 0.5], ['C4', 1], ['Bb3', 1],
-  ['A3', 2], ['E4', 2],
+  // Rewritten (owner: the old chromatic "snake" — rapid half-step tiptoe + phrygian
+  // Bb — read as a comedy sneak). A clean, tense A-natural-minor PROWL: longer notes,
+  // prowling leaps, no chromatic b2 and no rapid half-step circling. The STALK core's
+  // drone/drums/delay (the prowl knob's masking) carry the "hunted" essence; the lead
+  // just stalks with intent.
+  ['A3', 1.5], ['E4', 0.5], ['D4', 1], ['C4', 1],
+  ['D4', 1], ['E4', 1], ['A3', 2],
+  ['C4', 1.5], ['D4', 0.5], ['E4', 1], ['G4', 1],
+  ['F4', 1], ['E4', 1], ['D4', 2],
+  ['E4', 1], ['G4', 1], ['F4', 1], ['D4', 1],
+  ['D4', 1.5], ['E4', 0.5], ['G4', 1], ['E4', 1],
+  ['D4', 1], ['C4', 1], ['B3', 1], ['C4', 1],
+  ['A3', 2], ['E4', 1], ['A3', 1],
 ]);
 
 const STALK_CORE_DEF: CombatCoreDef = {
@@ -2406,8 +2408,11 @@ const COMBAT_VARIANTS: Record<CombatMusicId, SongSpec> = {
     drums: { verse: 'k.h.s.h.k.h.s.h.', fill: 'k.h.s.h.k.h.ssss' },
   }),
   combat_rally: makeCombatSpec(SURGE_CORE_DEF, {
-    semitones: -2,
-    tempoMul: 1.0,
+    // Saddened a touch (owner: "sounds pretty happy") — pitched down + a hair slower
+    // so it reads heavier, not goofy. Knob-only, so combat_frenzy (same core, liked)
+    // is untouched.
+    semitones: -4,
+    tempoMul: 0.97,
     swing: 0.05,
     trim: 1.06,
     drums: { verse: 'k.h.s.h.k.k.s.h.', fill: 'k.h.s.h.k.k.s.ss' },
