@@ -92,14 +92,26 @@ export function sfxForSpellEffect(kind: SpellEffectKind, element?: SpellElement)
 export function useCombatAudio(): void {
   useEffect(() => {
     let lastEventId = useCombatStore.getState().combat?.spellEffectEvent?.id ?? 0;
+    let lastBatchId = useCombatStore.getState().combat?.spellEffectEvents?.[0]?.id ?? 0;
     const unsub = useCombatStore.subscribe((state) => {
       const event = state.combat?.spellEffectEvent;
-      if (!event || event.id === lastEventId) return;
-      lastEventId = event.id;
-      const sfx = sfxForSpellEffect(event.kind, event.element);
-      if (sfx) playSfx(sfx);
-      // A boss refusing to fall raises the arrangement a layer.
-      if (event.kind === 'enemy-frenzy') bumpMusicIntensity();
+      if (event && event.id !== lastEventId) {
+        lastEventId = event.id;
+        const sfx = sfxForSpellEffect(event.kind, event.element);
+        if (sfx) playSfx(sfx);
+        // A boss refusing to fall raises the arrangement a layer.
+        if (event.kind === 'enemy-frenzy') bumpMusicIntensity();
+      }
+      // AoE-control batch (Entangle): play the cast's cue ONCE per emit — N
+      // overlapping identical roots-sounds would be a cacophony, and the visual
+      // already shows every rooted foe its own web.
+      const batch = state.combat?.spellEffectEvents;
+      const head = batch?.[0];
+      if (head && head.id !== lastBatchId) {
+        lastBatchId = head.id;
+        const sfx = sfxForSpellEffect(head.kind, head.element);
+        if (sfx) playSfx(sfx);
+      }
     });
     return unsub;
   }, []);

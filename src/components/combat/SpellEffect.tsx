@@ -74,13 +74,17 @@ function anchorFor(state: CombatState, id: string): Anchor {
 }
 
 /**
- * Mounts into the Battlefield as an absolute overlay. Subscribes to
- * `state.spellEffectEvent` and renders the matching SpellEffect for each
- * new event id. Clears itself when the effect signals onDone.
+ * Mounts into the Battlefield as an absolute overlay. Renders the matching
+ * SpellEffect for each new `state.spellEffectEvent` id (single-target casts) AND
+ * a per-target effect for every entry in `state.spellEffectEvents` (an AoE
+ * control batch — Entangle), so every rooted foe shows its own roots, not just
+ * the anchor. Each effect clears itself when it signals onDone.
  */
 export function SpellEffectLayer({ state }: SpellEffectLayerProps) {
   const [active, setActive] = useState<SpellEffectEvent | null>(null);
+  const [batch, setBatch] = useState<SpellEffectEvent[]>([]);
   const eventId = state.spellEffectEvent?.id;
+  const batchEvents = state.spellEffectEvents;
 
   useEffect(() => {
     if (!state.spellEffectEvent) return;
@@ -88,23 +92,46 @@ export function SpellEffectLayer({ state }: SpellEffectLayerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId]);
 
-  if (!active) return null;
+  // Render the roots shape only for foes that were actually rooted (failed the
+  // save → outcome 'landed'); a foe that resisted floats a RESISTED verdict but
+  // gets no web.
+  useEffect(() => {
+    setBatch((batchEvents ?? []).filter((e) => e.outcome === 'landed'));
+  }, [batchEvents]);
 
-  const origin = anchorFor(state, active.attackerId);
-  const target = active.targetId
-    ? anchorFor(state, active.targetId)
-    : origin;
+  if (!active && batch.length === 0) return null;
+
+  const activeTarget = active
+    ? active.targetId
+      ? anchorFor(state, active.targetId)
+      : anchorFor(state, active.attackerId)
+    : null;
 
   return (
     <div className="absolute inset-0 pointer-events-none z-20 overflow-visible">
-      <SpellEffect
-        key={active.id}
-        kind={active.kind}
-        origin={origin}
-        target={target}
-        element={active.element}
-        onDone={() => setActive(null)}
-      />
+      {active && activeTarget && (
+        <SpellEffect
+          key={active.id}
+          kind={active.kind}
+          origin={anchorFor(state, active.attackerId)}
+          target={activeTarget}
+          element={active.element}
+          onDone={() => setActive(null)}
+        />
+      )}
+      {batch.map((e) => {
+        const target = e.targetId ? anchorFor(state, e.targetId) : anchorFor(state, e.attackerId);
+        return (
+          <SpellEffect
+            key={e.id}
+            kind={e.kind}
+            origin={anchorFor(state, e.attackerId)}
+            target={target}
+            element={e.element}
+            onDone={() => setBatch((b) => b.filter((x) => x.id !== e.id))}
+          />
+        );
+      })}
     </div>
   );
 }

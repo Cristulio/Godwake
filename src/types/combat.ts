@@ -416,6 +416,17 @@ export interface CombatState {
   attackEventCounter: number;
   /** Latest spell-cast event — populated for the SpellEffectLayer overlay. */
   spellEffectEvent?: SpellEffectEvent;
+  /**
+   * Every spell-effect resolved in the most recent atomic cast, in order. A
+   * single `spellEffectEvent` can only carry ONE target/outcome, so an AoE
+   * control cast (Entangle) that roots several foes at once would otherwise
+   * surface only the last — every other foe's LANDED/RESISTED verdict and roots
+   * cue would be lost. This batch surfaces all of them so each foe floats its
+   * own verdict and rooted foes show their own roots (SpellEffectLayer +
+   * BattlefieldSprite drain it). Replaced per emit; absent on legacy saves and
+   * for single-target spells (treated as empty).
+   */
+  spellEffectEvents?: SpellEffectEvent[];
   /** Counter to issue stable SpellEffectEvent ids. Optional so legacy saves rehydrate. */
   spellEffectCounter?: number;
   /** Most recent saving-throw event the player rolled. Used by the postmortem to attribute deaths to a failed save (Hold Person, etc.). */

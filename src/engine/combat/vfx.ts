@@ -1,4 +1,9 @@
-import type { CombatState, SpellEffectKind, SpellElement } from '../../types/combat';
+import type {
+  CombatState,
+  SpellEffectEvent,
+  SpellEffectKind,
+  SpellElement,
+} from '../../types/combat';
 import type { Weapon } from '../../schemas/item';
 
 /**
@@ -23,6 +28,36 @@ export function attachCombatVfx(
     spellEffectCounter: next,
     spellEffectEvent: { id: next, kind, attackerId, targetId, element, outcome, damage },
   };
+}
+
+/** One per-target effect in a batch — the id is assigned by the emitter. */
+export interface BatchVfxEntry {
+  kind: SpellEffectKind;
+  attackerId: string;
+  targetId?: string;
+  element?: SpellElement;
+  outcome?: 'landed' | 'resisted';
+  damage?: number;
+}
+
+/**
+ * Emit a BATCH of combat-VFX events in one commit, each with its own
+ * target/outcome and a unique counter-advanced id. The single `spellEffectEvent`
+ * carries one target only, so an AoE control cast that touches many foes at once
+ * (Entangle) would lose every foe's verdict but the last; this surfaces them all
+ * so each sprite floats its own LANDED/RESISTED and rooted foes show their own
+ * roots. Replaced per emit (like `attackEvents`) so stale entries never re-fire.
+ */
+export function attachCombatVfxBatch(
+  state: CombatState,
+  entries: readonly BatchVfxEntry[],
+): CombatState {
+  let counter = state.spellEffectCounter ?? 0;
+  const events: SpellEffectEvent[] = entries.map((e) => {
+    counter += 1;
+    return { id: counter, ...e };
+  });
+  return { ...state, spellEffectCounter: counter, spellEffectEvents: events };
 }
 
 /**
