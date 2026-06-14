@@ -1856,8 +1856,9 @@ const HUB_SPEC: SongSpec = {
         t, beatS,
         { level: 0.085, type: 'triangle', sustain: 0.9 },
       );
-      // (Hat removed — owner: the synth hi-hat read too loud/weird; the hub now
-      // sits as pure ambient, like the grove, which has no percussion.)
+      // Grove-style soft kick once per bar (owner preferred the grove's "little
+      // kickdrum" pulse over the fire crackles — it sits under the ambient pads).
+      drumHitAt(ctx, out, 'k', t + 0.01, 0.4);
     }
     // Lead: wistful verse, rising answer, motif cadence.
     lineAt(ctx, out, HUB_LEAD_A, t0, beatS, {
@@ -1878,25 +1879,8 @@ const HUB_SPEC: SongSpec = {
       sustain: 0.95,
       vibrato: { hz: 5, cents: 12, after: 0.2 },
     });
-    // Fire crackles, scattered through the block. Dulled (highpass 1800→700) and
-    // quietened (~half) so their echo reads as soft warm pops, not the ticky
-    // "delayed hi-hat" the owner flagged (the bright transient + echo tail was the
-    // culprit once the drum hat was removed). Fewer of them, too.
-    const blockS = 16 * barS;
-    for (let i = 0; i < 8; i++) {
-      const t = t0 + Math.random() * blockS;
-      const src = ctx.createBufferSource();
-      src.buffer = noiseBuffer(ctx, 30 + Math.random() * 40);
-      const f = ctx.createBiquadFilter();
-      f.type = 'highpass';
-      f.frequency.value = 700;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.045 + Math.random() * 0.025, t + 0.005);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05 + Math.random() * 0.05);
-      src.connect(f).connect(g).connect(out);
-      src.start(t);
-    }
+    // (Fire crackles removed — replaced by the per-bar grove kick above, which the
+    // owner found combines better with the music than the crackle pops.)
   },
 };
 
