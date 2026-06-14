@@ -109,19 +109,21 @@ export interface MonsterInstance {
   burnDamagePerTurn?: number;
   burnTurnsRemaining?: number;
   /**
-   * Legendary-resistance pool: the number of times this monster auto-succeeds a
-   * player-applied control save (Hold Person) before the condition can land.
-   * Stamped on the primary monster of a boss/elite encounter at spawn so a lone
-   * boss can't be chain-paralyze-locked. Absent on rank-and-file monsters.
+   * Resolute will (boss/elite primary foe, stamped at spawn): this monster rolls
+   * player-applied control saves (stun / paralyze / fear / restrain) with
+   * ADVANTAGE — a higher resistance than rank-and-file, so it is harder to lock
+   * down but NEVER immune (every attempt can still land). Read as a boolean
+   * (`> 0`); it does NOT decrement and is deliberately NOT an auto-succeed pool —
+   * a boss you can't paralyze in three tries is a death sentence (owner directive,
+   * 2026-06-14). The numeric value is legacy; only `> 0` matters. Absent on
+   * rank-and-file. (Name kept for now; the live behavior is "resolute will".)
    */
   legendaryResistances?: number;
   /**
    * Encounter rank, stamped at spawn on the primary foe of an elite/boss room.
-   * Unlike {@link legendaryResistances} (a pool that decrements as it absorbs
-   * control), this never changes for the fight — it is the stable read for
-   * rank-gated effects: Power Word: Kill unmakes normals AND elites outright on
-   * a failed save, but a boss never dies to it. Absent = rank-and-file (adds
-   * and summons included).
+   * The stable read for rank-gated effects: Power Word: Kill unmakes normals AND
+   * elites outright on a failed save, but a boss never dies to it. Absent =
+   * rank-and-file (adds and summons included).
    */
   rank?: 'elite' | 'boss';
   /**
