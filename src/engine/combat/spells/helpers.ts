@@ -103,6 +103,25 @@ export function empoweredEvocationBonus(character: Readonly<Character>): number 
     : 0;
 }
 
+/** Necromancy — Grim Harvest (L3): heal a % of the damage your spells deal. */
+export const NECROMANCY_LIFESTEAL_PCT = 20;
+/** Necromancy — Undying Husk (L10): the harvest runs deeper. */
+export const NECROMANCY_LIFESTEAL_PCT_L10 = 35;
+
+/**
+ * School of Necromancy — Grim Harvest (L3) / Undying Husk (L10): the wizard who
+ * outlasts the room by draining it. Folded into the spell-lifesteal heal in
+ * dispatch beside the Soulthirst affix (they sum), so EVERY damaging spell knits
+ * the caster a little whole. The attrition caster's answer to the wizard's glass
+ * jaw — distinct from Abjuration's ward and Illusion's evasion. SIM-TUNED.
+ */
+export function necromancyLifestealPct(character: Readonly<Character>): number {
+  const c = character as Character;
+  if (characterHasMechanic(c, 'undying-husk')) return NECROMANCY_LIFESTEAL_PCT_L10;
+  if (characterHasMechanic(c, 'grim-harvest')) return NECROMANCY_LIFESTEAL_PCT;
+  return 0;
+}
+
 /**
  * Druid Circle of the Tempest — spell save DC bonus: +1 at the L2 circle pick
  * (`circle-of-the-tempest`), +1 again at L10 (`eye-of-the-storm`), +2 in all.

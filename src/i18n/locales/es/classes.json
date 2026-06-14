@@ -357,6 +357,22 @@
     "name": "Velos Superpuestos",
     "description": "El velo se dobla sobre sí mismo —ahora comienzas cada combate con dos imágenes especulares tejidas contra el Difuminar, no una. Dos golpes desperdiciados en imágenes residuales antes de que el primero encuentre tu verdadero yo."
   },
+  "wizard.necromancy": {
+    "name": "Escuela de Nigromancia",
+    "description": "Bebes la muerte que repartes. Mejor con equipo de daño de conjuro y disposición a intercambiar golpes: donde la Abjuración protege y la Ilusión esquiva, el Nigromante simplemente perdura —cada estallido teje algo de la vida que se escapa de la sala de vuelta a ti. El lanzador de desgaste, y la verdadera respuesta del mago frágil a su mandíbula de cristal.",
+    "archetype": "Segador",
+    "lever0": "Tus conjuros de daño te curan por un quinto del daño que infligen — drena la sala para perdurar.",
+    "lever1": "Sin escudo, sin velo —intercambias golpes y sales ganando, cada conjuro te recompone.",
+    "lever2": "Nivel 10: la cosecha corre más honda — un tercio del daño infligido drena de vuelta."
+  },
+  "wizard.necromancy.grim-harvest": {
+    "name": "Tradición Arcana: Nigromancia",
+    "description": "Aprendes a segar lo que tu magia mata. Siempre que un conjuro tuyo inflige daño, un quinto de él te inunda de vuelta como curación —la vida que abandona la sala entra en el Nigromante en su lugar. El mago de mandíbula de cristal aprende a plantarse a campo abierto y, simplemente, perdurar."
+  },
+  "wizard.necromancy.undying-husk": {
+    "name": "Cascarón Imperecedero",
+    "description": "La cosecha corre más honda de lo que la carne debería permitir —ahora un tercio del daño de cada conjuro drena de vuelta a ti, la sala desangrándose en tus venas más rápido de lo que cualquier enemigo pueda vaciarte. Te conviertes en lo que no cae mientras quede algo más en pie que drenar."
+  },
   "barbarian": {
     "name": "Bárbaro",
     "characterName": "Korrek Melena de Sangre",
