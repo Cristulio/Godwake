@@ -86,6 +86,37 @@
   "nightveil-ring": { "name": "Anillo del Velo Nocturno", "effect": "+1 a las tiradas de ataque" },
   "nightveil-treads": { "name": "Botas del Velo Nocturno", "effect": "+2 de daño de ataque furtivo" },
 
+  "wolfpack": { "name": "Equipo de la Jauría", "flavor": "El aparejo de un cazador de manada: derriba a la presa marcada y no deja que la herida cierre." },
+  "wolfpack.bonus": {
+    "2": "2 piezas: +1 a las tiradas de ataque",
+    "4": "4 piezas: +4 de daño a tu presa marcada y +3 de daño de sangrado"
+  },
+  "wolfpack-hood": { "name": "Capucha de la Jauría", "effect": "+3 de daño a tu presa marcada" },
+  "wolfpack-fang": { "name": "Colmillo de la Jauría", "effect": "Tus golpes desgarran con +3 de daño de sangrado" },
+  "wolfpack-band": { "name": "Anillo de la Jauría", "effect": "+1 a las tiradas de ataque" },
+  "wolfpack-quiver": { "name": "Carcaj de la Jauría", "effect": "+2 de daño a tu presa marcada" },
+
+  "cloudstep": { "name": "Regalía del Paso de Nube", "flavor": "Vendas ligerísimas y jade: el equipo de un puño que golpea antes de que el ojo lo siga." },
+  "cloudstep.bonus": {
+    "2": "2 piezas: +1 a la CA",
+    "3": "3 piezas: los críticos aciertan con 19-20 y +2 de daño de arma"
+  },
+  "cloudstep-band": { "name": "Banda del Paso de Nube", "effect": "+1 a la CA" },
+  "cloudstep-wraps": { "name": "Vendas del Paso de Nube", "effect": "+1 a las tiradas de ataque" },
+  "cloudstep-sash": { "name": "Faja del Paso de Nube", "effect": "Gana 4 PG temporales al inicio de cada combate" },
+
+  "oathbound": { "name": "Regalía del Juramentado", "flavor": "El equipo de guerra consagrado de un voto cumplido en sangre: aguanta donde se juró el juramento." },
+  "oathbound.bonus": {
+    "2": "2 piezas: +6 PG temporales por combate",
+    "3": "3 piezas: +2 de daño de arma en cada golpe",
+    "5": "5 piezas: +2 a la CA y cúrate el 5% del daño que inflijas"
+  },
+  "oathbound-helm": { "name": "Yelmo del Juramentado", "effect": "+1 a la CA" },
+  "oathbound-amulet": { "name": "Amuleto del Juramentado", "effect": "+2 de daño de arma en cada golpe" },
+  "oathbound-ring": { "name": "Anillo del Juramentado", "effect": "Cúrate el 4% del daño que inflijas" },
+  "oathbound-belt": { "name": "Cinturón del Juramentado", "effect": "Gana 5 PG temporales al inicio de cada combate" },
+  "oathbound-sabatons": { "name": "Escarpes del Juramentado", "effect": "+1 a la CA" },
+
   "warsong": { "name": "Panoplia del Canto de Guerra", "flavor": "Las galas de un caudillo, forjadas para quienes encabezan la carga." },
   "warsong.bonus": {
     "2": "2 piezas: los críticos aciertan con 19-20, +2 de daño de seguimiento"

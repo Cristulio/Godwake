@@ -482,6 +482,42 @@
   "nightveil-treads": {
     "name": "Botas del Velo Nocturno"
   },
+  "wolfpack-hood": {
+    "name": "Capucha de la Jauría"
+  },
+  "wolfpack-fang": {
+    "name": "Colmillo de la Jauría"
+  },
+  "wolfpack-band": {
+    "name": "Anillo de la Jauría"
+  },
+  "wolfpack-quiver": {
+    "name": "Carcaj de la Jauría"
+  },
+  "cloudstep-band": {
+    "name": "Banda del Paso de Nube"
+  },
+  "cloudstep-wraps": {
+    "name": "Vendas del Paso de Nube"
+  },
+  "cloudstep-sash": {
+    "name": "Faja del Paso de Nube"
+  },
+  "oathbound-helm": {
+    "name": "Yelmo del Juramentado"
+  },
+  "oathbound-amulet": {
+    "name": "Amuleto del Juramentado"
+  },
+  "oathbound-ring": {
+    "name": "Anillo del Juramentado"
+  },
+  "oathbound-belt": {
+    "name": "Cinturón del Juramentado"
+  },
+  "oathbound-sabatons": {
+    "name": "Escarpes del Juramentado"
+  },
   "warsong-gauntlet": {
     "name": "Guantelete del Canto de Guerra"
   },
