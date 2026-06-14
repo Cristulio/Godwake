@@ -26,6 +26,7 @@ export const ARCHETYPE_ACCENTS: Record<string, string> = {
   Stormcaller: '#56B6E6',
   Controller: '#6C5CE0',
   Elementalist: '#2FB8A0',
+  Reaper: '#8AAD3E',
 };
 
 const DEFAULT_ACCENT = '#F4A742';

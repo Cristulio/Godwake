@@ -2,6 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
 import { castSpell } from './spells';
+import {
+  necromancyLifestealPct,
+  NECROMANCY_LIFESTEAL_PCT,
+  NECROMANCY_LIFESTEAL_PCT_L10,
+} from './spells/helpers';
 import { createDiceRoller } from '../dice';
 import { getMonster } from '../../content/monsters';
 import type { CombatState } from '../../types/combat';
@@ -254,5 +259,60 @@ describe('Soulthirst — stacks on top of Life Drain’s inherent heal', () => {
     expect(vamped.gain).toBe(bare.gain + Math.max(1, Math.floor((vamped.dealt * 4) / 100)));
     expect(drinkLine(vamped.state)).toBeDefined();
     expect(drinkLine(bare.state)).toBeUndefined();
+  });
+});
+
+describe('School of Necromancy — Grim Harvest lifesteal (no affix needed)', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  const necro = (level: number, subclassId = 'necromancy') =>
+    makeWizard({
+      level,
+      subclassId,
+      equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+    });
+
+  it('necromancyLifestealPct: 20 at L2, 35 at L10, 0 for other schools / pre-pick', () => {
+    expect(necromancyLifestealPct(necro(2))).toBe(NECROMANCY_LIFESTEAL_PCT);
+    expect(necromancyLifestealPct(necro(10))).toBe(NECROMANCY_LIFESTEAL_PCT_L10);
+    expect(necromancyLifestealPct(necro(2, 'evocation'))).toBe(0);
+    expect(necromancyLifestealPct(necro(1))).toBe(0); // school not picked until L2
+  });
+
+  it('a Necromancer drinks a fifth of a damaging cast — no Soulthirst orb in hand', () => {
+    const roller = createDiceRoller(7);
+    const init = createCombat({ roller, character: necro(2), monsters: [{ def: getMonster('goblin') }] });
+    const w = { ...init.character, hp: { ...init.character.hp, current: 1, max: 500 } };
+    const before = monsterHpTotal(init.state);
+    const result = castSpell({
+      roller,
+      character: w,
+      state: init.state,
+      spellId: 'magic-missile',
+      targetId: firstMonsterId(init.state),
+    });
+    expect(result.cast).toBe(true);
+    const dealt = before - monsterHpTotal(result.state);
+    expect(dealt).toBeGreaterThan(0);
+    expect(result.character.hp.current).toBe(
+      1 + Math.max(1, Math.floor((dealt * NECROMANCY_LIFESTEAL_PCT) / 100)),
+    );
+    expect(drinkLine(result.state)).toBeDefined();
+  });
+
+  it('a non-Necromancer with no affix drinks nothing from the same cast', () => {
+    const roller = createDiceRoller(7);
+    const init = createCombat({ roller, character: necro(2, 'evocation'), monsters: [{ def: getMonster('goblin') }] });
+    const w = { ...init.character, hp: { ...init.character.hp, current: 1, max: 500 } };
+    const result = castSpell({
+      roller,
+      character: w,
+      state: init.state,
+      spellId: 'magic-missile',
+      targetId: firstMonsterId(init.state),
+    });
+    expect(result.cast).toBe(true);
+    expect(result.character.hp.current).toBe(1);
+    expect(drinkLine(result.state)).toBeUndefined();
   });
 });

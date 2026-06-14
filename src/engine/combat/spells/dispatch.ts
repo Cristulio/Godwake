@@ -3,7 +3,7 @@ import { appendLog, markPlayerLog } from '../log';
 import { characterAffixMods } from '../../items/affixMods';
 import { t } from '../../../i18n';
 import type { CombatState } from '../../../types/combat';
-import { type CastResult, type CastSpellContext, canCastSpell, nextLogId } from './helpers';
+import { type CastResult, type CastSpellContext, canCastSpell, nextLogId, necromancyLifestealPct } from './helpers';
 import { castFireBolt } from './fireBolt';
 import { castMagicMissile } from './magicMissile';
 import { castBurningHands } from './burningHands';
@@ -74,7 +74,10 @@ function monsterHpById(state: CombatState): Map<string, number> {
  * HP, not a monster's, so it stacks on top untouched.
  */
 function applySpellLifesteal(result: CastResult, hpBefore: Map<string, number>): CastResult {
-  const pct = characterAffixMods(result.character).spellLifestealPct;
+  // Soulthirst gear + the Necromancy school's Grim Harvest sum into one drink.
+  const pct =
+    characterAffixMods(result.character).spellLifestealPct +
+    necromancyLifestealPct(result.character);
   if (pct <= 0) return result;
   const { character } = result;
   if (character.hp.current >= character.hp.max) return result;

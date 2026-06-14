@@ -285,5 +285,39 @@ export const WIZARD: Class = ClassSchema.parse({
         ],
       },
     },
+    {
+      id: 'necromancy',
+      name: 'School of Necromancy',
+      description:
+        'You drink the death you deal. Best with spell-damage gear and a willingness to trade blows: where Abjuration wards and Illusion evades, the Necromancer simply outlasts — every nuke knits a little of the room\'s ebbing life back into you. The attrition caster, and the squishy mage\'s real answer to its glass jaw.',
+      bottomLine: {
+        archetype: 'Reaper',
+        levers: [
+          'Your damaging spells heal you for a fifth of the harm they deal — drain the room to outlast it.',
+          'No ward, no veil — you trade blows and come out ahead, every cast knitting you whole.',
+          'L10: the harvest runs deeper — a third of the damage dealt drains back.',
+        ],
+      },
+      featuresByLevel: {
+        '2': [
+          {
+            id: 'grim-harvest',
+            name: 'Arcane Tradition: Necromancy',
+            description:
+              'You learn to reap what your magic kills. Whenever a spell of yours deals damage, a fifth of it floods back into you as healing — the life going out of the room comes into the Necromancer instead. The glass-jawed wizard learns to stand in the open and simply outlast.',
+            mechanicKey: 'grim-harvest',
+          },
+        ],
+        '10': [
+          {
+            id: 'undying-husk',
+            name: 'Undying Husk',
+            description:
+              'The harvest runs deeper than flesh should allow — now a third of every spell\'s damage drains back into you, the room bleeding itself into your veins faster than any foe can empty them. You become the thing that does not fall while anything else still stands to be drained.',
+            mechanicKey: 'undying-husk',
+          },
+        ],
+      },
+    },
   ],
 });
