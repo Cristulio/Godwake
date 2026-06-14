@@ -2,6 +2,8 @@ import type { Character } from '../../../types/character';
 import type { CombatState, CombatLogEntry } from '../../../types/combat';
 import { spellcastingMod } from '../../character/derived';
 import { getSpell } from '../../../content/spells';
+import { getMonster } from '../../../content/monsters';
+import { abilityModifier } from '../../../types/abilities';
 import { applyDamage } from '../attack';
 import { appendLog } from '../log';
 import { scaleSpellDamage } from './scaling';
@@ -39,7 +41,10 @@ export function castFireBolt(ctx: CastSpellContext): CastResult {
   // an attack-roll-vs-AC formulation that missed ~45% vs Ch1 boss AC 15 and
   // made the wizard's only at-will action feel miserable. Per gameplay-over-RAW.
   const dc = spellSaveDC(nextCharacter);
-  const save = roller.d20('normal', 0);
+  // The target's own DEX decides the dodge, like Fireball/Lightning Bolt — a
+  // nimble foe shrugs the burn to half more often than a sluggish one.
+  const dexMod = abilityModifier(getMonster(target.instance.defId).abilityScores.dex ?? 10);
+  const save = roller.d20('normal', dexMod);
   const saved = save.total >= dc;
 
   const damageRoll = roller.roll({ count: 1, die: 10, modifier: 0 });

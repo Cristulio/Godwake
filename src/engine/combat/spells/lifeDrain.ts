@@ -51,11 +51,16 @@ function castDrain(
     text: opts.strikeLine(nextCharacter.name, target.instance.displayName, dealt),
   });
   nextState = attachSpellEffect(nextState, 'spell-drain', 'player', targetId, spellElement(ctx.spellId), undefined, dealt);
+  // Heal off the life ACTUALLY torn out (post-resistance, post-overkill), not the
+  // rolled number — you can't drain more warmth than the wound held.
+  const targetHpBefore = findMonster(nextState, targetId)?.instance.hp.current ?? 0;
   const damaged = applyDamage(nextState, targetId, dealt, nextCharacter);
   nextState = damaged.state;
   nextCharacter = damaged.character;
+  const targetHpAfter = findMonster(nextState, targetId)?.instance.hp.current ?? 0;
+  const lifeTorn = Math.max(0, targetHpBefore - targetHpAfter);
 
-  const healAmount = Math.floor(dealt / 2);
+  const healAmount = Math.floor(lifeTorn / 2);
   const before = nextCharacter.hp.current;
   const after = Math.min(nextCharacter.hp.max, before + healAmount);
   nextCharacter = { ...nextCharacter, hp: { ...nextCharacter.hp, current: after } };

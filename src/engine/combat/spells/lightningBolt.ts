@@ -10,13 +10,12 @@ import {
   type CastSpellContext,
   attachSpellEffect,
   consumeSlot,
-  empoweredEvocationBonus,
   evaluateCombatEndFull,
   findMonster,
   firstLiveMonsterId,
-  gatheringStormBonus,
   markActionUsed,
   nextLogId,
+  spellDamageBonus,
   spellElement,
   spellSaveDC,
 } from './helpers';
@@ -47,11 +46,13 @@ export function castLightningBolt(ctx: CastSpellContext): CastResult {
   const evoker = characterHasMechanic(nextCharacter, 'sculpt-spells');
   const dice = evoker ? 11 : 10;
   const damageRoll = roller.roll({ count: dice, die: 6, modifier: 0 });
-  // Empowered Evocation rides the bolt directly (Lightning Bolt bypasses spellDamageBonus).
+  // The bolt scales with the caster's spell-damage investment — gear affixes,
+  // blessings, camp boons, Apotheosis, and the level-scaling riders all ride it,
+  // same as every other damaging spell. Doubly right for a single-target nuke:
+  // a wizard's spell gear should never read as dead on it. spellDamageBonus folds
+  // them in.
   const fullDmg =
-    scaleSpellDamage(damageRoll.total, nextCharacter, 3) +
-    empoweredEvocationBonus(nextCharacter) +
-    gatheringStormBonus(nextCharacter);
+    scaleSpellDamage(damageRoll.total, nextCharacter, 3) + spellDamageBonus(nextCharacter);
   const dc = spellSaveDC(nextCharacter);
 
   let nextState: CombatState = appendLog(state, {
