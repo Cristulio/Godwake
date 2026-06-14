@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { Button } from '../ui/Button';
 import { getTutorial } from '../../content/tutorials';
 import { useInputBlock } from '../ui/useInputBlock';
+import { playSfx } from '../../engine/audio';
 import { useT } from '../../i18n/useT';
 
 interface UnlockTutorialCardProps {
@@ -18,6 +20,11 @@ export function UnlockTutorialCard({ featureId, onDismiss }: UnlockTutorialCardP
   const overlayRef = useInputBlock<HTMLDivElement>();
   const { t, tc } = useT();
   const tutorial = getTutorial(featureId);
+  // A small quick chime when an unlock notice appears, so a new unlock is felt,
+  // not just seen. Keyed on featureId so each card in the queue sounds once.
+  useEffect(() => {
+    if (tutorial) playSfx('shrine_chime');
+  }, [featureId]); // eslint-disable-line react-hooks/exhaustive-deps
   // Defensive: an unknown id has no copy to show — dismiss rather than wedge.
   if (!tutorial) {
     onDismiss();
