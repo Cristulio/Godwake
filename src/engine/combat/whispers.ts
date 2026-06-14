@@ -5,6 +5,7 @@ import { abilityModifier } from '../../types/abilities';
 import { getMonster } from '../../content/monsters';
 import { getActiveRoller } from '../dice/instance';
 import { appendLog } from './log';
+import { attachCombatVfx } from './vfx';
 import {
   bardSongPlaying,
   hasWordsOfTerror,
@@ -90,9 +91,12 @@ export function applyDread(
     }),
   };
 
-  // Only announce freshly-gripped foes (a refresh on an already-frightened foe is
-  // silent, so the log doesn't drone the same name every round).
+  // Only announce + cue freshly-gripped foes (a refresh on an already-frightened
+  // foe is silent, so the log/SFX don't drone every round). The frighten VFX
+  // routes through the existing debuff-frighten → spell_ice cue, so the dread
+  // finally lands with sound + a visual, not just a log line (audio sweep).
   if (newlyGrippedNames.length > 0) {
+    nextState = attachCombatVfx(nextState, 'debuff-frighten', 'player', [...gripped][0], 'cold');
     nextState = appendLog(nextState, {
       id: nextState.log.length + 1,
       kind: 'system',

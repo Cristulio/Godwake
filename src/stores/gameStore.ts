@@ -416,7 +416,18 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
       savedAt: new Date().toISOString(),
       characterName: ch.character?.name ?? '—',
       characterLevel: ch.character?.level ?? 0,
-      characterClass: ch.character ? getClass(ch.character.classId).name : '—',
+      // getClass THROWS on an unknown id; this label runs on EVERY persist write
+      // (partialize), so a corrupt/edited classId must not be able to kill the
+      // autosave. Fall back to the raw id rather than throw — the label is cosmetic.
+      characterClass: ch.character
+        ? (() => {
+            try {
+              return getClass(ch.character.classId).name;
+            } catch {
+              return ch.character.classId;
+            }
+          })()
+        : '—',
       location: locationLabel(screen.screen),
       chapterCleared: meta.chaptersCleared,
     },

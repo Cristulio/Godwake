@@ -51,6 +51,11 @@ const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
   'sustain-heal': 'spell_holy',
   'sustain-ward': 'armor_clang',
   'sustain-drain': 'spell_debuff',
+  // Signature cues that were shipping silent (audio sweep): the Bard's always-on
+  // Song pulse, the Druid's Regrowth heal + Spirit Beast summon.
+  'song-pulse': 'shrine_chime',
+  regrowth: 'spell_holy',
+  'summon-beast': 'enemy_cast',
 };
 
 /** SFX for the element-aware shape kinds, keyed off the cast's element. */

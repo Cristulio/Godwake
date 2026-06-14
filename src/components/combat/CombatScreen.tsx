@@ -175,7 +175,14 @@ export function CombatScreen({
 
   // Mount dice overlay whenever a new attack event arrives
   useEffect(() => {
-    if (!state.lastAttack) return;
+    // Defensive: if lastAttack ever clears while the overlay flag is up, the
+    // overlay unmounts without self-dismissing and would wedge auto-end-turn /
+    // auto-battle (both bail while overlayActive). Reset the flag so the turn
+    // never stalls. (Not reachable today; the engine never nulls lastAttack.)
+    if (!state.lastAttack) {
+      setOverlayActive(false);
+      return;
+    }
     setOverlayActive(true);
     const attack = state.lastAttack;
     // Crits shake hard + flash the screen; a plain-but-heavy blow gets a softer

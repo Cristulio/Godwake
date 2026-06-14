@@ -51,7 +51,10 @@ export function useElementalBurst(
   const dc = monkKiSaveDC(character);
   const diceN = monkElementalBurstDice(character);
   let nextCharacter: Character = character;
-  let nextState: CombatState = attachCombatVfx(state, 'spell-bolt', 'player');
+  // A room-wide gout of fire: the AoE BURST shape + fire element so it both sounds
+  // (spell_fire crackle) and looks (fire palette) right — a lone 'spell-bolt' with
+  // no element was silent and colourless (audio sweep P1).
+  let nextState: CombatState = attachCombatVfx(state, 'spell-burst', 'player', undefined, 'fire');
   nextState = appendLog(nextState, {
     id: nextState.log.length + 1,
     kind: 'narration',
