@@ -132,6 +132,24 @@ export const SET_BASE_ITEMS: Item[] = [
   accessory({ id: 'nightveil-ring', name: 'Nightveil Ring', accessorySlot: 'ring', cost: 220 }),
   accessory({ id: 'nightveil-treads', name: 'Nightveil Treads', accessorySlot: 'boots', cost: 220 }),
 
+  // --- Wolfpack Kit (ranger, 4-piece accessories) --------------------------
+  accessory({ id: 'wolfpack-hood', name: 'Wolfpack Hood', accessorySlot: 'helm', cost: 220 }),
+  accessory({ id: 'wolfpack-fang', name: 'Wolfpack Fang', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'wolfpack-band', name: 'Wolfpack Band', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'wolfpack-quiver', name: 'Wolfpack Quiver', accessorySlot: 'belt', cost: 220 }),
+
+  // --- Cloudstep (monk, 3-piece accessories) -------------------------------
+  accessory({ id: 'cloudstep-band', name: 'Cloudstep Band', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'cloudstep-wraps', name: 'Cloudstep Wraps', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'cloudstep-sash', name: 'Cloudstep Sash', accessorySlot: 'belt', cost: 220 }),
+
+  // --- Oathbound (paladin, 5-piece accessories) ----------------------------
+  accessory({ id: 'oathbound-helm', name: 'Oathbound Helm', accessorySlot: 'helm', cost: 240 }),
+  accessory({ id: 'oathbound-amulet', name: 'Oathbound Amulet', accessorySlot: 'amulet', cost: 240 }),
+  accessory({ id: 'oathbound-ring', name: 'Oathbound Ring', accessorySlot: 'ring', cost: 240 }),
+  accessory({ id: 'oathbound-belt', name: 'Oathbound Belt', accessorySlot: 'belt', cost: 240 }),
+  accessory({ id: 'oathbound-sabatons', name: 'Oathbound Sabatons', accessorySlot: 'boots', cost: 240 }),
+
   // --- Warsong (fighter, accessories) --------------------------------------
   accessory({ id: 'warsong-gauntlet', name: 'Warsong Gauntlet', accessorySlot: 'belt', cost: 240 }),
   accessory({ id: 'warsong-crest', name: 'Warsong Crest', accessorySlot: 'helm', cost: 240 }),

@@ -296,6 +296,84 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'rogue',
   },
 
+  // --- Wolfpack Kit (Ranger, 4-piece — mark & bleed hunter) ----------------
+  {
+    id: 'wolfpack-hood', setId: 'wolfpack', name: 'Wolfpack Hood', slot: 'helm',
+    flavor: 'A grey-wolf hood that sharpens the eye for the quarry already bleeding.',
+    effects: { markDamageBonus: 3 }, effectLine: '+3 damage to your marked quarry',
+    classGate: 'ranger',
+  },
+  {
+    id: 'wolfpack-fang', setId: 'wolfpack', name: 'Wolfpack Fang', slot: 'amulet',
+    flavor: 'A pack-leader’s fang on a cord — what it opens does not close.',
+    effects: { bleedDamage: 3 }, effectLine: 'Your blows rend for +3 bleed damage',
+    classGate: 'ranger',
+  },
+  {
+    id: 'wolfpack-band', setId: 'wolfpack', name: 'Wolfpack Band', slot: 'ring1',
+    flavor: 'A hunter’s ring notched once for every quarry that did not get away.',
+    effects: { attackBonus: 1 }, effectLine: '+1 to attack rolls',
+    classGate: 'ranger',
+  },
+  {
+    id: 'wolfpack-quiver', setId: 'wolfpack', name: 'Wolfpack Quiver', slot: 'belt',
+    flavor: 'A worn belt-quiver whose every shaft seems to find the marked one.',
+    effects: { markDamageBonus: 2 }, effectLine: '+2 damage to your marked quarry',
+    classGate: 'ranger',
+  },
+
+  // --- Cloudstep (Monk, 3-piece — speed & poise) ---------------------------
+  {
+    id: 'cloudstep-band', setId: 'cloudstep', name: 'Cloudstep Band', slot: 'amulet',
+    flavor: 'A jade band that hangs weightless, as if the wearer were already half air.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+    classGate: 'monk',
+  },
+  {
+    id: 'cloudstep-wraps', setId: 'cloudstep', name: 'Cloudstep Wraps', slot: 'ring1',
+    flavor: 'Hand-wraps worn to silk that guide the strike to the opening.',
+    effects: { attackBonus: 1 }, effectLine: '+1 to attack rolls',
+    classGate: 'monk',
+  },
+  {
+    id: 'cloudstep-sash', setId: 'cloudstep', name: 'Cloudstep Sash', slot: 'belt',
+    flavor: 'A long sash that snaps taut at the first blow and holds the breath steady.',
+    effects: { tempHpPerCombat: 4 }, effectLine: 'Gain 4 temporary HP at the start of each fight',
+    classGate: 'monk',
+  },
+
+  // --- Oathbound (Paladin, 5-piece — radiant bulwark) ----------------------
+  {
+    id: 'oathbound-helm', setId: 'oathbound', name: 'Oathbound Helm', slot: 'helm',
+    flavor: 'A visored helm graven with a vow no blow has yet made the wearer break.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+    classGate: 'paladin',
+  },
+  {
+    id: 'oathbound-amulet', setId: 'oathbound', name: 'Oathbound Amulet', slot: 'amulet',
+    flavor: 'A reliquary medallion that hums warm when the oath is kept in blood.',
+    effects: { damageBonus: 2 }, effectLine: '+2 weapon damage on every hit',
+    classGate: 'paladin',
+  },
+  {
+    id: 'oathbound-ring', setId: 'oathbound', name: 'Oathbound Ring', slot: 'ring1',
+    flavor: 'A signet of the order; the wounds it deals feed the hand that keeps faith.',
+    effects: { lifestealPct: 4 }, effectLine: 'Heal 4% of the damage you deal',
+    classGate: 'paladin',
+  },
+  {
+    id: 'oathbound-belt', setId: 'oathbound', name: 'Oathbound Belt', slot: 'belt',
+    flavor: 'A consecrated war-belt that stands the bearer up when lesser men would fall.',
+    effects: { tempHpPerCombat: 5 }, effectLine: 'Gain 5 temporary HP at the start of each fight',
+    classGate: 'paladin',
+  },
+  {
+    id: 'oathbound-sabatons', setId: 'oathbound', name: 'Oathbound Sabatons', slot: 'boots',
+    flavor: 'Blessed sabatons that hold the line where the oath was first sworn.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+    classGate: 'paladin',
+  },
+
   // --- Warsong (Fighter-bound) ---------------------------------------------
   {
     id: 'warsong-gauntlet', setId: 'warsong', name: 'Warsong Gauntlet', slot: 'belt',
@@ -635,6 +713,40 @@ export const GEAR_SETS: GearSet[] = [
     bonuses: [
       { piecesRequired: 2, label: '2-piece: +1 to attack rolls', bonuses: { attackBonus: 1 } },
       { piecesRequired: 4, label: '4-piece: critical hits land on 19–20 and +4 sneak-attack damage', bonuses: { critRangeBonus: 1, sneakDamageBonus: 4 } },
+    ],
+  },
+  {
+    id: 'wolfpack',
+    name: 'Wolfpack Kit',
+    flavor: 'A pack-hunter’s rig — it runs the marked quarry down and does not let the wound close.',
+    classGate: 'ranger',
+    pieceIds: ['wolfpack-hood', 'wolfpack-fang', 'wolfpack-band', 'wolfpack-quiver'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 to attack rolls', bonuses: { attackBonus: 1 } },
+      { piecesRequired: 4, label: '4-piece: +4 damage to your marked quarry and +3 bleed damage', bonuses: { markDamageBonus: 4, bleedDamage: 3 } },
+    ],
+  },
+  {
+    id: 'cloudstep',
+    name: 'Cloudstep Regalia',
+    flavor: 'Featherweight wraps and jade — the kit of a fist that lands before the eye can follow.',
+    classGate: 'monk',
+    pieceIds: ['cloudstep-band', 'cloudstep-wraps', 'cloudstep-sash'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 AC', bonuses: { acBonus: 1 } },
+      { piecesRequired: 3, label: '3-piece: critical hits land on 19–20 and +2 weapon damage', bonuses: { critRangeBonus: 1, damageBonus: 2 } },
+    ],
+  },
+  {
+    id: 'oathbound',
+    name: 'Oathbound Regalia',
+    flavor: 'The consecrated war-gear of a vow kept in blood — it stands where the oath was sworn.',
+    classGate: 'paladin',
+    pieceIds: ['oathbound-helm', 'oathbound-amulet', 'oathbound-ring', 'oathbound-belt', 'oathbound-sabatons'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +6 temporary HP each fight', bonuses: { tempHpPerCombat: 6 } },
+      { piecesRequired: 3, label: '3-piece: +2 weapon damage on every hit', bonuses: { damageBonus: 2 } },
+      { piecesRequired: 5, label: '5-piece: +2 AC and heal 5% of the damage you deal', bonuses: { acBonus: 2, lifestealPct: 5 } },
     ],
   },
   {
