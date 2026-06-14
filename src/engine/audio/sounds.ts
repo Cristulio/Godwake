@@ -1893,10 +1893,8 @@ const HUB_SPEC: SongSpec = {
         t, beatS,
         { level: 0.085, type: 'triangle', sustain: 0.9 },
       );
-      // One soft hat tick per bar once the theme has settled in.
-      if (blockIdx > 0) {
-        drumBarAt(ctx, out, '............h...', t, beatS, 0.35);
-      }
+      // (Hat removed — owner: the synth hi-hat read too loud/weird; the hub now
+      // sits as pure ambient, like the grove, which has no percussion.)
     }
     // Lead: wistful verse, rising answer, motif cadence.
     lineAt(ctx, out, HUB_LEAD_A, t0, beatS, {
@@ -2141,16 +2139,17 @@ const BROOD_BASS_BARS: ParsedStep[][] = [
 ];
 
 const BROOD_LEAD = mel([
-  // Darkened (owner: "too happy/peppy"): the old rising D-minor arpeggio read like
-  // a fanfare. This is a HEAVY DESCENT — lower register, longer notes, the phrygian
-  // Eb grinding down onto the tonic — dread, not heroism. The driving bass + drums
-  // carry the combat energy; the lead broods over them.
-  // Bars 1-2: the descent, Eb b2 leaning onto D.
-  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 2], ['Eb4', 1], ['D4', 2], [null, 1],
-  // Bars 3-4: lower and grieving — down to the floor at F3, a slow climb back.
-  ['A3', 1], ['Bb3', 0.5], ['A3', 0.5], ['F3', 2], ['G3', 1], ['A3', 2], [null, 1],
-  // Bars 5-6: a strained climb that never reaches triumph — it sinks to the low tonic.
-  ['D4', 1], ['E4', 0.5], ['F4', 0.5], ['G4', 1], ['F4', 0.5], ['E4', 0.5], ['D4', 1], ['A3', 1], [null, 2],
+  // Dread / uncertainty (owner: "that worrying — could die at any moment"). Not
+  // grief (a clean descent resolves and consoles) but ANXIETY: a creeping, chromatic,
+  // UNRESOLVED line — phrygian Eb b2, half-step approaches, a brushed tritone — that
+  // circles the key and never lands on the tonic. The predator is always one step
+  // behind; the driving bass+drums keep the pulse, the lead keeps you off-balance.
+  // Bars 1-2: restless, won't settle.
+  ['D4', 1], ['Eb4', 0.5], ['D4', 0.5], ['A3', 1.5], ['Bb3', 0.5], ['A3', 1], ['G3', 1], ['A3', 1], [null, 1],
+  // Bars 3-4: a chromatic creep upward — the threat closing in, inexorable.
+  ['A3', 0.5], ['Bb3', 0.5], ['B3', 0.5], ['C4', 0.5], ['C#4', 1], ['D4', 1], ['Eb4', 1.5], ['D4', 1], [null, 1.5],
+  // Bars 5-6: descend, brush the tritone (Ab), end UNRESOLVED on the 5th — not safe.
+  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1], ['Ab3', 0.5], ['A3', 0.5], ['Bb3', 1], ['A3', 1.5], [null, 1.5],
 ]);
 
 const BROOD_STAB_CHORDS = [
