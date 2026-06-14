@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 import type { Character } from '../../types/character';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import type { CombatState } from '../../types/combat';
+import type { ConditionName } from '../../types/conditions';
 import { computeAC, critRange, characterHasMechanic } from '../../engine/character/derived';
 import { effectiveAC, AC_SOFTCAP } from '../../engine/character/effectiveAC';
 import {
@@ -55,6 +56,24 @@ function conditionGlyph(name: string): string {
     case 'frightened': return '!';
     case 'restrained': return '⊠';
     default: return '◇';
+  }
+}
+
+// A status pip's hover/tap tooltip should say what the condition DOES to the
+// hero, not just its name — the player-facing effect, verified against the
+// condition handlers (playerConditions.ts / holdPerson.ts). The `default`
+// covers 'weakened' and any future ConditionName.
+function conditionEffect(name: ConditionName): string {
+  switch (name) {
+    case 'paralyzed':
+    case 'frightened':
+    case 'poisoned':
+    case 'blinded':
+    case 'restrained':
+    case 'weakened':
+      return t(`combat.cond.effect.${name}`);
+    default:
+      return t('combat.cond.effect.default');
   }
 }
 
@@ -803,16 +822,29 @@ export function CombatHUD({ character, state, onToggleShieldAutoFire }: CombatHU
         <Section title={t('combat.hud.status')}>
           {conditions.map((c, i) => {
             const condName = t(`combat.cond.name.${c.name}`);
+            const effect = conditionEffect(c.name);
+            // The pip's short label needs its tooltip to read what the condition
+            // DOES (not just the name) — hover on desktop, tap on touch, focus
+            // for keyboard, like the resource Pills above.
             return (
-              <span
+              <TouchTooltip
                 key={`${c.name}-${i}`}
-                title={condName}
-                aria-label={condName}
-                className="inline-flex items-center gap-1 px-1.5 py-0.5 border-2 bg-[var(--color-accent-deep-blood)] border-[var(--color-accent-blood)] text-[var(--color-text-primary)] text-[9px]"
+                label={`${condName} — ${effect}`}
+                className="inline-flex items-center gap-1 px-1.5 py-0.5 border-2 bg-[var(--color-accent-deep-blood)] border-[var(--color-accent-blood)] text-[var(--color-text-primary)] text-[9px] cursor-help"
+                content={
+                  <>
+                    <span className="block font-bold text-[var(--color-text-primary)] text-[10px] leading-tight">
+                      {condName}
+                    </span>
+                    <span className="block mt-0.5 text-[var(--color-text-secondary)] text-[10px] leading-snug">
+                      {effect}
+                    </span>
+                  </>
+                }
               >
                 <span>{conditionGlyph(c.name)}</span>
                 <span className="uppercase tracking-[0.15em]">{condName}</span>
-              </span>
+              </TouchTooltip>
             );
           })}
         </Section>

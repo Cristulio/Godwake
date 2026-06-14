@@ -103,6 +103,15 @@
       "restrained": "restrained",
       "weakened": "weakened"
     },
+    "effect": {
+      "paralyzed": "You lose your turn — save each round to break free — and attackers strike you with advantage.",
+      "blinded": "Your attacks roll at disadvantage, and attackers strike you with advantage.",
+      "poisoned": "Your attacks roll at disadvantage.",
+      "frightened": "Your attacks roll at disadvantage.",
+      "restrained": "Your attacks roll at disadvantage, and attackers strike you with advantage.",
+      "weakened": "Your blows fall softer — each hit deals less damage.",
+      "default": "A curse grips you."
+    },
     "end": {
       "poisoned": "shakes off the poison",
       "frightened": "steadies — the fear passes",
