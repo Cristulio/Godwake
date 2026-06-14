@@ -195,7 +195,7 @@ export const WIZARD: Class = ClassSchema.parse({
         archetype: 'Blaster',
         levers: [
           '+1 die on every evocation — Burning Hands roars 4d6 where others muster 3d6.',
-          'L10: every damaging spell adds half your level, flat.',
+          'L10: every damaging spell adds half your level on top of its dice.',
         ],
       },
       featuresByLevel: {
@@ -213,7 +213,7 @@ export const WIZARD: Class = ClassSchema.parse({
             id: 'empowered-evocation',
             name: 'Empowered Evocation',
             description:
-              'You pour your own gathered force into the work — every damaging spell you cast lands for additional damage equal to half your level. A flat edge on every bolt, blast, and ray, compounding with each die the slot already rolls.',
+              'You pour your own gathered force into the work — every damaging spell you cast lands for additional damage equal to half your level. Extra harm on every bolt, blast, and ray, added on top of each die it already rolls.',
             mechanicKey: 'empowered-evocation',
           },
         ],
