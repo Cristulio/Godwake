@@ -321,6 +321,12 @@ export interface Character {
     kiPoints?: number;
     /** Druid Primal Reservoir: +N Wild Shape uses per combat (folded into wildShapeUsesMax). */
     wildShapeUses?: number;
+    /** Martial Grove node (Fighter/Barbarian/Ranger): +N to the Resolve/Fury/Focus pool ceiling (folded into martialPoolMax). */
+    martialPool?: number;
+    /** Bard Grove node: +N to the Bardic Inspiration pool (folded into bardInspirationMax). */
+    inspirationDice?: number;
+    /** Paladin Grove node: +N HP to the Lay on Hands well (folded into layOnHandsMax). */
+    layOnHands?: number;
     /** Caster Wellspring of Mysteries / Deep Roots: +N extra 1st-level spell slot (folded into wizardSpellSlots + delve-start seed). */
     bonusSpellSlotsL1?: number;
     /** Coin in the Pocket: seed gold at delve start. Read by delveStore.startDelve. */

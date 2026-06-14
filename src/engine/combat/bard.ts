@@ -56,7 +56,9 @@ export function bardInspirationMax(character: Readonly<Character>): number {
       ? 1
       : 0;
   const capstone = characterHasMechanic(character as Character, 'peerless-performer') ? 2 : 0;
-  return base + collegeDeepening + capstone;
+  // Grove "Wellspring Refrain" deepens the well the songs draw from.
+  const grove = character.permanentBonuses?.inspirationDice ?? 0;
+  return base + collegeDeepening + capstone + grove;
 }
 
 /** Inspiration dice the Bard has banked right now. */

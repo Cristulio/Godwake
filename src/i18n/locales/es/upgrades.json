@@ -230,5 +230,161 @@
       "one": "+{n} espacio de conjuro de primer nivel por descenso.",
       "other": "+{n} espacios de conjuro de primer nivel por descenso."
     }
+  },
+  "tactician-reserve": {
+    "name": "Reserva del Táctico",
+    "flavor": "Los viejos soldados lo grababan en la médula: guarda siempre un golpe en reserva, uno más de los que el enemigo cuenta. El pozo de Temple se asienta una medida más hondo ahora.",
+    "effect": {
+      "one": "+{n} punto a tu reserva de Temple.",
+      "other": "+{n} puntos a tu reserva de Temple."
+    }
+  },
+  "drilled-opening": {
+    "name": "Apertura Adiestrada",
+    "flavor": "Diez mil repeticiones del mismo primer paso. Cuando la línea se rompe, tu hoja ya está donde estará el hueco.",
+    "effect": "+{n} de daño en el primer ataque de cada combate."
+  },
+  "tempered-edge": {
+    "name": "Filo Templado",
+    "flavor": "El acero de un soldado solo vale lo que la mano que lo mantiene afilado. El tuyo nunca va al combate mellado.",
+    "effect": "+{n} de daño en todos los golpes con arma."
+  },
+  "executioners-cut": {
+    "name": "Tajo del Verdugo",
+    "flavor": "Aprendiste dónde cede la juntura de la armadura y dónde termina el hombre debajo. Cuando el golpe acierta, lo atraviesa entero.",
+    "effect": "+{n} de daño en los golpes críticos."
+  },
+  "opening-feint": {
+    "name": "Finta de Apertura",
+    "flavor": "Un quiebro de la mano torpe, una mirada al lado equivocado — el blanco se compromete, y el primer tajo ya se desliza por donde la guardia no está.",
+    "effect": "+{n} de daño en el primer ataque de cada combate."
+  },
+  "throat-finder": {
+    "name": "Hallagargantas",
+    "flavor": "La Madre Vigilante le enseña a la hoja dónde habita el aliento. Una cosa herida tiene menos sitios donde esconderlo.",
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos)."
+  },
+  "cat-feet": {
+    "name": "Pies de Gato",
+    "flavor": "Dejaste de estar donde cae el golpe hace mucho tiempo. La sombra mantiene medio paso entre tu piel y el acero.",
+    "effect": "+{n} a la CA."
+  },
+  "unbroken-hide": {
+    "name": "Pellejo Indómito",
+    "flavor": "El frío de los altos pasos te curtió como cuero. Los golpes que abrirían a otro hombre solo retumban contra tu vieja carne dura.",
+    "effect": "+{n} de PG máximo."
+  },
+  "blood-frenzy": {
+    "name": "Frenesí de Sangre",
+    "flavor": "El olor de una herida —tuya o de ellos— remueve algo en ti. Un enemigo que sangra no es presa que huye. Es presa que ya es tuya.",
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos)."
+  },
+  "thundering-arm": {
+    "name": "Brazo Atronador",
+    "flavor": "Cada vida que el Manantial devuelve deja el mandoble un poco más pesado — un peso que la rueda olvida llevarse con lo demás.",
+    "effect": "+{n} de daño en todos los golpes con arma."
+  },
+  "hunters-eye": {
+    "name": "Ojo del Cazador",
+    "flavor": "Lees a la presa antes de que sepa que es presa — la pata favorita, el lado ciego, el aliento que contiene. El disparo va donde está el fallo.",
+    "effect": "+{n} a todas las tiradas de ataque."
+  },
+  "barbed-broadhead": {
+    "name": "Punta Dentada",
+    "flavor": "La punta de un cazador se talla para enganchar al salir, no al entrar. Cuando golpea el corazón de la cosa, se lleva el corazón con ella.",
+    "effect": "+{n} de daño en los golpes críticos."
+  },
+  "wilds-patience": {
+    "name": "Paciencia de lo Salvaje",
+    "flavor": "Aprendiste la lección más larga de la caza del lobo y del halcón que aguarda: el que más resiste es el que come. El camino ya no te desgasta tan deprisa.",
+    "effect": "+{n} de PG máximo."
+  },
+  "storms-eye": {
+    "name": "Ojo de la Tormenta",
+    "flavor": "Lo salvaje no apunta — simplemente halla el hueco, como el agua halla la grieta. Tus llamamientos golpean donde ninguna salvaguarda resiste.",
+    "effect": "+{n} a la CD de salvación de tus conjuros (los enemigos salvan con más dificultad contra ellos)."
+  },
+  "thornbound-husk": {
+    "name": "Cáscara de Espino",
+    "flavor": "La corteza se cierra sobre el alma allí donde antaño cayó el látigo del amo. Despiertas cada vida envuelto en un poco más de la vieja madera paciente.",
+    "effect": "+{n} de PG máximo."
+  },
+  "opening-palm": {
+    "name": "Palma de Apertura",
+    "flavor": "La primera forma que enseñan los maestros y la última que alguien desaprende: golpear antes de tomar el aliento. El golpe inicial carga con el peso de toda la quietud que lo precede.",
+    "effect": "+{n} de daño en el primer ataque de cada combate."
+  },
+  "flowing-water": {
+    "name": "Agua que Fluye",
+    "flavor": "El agua es golpeada mil veces y no guarda cicatriz. Los maestros le enseñaron al cuerpo ese truco; el Manantial se lo enseña al alma.",
+    "effect": "+{n} a la CA."
+  },
+  "crippling-strike": {
+    "name": "Golpe Lisiador",
+    "flavor": "Un golpe al tambaleante, al que sangra, al que ya cae — los maestros lo llamaban piedad, y querían decir lo contrario.",
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos)."
+  },
+  "mind-ward": {
+    "name": "Salvaguarda Mental",
+    "flavor": "Un pliegue permanente de la Urdimbre, anudado en la nuca y dejado ahí. Desvía el primer golpe como un aliento contenido desvía un respingo.",
+    "effect": "+{n} a la CA."
+  },
+  "overchannel": {
+    "name": "Sobrecanalización",
+    "flavor": "Los maestros advierten contra extraer más Urdimbre de la que el conjuro fue tallado para contener. La extrajiste igualmente, y el excedente arde limpio de las palabras.",
+    "effect": "+{n} de daño a los conjuros."
+  },
+  "wellspring-refrain": {
+    "name": "Estribillo del Manantial",
+    "flavor": "Hay una melodía bajo el Manantial que nadie enseñó y todos conocen. Despiertas con un verso más de ella en el pecho, listo para gastar.",
+    "effect": {
+      "one": "+{n} dado de Inspiración de Bardo por combate.",
+      "other": "+{n} dados de Inspiración de Bardo por combate."
+    }
+  },
+  "cutting-verse": {
+    "name": "Verso Cortante",
+    "flavor": "Una palabra engastada en la canción que cae como un cuchillo arrojado — la rima que abre una vena que la hoja erró.",
+    "effect": "+{n} de daño a los conjuros."
+  },
+  "piercing-key": {
+    "name": "Tono Penetrante",
+    "flavor": "Hallaste la nota que ninguna salvaguarda está hecha para ignorar. Cantada hacia ella, la voluntad más fuerte se quiebra como una nota sostenida demasiado tiempo.",
+    "effect": "+{n} a la CD de salvación de tus conjuros (los enemigos salvan con más dificultad contra ellos)."
+  },
+  "practiced-hand": {
+    "name": "Mano Diestra",
+    "flavor": "Un intérprete que ha sostenido el estoque tanto como el laúd aprende que ambos son la misma muñeca. La punta va donde canta el ojo.",
+    "effect": "+{n} a las tiradas de ataque y de ataque con conjuro."
+  },
+  "crowd-pleaser": {
+    "name": "Agrada-Multitudes",
+    "flavor": "Un artista aprende pronto a guardar un poco de aliento para el bis. El alma guarda el mismo truco — una medida de vida retenida de la rueda.",
+    "effect": "+{n} de PG máximo."
+  },
+  "deepwell-mercy": {
+    "name": "Piedad del Pozo Hondo",
+    "flavor": "El juramento que prestaste tenía un pozo debajo, y el pozo baja más de lo que los maestros te dejaron alcanzar jamás. El Manantial te muestra su fondo.",
+    "effect": "+{n} de PG a tu reserva de Imposición de Manos por combate."
+  },
+  "radiant-oath": {
+    "name": "Juramento Radiante",
+    "flavor": "El voto no se queda en el corazón donde lo prestaste. Baja por el brazo y sale por la hoja, y la oscuridad se encoge ante su luz.",
+    "effect": "+{n} de daño en todos los golpes con arma."
+  },
+  "sworn-aim": {
+    "name": "Puntería Jurada",
+    "flavor": "Un golpe asestado bajo juramento no se desvía. La mano que sostiene el voto sostiene con él la línea del golpe.",
+    "effect": "+{n} a todas las tiradas de ataque."
+  },
+  "consecrated-plate": {
+    "name": "Placa Consagrada",
+    "flavor": "Ningún herrero bendijo este acero. El juramento sí — y una placa guardada por un voto desvía un golpe como la herrería nunca pudo.",
+    "effect": "+{n} a la CA."
+  },
+  "avenging-strike": {
+    "name": "Golpe Vengador",
+    "flavor": "Contra el herido y el perverso el juramento se inclina con más fuerza. Lo que ya falla, el voto lo termina.",
+    "effect": "+{n} de daño contra objetivos heridos (PG a la mitad o menos)."
   }
 }

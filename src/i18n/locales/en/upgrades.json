@@ -148,5 +148,101 @@
       "one": "+{n} first-level spell slot each delve.",
       "other": "+{n} first-level spell slots each delve."
     }
+  },
+  "tactician-reserve": {
+    "effect": {
+      "one": "+{n} point to your Resolve pool.",
+      "other": "+{n} points to your Resolve pool."
+    }
+  },
+  "drilled-opening": {
+    "effect": "+{n} damage on the first attack of each combat."
+  },
+  "tempered-edge": {
+    "effect": "+{n} damage on all weapon hits."
+  },
+  "executioners-cut": {
+    "effect": "+{n} damage on critical hits."
+  },
+  "opening-feint": {
+    "effect": "+{n} damage on the first attack of each combat."
+  },
+  "throat-finder": {
+    "effect": "+{n} damage against wounded targets (HP at half or less)."
+  },
+  "cat-feet": {
+    "effect": "+{n} AC."
+  },
+  "unbroken-hide": {
+    "effect": "+{n} maximum HP."
+  },
+  "blood-frenzy": {
+    "effect": "+{n} damage against wounded targets (HP at half or less)."
+  },
+  "thundering-arm": {
+    "effect": "+{n} damage on all weapon hits."
+  },
+  "hunters-eye": {
+    "effect": "+{n} to all attack rolls."
+  },
+  "barbed-broadhead": {
+    "effect": "+{n} damage on critical hits."
+  },
+  "wilds-patience": {
+    "effect": "+{n} maximum HP."
+  },
+  "storms-eye": {
+    "effect": "+{n} spell save DC (enemies save harder against your spells)."
+  },
+  "thornbound-husk": {
+    "effect": "+{n} maximum HP."
+  },
+  "opening-palm": {
+    "effect": "+{n} damage on the first attack of each combat."
+  },
+  "flowing-water": {
+    "effect": "+{n} AC."
+  },
+  "crippling-strike": {
+    "effect": "+{n} damage against wounded targets (HP at half or less)."
+  },
+  "mind-ward": {
+    "effect": "+{n} AC."
+  },
+  "overchannel": {
+    "effect": "+{n} damage to spells."
+  },
+  "wellspring-refrain": {
+    "effect": {
+      "one": "+{n} Bardic Inspiration die per combat.",
+      "other": "+{n} Bardic Inspiration dice per combat."
+    }
+  },
+  "cutting-verse": {
+    "effect": "+{n} damage to spells."
+  },
+  "piercing-key": {
+    "effect": "+{n} spell save DC (enemies save harder against your spells)."
+  },
+  "practiced-hand": {
+    "effect": "+{n} to attack rolls and spell-attack rolls."
+  },
+  "crowd-pleaser": {
+    "effect": "+{n} maximum HP."
+  },
+  "deepwell-mercy": {
+    "effect": "+{n} HP to your Lay on Hands pool per combat."
+  },
+  "radiant-oath": {
+    "effect": "+{n} damage on all weapon hits."
+  },
+  "sworn-aim": {
+    "effect": "+{n} to all attack rolls."
+  },
+  "consecrated-plate": {
+    "effect": "+{n} AC."
+  },
+  "avenging-strike": {
+    "effect": "+{n} damage against wounded targets (HP at half or less)."
   }
 }

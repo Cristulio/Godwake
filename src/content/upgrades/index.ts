@@ -466,6 +466,71 @@ const RAW: Upgrade[] = [
     kind: 'delveStart',
   },
 
+  {
+    id: 'tactician-reserve',
+    category: 'survival',
+    classId: 'fighter',
+    name: 'Tactician’s Reserve',
+    flavor:
+      'The old soldiers drilled it into the marrow: keep a blow in reserve, always one more than the foe counts on. The well of Resolve sits a measure deeper now.',
+    effectAtRank: (r) => fx('tactician-reserve', { count: r, n: r }),
+    costForRank: (r) => rankCost(130, r),
+    maxRank: 2,
+    apply: (c, rank) => {
+      if (c.classId !== 'fighter') return c;
+      return setPermanentBonus(c, 'martialPool', rank);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'drilled-opening',
+    category: 'offense',
+    classId: 'fighter',
+    name: 'Drilled Opening',
+    flavor:
+      'Ten thousand repetitions of the same first step. When the line breaks, your blade is already where the gap will be.',
+    effectAtRank: (r) => fx('drilled-opening', { n: r }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'fighter') return c;
+      return { ...c, permanentFirstAttackDamage: (c.permanentFirstAttackDamage ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'tempered-edge',
+    category: 'offense',
+    classId: 'fighter',
+    name: 'Tempered Edge',
+    flavor:
+      'A soldier’s steel is only as good as the hand that keeps it whetted. Yours never goes to the fight dull.',
+    effectAtRank: (r) => fx('tempered-edge', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'fighter') return c;
+      return addPermanentBonus(c, 'damage', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'executioners-cut',
+    category: 'offense',
+    classId: 'fighter',
+    name: 'Executioner’s Cut',
+    flavor:
+      'You learned where the seam of the armour gives and the man beneath it ends. When the strike lands true, it lands all the way through.',
+    effectAtRank: (r) => fx('executioners-cut', { n: r }),
+    costForRank: (r) => rankCost(160, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'fighter') return c;
+      return { ...c, permanentCritDamageBonus: (c.permanentCritDamageBonus ?? 0) + 2 };
+    },
+    kind: 'permanent',
+  },
+
   // ─── CLASS: ROGUE ────────────────────────────────────────────────────────
   {
     id: 'shadowstep',
@@ -496,6 +561,54 @@ const RAW: Upgrade[] = [
     apply: (c, rank) => {
       if (c.classId !== 'rogue') return c;
       return setPermanentBonus(c, 'sneakAttackDice', rank);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'opening-feint',
+    category: 'offense',
+    classId: 'rogue',
+    name: 'Opening Feint',
+    flavor:
+      'A flick of the off-hand, a glance the wrong way — the mark commits, and the first cut is already sliding home where the guard isn’t.',
+    effectAtRank: (r) => fx('opening-feint', { n: r }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'rogue') return c;
+      return { ...c, permanentFirstAttackDamage: (c.permanentFirstAttackDamage ?? 0) + 2 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'throat-finder',
+    category: 'offense',
+    classId: 'rogue',
+    name: 'Throat-Finder',
+    flavor:
+      'The Wakeful Mother teaches the blade where the breath lives. A wounded thing has fewer places left to hide it.',
+    effectAtRank: (r) => fx('throat-finder', { n: r }),
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'rogue') return c;
+      return { ...c, permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 2 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'cat-feet',
+    category: 'survival',
+    classId: 'rogue',
+    name: 'Cat-Feet',
+    flavor:
+      'You stopped being where the blow falls a long time ago. The shadow keeps a half-step between your skin and the steel.',
+    effectAtRank: (r) => fx('cat-feet', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'rogue') return c;
+      return addPermanentBonus(c, 'ac', 1);
     },
     kind: 'permanent',
   },
@@ -574,6 +687,54 @@ const RAW: Upgrade[] = [
     },
     kind: 'permanent',
   },
+  {
+    id: 'unbroken-hide',
+    category: 'survival',
+    classId: 'barbarian',
+    name: 'Unbroken Hide',
+    flavor:
+      'The cold of the high passes tanned you to leather. Blows that would open another man only thud against the old, hard meat of you.',
+    effectAtRank: (r) => fx('unbroken-hide', { n: r * 8 }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 4,
+    apply: (c) => {
+      if (c.classId !== 'barbarian') return c;
+      return addPermanentBonus(c, 'hp', 8);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'blood-frenzy',
+    category: 'offense',
+    classId: 'barbarian',
+    name: 'Blood Frenzy',
+    flavor:
+      'The smell of a wound — yours or theirs — turns something over in you. A bleeding foe is not prey that flees. It is prey that is already yours.',
+    effectAtRank: (r) => fx('blood-frenzy', { n: r }),
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'barbarian') return c;
+      return { ...c, permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'thundering-arm',
+    category: 'offense',
+    classId: 'barbarian',
+    name: 'Thundering Arm',
+    flavor:
+      'Each life the Wellspring gives back leaves the swing a little heavier — a weight the wheel forgets to take with the rest.',
+    effectAtRank: (r) => fx('thundering-arm', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 4,
+    apply: (c) => {
+      if (c.classId !== 'barbarian') return c;
+      return addPermanentBonus(c, 'damage', 1);
+    },
+    kind: 'permanent',
+  },
 
   // ─── CLASS: RANGER ───────────────────────────────────────────────────────
   {
@@ -605,6 +766,54 @@ const RAW: Upgrade[] = [
     apply: (c) => {
       if (c.classId !== 'ranger') return c;
       return { ...c, permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'hunters-eye',
+    category: 'offense',
+    classId: 'ranger',
+    name: 'Hunter’s Eye',
+    flavor:
+      'You read the quarry before it knows it is quarry — the favoured leg, the blind side, the breath it holds. The shot goes where the flaw is.',
+    effectAtRank: (r) => fx('hunters-eye', { n: r }),
+    costForRank: (r) => rankCost(130, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'ranger') return c;
+      return addPermanentBonus(c, 'attack', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'barbed-broadhead',
+    category: 'offense',
+    classId: 'ranger',
+    name: 'Barbed Broadhead',
+    flavor:
+      'A hunter’s arrowhead is cut to catch coming out, not going in. When it strikes the heart of the thing, it takes the heart with it.',
+    effectAtRank: (r) => fx('barbed-broadhead', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'ranger') return c;
+      return { ...c, permanentCritDamageBonus: (c.permanentCritDamageBonus ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'wilds-patience',
+    category: 'survival',
+    classId: 'ranger',
+    name: 'Wild’s Patience',
+    flavor:
+      'You learned the hunt’s longest lesson from the wolf and the waiting hawk: the one who outlasts is the one who eats. The road no longer wears you down so fast.',
+    effectAtRank: (r) => fx('wilds-patience', { n: r * 5 }),
+    costForRank: (r) => rankCost(110, r),
+    maxRank: 4,
+    apply: (c) => {
+      if (c.classId !== 'ranger') return c;
+      return addPermanentBonus(c, 'hp', 5);
     },
     kind: 'permanent',
   },
@@ -658,6 +867,38 @@ const RAW: Upgrade[] = [
     },
     kind: 'permanent',
   },
+  {
+    id: 'storms-eye',
+    category: 'offense',
+    classId: 'druid',
+    name: 'Storm’s Eye',
+    flavor:
+      'The wild does not aim — it simply finds the gap, the way water finds the crack. Your callings strike where no ward stands.',
+    effectAtRank: (r) => fx('storms-eye', { n: r }),
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'druid') return c;
+      return addPermanentBonus(c, 'spellDc', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'thornbound-husk',
+    category: 'survival',
+    classId: 'druid',
+    name: 'Thornbound Husk',
+    flavor:
+      'Bark closes over the soul where the master’s lash once fell. You wake each life sheathed in a little more of the old, patient wood.',
+    effectAtRank: (r) => fx('thornbound-husk', { n: r * 6 }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 4,
+    apply: (c) => {
+      if (c.classId !== 'druid') return c;
+      return addPermanentBonus(c, 'hp', 6);
+    },
+    kind: 'permanent',
+  },
 
   // ─── CLASS: MONK ─────────────────────────────────────────────────────────
   {
@@ -692,6 +933,54 @@ const RAW: Upgrade[] = [
     },
     kind: 'permanent',
   },
+  {
+    id: 'opening-palm',
+    category: 'offense',
+    classId: 'monk',
+    name: 'Opening Palm',
+    flavor:
+      'The first form the masters teach and the last one anyone unlearns: strike before the breath is drawn. The opening blow carries the weight of all the stillness before it.',
+    effectAtRank: (r) => fx('opening-palm', { n: r }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'monk') return c;
+      return { ...c, permanentFirstAttackDamage: (c.permanentFirstAttackDamage ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'flowing-water',
+    category: 'survival',
+    classId: 'monk',
+    name: 'Flowing Water',
+    flavor:
+      'Water is struck a thousand times and keeps no scar. The masters taught the body that trick; the Wellspring teaches it to the soul.',
+    effectAtRank: (r) => fx('flowing-water', { n: r }),
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'monk') return c;
+      return addPermanentBonus(c, 'ac', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'crippling-strike',
+    category: 'offense',
+    classId: 'monk',
+    name: 'Crippling Strike',
+    flavor:
+      'A blow to the staggered, the bleeding, the already-falling — the masters called it mercy, and meant the opposite.',
+    effectAtRank: (r) => fx('crippling-strike', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'monk') return c;
+      return { ...c, permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 1 };
+    },
+    kind: 'permanent',
+  },
 
   // ─── CLASS: WIZARD (caster slot) ─────────────────────────────────────────
   {
@@ -707,6 +996,202 @@ const RAW: Upgrade[] = [
     apply: (c) => {
       if (c.classId !== 'wizard') return c;
       return addPermanentBonus(c, 'bonusSpellSlotsL1', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'mind-ward',
+    category: 'survival',
+    classId: 'wizard',
+    name: 'Mind-Ward',
+    flavor:
+      'A standing fold of the Weft, knotted at the back of the skull and left there. It turns the first blow the way a held breath turns a flinch.',
+    effectAtRank: (r) => fx('mind-ward', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'wizard') return c;
+      return addPermanentBonus(c, 'ac', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'overchannel',
+    category: 'offense',
+    classId: 'wizard',
+    name: 'Overchannel',
+    flavor:
+      'The masters warn against drawing more of the Weft than the spell was cut to hold. You drew it anyway, and the surplus burns clean off the words.',
+    effectAtRank: (r) => fx('overchannel', { n: r }),
+    costForRank: (r) => rankCost(160, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'wizard') return c;
+      return addPermanentBonus(c, 'spellDamage', 1);
+    },
+    kind: 'permanent',
+  },
+
+  // ─── CLASS: BARD ─────────────────────────────────────────────────────────
+  {
+    id: 'wellspring-refrain',
+    category: 'survival',
+    classId: 'bard',
+    name: 'Wellspring Refrain',
+    flavor:
+      'There is a melody under the Wellspring that nobody taught and everybody knows. You wake with one more verse of it in the chest, ready to spend.',
+    effectAtRank: (r) => fx('wellspring-refrain', { count: r, n: r }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 2,
+    apply: (c, rank) => {
+      if (c.classId !== 'bard') return c;
+      return setPermanentBonus(c, 'inspirationDice', rank);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'cutting-verse',
+    category: 'offense',
+    classId: 'bard',
+    name: 'Cutting Verse',
+    flavor:
+      'A word laid into the song that lands like a thrown knife — the rhyme that opens a vein the blade missed.',
+    effectAtRank: (r) => fx('cutting-verse', { n: r }),
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 4,
+    apply: (c) => {
+      if (c.classId !== 'bard') return c;
+      return addPermanentBonus(c, 'spellDamage', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'piercing-key',
+    category: 'offense',
+    classId: 'bard',
+    name: 'Piercing Key',
+    flavor:
+      'You found the pitch that no ward is built to ignore. Sung at it, the strongest will cracks like a held note held too long.',
+    effectAtRank: (r) => fx('piercing-key', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'bard') return c;
+      return addPermanentBonus(c, 'spellDc', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'practiced-hand',
+    category: 'offense',
+    classId: 'bard',
+    name: 'Practiced Hand',
+    flavor:
+      'A player who has held the rapier as long as the lute learns the two are the same wrist. The point goes where the eye sings.',
+    effectAtRank: (r) => fx('practiced-hand', { n: r }),
+    costForRank: (r) => rankCost(130, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'bard') return c;
+      return addPermanentBonus(addPermanentBonus(c, 'attack', 1), 'spellAttack', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'crowd-pleaser',
+    category: 'survival',
+    classId: 'bard',
+    name: 'Crowd-Pleaser',
+    flavor:
+      'A performer learns early to keep a little wind in reserve for the encore. The soul keeps the same trick — a measure of life held back from the wheel.',
+    effectAtRank: (r) => fx('crowd-pleaser', { n: r * 5 }),
+    costForRank: (r) => rankCost(110, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'bard') return c;
+      return addPermanentBonus(c, 'hp', 5);
+    },
+    kind: 'permanent',
+  },
+
+  // ─── CLASS: PALADIN ──────────────────────────────────────────────────────
+  {
+    id: 'deepwell-mercy',
+    category: 'survival',
+    classId: 'paladin',
+    name: 'Deepwell Mercy',
+    flavor:
+      'The oath you swore had a well beneath it, and the well goes down further than the masters ever let you reach. The Wellspring shows you the floor of it.',
+    effectAtRank: (r) => fx('deepwell-mercy', { n: r * 4 }),
+    costForRank: (r) => rankCost(120, r),
+    maxRank: 3,
+    apply: (c, rank) => {
+      if (c.classId !== 'paladin') return c;
+      return setPermanentBonus(c, 'layOnHands', rank * 4);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'radiant-oath',
+    category: 'offense',
+    classId: 'paladin',
+    name: 'Radiant Oath',
+    flavor:
+      'The vow does not stay in the heart where you swore it. It runs down the arm and out the blade, and the dark flinches from the light of it.',
+    effectAtRank: (r) => fx('radiant-oath', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'paladin') return c;
+      return addPermanentBonus(c, 'damage', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'sworn-aim',
+    category: 'offense',
+    classId: 'paladin',
+    name: 'Sworn Aim',
+    flavor:
+      'A blow struck under oath does not wander. The hand that holds the vow holds the line of the strike with it.',
+    effectAtRank: (r) => fx('sworn-aim', { n: r }),
+    costForRank: (r) => rankCost(130, r),
+    maxRank: 3,
+    apply: (c) => {
+      if (c.classId !== 'paladin') return c;
+      return addPermanentBonus(c, 'attack', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'consecrated-plate',
+    category: 'survival',
+    classId: 'paladin',
+    name: 'Consecrated Plate',
+    flavor:
+      'No smith blessed this steel. The oath did — and an oath-warded plate turns a blow the smithing never could.',
+    effectAtRank: (r) => fx('consecrated-plate', { n: r }),
+    costForRank: (r) => rankCost(150, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'paladin') return c;
+      return addPermanentBonus(c, 'ac', 1);
+    },
+    kind: 'permanent',
+  },
+  {
+    id: 'avenging-strike',
+    category: 'offense',
+    classId: 'paladin',
+    name: 'Avenging Strike',
+    flavor:
+      'Against the wounded and the wicked the oath leans hardest. What is already failing, the vow finishes.',
+    effectAtRank: (r) => fx('avenging-strike', { n: r }),
+    costForRank: (r) => rankCost(140, r),
+    maxRank: 2,
+    apply: (c) => {
+      if (c.classId !== 'paladin') return c;
+      return { ...c, permanentWoundedTargetDamage: (c.permanentWoundedTargetDamage ?? 0) + 1 };
     },
     kind: 'permanent',
   },

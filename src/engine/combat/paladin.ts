@@ -41,7 +41,9 @@ export function layOnHandsMax(character: Readonly<Character>): number {
   const base = 4 + character.level * 2 + Math.max(0, chaMod(character));
   // Unyielding Oath (L20 capstone): the well of mercy runs a full level deeper.
   const capstone = characterHasMechanic(character as Character, 'oathkeeper') ? character.level : 0;
-  return base + capstone;
+  // Grove "Deepwell Mercy" pours more HP into the renewable well.
+  const grove = character.permanentBonuses?.layOnHands ?? 0;
+  return base + capstone + grove;
 }
 
 /** HP points left in the Lay on Hands pool right now. */
