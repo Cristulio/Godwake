@@ -28,6 +28,12 @@ type CommonProps = {
   attackEvents?: AttackEvent[];
   /** Latest spell-effect event — used to float a control verdict (LANDED/RESISTED) on this sprite. */
   spellEffectEvent?: SpellEffectEvent;
+  /**
+   * Per-target batch from an AoE control cast (Entangle). Each sprite floats the
+   * entry whose targetId is its own, so EVERY rooted/resisted foe gets a verdict,
+   * not just the anchor. Fresh array per emit — compared by reference in the memo.
+   */
+  spellEffectEvents?: SpellEffectEvent[];
 };
 
 type PlayerProps = CommonProps & {
@@ -434,6 +440,26 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.spellEffectEvent?.id]);
 
+  // AoE control cast (Entangle): one verdict per foe arrives in this batch. Each
+  // sprite floats the entry aimed at it, so every rooted (LANDED) / saved
+  // (RESISTED) foe shows its own verdict — not just the anchor. Keyed on the
+  // array identity (a fresh array per emit), mirroring the attackEvents batch.
+  useEffect(() => {
+    const events = props.spellEffectEvents;
+    if (!events || events.length === 0) return;
+    const myId = props.kind === 'player' ? 'player' : props.instance.id;
+    const mine = events.filter((e) => e.targetId === myId && e.outcome);
+    if (mine.length === 0) return;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    mine.forEach((e) => {
+      const id = Date.now() + Math.random();
+      setDamageFloats((d) => [...d, { id, amount: 0, kind: e.outcome! }]);
+      timers.push(setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1200));
+    });
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.spellEffectEvents]);
+
   // Lunge only when this sprite has actually attacked (attackPulse bumps).
   useEffect(() => {
     if (props.attackPulse === lastAttackPulse.current) return;
@@ -775,6 +801,9 @@ export const BattlefieldSprite = memo(BattlefieldSpriteImpl, (prev, next) => {
   if (prev.attackEvents !== next.attackEvents) return false;
   // spellEffectEvent: a new id may carry a control verdict to float on this sprite.
   if (prev.spellEffectEvent?.id !== next.spellEffectEvent?.id) return false;
+  // spellEffectEvents: a fresh AoE-control batch must re-render so each foe floats
+  // its own verdict. New array identity per emit — compare by reference.
+  if (prev.spellEffectEvents !== next.spellEffectEvents) return false;
   if (prev.kind === 'player' && next.kind === 'player') {
     return (
       prev.character.hp.current === next.character.hp.current &&

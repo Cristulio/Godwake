@@ -334,8 +334,9 @@ describe('Entangling Roots — caster\'s-eye control verdict', () => {
     const roller = makeScriptedRoller({ d20Faces: [1] });
     const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'entangling-roots' });
     expect(result.cast).toBe(true);
-    expect(result.state.spellEffectEvent?.outcome).toBe('landed');
-    expect(result.state.spellEffectEvent?.targetId).toBe(anchorId);
+    const verdict = result.state.spellEffectEvents?.find((e) => e.targetId === anchorId);
+    expect(verdict?.outcome).toBe('landed');
+    expect(verdict?.kind).toBe('debuff-restrain');
   });
 
   it('the anchor foe making its save emits outcome:resisted', () => {
@@ -346,6 +347,27 @@ describe('Entangling Roots — caster\'s-eye control verdict', () => {
     const roller = makeScriptedRoller({ d20Faces: [20] });
     const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'entangling-roots' });
     expect(result.cast).toBe(true);
-    expect(result.state.spellEffectEvent?.outcome).toBe('resisted');
+    expect(result.state.spellEffectEvents?.every((e) => e.outcome === 'resisted')).toBe(true);
+    expect(result.state.spellEffectEvents).toHaveLength(1);
+  });
+
+  it('a multi-foe cast emits one verdict per foe — every landed/resisted is visible', () => {
+    const goblin = getMonster('goblin');
+    const druid = makeDruid({ slots: { 2: 1 } });
+    const init = createCombat({
+      character: druid,
+      monsters: [{ def: goblin }, { def: goblin }, { def: goblin }],
+    });
+    const ids = monsters(init.state).map((m) => m.id);
+    // Two fail (nat 1), one tears free (nat 20) — order matches the live loop.
+    const roller = makeScriptedRoller({ d20Faces: [1, 1, 20] });
+    const result = castSpell({ roller, character: init.character, state: init.state, spellId: 'entangling-roots' });
+    expect(result.cast).toBe(true);
+    const events = result.state.spellEffectEvents ?? [];
+    expect(events).toHaveLength(3);
+    expect(events.map((e) => e.targetId)).toEqual(ids);
+    expect(events.map((e) => e.outcome)).toEqual(['landed', 'landed', 'resisted']);
+    // Unique ids so each sprite mounts its own effect.
+    expect(new Set(events.map((e) => e.id)).size).toBe(3);
   });
 });

@@ -23,7 +23,7 @@ import { APOTHEOSIS_BONUS_DAMAGE, isAscendant } from '../apotheosis';
 import { bardLoreAmpDamage, bardLoreAmpDc } from '../bard';
 import { appendLog } from '../log';
 import { patchActionEconomy, patchSpellSlots } from '../types';
-import { attachCombatVfx } from '../vfx';
+import { attachCombatVfx, attachCombatVfxBatch, type BatchVfxEntry } from '../vfx';
 import { t } from '../../../i18n';
 
 export interface CastSpellContext {
@@ -177,6 +177,19 @@ export function attachSpellEffect(
   damage?: number,
 ): CombatState {
   return attachCombatVfx(state, kind, attackerId, targetId, element, outcome, damage);
+}
+
+/**
+ * Emit a per-target batch of spell effects in one commit (AoE control). Each
+ * entry floats its own verdict / shows its own cue; the single `spellEffectEvent`
+ * could only carry one. Thin wrapper over {@link attachCombatVfxBatch}, the
+ * batch analogue of {@link attachSpellEffect}.
+ */
+export function attachSpellEffects(
+  state: CombatState,
+  entries: readonly BatchVfxEntry[],
+): CombatState {
+  return attachCombatVfxBatch(state, entries);
 }
 
 const SPELL_ELEMENTS: ReadonlySet<string> = new Set<SpellElement>([

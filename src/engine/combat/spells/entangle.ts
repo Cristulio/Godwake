@@ -7,11 +7,12 @@ import { patchActionEconomy } from '../types';
 import {
   type CastResult,
   type CastSpellContext,
-  attachSpellEffect,
+  attachSpellEffects,
   consumeSlot,
   nextLogId,
   spellSaveDC,
 } from './helpers';
+import type { BatchVfxEntry } from '../vfx';
 import { t } from '../../../i18n';
 
 /**
@@ -39,6 +40,11 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
   });
 
   const rooted: string[] = [];
+  // One restrain effect per foe — the whole floor is rooted, so every enemy
+  // floats its OWN caster's-eye verdict (rooted = LANDED, saved = RESISTED) and
+  // every rooted foe shows its own roots. A single spellEffectEvent could carry
+  // only one target; the batch surfaces them all.
+  const effects: BatchVfxEntry[] = [];
   for (const m of live) {
     const monsterDef = getMonster(m.instance.defId);
     const strMod = abilityModifier(monsterDef.abilityScores.str ?? 10);
@@ -48,18 +54,12 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
     const save = roller.d20(resoluteWill ? 'advantage' : 'normal', strMod);
     const success = save.total >= dc;
 
-    // Anchor the restrain VFX + the caster's-eye verdict on the primary target
-    // (the first live foe): rooted = it LANDED, made the save = RESISTED.
-    if (m.id === live[0].id) {
-      nextState = attachSpellEffect(
-        nextState,
-        'debuff-restrain',
-        'player',
-        m.id,
-        undefined,
-        success ? 'resisted' : 'landed',
-      );
-    }
+    effects.push({
+      kind: 'debuff-restrain',
+      attackerId: 'player',
+      targetId: m.id,
+      outcome: success ? 'resisted' : 'landed',
+    });
 
     nextState = appendLog(nextState, {
       id: nextLogId(nextState),
@@ -100,6 +100,8 @@ export function castEntangle(ctx: CastSpellContext): CastResult {
       }),
     };
   }
+
+  nextState = attachSpellEffects(nextState, effects);
 
   if (rooted.length > 0) {
     nextState = appendLog(nextState, {
