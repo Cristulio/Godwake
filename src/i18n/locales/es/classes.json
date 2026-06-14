@@ -46,7 +46,7 @@
   },
   "fighter.weapon-mastery": {
     "name": "Maestría con Armas",
-    "description": "Años en la línea afilan cada movimiento —tus ataques con arma ganan +1 al daño. Una ventaja fija que se acumula con todo lo demás que blandes."
+    "description": "Años en la línea afilan cada movimiento —tus ataques con arma ganan +1 al daño, sumado a todo lo demás que blandes."
   },
   "fighter.extra-attack-2": {
     "name": "Asalto Implacable",
@@ -317,7 +317,7 @@
     "description": "Doblas la fuerza arcana en bruto hacia una ruina dirigida. Mejor con equipo de daño de conjuro y CD de conjuro que afila cada descarga que arrojas.",
     "archetype": "Devastador",
     "lever0": "+1 dado en cada evocación — tus Manos Ardientes rugen 4d6 donde otros reúnen 3d6.",
-    "lever1": "Nivel 10: cada conjuro dañino añade la mitad de tu nivel como daño plano."
+    "lever1": "Nivel 10: cada conjuro dañino añade la mitad de tu nivel encima de sus dados."
   },
   "wizard.evocation.sculpt-spells": {
     "name": "Tradición Arcana: Evocación",
@@ -325,7 +325,7 @@
   },
   "wizard.evocation.empowered-evocation": {
     "name": "Evocación Potenciada",
-    "description": "Viertes tu propia fuerza reunida en la obra —cada hechizo de daño que lanzas golpea con daño adicional igual a la mitad de tu nivel. Una ventaja fija en cada rayo, estallido y descarga, que se acumula con cada dado que la ranura ya tira."
+    "description": "Viertes tu propia fuerza reunida en la obra —cada hechizo de daño que lanzas golpea con daño adicional igual a la mitad de tu nivel. Daño extra en cada rayo, estallido y descarga, sumado encima de cada dado que ya tira."
   },
   "wizard.abjuration": {
     "name": "Escuela de Abjuración",
@@ -685,7 +685,7 @@
     "description": "El Círculo que se mete en el combate vistiendo la bestia. Mejor con una construcción que se apoya en la Forma Salvaje —una forma más recia, un segundo cambio cada combate y las más pesadas Garras Atroces.",
     "archetype": "Cambiaformas",
     "lever0": "Forma Salvaje dos veces por combate en lugar de una.",
-    "lever1": "La bestia carga 8 + 3 por nivel de puntos de golpe temporales, no los 4 + 2 del druida sin círculo.",
+    "lever1": "La bestia carga 8 + 3 por nivel de puntos de golpe temporales —un escudo hondo tras el que pelear.",
     "lever2": "Garras Atroces — una escalera de golpes más pesada (1d10, luego 2d6, luego 2d8).",
     "lever3": "Nivel 6: en forma de bestia, tus garras golpean con +2 al ataque y +2 al daño (Golpe Primigenio)."
   },
@@ -706,7 +706,7 @@
     "description": "El Círculo que nunca viste la bestia —se convierte en la tormenta de la que la bestia huye. Mejor con una construcción de lanzador: el orbe en la otra mano, las túnicas, y el equipo de CD de conjuro y de daño de conjuro que afila cada trabajo que sueltas.",
     "archetype": "Tempestuario",
     "lever0": "+1 a la CD de salvación de tus conjuros —la llamada de lo silvestre cuesta más sacudirse.",
-    "lever1": "Nivel 6: cada conjuro dañino acierta por la mitad de tu nivel de más, plano.",
+    "lever1": "Nivel 6: cada conjuro dañino acierta por la mitad de tu nivel de más, encima de sus dados.",
     "lever2": "Nivel 10: +1 más a la CD de salvación (+2 en total) —nadie capea la tormenta."
   },
   "druid.circle-of-the-tempest.circle-of-the-tempest": {
@@ -715,11 +715,11 @@
   },
   "druid.circle-of-the-tempest.gathering-storm": {
     "name": "Tormenta Creciente",
-    "description": "Cuanto más habla lo silvestre a través de ti, más fuerte golpea —cada conjuro dañino que sueltas acierta por un daño adicional igual a la mitad de tu nivel, un filo plano encima de cada dado que ya tira el espacio."
+    "description": "Cuanto más habla lo silvestre a través de ti, más fuerte golpea —cada conjuro dañino que sueltas acierta por un daño adicional igual a la mitad de tu nivel, sumado encima de cada dado que ya tira."
   },
   "druid.circle-of-the-tempest.eye-of-the-storm": {
     "name": "Ojo de la Tormenta",
-    "description": "Te yergues intacto en el corazón de la ruina que haces descender, y nada que se te oponga la capea —tu CD de salvación de conjuro sube en 1 otra vez, dos en total sobre el druida sin círculo."
+    "description": "Te yergues intacto en el corazón de la ruina que haces descender, y nada que se te oponga la capea —tu CD de salvación de conjuro sube en 1 otra vez, dos en total, y nadie capea la tormenta en que te has convertido."
   },
   "monk": {
     "name": "Monje",

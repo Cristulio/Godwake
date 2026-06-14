@@ -100,7 +100,7 @@ export const FIGHTER: Class = ClassSchema.parse({
         id: 'weapon-mastery',
         name: 'Weapon Mastery',
         description:
-          'Years on the line sharpen every motion — your weapon attacks gain +1 damage. A flat edge that compounds with everything else you swing.',
+          'Years on the line sharpen every motion — your weapon attacks gain +1 damage, added to everything else you swing.',
         mechanicKey: 'weapon-mastery',
       },
     ],

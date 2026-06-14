@@ -189,7 +189,7 @@ export const DRUID: Class = ClassSchema.parse({
         archetype: 'Shapeshifter',
         levers: [
           'Wild Shape twice per combat instead of once.',
-          'The beast carries 8 + 3 per level temporary HP, not the circle-less 4 + 2.',
+          'The beast carries 8 + 3 per level temporary HP — a deep shield to fight behind.',
           'Dire Claws — a heavier strike ladder (1d10, then 2d6, then 2d8).',
           'Level 6: shapeshifted claws strike at +2 to hit and +2 damage (Primal Strike).',
         ],
@@ -232,7 +232,7 @@ export const DRUID: Class = ClassSchema.parse({
         archetype: 'Stormcaller',
         levers: [
           "+1 to your spell save DC — the wild's call is harder to shrug off.",
-          'Level 6: every damaging spell lands for an extra half your level, flat.',
+          'Level 6: every damaging spell lands for an extra half your level on top of its dice.',
           'Level 10: +1 more spell save DC (+2 in all) — none weather the storm.',
         ],
       },
@@ -251,7 +251,7 @@ export const DRUID: Class = ClassSchema.parse({
             id: 'gathering-storm',
             name: 'Gathering Storm',
             description:
-              'The longer the wild speaks through you, the harder it strikes — every damaging spell you loose lands for additional damage equal to half your level, a flat edge on top of every die the slot already rolls.',
+              'The longer the wild speaks through you, the harder it strikes — every damaging spell you loose lands for additional damage equal to half your level, added on top of every die it already rolls.',
             mechanicKey: 'gathering-storm',
           },
         ],
@@ -260,7 +260,7 @@ export const DRUID: Class = ClassSchema.parse({
             id: 'eye-of-the-storm',
             name: 'Eye of the Storm',
             description:
-              'You stand untouched at the heart of the ruin you call down, and nothing set against you weathers it — your spell save DC rises by 1 again, two in all over the circle-less druid.',
+              'You stand untouched at the heart of the ruin you call down, and nothing set against you weathers it — your spell save DC rises by 1 again, two in all, and none weather the storm you have become.',
             mechanicKey: 'eye-of-the-storm',
           },
         ],
