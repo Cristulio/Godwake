@@ -328,6 +328,8 @@
     "timeStopTurn": "El tiempo pende congelado — {name} vuelve a moverse mientras el mundo queda quieto. ({n} turnos congelados restantes)",
     "shapeChange": "El cuerpo de {name} se hincha y se cubre de escamas hasta volverse un dragón — {temp} PG temporales y tres garras desgarradoras, durante {rounds} rondas.",
     "shapeChangeFade": "La forma del dragón se desprende — {name} vuelve a ser carne.",
+    "greatBear": "{name} deja correr lo salvaje por entero y se alza como el Gran Oso — {temp} PG temporales, +{ac} CA, y dos garras desgarradoras, durante {rounds} rondas.",
+    "greatBearFade": "La forma del Gran Oso se asienta — {name} vuelve a ser carne.",
     "ninthDrain": "{name} pronuncia a {target} medio fuera del mundo — {dealt} necrótico mientras su forma se quiebra.",
     "ninthBindRoll": "Salvación de CON de {name} contra la atadura{resolute}: d20{mod} = {total} vs CD {dc} — {result}.",
     "ninthBindParalyze": "{name} es rehecho en algo indefenso — paralizado por 2 rondas.",

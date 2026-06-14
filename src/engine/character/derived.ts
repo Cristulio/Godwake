@@ -11,6 +11,7 @@ import { characterBlessingMods } from './blessings';
 import { characterCampBoonMods } from './campBoons';
 import { characterAffixMods, enhancementOf } from '../items/affixMods';
 import { APOTHEOSIS_AC_BONUS, isAscendant } from '../combat/apotheosis';
+import { BEAR_FORM_AC_BONUS, isBearForm } from '../combat/bearForm';
 
 /**
  * Proficiency bonus by character level (PHB Table: Proficiency Bonus).
@@ -147,6 +148,10 @@ export function computeAC(character: Character): number {
   // Apotheosis: the ascendant form turns blows aside.
   if (isAscendant(character)) {
     base += APOTHEOSIS_AC_BONUS;
+  }
+  // Avatar of the Wilds (Great Bear): thick hide turns blows aside.
+  if (isBearForm(character)) {
+    base += BEAR_FORM_AC_BONUS;
   }
 
   return base;

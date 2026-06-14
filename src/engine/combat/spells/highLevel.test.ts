@@ -15,6 +15,14 @@ import {
   DRAGON_CLAW_WEAPON_ID,
 } from '../shapeChange';
 import { TIME_STOP_EXTRA_TURNS } from '../timeStop';
+import {
+  isBearForm,
+  BEAR_FORM_ROUNDS,
+  BEAR_FORM_TEMP_HP,
+  BEAR_FORM_AC_BONUS,
+  BEAR_CLAW_ATTACKS,
+  BEAR_CLAW_WEAPON_ID,
+} from '../bearForm';
 import { maxAttacksPerAction, playerAttack } from '../attack/playerAttack';
 import { endTurn, currentCombatantId } from '../turn';
 import { availableWizardSpellsForLearn } from '../../character/leveling';
@@ -39,6 +47,34 @@ function makeArchmage(spellId: string, level = 17): Character {
       cha: STANDARD_ARRAY[4],
     },
     skillProficiencies: ['arcana', 'history'],
+  });
+  return {
+    ...base,
+    level,
+    resources: {
+      ...base.resources,
+      spellSlots: wizardSpellSlotsForLevel(level),
+      knownSpells: [...(base.resources.knownSpells ?? []), spellId],
+    },
+  };
+}
+
+/** A level-17 druid who knows `spellId`, with the full L17 slot table refilled. */
+function makeArchdruid(spellId: string, level = 17): Character {
+  const base = createCharacter({
+    id: 'archdruid',
+    name: 'Faelar Quill',
+    raceId: 'human',
+    classId: 'druid',
+    baseAbilityScores: {
+      str: STANDARD_ARRAY[3],
+      dex: STANDARD_ARRAY[2],
+      con: STANDARD_ARRAY[1],
+      int: STANDARD_ARRAY[4],
+      wis: STANDARD_ARRAY[0],
+      cha: STANDARD_ARRAY[5],
+    },
+    skillProficiencies: ['nature', 'survival'],
   });
   return {
     ...base,
@@ -168,6 +204,50 @@ describe('Shape Change — the become-a-dragon capstone', () => {
     }
     expect(swings).toBe(DRAGON_CLAW_ATTACKS);
     // The third claw spends the one Attack action.
+    expect(ch.actionEconomy.actionUsed).toBe(true);
+  });
+});
+
+describe('Avatar of the Wilds — the become-the-Great-Bear capstone', () => {
+  it('spends a 9th-level slot, grants the bear temp HP + AC, and holds for 5 rounds', () => {
+    const roller = createDiceRoller('bear-seed');
+    const d = makeArchdruid('avatar-of-the-wilds');
+    const init = createCombat({ character: d, monsters: [{ def: getMonster('fire-giant') }] });
+    const acBefore = computeAC(init.character);
+
+    const r = castSpell({ roller, character: init.character, state: init.state, spellId: 'avatar-of-the-wilds' });
+
+    expect(r.cast).toBe(true);
+    expect(r.character.resources.spellSlots?.[9]).toBe(0);
+    expect(r.character.resources.bearFormRoundsRemaining).toBe(BEAR_FORM_ROUNDS);
+    expect(r.character.hp.temp).toBe(BEAR_FORM_TEMP_HP);
+    expect(isBearForm(r.character)).toBe(true);
+    expect(computeAC(r.character)).toBe(acBefore + BEAR_FORM_AC_BONUS);
+    // It is the druid's own form — it does NOT borrow the shared ascendant buff
+    // (so the wizard/bard Apotheosis stays distinct) nor the wizard's dragon.
+    expect(isAscendant(r.character)).toBe(false);
+    expect(isDragonForm(r.character)).toBe(false);
+  });
+
+  it('the bear mauls with two claw swings per Attack action', () => {
+    const roller = createDiceRoller('bear-volley');
+    const d = makeArchdruid('avatar-of-the-wilds');
+    const init = createCombat({ character: d, monsters: [{ def: getMonster('goblin') }] });
+    const cast = castSpell({ roller, character: init.character, state: init.state, spellId: 'avatar-of-the-wilds' });
+
+    expect(maxAttacksPerAction(cast.character)).toBe(BEAR_CLAW_ATTACKS);
+
+    const monId = findMonster(cast.state).id;
+    let s = cast.state;
+    let ch = cast.character;
+    let swings = 0;
+    for (let i = 0; i < BEAR_CLAW_ATTACKS; i++) {
+      const r = playerAttack({ roller, character: ch, state: s }, monId, BEAR_CLAW_WEAPON_ID);
+      s = r.state;
+      ch = r.character;
+      if (s.lastAttack?.weaponName === 'Worldbear Claws') swings += 1;
+    }
+    expect(swings).toBe(BEAR_CLAW_ATTACKS);
     expect(ch.actionEconomy.actionUsed).toBe(true);
   });
 

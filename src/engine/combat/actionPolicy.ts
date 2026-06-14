@@ -42,6 +42,7 @@ import { useRage } from './rage';
 import { useHuntersMark } from './huntersMark';
 import { useWildShape } from './wildShape';
 import { isDragonForm } from './shapeChange';
+import { isBearForm } from './bearForm';
 import { useElementalBurst } from './fourElements';
 import {
   useFlurryOfBlows,
@@ -966,10 +967,10 @@ function chooseWizardAction(
   const actionFree = !character.actionEconomy.actionUsed;
   const beefy = highestHpTarget(live);
 
-  // Shape Change (dragon form): the wizard is a melee bruiser — maul with the
-  // claws rather than spend the one action casting. (Attack and cast share the
-  // action; the form's whole point is the triple claw.)
-  if (isDragonForm(character) && primary) {
+  // Shape Change (dragon) / Avatar of the Wilds (Great Bear): the caster is a
+  // melee bruiser — maul with the claws rather than spend the one action casting.
+  // (Attack and cast share the action; the form's whole point is the multi-claw.)
+  if ((isDragonForm(character) || isBearForm(character)) && primary) {
     return { kind: 'attack', targetId: primary.id };
   }
 
@@ -1230,15 +1231,15 @@ function chooseDruidAction(
     return { kind: 'cast', spellId: 'regrowth' };
   }
 
-  // Boss finisher: against a true boss, blaze into the Avatar of the Wilds
-  // (the 9th-level self-buff) — temp HP, +AC, and far harder strikes for the
-  // assembled kill. Only when not already transformed.
+  // Boss finisher: against a true boss, rise into the Avatar of the Wilds (the
+  // Great Bear) — a wall of temp HP, +AC, and twin maul-strikes for the assembled
+  // kill. Only when not already transformed.
   if (
     beefy &&
     beefy.instance.hp.current >= CAPSTONE_NUKE_HP &&
     knows(character, 'avatar-of-the-wilds') &&
     slotsAt(character, 9) > 0 &&
-    (character.resources.ascendantRoundsRemaining ?? 0) === 0
+    !isBearForm(character)
   ) {
     return { kind: 'cast', spellId: 'avatar-of-the-wilds' };
   }

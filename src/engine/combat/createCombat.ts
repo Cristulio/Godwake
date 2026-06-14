@@ -354,6 +354,8 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   if (nextCharacter.classId === 'druid') {
     nextCharacter = patchResources(nextCharacter, {
       wildShapeRoundsRemaining: 0,
+      // Drop any stale Avatar of the Wilds (Great Bear) form from a prior fight.
+      bearFormRoundsRemaining: 0,
       wildShapeUsesRemaining: wildShapeUsesMax(nextCharacter),
       // Clear any stale signature-spell DOT/HOT carried from the prior fight —
       // Regrowth and Spirit Beast are per-combat effects.

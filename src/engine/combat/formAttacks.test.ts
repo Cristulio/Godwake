@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCharacter, STANDARD_ARRAY } from '../character/initialize';
 import { buildPlayerCharacter, presetCreationInput } from '../character/defaultCharacter';
 import { createCombat, _resetMonsterInstanceCounter } from './createCombat';
-import { playerAttack, attackWeaponId } from './attack/playerAttack';
+import { playerAttack, attackWeaponId, maxAttacksPerAction } from './attack/playerAttack';
 import {
   beastWeaponId,
   PRIMAL_STRIKE_HIT_BONUS,
@@ -15,7 +15,15 @@ import {
   SHAPE_CHANGE_ROUNDS,
 } from './shapeChange';
 import { WILD_SHAPE_ROUNDS } from './wildShape';
-import { spellcastingMod, proficiencyBonus } from '../character/derived';
+import {
+  BEAR_CLAW_ATTACKS,
+  BEAR_CLAW_DAMAGE_BONUS,
+  BEAR_CLAW_HIT_BONUS,
+  BEAR_CLAW_WEAPON_ID,
+  BEAR_FORM_AC_BONUS,
+  BEAR_FORM_ROUNDS,
+} from './bearForm';
+import { spellcastingMod, proficiencyBonus, computeAC } from '../character/derived';
 import { parseDiceExpression } from '../dice';
 import type { DiceRoller } from '../dice';
 import { getItem } from '../../content/items';
@@ -109,6 +117,14 @@ function shapeshift(druid: Character): Character {
   };
 }
 
+/** Enter the Great Bear (Avatar of the Wilds) form. Apply AFTER createCombat. */
+function bearForm(druid: Character): Character {
+  return {
+    ...druid,
+    resources: { ...druid.resources, bearFormRoundsRemaining: BEAR_FORM_ROUNDS },
+  };
+}
+
 function findMonster(state: CombatState): MonsterCombatant {
   return state.combatants.find((c) => c.kind === 'monster') as MonsterCombatant;
 }
@@ -158,6 +174,7 @@ describe('claw weapons carry the martial-beast contract', () => {
     'dire-claws-savage',
     'dire-claws-apex',
     'dragon-claws',
+    'worldbear-claws',
   ];
 
   it('every claw is a casterWeapon — the form attacks off the spellcasting stat', () => {
@@ -189,6 +206,13 @@ describe('attackWeaponId — the one shared weapon pick for player taps and the 
   it('dragon form outranks everything else', () => {
     const dragon = dragonForm(makeArchwizard());
     expect(attackWeaponId(dragon)).toBe(DRAGON_CLAW_WEAPON_ID);
+  });
+
+  it('the Great Bear form outranks the ordinary wild-shape claws', () => {
+    // A druid that is BOTH wild-shaped and in the Avatar bear swings the bear,
+    // not the beast-tier claw — the capstone form wins.
+    const both = bearForm(shapeshift(makeDruid(17, 'circle-of-the-moon')));
+    expect(attackWeaponId(both)).toBe(BEAR_CLAW_WEAPON_ID);
   });
 
   it('an unshaped character swings the equipped main-hand', () => {
@@ -347,6 +371,79 @@ describe('beast form — to-hit and damage off Wisdom, not the dumped STR/DEX', 
       (claw.damageMod ?? 0) +
       1 +
       PRIMAL_STRIKE_DAMAGE_BONUS;
+    expect(r.state.lastAttack?.damageDealt).toBe(expected);
+  });
+});
+
+describe('Great Bear form (Avatar of the Wilds) — the druid capstone', () => {
+  it('mauls with two claw strikes per Attack — an upgraded wild-shape', () => {
+    expect(maxAttacksPerAction(bearForm(makeDruid(17)))).toBe(BEAR_CLAW_ATTACKS);
+    // A plain wild-shaped druid makes a single strike — the bear is the upgrade.
+    expect(maxAttacksPerAction(shapeshift(makeDruid(17)))).toBe(1);
+  });
+
+  it('wears thick hide — +AC while the form holds', () => {
+    const druid = makeDruid(17);
+    expect(computeAC(bearForm(druid))).toBe(computeAC(druid) + BEAR_FORM_AC_BONUS);
+  });
+
+  it('the claw attack bonus is WIS mod + proficiency + the bear-claw edge', () => {
+    const init = createCombat({
+      character: makeDruid(17),
+      monsters: [{ def: getMonster('fire-giant') }],
+    });
+    const bear = bearForm(init.character);
+    const r = playerAttack(
+      { roller: scriptedRoller([10]), character: bear, state: init.state },
+      findMonster(init.state).id,
+      BEAR_CLAW_WEAPON_ID,
+    );
+    const expected =
+      spellcastingMod(bear) + proficiencyBonus(bear.level) + BEAR_CLAW_HIT_BONUS;
+    expect(r.state.lastAttack?.attackBonus).toBe(expected);
+  });
+
+  it('STR is irrelevant to the bear — the paw swings off Wisdom', () => {
+    const init = createCombat({
+      character: makeDruid(17),
+      monsters: [{ def: getMonster('fire-giant') }],
+    });
+    const target = findMonster(init.state).id;
+    const weak = bearForm(init.character);
+    const strong: Character = {
+      ...weak,
+      baseAbilityScores: { ...weak.baseAbilityScores, str: 30 },
+    };
+    const rWeak = playerAttack(
+      { roller: scriptedRoller([10]), character: weak, state: init.state },
+      target,
+      BEAR_CLAW_WEAPON_ID,
+    );
+    const rStrong = playerAttack(
+      { roller: scriptedRoller([10]), character: strong, state: init.state },
+      target,
+      BEAR_CLAW_WEAPON_ID,
+    );
+    expect(rStrong.state.lastAttack?.attackBonus).toBe(rWeak.state.lastAttack?.attackBonus);
+  });
+
+  it('a connecting paw lands 2d12 + WIS mod + bear bonus + affinity', () => {
+    const init = createCombat({
+      character: makeDruid(17),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const bear = bearForm(init.character);
+    const face = 5;
+    const r = playerAttack(
+      { roller: scriptedRoller([15], face), character: bear, state: init.state },
+      findMonster(init.state).id,
+      BEAR_CLAW_WEAPON_ID,
+    );
+    expect(r.state.lastAttack?.hit).toBe(true);
+    expect(r.state.lastAttack?.crit).toBe(false);
+    // 2d12 at a scripted face, + WIS (the casterWeapon damage stat), + the flat
+    // bear bonus, + the druid-affinity edge baked on the claw def.
+    const expected = 2 * face + spellcastingMod(bear) + BEAR_CLAW_DAMAGE_BONUS + 1;
     expect(r.state.lastAttack?.damageDealt).toBe(expected);
   });
 });

@@ -574,8 +574,8 @@ export const AVATAR_OF_THE_WILDS: Spell = SpellSchema.parse({
   range: 'Self',
   target: 'self',
   description:
-    'You let the wild pour through you whole and stand as something primeval. For 4 rounds you gain 30 temporary hit points, +2 AC, and every strike — claw or spell — bites for far more.',
-  effectKey: 'apotheosis',
+    'You let the wild pour through you whole and rise as the Great Bear — a Wild Shape past every beast you have worn. For 5 rounds you gain 90 temporary hit points and +3 AC, and you maul with two heavy claw strikes each turn (Wisdom to hit and harm, +3 to both). An upgraded shapeshift: a wall of hide and a storm of claws.',
+  effectKey: 'great-bear',
 });
 
 // --- Bard: the College repertoire (Charisma, the lyric craft). A focused book

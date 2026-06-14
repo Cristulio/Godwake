@@ -379,6 +379,30 @@ export const DRAGON_CLAWS: Weapon = WeaponSchema.parse({
   description: 'Talons the length of swords — the natural arms of the dragon you have become.',
 });
 
+// Avatar of the Wilds bear claws — the druid counterpart to the dragon claws,
+// never sold or rolled (absent from the loot/shop pools, which draw from explicit
+// id lists). Resolved only when the engine swaps the druid's attack to its Great
+// Bear profile. `casterWeapon` makes the claw attack AND damage off the druid's
+// WISDOM (spellcasting mod, read in playerAttack) — the bear strikes with the
+// wild that shaped it, not the druid's dumped STR. The +3/+3 form edge is applied
+// in playerAttack (gated on isBearForm), NOT baked here. The 2d12 rend is a
+// PROVISIONAL number (the heaviest single claw in the game, two swings per Attack,
+// the apex of the druid's beast ladder) — the end-of-campaign sim batch calibrates it.
+export const WORLDBEAR_CLAWS: Weapon = WeaponSchema.parse({
+  id: 'worldbear-claws',
+  kind: 'weapon',
+  name: 'Worldbear Claws',
+  affinity: 'druid',
+  casterWeapon: true,
+  category: 'martial',
+  damage: '2d12',
+  damageType: 'slashing',
+  properties: [],
+  cost: 0,
+  rarity: 'common',
+  description: 'Paws the size of shields, claws like reaping hooks — the arms of the Great Bear you have become.',
+});
+
 // Monk Martial Arts fists — VIRTUAL attack profiles, never owned, sold, rolled,
 // or equipped (a monk's unarmed state is an EMPTY main-hand; these ids exist only
 // inside the attack dispatch, which swaps the swing to the level-appropriate die
@@ -542,6 +566,7 @@ export const ALL_WEAPONS: Weapon[] = [
   DIRE_CLAWS_SAVAGE,
   DIRE_CLAWS_APEX,
   DRAGON_CLAWS,
+  WORLDBEAR_CLAWS,
   MONK_FISTS,
   MONK_FISTS_ADEPT,
   MONK_FISTS_MASTER,

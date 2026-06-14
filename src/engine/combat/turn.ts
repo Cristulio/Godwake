@@ -330,6 +330,23 @@ export function endTurn(state: CombatState, character: Readonly<Character>): Com
     }
   }
 
+  // Druid: the Avatar of the Wilds (Great Bear) form burns down one round each
+  // time the player's turn comes around, reverting when it runs out. The temp HP
+  // may persist past the form (like the dragon) — only the form flag clears.
+  if (order[nextIndex] === 'player' && (nextCharacter.resources.bearFormRoundsRemaining ?? 0) > 0) {
+    const remaining = (nextCharacter.resources.bearFormRoundsRemaining ?? 0) - 1;
+    if (remaining <= 0) {
+      nextCharacter = patchResources(nextCharacter, { bearFormRoundsRemaining: 0 });
+      nextState = appendLog(nextState, {
+        id: nextState.log.length + 1,
+        kind: 'narration',
+        text: t('combat.log.greatBearFade', { name: nextCharacter.name }),
+      });
+    } else {
+      nextCharacter = patchResources(nextCharacter, { bearFormRoundsRemaining: remaining });
+    }
+  }
+
   // Tick down monster-debuff conditions (poisoned/frightened/blinded/restrained/
   // weakened) at the start of the player's turn, dropping any that expire.
   // Paralyzed is skipped here — its save-each-turn resolver below owns it.
