@@ -14,7 +14,7 @@ export const ASCENDANT_SLAYER: Monster = MonsterSchema.parse({
   name: 'Ascendant Slayer',
   cr: '15',
   size: 'large',
-  creatureType: 'fiend (bhaalspawn-essence)',
+  creatureType: 'fiend (slain-god essence)',
   ac: 18,
   maxHp: 208,
   speed: 40,

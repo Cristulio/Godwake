@@ -157,7 +157,7 @@
   },
   "wine-merchant": {
     "title": "La hospitalidad de un mercader de vino",
-    "flavor": "Un hombre de abrigo azafrán se inclina sobre su mostrador con una copa ya servida. «Invita la casa, caminante. Un trago de tinto amnio. La bodega tiene más… para quien tenga moneda y garganta.»",
+    "flavor": "Un hombre de abrigo azafrán se inclina sobre su mostrador con una copa ya servida. «Invita la casa, caminante. Un trago de tinto sudriano. La bodega tiene más… para quien tenga moneda y garganta.»",
     "choice.free-cup.label": "Aceptar la copa gratis",
     "choice.free-cup.hint": "Calor y un pequeño escozor.",
     "choice.free-cup.resolution": "La apuras. Es mejor de lo que tiene derecho a ser. Tu cabeza se afloja; tu brazo se alarga. Te sientes medio paso más certero con la hoja, pero medio paso menos en guardia.",
@@ -166,7 +166,7 @@
     "choice.buy-bottle.resolution": "Envuelve la botella en tela encerada y la desliza en tu morral. El primer trago en el camino de mañana zurce algo que el día rompió.",
     "choice.haggle.label": "[Persuasión] Regatear la botella",
     "choice.haggle.hint": "Encanta para bajar el precio: cuanto mejor el relato, más ligera la cuenta. Si caes en plano, el precio aguanta.",
-    "choice.haggle.resolution": "Le hilas un cuento sobre veranos amnios y una hermana casada con un vinatero. Ríe y agita una mano. «Mitad de precio para un caminante que conoce la tierra, pues» —y cuanto más lo mantienes riendo, más cobres te devuelve a la palma. La botella va a tu morral a precio de ladrón.",
+    "choice.haggle.resolution": "Le hilas un cuento sobre veranos sudrianos y una hermana casada con un vinatero. Ríe y agita una mano. «Mitad de precio para un caminante que conoce la tierra, pues» —y cuanto más lo mantienes riendo, más cobres te devuelve a la palma. La botella va a tu morral a precio de ladrón.",
     "choice.haggle.failureResolution": "Tu relato divaga y su sonrisa se adelgaza hasta la mera cortesía. «Encantador, caminante. Pero mis hijos comen del tinto de Sudria igual que tú.» El precio se mantiene. Para guardar las apariencias compras un brebaje menor que no querías y te marchas unas monedas más ligero, la buena botella aún en su estante.",
     "choice.decline.label": "Declinar con gracias",
     "choice.decline.hint": "El camino es largo y el vino de Stormhaven tiene larga memoria.",

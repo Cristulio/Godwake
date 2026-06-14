@@ -12,7 +12,7 @@ export const BLOOD_FIEND: Monster = MonsterSchema.parse({
   name: 'Blood-Fiend',
   cr: '13',
   size: 'large',
-  creatureType: 'fiend (bhaalspawn-essence)',
+  creatureType: 'fiend (slain-god essence)',
   ac: 20,
   maxHp: 218,
   speed: 30,
