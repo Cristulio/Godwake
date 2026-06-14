@@ -624,7 +624,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => fx('arcane-focus', { n: r }),
     costForRank: (r) => rankCost(100, r),
     maxRank: 3,
-    apply: (c) => addPermanentBonus(c, 'spellAttack', 1),
+    apply: (c) => (c.classId !== 'wizard' ? c : addPermanentBonus(c, 'spellAttack', 1)),
     kind: 'permanent',
   },
   {
@@ -637,7 +637,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => fx('burning-tongue', { n: r }),
     costForRank: (r) => rankCost(140, r),
     maxRank: 5,
-    apply: (c) => addPermanentBonus(c, 'spellDamage', 1),
+    apply: (c) => (c.classId !== 'wizard' ? c : addPermanentBonus(c, 'spellDamage', 1)),
     kind: 'permanent',
   },
   {
@@ -650,7 +650,7 @@ const RAW: Upgrade[] = [
     effectAtRank: (r) => fx('sigil-of-the-wakened-mind', { n: r }),
     costForRank: (r) => rankCost(180, r),
     maxRank: 3,
-    apply: (c) => addPermanentBonus(c, 'spellDc', 1),
+    apply: (c) => (c.classId !== 'wizard' ? c : addPermanentBonus(c, 'spellDc', 1)),
     kind: 'permanent',
   },
 
