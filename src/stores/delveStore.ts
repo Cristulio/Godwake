@@ -1124,6 +1124,7 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
         blessings: [],
         campBoons: [],
         delveAttackBonus: 0,
+        delveSpellAttackBonus: 0,
         bossIntel: {},
         boldApproachBosses: [],
       }),

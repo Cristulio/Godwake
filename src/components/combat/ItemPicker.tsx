@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { Character } from '../../types/character';
 import { getItem } from '../../content/items';
 import { Button } from '../ui/Button';
@@ -12,6 +13,11 @@ interface ItemPickerProps {
 
 export function ItemPicker({ character, onPick, onCancel }: ItemPickerProps) {
   const { t, tc } = useT();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
   // Group consumables by item id with counts
   const consumables = character.inventory
     .map((ref, idx) => ({ ref, idx, item: getItem(ref.itemId) }))

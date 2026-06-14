@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { Character, SpellSlotLevel } from '../../types/character';
 import type { Spell } from '../../schemas/spell';
 import { getSpell } from '../../content/spells';
@@ -26,6 +27,12 @@ interface SpellPickerProps {
 
 export function SpellPicker({ character, onPick, onCancel }: SpellPickerProps) {
   const { t, tc } = useT();
+  // Escape closes the picker (parity with the backdrop click + the other modals).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
   const spellScopeLabel = (target: Spell['target']): string => {
     switch (target) {
       case 'area': return t('ui.combat.hitsAll');

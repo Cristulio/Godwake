@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Button } from '../ui/Button';
 import type { CunningActionChoice } from '../../engine/combat';
 import { useT } from '../../i18n/useT';
@@ -16,6 +17,11 @@ const OPTIONS: Array<{ choice: CunningActionChoice; labelKey: string; blurbKey: 
 
 export function CunningActionPicker({ onPick, onCancel }: CunningActionPickerProps) {
   const { t } = useT();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg-base)]/80">
       <div className="bg-[var(--color-bg-panel)] border-2 border-[var(--color-border-warm)] p-5 max-w-md w-full">

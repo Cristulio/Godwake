@@ -226,8 +226,10 @@ function DamageNumber({ item }: { item: FloatingDamageItem }) {
               ? `${style.prefix}${item.amount}${t('combat.float.graze')}`
               : `${style.prefix}${item.amount}${style.suffix}`;
 
-  // Spread numbers slightly so back-to-back hits don't perfectly overlap.
-  const offsetX = ((item.id % 5) - 2) * 14;
+  // Spread numbers slightly so back-to-back hits don't perfectly overlap. item.id
+  // is a float (Date.now()+Math.random()), so floor it before bucketing or `% 5`
+  // yields a fractional column and the anti-overlap spread drifts off its ±2 grid.
+  const offsetX = ((Math.floor(item.id) % 5) - 2) * 14;
 
   const glow = tint?.glow ?? style.glow;
   // Crit keeps the dramatic dual-glow + thick outline; everything else gets a
