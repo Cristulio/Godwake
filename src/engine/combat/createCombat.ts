@@ -170,6 +170,8 @@ export function createCombat(input: CreateCombatInput): CombatActionResult {
   // Per-combat consumable effects (Antitoxin/Elixir of Iron/Oil of Sharpness)
   // are cleared in combat RESOLUTION; clearing again here guards any exit path
   // that skips resolution so a paid one-fight effect never spans two fights.
+  // (Conditions are deliberately NOT cleared here — combat start must honor a
+  // pre-applied condition; they're wiped at fight's end by clearEncounterEffects.)
   nextCharacter = clearEncounterConsumables(nextCharacter);
 
   // Ascension scaling: HP rides on the (copied) def so spawnMonsterInstance

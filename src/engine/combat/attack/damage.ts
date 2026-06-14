@@ -286,8 +286,11 @@ export interface CombatEndResult {
 
 /**
  * Strip every per-combat consumable effect (Antitoxin's immunity, Elixir of
- * Iron's hide, Oil of Sharpness's edge) — called from both resolution paths so
- * a drink never leaks into the next fight. No-op when nothing is active.
+ * Iron's hide, Oil of Sharpness's edge) — called from both resolution paths AND
+ * at combat start so a drink never leaks into the next fight. No-op when nothing
+ * is active. Does NOT touch conditions: combat START must faithfully honor a
+ * pre-applied condition on the character (see {@link clearEncounterEffects},
+ * which clears conditions only at fight's END).
  */
 export function clearEncounterConsumables(character: Readonly<Character>): Character {
   if (
@@ -307,6 +310,18 @@ export function clearEncounterConsumables(character: Readonly<Character>): Chara
   };
 }
 
+/**
+ * Fight's-end cleanup: consumables PLUS any lingering combat conditions
+ * (poison/blind/frighten/weaken/restrain). A debuff landed on the enemy's
+ * killing-turn must not ride on the character into the next room's combat, so we
+ * wipe conditions when the fight resolves — not at combat start, which must keep
+ * a deliberately pre-applied condition intact.
+ */
+export function clearEncounterEffects(character: Readonly<Character>): Character {
+  const cleared = clearEncounterConsumables(character);
+  return cleared.conditions.length > 0 ? { ...cleared, conditions: [] } : cleared;
+}
+
 export function evaluateCombatEnd(
   state: CombatState,
   character: Readonly<Character>,
@@ -316,7 +331,7 @@ export function evaluateCombatEnd(
     .filter((c) => c.kind === 'monster')
     .every((c) => isDead(c, nextCharacter));
   if (allMonstersDead) {
-    nextCharacter = clearEncounterConsumables(nextCharacter);
+    nextCharacter = clearEncounterEffects(nextCharacter);
     return {
       state: appendLog(
         { ...state, status: 'player-victory' },
@@ -326,7 +341,7 @@ export function evaluateCombatEnd(
     };
   }
   if (nextCharacter.hp.current <= 0) {
-    nextCharacter = clearEncounterConsumables(nextCharacter);
+    nextCharacter = clearEncounterEffects(nextCharacter);
     return {
       state: appendLog(
         { ...state, status: 'player-defeat' },

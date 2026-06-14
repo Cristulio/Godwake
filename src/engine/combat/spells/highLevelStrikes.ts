@@ -215,8 +215,10 @@ export function castWither(ctx: CastSpellContext): CastResult {
   nextCharacter = damaged.character;
 
   // Apply 'weakened' to the survivor — read by monsterAttack as a flat cut to
-  // its outgoing damage. Long duration so it holds for the fight; the per-turn
-  // debuff tick in turn.ts still expires it eventually.
+  // its outgoing damage. Unlike paralyzed/restrained/frightened there is no
+  // monster-side per-turn ticker for it (turn.ts ticks PLAYER conditions only),
+  // so the long nominal duration simply holds for the rest of the encounter and
+  // is cleared at combat end. Intentional: Wither weakens the foe for the fight.
   nextState = {
     ...nextState,
     combatants: nextState.combatants.map((c) => {
