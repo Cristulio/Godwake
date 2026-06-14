@@ -1192,28 +1192,34 @@ function resolveSwing(
     }
 
     // "of Bloodletting" weapon affix (+ Gauntlets of the Titan legendary):
-    // apply a bleed DOT to the target. Each stack refreshes to 3 turns — the
-    // damage ticks at the start of the player's next turn in turn.ts.
+    // apply a bleed DOT to the target. Folded max-of (like Envenom/BM below) so
+    // it never weakens a stronger bleed already running; refreshes to 3 turns —
+    // the damage ticks at the start of the player's next turn in turn.ts.
     if (affixMods.bleedDamage > 0 && target.kind === 'monster') {
-      nextState = {
-        ...nextState,
-        combatants: nextState.combatants.map((c) => {
-          if (c.kind !== 'monster' || c.id !== targetId) return c;
-          return {
-            ...c,
-            instance: {
-              ...c.instance,
-              bleedDamagePerTurn: affixMods.bleedDamage,
-              bleedTurnsRemaining: 3,
-            },
-          };
-        }),
-      };
-      nextState = appendLog(nextState, {
-        id: nextLogId(nextState),
-        kind: 'system',
-        text: t('combat.log.bleedBegin', { target: displayName(target, nextCharacter), n: affixMods.bleedDamage }),
-      });
+      const stillAlive = nextState.combatants.some(
+        (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
+      );
+      if (stillAlive) {
+        nextState = {
+          ...nextState,
+          combatants: nextState.combatants.map((c) => {
+            if (c.kind !== 'monster' || c.id !== targetId) return c;
+            return {
+              ...c,
+              instance: {
+                ...c.instance,
+                bleedDamagePerTurn: Math.max(c.instance.bleedDamagePerTurn ?? 0, affixMods.bleedDamage),
+                bleedTurnsRemaining: Math.max(c.instance.bleedTurnsRemaining ?? 0, 3),
+              },
+            };
+          }),
+        };
+        nextState = appendLog(nextState, {
+          id: nextLogId(nextState),
+          kind: 'system',
+          text: t('combat.log.bleedBegin', { target: displayName(target, nextCharacter), n: affixMods.bleedDamage }),
+        });
+      }
     }
 
     // Rogue Envenom (L8): a landed Sneak Attack leaves a bleeding/poisoned wound
@@ -1259,6 +1265,7 @@ function resolveSwing(
 
     // Fighter (Battle Master): the maneuver also opens a bleeding wound — 3
     // damage a turn for 3 turns — if the target still stands after the strike.
+    // Folded max-of so it never downgrades a stronger Envenom/affix bleed.
     if (battleMasterManeuver && target.kind === 'monster') {
       const stillAlive = nextState.combatants.some(
         (c) => c.kind === 'monster' && c.id === targetId && c.instance.hp.current > 0,
@@ -1270,7 +1277,11 @@ function resolveSwing(
             if (c.kind !== 'monster' || c.id !== targetId) return c;
             return {
               ...c,
-              instance: { ...c.instance, bleedDamagePerTurn: 3, bleedTurnsRemaining: 3 },
+              instance: {
+                ...c.instance,
+                bleedDamagePerTurn: Math.max(c.instance.bleedDamagePerTurn ?? 0, 3),
+                bleedTurnsRemaining: Math.max(c.instance.bleedTurnsRemaining ?? 0, 3),
+              },
             };
           }),
         };

@@ -359,3 +359,28 @@ describe('player-condition tick through endTurn', () => {
     expect(t2.state.log.some((l) => /shakes off the poison/.test(l.text))).toBe(true);
   });
 });
+
+describe('combat-end clears lingering player conditions', () => {
+  it('a debuff still active at the kill does not ride into the next fight', () => {
+    // The leak: a condition landed on the enemy's final turn used to persist on
+    // the character past victory and open the NEXT room's combat. clearEncounter
+    // Effects now wipes it at fight's end — but createCombat must keep it intact.
+    let proven = false;
+    for (let seed = 1; seed <= 200 && !proven; seed++) {
+      _resetMonsterInstanceCounter();
+      const roller = createDiceRoller(seed);
+      const poisoned = applyPlayerCondition(makeFighter(), { name: 'poisoned', rounds: 5 });
+      let init = createCombat({ roller, character: poisoned, monsters: [{ def: getDef('goblin') }] });
+      // Combat START honors the pre-applied condition (does not silently wipe it).
+      expect(init.character.conditions.some((c) => c.name === 'poisoned')).toBe(true);
+      const gid = monstersOf(init.state, 'goblin')[0].id;
+      init = { ...init, state: patchInstanceHp(init.state, 'goblin', 1) };
+      const r = playerAttack({ roller, character: init.character, state: init.state }, gid, 'longsword');
+      if (r.state.status === 'player-victory') {
+        expect(r.character.conditions).toEqual([]); // wiped at fight's end, not leaked
+        proven = true;
+      }
+    }
+    expect(proven).toBe(true);
+  });
+});

@@ -95,7 +95,10 @@ export const IRENICUS: Monster = MonsterSchema.parse({
           condition: 'frightened',
           saveDC: 21,
           saveAbility: 'wis',
-          durationRounds: 1,
+          // 2, not 1: player conditions tick at the START of the player's turn,
+          // so a 1-round fear applied on the boss turn expires before the player
+          // acts — inert. 2 = exactly one disadvantaged turn, like every other debuff.
+          durationRounds: 2,
           description:
             'The Slayer turns the ruin of Velnaris\'s face on you, and what looks out of it is older than him and older than you and is the single oldest thing in your blood — the murder that made you. Some animal floor of you that the soul-theft never reached recognises its maker and tries to run, and for a breath you cannot make yourself close with the thing wearing your father\'s purpose.',
         },
