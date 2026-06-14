@@ -149,12 +149,6 @@ describe('useDelveStore — basic CRUD', () => {
     useDelveStore.getState().markChapter1BossKilled();
     expect(useDelveStore.getState().delve?.chapter1BossKilled).toBe(true);
   });
-
-  it('concludeDelveAtCamp flips phase to completed', () => {
-    useDelveStore.setState({ delve: createGodwakeDelve(1) });
-    useDelveStore.getState().concludeDelveAtCamp();
-    expect(useDelveStore.getState().delve?.phase).toBe('completed');
-  });
 });
 
 describe('useCombatStore — basic CRUD', () => {

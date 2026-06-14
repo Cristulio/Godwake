@@ -50,9 +50,10 @@ function decorationForRoom(room: RoomSpec, chapterId: string): BattlefieldDecora
   }
   const roomId = room.id;
   // Legacy fallback for the old linear Godwake layout (fixed room-N ids). The
-  // branching delve sets `room.chapter` on every node, so the chapter switch
-  // above handles all six chapters and this id table is only reached if a node
-  // ever lacks a chapter tag.
+  // chapter switch above only carries bespoke art for chapters 1-6 (1-4 themed,
+  // 5-6 deliberately generic); chapters 7-14 and any untagged node fall through
+  // to this id table, which returns 'generic' for the branching delve's non-room-N
+  // ids until that later art exists.
   if (chapterId === 'godwake') {
     switch (roomId) {
       // Ch1 combat

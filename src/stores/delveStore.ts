@@ -464,7 +464,6 @@ interface DelveStoreState {
   abandonDelve: () => void;
   markChapter1BossKilled: () => void;
   creditChapterClearGold: (clearedChapter?: number) => void;
-  concludeDelveAtCamp: () => void;
   /** Resolve a camp choice. Returns null (rest grants no blessing). */
   pickCampChoice: (choice: 'rest') => string | null;
   /**
@@ -1162,9 +1161,6 @@ export const useDelveStore = create<DelveStoreState>()((set, get) => ({
     });
     set({ delve: { ...s.delve, goldEarned: s.delve.goldEarned + bonus } });
   },
-
-  concludeDelveAtCamp: () =>
-    set((s) => (s.delve ? { delve: { ...s.delve, phase: 'completed' } } : s)),
 
   pickCampChoice: (choice) => {
     const s = get();

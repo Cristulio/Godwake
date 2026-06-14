@@ -40,6 +40,9 @@ const SPELL_EFFECT_SFX: Partial<Record<SpellEffectKind, SfxId>> = {
   // attack path already sounds them via swingSfxForWeapon.
   'ki-charge': 'buff_surge',
   'stun-burst': 'spell_debuff',
+  // A martial DISRUPT landing (staggering strike topple) — the same control-took-
+  // hold cue as the monk's stun, so a knockdown is never silent.
+  'knockdown-burst': 'spell_debuff',
   // Enemy abilities.
   'enemy-summon': 'enemy_cast',
   'enemy-frenzy': 'boss_phase',
