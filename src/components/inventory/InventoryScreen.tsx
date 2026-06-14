@@ -307,7 +307,7 @@ export function InventoryScreen() {
                         label={t('screens.inventory.detailsAria', {
                           name: localizedItemName(ref),
                         })}
-                        className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
+                        className="flex items-center justify-center w-10 h-10 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
                         content={
                           <ItemTooltip
                             item={item}
@@ -468,7 +468,7 @@ export function InventoryScreen() {
                           label={t('screens.inventory.detailsAria', {
                             name: localizedItemName(ref),
                           })}
-                          className="flex items-center justify-center w-8 h-8 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
+                          className="flex items-center justify-center w-10 h-10 border border-[var(--color-border-warm)] bg-[var(--color-bg-deep)]/85 text-[var(--color-accent-amber)] text-sm leading-none"
                           content={
                             <ItemTooltip
                               item={item}
