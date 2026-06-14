@@ -92,6 +92,19 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
 
   const edges = useMemo(() => {
     const lines: Array<{ x1: number; y1: number; x2: number; y2: number; lit: boolean; open: boolean; locked: boolean }> = [];
+    // Clip every connector to the node-box edges (+ a small gap) so a line never
+    // penetrates a box — it springs from the rim of one and points at the rim of
+    // the next. Box half-extents: height is fixed (NODE), width grows a little with
+    // the label, so use a generous half-width; the gap keeps the touch airy.
+    const HALF_H = NODE / 2;
+    const HALF_W = NODE / 2 + 22;
+    const GAP = 7;
+    // Distance from a box centre to its rim along a unit direction (rectangle ray).
+    const rim = (ux: number, uy: number) =>
+      Math.min(
+        Math.abs(ux) < 1e-6 ? Infinity : HALF_W / Math.abs(ux),
+        Math.abs(uy) < 1e-6 ? Infinity : HALF_H / Math.abs(uy),
+      ) + GAP;
     for (const p of placed) {
       for (const nid of p.room.next ?? []) {
         const t = byId.get(nid);
@@ -99,7 +112,22 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
         const locked = !!t.room.locked;
         const open = !locked && p.room.id === current?.id && reachable.has(nid);
         const lit = visited.has(p.room.id) && visited.has(nid);
-        lines.push({ x1: p.cx, y1: p.cy, x2: t.cx, y2: t.cy, lit, open, locked });
+        const dx = t.cx - p.cx;
+        const dy = t.cy - p.cy;
+        const len = Math.hypot(dx, dy) || 1;
+        const ux = dx / len;
+        const uy = dy / len;
+        const sOut = rim(ux, uy);
+        const tOut = rim(ux, uy);
+        lines.push({
+          x1: p.cx + ux * sOut,
+          y1: p.cy + uy * sOut,
+          x2: t.cx - ux * tOut,
+          y2: t.cy - uy * tOut,
+          lit,
+          open,
+          locked,
+        });
       }
     }
     return lines;
@@ -202,10 +230,10 @@ export function DelveMap({ delve, character }: { delve: DelveState; character: C
                       ? 'var(--color-accent-gold)'
                       : 'var(--color-border-dim)'
                 }
-                strokeWidth={e.open ? 3.5 : e.lit ? 2.5 : 2}
-                strokeDasharray={e.locked ? '1 7' : e.open || e.lit ? undefined : '4 5'}
-                strokeLinecap={e.locked ? 'round' : undefined}
-                opacity={e.open ? 0.95 : e.lit ? 0.7 : e.locked ? 0.2 : 0.5}
+                strokeWidth={e.open ? 3.5 : e.lit ? 2.75 : 2.25}
+                strokeDasharray={e.open || e.lit ? undefined : e.locked ? '0.1 9' : '0.1 7'}
+                strokeLinecap="round"
+                opacity={e.open ? 0.95 : e.lit ? 0.75 : e.locked ? 0.22 : 0.5}
               />
             ))}
           </svg>
