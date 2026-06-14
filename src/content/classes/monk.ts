@@ -246,5 +246,39 @@ export const MONK: Class = ClassSchema.parse({
         ],
       },
     },
+    {
+      id: 'way-of-the-four-elements',
+      name: 'Way of the Four Elements',
+      description:
+        'The elemental tradition — the monk who bends Ki into raw element and hurls it across the room. Best with a Wisdom/Dexterity build that wants reach and crowds: where Open Hand and Shadow strike one foe, the Four Elements monk answers a whole rank at once with a gout of conjured fire. A ki-caster — fists when they close, a blast when they do not.',
+      bottomLine: {
+        archetype: 'Elementalist',
+        levers: [
+          'Elemental Burst (bonus action, 1 Ki): every foe takes a blast of elemental fire — Dexterity save for half.',
+          'It competes with Flurry for the bonus action and the Ki — single-target deluge OR room-wide blast.',
+          'L10: the burst deepens by a die, and the elements answer harder.',
+        ],
+      },
+      featuresByLevel: {
+        '3': [
+          {
+            id: 'elemental-burst',
+            name: 'Monastic Tradition: Four Elements',
+            description:
+              'You learn to spend Ki not on the fist but on the element behind it. As a bonus action you loose an Elemental Burst — a gout of conjured fire across the whole field, every enemy rolling a Dexterity save against your Ki or burning for it (half on a save). It is the deluge turned outward: where Flurry pours blows into one foe, the Burst answers the entire room. The monk who finally has an answer to a crowd.',
+            mechanicKey: 'elemental-burst',
+          },
+        ],
+        '10': [
+          {
+            id: 'elemental-mastery',
+            name: 'Elemental Mastery',
+            description:
+              'The elements no longer merely answer your call — they obey it. Your Elemental Burst rolls a die deeper, the conjured fire blooming hotter across the room than any lesser adept could hold. The whole field burns at your word, and the crowd that thought to swarm you is the kindling.',
+            mechanicKey: 'elemental-mastery',
+          },
+        ],
+      },
+    },
   ],
 });

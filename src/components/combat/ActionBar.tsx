@@ -17,7 +17,7 @@ import {
   MARTIAL_DEFENSE_COST,
 } from '../../engine/combat/martialResource';
 import { getItem } from '../../content/items';
-import { stunningStrikeKiCost, monkKitActive } from '../../engine/combat/monk';
+import { stunningStrikeKiCost, monkKitActive, ELEMENTAL_BURST_KI_COST } from '../../engine/combat/monk';
 import { bardActiveSongs, bardInspirationLeft, bardKnownSongs } from '../../engine/combat/bard';
 import { isPaladin, layOnHandsLeft, paladinHasSmiteSlot } from '../../engine/combat/paladin';
 import { slotsAt, canCastSpell } from '../../engine/combat/spells';
@@ -37,6 +37,7 @@ interface ActionBarProps {
   onFlurry: () => void;
   onPatientDefense: () => void;
   onStunningStrike: () => void;
+  onElementalBurst: () => void;
   onBardSong: (songId: BardSongId) => void;
   onLayOnHands: () => void;
   onDivineSmite: () => void;
@@ -61,6 +62,7 @@ export function ActionBar({
   onFlurry,
   onPatientDefense,
   onStunningStrike,
+  onElementalBurst,
   onBardSong,
   onLayOnHands,
   onDivineSmite,
@@ -263,6 +265,15 @@ export function ActionBar({
     ki >= stunningStrikeKiCost(character) &&
     !stunningArmed &&
     !character.actionEconomy.actionUsed;
+  const hasElementalBurst = isMonk && characterHasMechanic(character, 'elemental-burst');
+  const canElementalBurst =
+    playersTurn &&
+    active &&
+    hasElementalBurst &&
+    monkKitOn &&
+    ki >= ELEMENTAL_BURST_KI_COST &&
+    !character.actionEconomy.bonusActionUsed &&
+    !midMultiattack;
 
   // Bard Battle Songs: one is always playing — the whole known book renders as
   // buttons, the playing tune lit, the rest a switch away (bonus action + one
@@ -553,6 +564,17 @@ export function ActionBar({
             className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
           >
             {stunningArmed ? t('ui.combat.stunningOn') : t('ui.combat.stunningStrike')}
+          </Button>
+        )}
+        {hasElementalBurst && (
+          <Button
+            variant={canElementalBurst ? 'primary' : 'secondary'}
+            onClick={onElementalBurst}
+            disabled={!canElementalBurst}
+            title={kitDarkTitle ?? t('combat.bar.elementalBurst', { cost: ELEMENTAL_BURST_KI_COST })}
+            className="flex-1 basis-[calc(50%_-_0.25rem)] sm:basis-0 min-h-[44px] sm:min-h-0"
+          >
+            {t('ui.combat.elementalBurst', { n: ki })}
           </Button>
         )}
 

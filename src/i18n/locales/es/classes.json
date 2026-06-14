@@ -813,6 +813,22 @@
     "name": "Manto de Sombras",
     "description": "Vistes la oscuridad como una segunda piel. El golpe de apertura que lanzas desde la sombra inflige aún más ruina cargada de Ki —el primer golpe invisible de cada combate pega más fuerte que nunca, la apertura más certera del camino de la mano vacía."
   },
+  "monk.way-of-the-four-elements": {
+    "name": "Senda de los Cuatro Elementos",
+    "description": "La tradición elemental —el monje que dobla el Ki en elemento puro y lo arroja a través de la sala. Mejor con una construcción de Sabiduría/Destreza que quiera alcance y multitudes: donde Mano Abierta y Sombra golpean a un solo enemigo, el monje de los Cuatro Elementos responde a una fila entera de una vez con una llamarada conjurada. Un lanzador de Ki —puños cuando se acercan, un estallido cuando no.",
+    "archetype": "Elementalista",
+    "lever0": "Estallido Elemental (acción adicional, 1 Ki): cada enemigo recibe una llamarada de fuego elemental — salvación de Destreza para la mitad.",
+    "lever1": "Compite con la Ráfaga por la acción adicional y el Ki — diluvio a un objetivo O estallido en toda la sala.",
+    "lever2": "Nivel 10: el estallido gana un dado, y los elementos responden con más fuerza."
+  },
+  "monk.way-of-the-four-elements.elemental-burst": {
+    "name": "Tradición Monástica: Cuatro Elementos",
+    "description": "Aprendes a gastar el Ki no en el puño sino en el elemento que hay tras él. Como acción adicional sueltas un Estallido Elemental —una llamarada de fuego conjurado por todo el campo, cada enemigo tirando una salvación de Destreza contra tu Ki o ardiendo por ello (mitad si salva). Es el diluvio vuelto hacia afuera: donde la Ráfaga vierte golpes en un solo enemigo, el Estallido responde a la sala entera. El monje que por fin tiene una respuesta para una multitud."
+  },
+  "monk.way-of-the-four-elements.elemental-mastery": {
+    "name": "Maestría Elemental",
+    "description": "Los elementos ya no se limitan a responder a tu llamada —la obedecen. Tu Estallido Elemental tira un dado más hondo, el fuego conjurado floreciendo más caliente por la sala de lo que cualquier adepto menor podría sostener. El campo entero arde a tu palabra, y la multitud que pensó rodearte es la yesca."
+  },
   "bard": {
     "name": "Bardo",
     "characterName": "Sylvaine Plañidera",

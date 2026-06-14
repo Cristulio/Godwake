@@ -35,6 +35,7 @@ import {
   applyPlannedAction,
 } from '../../engine/combat';
 import { buildPostmortem } from '../../engine/combat/postmortem';
+import { useElementalBurst } from '../../engine/combat/fourElements';
 import { getSpell } from '../../content/spells';
 import { ItemPicker } from './ItemPicker';
 import { CombatLog } from './CombatLog';
@@ -649,6 +650,13 @@ export function CombatScreen({
     setCombat(result.state);
   }
 
+  function handleElementalBurst() {
+    cancelTargeting();
+    const result = useElementalBurst({ character, state });
+    setCharacter(result.character);
+    setCombat(result.state);
+  }
+
   function handleBardSong(songId: BardSongId) {
     cancelTargeting();
     const result = startBardSong({ character, state }, songId);
@@ -924,6 +932,7 @@ export function CombatScreen({
             onFlurry={handleFlurry}
             onPatientDefense={handlePatientDefense}
             onStunningStrike={handleStunningStrike}
+            onElementalBurst={handleElementalBurst}
             onBardSong={handleBardSong}
             onLayOnHands={handleLayOnHands}
             onDivineSmite={handleDivineSmite}
