@@ -24,7 +24,12 @@ const ARCHETYPES: Record<string, { first: string; byId: Record<string, string> }
   },
   wizard: {
     first: 'evocation',
-    byId: { evocation: 'sculpt-spells', abjuration: 'abjurer', illusion: 'illusionist' },
+    byId: {
+      evocation: 'sculpt-spells',
+      abjuration: 'abjurer',
+      illusion: 'illusionist',
+      necromancy: 'grim-harvest',
+    },
   },
   barbarian: {
     first: 'berserker',
@@ -36,6 +41,31 @@ const ARCHETYPES: Record<string, { first: string; byId: Record<string, string> }
       hunter: 'colossus-slayer',
       'horde-breaker': 'horde-breaker',
       'giant-killer': 'giant-killer',
+      'blade-dancer': 'dual-wielder',
+    },
+  },
+  paladin: {
+    first: 'radiant',
+    byId: {
+      radiant: 'radiant-smite',
+      bulwark: 'aura-of-the-bulwark',
+      vengeance: 'vow-of-enmity',
+    },
+  },
+  bard: {
+    first: 'lore',
+    byId: {
+      lore: 'cutting-words',
+      valor: 'martial-training',
+      whispers: 'words-of-terror',
+    },
+  },
+  monk: {
+    first: 'way-of-the-open-hand',
+    byId: {
+      'way-of-the-open-hand': 'open-hand-technique',
+      'way-of-shadow': 'shadow-strike',
+      'way-of-the-four-elements': 'elemental-burst',
     },
   },
 };

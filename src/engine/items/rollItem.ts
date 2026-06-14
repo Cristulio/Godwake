@@ -284,6 +284,7 @@ export function affixDominance(affix: Affix): number {
     (m.markDamageBonus ?? 0) +
     (m.sneakDamageBonus ?? 0) +
     (m.followupDamageBonus ?? 0) +
+    (m.offHandDamageBonus ?? 0) +
     (m.lifestealPct ?? 0) +
     (m.spellLifestealPct ?? 0) +
     (m.bleedDamage ?? 0) +

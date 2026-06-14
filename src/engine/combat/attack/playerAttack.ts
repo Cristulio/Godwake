@@ -1072,9 +1072,21 @@ function resolveSwing(
     );
     const weaponTypeDamage = totalDamage - offTypeDamage;
 
+    const targetBeforeHit = nextState.combatants.find((c) => c.id === targetId);
+    const hpBeforeHit =
+      targetBeforeHit?.kind === 'monster' ? targetBeforeHit.instance.hp.current : 0;
     const damaged = applyDamage(nextState, targetId, totalDamage, nextCharacter);
     nextState = damaged.state;
     nextCharacter = damaged.character;
+    // Actual HP this swing removed — POST boss-ward-gate and POST overkill. Lifesteal
+    // drinks off this, not the rolled total, so a ward-held boss denies sustain the
+    // same way it denies a spell's drink (dispatch.ts diffs HP identically). Phantom
+    // sustain off a gated/overkilled hit was a real exploit for vampiric dual-wielders.
+    const targetAfterHit = nextState.combatants.find((c) => c.id === targetId);
+    const dealtToTarget = Math.max(
+      0,
+      hpBeforeHit - (targetAfterHit?.kind === 'monster' ? targetAfterHit.instance.hp.current : 0),
+    );
     // Surface the full pre-clamp damage on the attack event so the floating
     // combat number reads true even when the hit overkills the target's HP.
     if (nextState.lastAttack && nextState.lastAttack.id === attackEvent.id) {
@@ -1151,8 +1163,9 @@ function resolveSwing(
     ) {
       const healed = ragedHealAmount(
         nextCharacter,
-        // A tiny pct on a small hit floors to 0 — a vampiric weapon always drinks at least 1.
-        Math.max(1, Math.floor((totalDamage * affixMods.lifestealPct) / 100)),
+        // Drink off the HP actually spilled (post-gate, post-overkill), not the rolled
+        // total — a vampiric weapon always drinks at least 1 when the blow drew blood.
+        dealtToTarget > 0 ? Math.max(1, Math.floor((dealtToTarget * affixMods.lifestealPct) / 100)) : 0,
       );
       if (healed > 0) {
         const before = nextCharacter.hp.current;

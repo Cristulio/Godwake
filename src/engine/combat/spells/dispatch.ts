@@ -52,7 +52,14 @@ export function castSpell(ctx: CastSpellContext): CastResult {
   const result = runCast(ctx);
   if (!result.cast) return result;
   const drunk = applySpellLifesteal(result, hpBefore);
-  return { ...drunk, state: markPlayerLog(drunk.state, beforeLog) };
+  // Sealed Wards strips blessings inside runCast for the cast's mod-reads ONLY.
+  // That stripped view must never persist — restore the caster's real blessings
+  // onto the returned character, or a single cast under the seal wipes them for
+  // the rest of the run (the persisted delve character is committed downstream).
+  const character = ctx.state.blessingsSealed
+    ? { ...drunk.character, blessings: ctx.character.blessings }
+    : drunk.character;
+  return { ...drunk, character, state: markPlayerLog(drunk.state, beforeLog) };
 }
 
 /** Live monster HP keyed by combatant id — the pre-cast baseline the vamp diff reads. */

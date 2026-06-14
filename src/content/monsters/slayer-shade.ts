@@ -14,7 +14,7 @@ export const SLAYER_SHADE: Monster = MonsterSchema.parse({
   name: 'Slayer-Shade',
   cr: '10',
   size: 'medium',
-  creatureType: 'fiend (bhaal-echo)',
+  creatureType: 'fiend (slain-god echo)',
   ac: 18,
   maxHp: 164,
   speed: 40,

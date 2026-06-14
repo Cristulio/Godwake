@@ -12,7 +12,7 @@ export const BHAAL_ESSENCE_MOTE: Monster = MonsterSchema.parse({
   name: 'God-Essence Mote',
   cr: '12',
   size: 'medium',
-  creatureType: 'fiend (bhaalspawn-essence)',
+  creatureType: 'fiend (slain-god essence)',
   ac: 19,
   maxHp: 180,
   speed: 30,

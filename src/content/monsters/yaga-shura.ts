@@ -28,7 +28,7 @@ export const YAGA_SHURA: Monster = MonsterSchema.parse({
   name: 'Hargan-Vor',
   cr: '16',
   size: 'huge',
-  creatureType: 'giant (bhaalspawn)',
+  creatureType: 'giant (slain-god scion)',
   ac: 22,
   maxHp: 390,
   speed: 40,

@@ -13,7 +13,7 @@ export const GROMNIR_DEFENDER: Monster = MonsterSchema.parse({
   name: "Brogmar's Defender",
   cr: '12',
   size: 'medium',
-  creatureType: 'humanoid (bhaalspawn)',
+  creatureType: 'humanoid (slain-god scion)',
   ac: 20,
   maxHp: 230,
   speed: 30,
