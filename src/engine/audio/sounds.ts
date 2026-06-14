@@ -2095,8 +2095,9 @@ const BROOD_LEAD = mel([
   // everything else is good") — pure D natural minor, no Eb/B/C#/Ab creep.
   // Bars 1-2: descend, low and brooding — pure D natural minor.
   ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1.5], ['Bb3', 0.5], ['A3', 1], ['G3', 1], ['A3', 1], [null, 1],
-  // Bars 3-4: a tense diatonic rise to the b3, leaning on the b6, then sinking back.
-  ['A3', 0.5], ['Bb3', 0.5], ['C4', 0.5], ['D4', 0.5], ['F4', 1], ['E4', 1], ['D4', 1.5], ['C4', 1], [null, 1.5],
+  // Bars 3-4: LEAP up to the peak (A→D→F — no stepwise "stair"; owner flagged the old
+  // A-Bb-C-D climb as awful), then a grim stepwise sink back.
+  ['A3', 1], ['D4', 1], ['F4', 1], ['E4', 1], ['D4', 1.5], ['C4', 0.5], ['A3', 1], [null, 1],
   // Bars 5-6: descend to the floor and end UNRESOLVED on the 5th (A) — not safe.
   ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 1], ['G3', 0.5], ['F3', 0.5], ['G3', 1], ['A3', 1.5], [null, 1.5],
 ]);
@@ -2216,10 +2217,13 @@ const STALK_LEAD = mel([
   // just stalks with intent.
   ['A3', 1.5], ['E4', 0.5], ['D4', 1], ['C4', 1],
   ['D4', 1], ['E4', 1], ['A3', 2],
-  ['C4', 1.5], ['D4', 0.5], ['E4', 1], ['G4', 1],
+  // De-goofed: was a dotted lilt + stepwise rise (C-D-E) — now even leaps.
+  ['C4', 1], ['E4', 1], ['D4', 1], ['G4', 1],
   ['F4', 1], ['E4', 1], ['D4', 2],
   ['E4', 1], ['G4', 1], ['F4', 1], ['D4', 1],
-  ['D4', 1.5], ['E4', 0.5], ['G4', 1], ['E4', 1],
+  // De-goofed (~10s, owner: "super stupid"): was a dotted lilt + E-G-E wobble — now a
+  // steady grim descent.
+  ['F4', 1], ['E4', 1], ['D4', 1], ['C4', 1],
   ['D4', 1], ['C4', 1], ['B3', 1], ['C4', 1],
   ['A3', 2], ['E4', 1], ['A3', 1],
 ]);
