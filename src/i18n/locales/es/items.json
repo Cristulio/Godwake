@@ -431,6 +431,57 @@
   "pilgrim-sandals": {
     "name": "Sandalias del Peregrino"
   },
+  "warlord-blade": {
+    "name": "Espada del Caudillo"
+  },
+  "warlord-bulwark": {
+    "name": "Broquel del Caudillo"
+  },
+  "warlord-plate": {
+    "name": "Placas del Caudillo"
+  },
+  "warlord-greathelm": {
+    "name": "Gran Yelmo del Caudillo"
+  },
+  "warlord-torc": {
+    "name": "Torque del Caudillo"
+  },
+  "warlord-ring-command": {
+    "name": "Anillo de Mando del Caudillo"
+  },
+  "warlord-ring-war": {
+    "name": "Anillo de Guerra del Caudillo"
+  },
+  "warlord-warbelt": {
+    "name": "Cinturón de Guerra del Caudillo"
+  },
+  "warlord-sabatons": {
+    "name": "Escarpes del Caudillo"
+  },
+  "ruinhide-fang": {
+    "name": "Colmillo del Despojo"
+  },
+  "ruinhide-band": {
+    "name": "Anillo del Despojo"
+  },
+  "ruinhide-girdle": {
+    "name": "Faja del Despojo"
+  },
+  "ruinhide-treads": {
+    "name": "Botas del Despojo"
+  },
+  "nightveil-cowl": {
+    "name": "Capucha del Velo Nocturno"
+  },
+  "nightveil-pendant": {
+    "name": "Colgante del Velo Nocturno"
+  },
+  "nightveil-ring": {
+    "name": "Anillo del Velo Nocturno"
+  },
+  "nightveil-treads": {
+    "name": "Botas del Velo Nocturno"
+  },
   "warsong-gauntlet": {
     "name": "Guantelete del Canto de Guerra"
   },

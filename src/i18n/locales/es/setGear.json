@@ -50,6 +50,42 @@
   "pilgrim-cincture": { "name": "Ceñidor del Peregrino", "effect": "Cúrate el 3% del daño que inflijas" },
   "pilgrim-sandals": { "name": "Sandalias del Peregrino", "effect": "+1 a la CA" },
 
+  "warlord": { "name": "Panoplia del Caudillo", "flavor": "El equipo de guerra completo de un comandante rompefilas: cada pieza puesta, nada al azar." },
+  "warlord.bonus": {
+    "3": "3 piezas: +2 de daño de arma en cada golpe",
+    "6": "6 piezas: +6 PG temporales por combate y +1 a las tiradas de ataque",
+    "9": "9 piezas: los críticos aciertan con 19-20, +4 de daño de seguimiento y +2 a la CA"
+  },
+  "warlord-blade": { "name": "Espada del Caudillo", "effect": "+2 de daño de arma en cada golpe" },
+  "warlord-bulwark": { "name": "Broquel del Caudillo", "effect": "+1 a la CA" },
+  "warlord-plate": { "name": "Placas del Caudillo", "effect": "Gana 6 PG temporales al inicio de cada combate" },
+  "warlord-greathelm": { "name": "Gran Yelmo del Caudillo", "effect": "Los críticos aciertan con 19-20" },
+  "warlord-torc": { "name": "Torque del Caudillo", "effect": "+3 de daño de seguimiento" },
+  "warlord-ring-command": { "name": "Anillo de Mando del Caudillo", "effect": "+1 a las tiradas de ataque" },
+  "warlord-ring-war": { "name": "Anillo de Guerra del Caudillo", "effect": "+2 de daño de arma en cada golpe" },
+  "warlord-warbelt": { "name": "Cinturón de Guerra del Caudillo", "effect": "Gana 4 PG temporales al inicio de cada combate" },
+  "warlord-sabatons": { "name": "Escarpes del Caudillo", "effect": "+1 a la CA" },
+
+  "ruinhide": { "name": "Arnés del Despojo", "flavor": "Pellejo de trofeo y hueso de bestia, ceñidos para llevar la furia al combate." },
+  "ruinhide.bonus": {
+    "2": "2 piezas: +3 de daño cuerpo a cuerpo mientras arde la Furia",
+    "4": "4 piezas: +4 de daño de sangrado y cúrate el 5% del daño que inflijas"
+  },
+  "ruinhide-fang": { "name": "Colmillo del Despojo", "effect": "+3 de daño cuerpo a cuerpo mientras arde la Furia" },
+  "ruinhide-band": { "name": "Anillo del Despojo", "effect": "Tus golpes desgarran con +3 de daño de sangrado" },
+  "ruinhide-girdle": { "name": "Faja del Despojo", "effect": "Cúrate el 4% del daño que inflijas" },
+  "ruinhide-treads": { "name": "Botas del Despojo", "effect": "Gana 5 PG temporales al inicio de cada combate" },
+
+  "nightveil": { "name": "Atuendo del Velo Nocturno", "flavor": "El equipo silencioso de un asesino al que no se ve hasta que la hoja ya está dentro." },
+  "nightveil.bonus": {
+    "2": "2 piezas: +1 a las tiradas de ataque",
+    "4": "4 piezas: los críticos aciertan con 19-20 y +4 de daño de ataque furtivo"
+  },
+  "nightveil-cowl": { "name": "Capucha del Velo Nocturno", "effect": "+3 de daño de ataque furtivo" },
+  "nightveil-pendant": { "name": "Colgante del Velo Nocturno", "effect": "Los críticos aciertan con 19-20" },
+  "nightveil-ring": { "name": "Anillo del Velo Nocturno", "effect": "+1 a las tiradas de ataque" },
+  "nightveil-treads": { "name": "Botas del Velo Nocturno", "effect": "+2 de daño de ataque furtivo" },
+
   "warsong": { "name": "Panoplia del Canto de Guerra", "flavor": "Las galas de un caudillo, forjadas para quienes encabezan la carga." },
   "warsong.bonus": {
     "2": "2 piezas: los críticos aciertan con 19-20, +2 de daño de seguimiento"
