@@ -157,6 +157,9 @@ function renderStats(item: Item, t: TFn, rolledCost?: number, rolled?: RolledIte
       rows.push([t('screens.itemTooltip.stat.acBonus'), `+${item.baseAC + enh}`]);
     } else if (item.category === 'robe') {
       rows.push([t('screens.itemTooltip.stat.armour'), t('screens.itemTooltip.noneCaster')]);
+    } else if (item.category === 'orb') {
+      // An orb is a caster focus with no armour value — show that, not "Base AC: 0".
+      rows.push([t('screens.itemTooltip.stat.armour'), t('screens.itemTooltip.orbNoAc')]);
     } else {
       rows.push([t('screens.itemTooltip.stat.baseAc'), String(item.baseAC + enh)]);
       if (enh > 0) rows.push([t('screens.itemTooltip.stat.enhancement'), t('screens.itemTooltip.enhAc', { n: enh })]);

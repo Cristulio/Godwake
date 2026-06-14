@@ -218,7 +218,6 @@ interface GameState {
   abandonDelve: () => void;
   markChapter1BossKilled: () => void;
   creditChapterClearGold: () => void;
-  concludeDelveAtCamp: () => void;
   pickCampChoice: (choice: 'rest') => string | null;
   pickRestChoice: (choice: 'rest' | 'hone', slot?: EquipSlot) => boolean;
   pickEliteChoice: (choice: 'fight' | 'gold') => void;
@@ -925,8 +924,6 @@ export const useGameStore = create<GameState>()(
           useDelveStore.getState().markChapter1BossKilled(),
         creditChapterClearGold: () =>
           useDelveStore.getState().creditChapterClearGold(),
-        concludeDelveAtCamp: () =>
-          useDelveStore.getState().concludeDelveAtCamp(),
         pickCampChoice: (choice) =>
           useDelveStore.getState().pickCampChoice(choice),
         pickRestChoice: (choice, slot) =>
