@@ -354,6 +354,10 @@
     "word": "Infalible",
     "effect": "+1 a las tiradas de ataque con arma."
   },
+  "paired": {
+    "word": "del Filo Gemelo",
+    "effect": "+3 de daño en cada golpe con la mano torpe (solo doble empuñadura)."
+  },
   "crystal-orb": {
     "name": "Orbe de Cristal"
   },

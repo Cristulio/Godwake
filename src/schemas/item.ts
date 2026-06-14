@@ -244,6 +244,8 @@ export const AffixModifiersSchema = z
     sneakDamageBonus: z.number().optional(),
     /** Class-flavoured (Fighter): extra damage on each follow-up swing of a multiattack. */
     followupDamageBonus: z.number().optional(),
+    /** Dual-wield reward: extra damage on each off-hand follow-swing (dead without a second weapon). */
+    offHandDamageBonus: z.number().optional(),
     /** Heal the player for this many HP at the start of each of their next 3 turns (DOT heal). */
     regenPerTurn: z.number().optional(),
   })

@@ -119,6 +119,7 @@ const PART_KEY: Record<string, string> = {
   Quarry: 'quarry',
   vow: 'vow',
   rend: 'rend',
+  paired: 'paired',
   song: 'song',
   oil: 'oil',
 };
@@ -864,6 +865,14 @@ function resolveSwing(
     if (affixMods.followupDamageBonus > 0 && (state.playerAttacksThisTurn ?? 0) >= 1) {
       bonusDamage += affixMods.followupDamageBonus;
       onTypeParts.push({ amount: affixMods.followupDamageBonus, label: 'Relentless' });
+    }
+    // Paired (dual-wield gear): extra damage on the off-hand follow-swing — dead
+    // weight unless you fight with two weapons. swingAffixMods already scopes this
+    // to the off-hand's own affix view, and the isOffHandSwing gate keeps it off
+    // main-hand strikes, so it only ever pays the wielder of a second blade.
+    if (isOffHandSwing && affixMods.offHandDamageBonus > 0) {
+      bonusDamage += affixMods.offHandDamageBonus;
+      onTypeParts.push({ amount: affixMods.offHandDamageBonus, label: 'paired' });
     }
     // Vow reroll is already baked into the dice total — a note, not a summand,
     // or the breakdown would double-count it.

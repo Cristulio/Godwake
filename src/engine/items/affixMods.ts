@@ -33,6 +33,7 @@ export interface AffixMods {
   markDamageBonus: number;
   sneakDamageBonus: number;
   followupDamageBonus: number;
+  offHandDamageBonus: number;
   resists: DamageType[];
 }
 
@@ -57,6 +58,7 @@ function emptyAffixMods(): AffixMods {
     markDamageBonus: 0,
     sneakDamageBonus: 0,
     followupDamageBonus: 0,
+    offHandDamageBonus: 0,
     resists: [],
   };
 }
@@ -108,6 +110,7 @@ function applyAffixModifiers(acc: AffixMods, m: AffixModifiers, scale = 1): void
   acc.markDamageBonus += scaleAffixMagnitude(m.markDamageBonus ?? 0, scale);
   acc.sneakDamageBonus += scaleAffixMagnitude(m.sneakDamageBonus ?? 0, scale);
   acc.followupDamageBonus += scaleAffixMagnitude(m.followupDamageBonus ?? 0, scale);
+  acc.offHandDamageBonus += scaleAffixMagnitude(m.offHandDamageBonus ?? 0, scale);
   if (m.resist && !acc.resists.includes(m.resist)) acc.resists.push(m.resist);
 }
 
