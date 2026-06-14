@@ -24,6 +24,7 @@ class FakeParam {
 class FakeNode {
   gain = new FakeParam();
   frequency = new FakeParam();
+  detune = new FakeParam();
   Q = new FakeParam();
   delayTime = new FakeParam();
   type = '';

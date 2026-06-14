@@ -1518,12 +1518,28 @@ function makeDrone(
   freqs: Array<{ hz: number; type: OscillatorType; level: number }>,
   lowpassHz: number,
   lfo?: { hz: number; depth: number },
+  opts?: {
+    /** Split each voice into a ±(cents/2) detuned pair for slow chorusing beat —
+     *  the warmth/shimmer that turns a dead test-tone into a living horn. */
+    chorusCents?: number;
+    /** Fade the whole drone in over this many seconds instead of slamming on —
+     *  a horn swells into the room, it does not just exist. */
+    swellS?: number;
+  },
 ): Fixture {
   // Breathing master gain: the drone ebbs and swells over ~22s instead of
   // sitting as one flat, constant tone (the monotone, fatiguing "horn"). A lower
   // base level also pushes it further back in the mix.
   const master = ctx.createGain();
-  master.gain.value = 0.8;
+  const t0 = ctx.currentTime;
+  const swellS = opts?.swellS ?? 0;
+  if (swellS > 0) {
+    // Base level ramps 0 -> 0.8; the breath LFOs sum on top of this timeline.
+    master.gain.setValueAtTime(0, t0);
+    master.gain.linearRampToValueAtTime(0.8, t0 + swellS);
+  } else {
+    master.gain.value = 0.8;
+  }
   master.connect(out);
   const breath = ctx.createOscillator();
   breath.type = 'sine';
@@ -1532,13 +1548,22 @@ function makeDrone(
   breathDepth.gain.value = 0.2;
   breath.connect(breathDepth).connect(master.gain);
   breath.start();
+  // A second, slower breath at an incommensurate rate so the swell never settles
+  // into one audible period — the difference between "alive" and "an LFO".
+  const breath2 = ctx.createOscillator();
+  breath2.type = 'sine';
+  breath2.frequency.value = 0.029;
+  const breath2Depth = ctx.createGain();
+  breath2Depth.gain.value = 0.1;
+  breath2.connect(breath2Depth).connect(master.gain);
+  breath2.start();
 
   const filter = ctx.createBiquadFilter();
   filter.type = 'lowpass';
   filter.frequency.value = lowpassHz;
   filter.Q.value = 0.9;
   filter.connect(master);
-  const stops: Array<() => void> = [() => breath.stop()];
+  const stops: Array<() => void> = [() => breath.stop(), () => breath2.stop()];
   if (lfo) {
     const l = ctx.createOscillator();
     l.type = 'sine';
@@ -1549,15 +1574,23 @@ function makeDrone(
     l.start();
     stops.push(() => l.stop());
   }
+  const chorus = opts?.chorusCents ?? 0;
   for (const f of freqs) {
-    const o = ctx.createOscillator();
-    o.type = f.type;
-    o.frequency.value = f.hz;
-    const g = ctx.createGain();
-    g.gain.value = f.level;
-    o.connect(g).connect(filter);
-    o.start();
-    stops.push(() => o.stop());
+    // Each voice is one osc, or a ±(chorus/2)-cent pair that beats slowly for
+    // warmth. The pair splits the level so total energy stays put.
+    const detunes = chorus > 0 ? [chorus / 2, -chorus / 2] : [0];
+    const voiceLevel = chorus > 0 ? f.level * 0.55 : f.level;
+    for (const dt of detunes) {
+      const o = ctx.createOscillator();
+      o.type = f.type;
+      o.frequency.value = f.hz;
+      if (dt !== 0) o.detune.value = dt;
+      const g = ctx.createGain();
+      g.gain.value = voiceLevel;
+      o.connect(g).connect(filter);
+      o.start();
+      stops.push(() => o.stop());
+    }
   }
   return {
     stop: () => {
@@ -1736,6 +1769,9 @@ const TITLE_SPEC: SongSpec = {
       ],
       760, // darker — the horn sits warm and far back, no longer a flat blare
       { hz: 0.05, depth: 220 },
+      // The lone title voice gets the widest chorus and a long swell-in: the horn
+      // breathes into the dark instead of being switched on.
+      { chorusCents: 8, swellS: 3.5 },
     );
     return {
       input: echo.input,
@@ -1814,18 +1850,20 @@ const HUB_SPEC: SongSpec = {
   trim: 1.19,
   setup: (ctx, out) => {
     const echo = makeEcho(ctx, out, 0.42, 0.3, 0.26);
-    const wind = makeWind(ctx, out, 380, 0.09);
+    // (Wind removed — owner: the noise-wash "waterfall" covered everything.)
     const drone = makeDrone(
       ctx, out,
       [{ hz: midiHz(midi('A1')), type: 'sine', level: 0.07 }],
       640, // warmer, the lone fire deeper in the dark
       { hz: 0.06, depth: 150 },
+      // A single sine reads deadest of all — give it a detuned twin to beat
+      // against, and let the fire's drone swell up rather than snap on.
+      { chorusCents: 6, swellS: 3 },
     );
     return {
       input: echo.input,
       stop: () => {
         echo.stop();
-        wind.stop();
         drone.stop();
       },
     };
@@ -1932,14 +1970,16 @@ const GROVE_SPEC: SongSpec = {
       ],
       700, // warmer, darker forest floor
       { hz: 0.045, depth: 200 },
+      // Both grove voices beat gently against detuned twins — the green air
+      // shimmers rather than hums.
+      { chorusCents: 6, swellS: 3 },
     );
-    const wind = makeWind(ctx, out, 620, 0.05);
+    // (Wind removed — owner: the noise-wash "waterfall" covered everything.)
     return {
       input: echo.input,
       stop: () => {
         echo.stop();
         drone.stop();
-        wind.stop();
       },
     };
   },
@@ -2101,15 +2141,16 @@ const BROOD_BASS_BARS: ParsedStep[][] = [
 ];
 
 const BROOD_LEAD = mel([
-  // Bars 1-2: the rising D-minor call.
-  ['D4', 0.5], ['F4', 0.5], ['A4', 0.5], ['D5', 1], ['C5', 0.5], ['A4', 1],
-  ['F4', 0.5], ['A4', 0.5], ['C5', 0.5], ['A4', 1.5], [null, 1],
-  // Bars 3-4: the answer turns down through Bb — grief with its teeth out.
-  ['D4', 0.5], ['F4', 0.5], ['Bb4', 0.5], ['D5', 1], ['C5', 0.5], ['A4', 1],
-  ['F4', 0.5], ['G4', 0.5], ['F4', 0.5], ['D4', 1.5], [null, 1],
-  // Bars 5-6: the call again, higher tension.
-  ['D4', 0.5], ['F4', 0.5], ['A4', 0.5], ['D5', 1], ['E5', 0.5], ['D5', 1],
-  ['C5', 0.5], ['A4', 0.5], ['F4', 0.5], ['D4', 1.5], [null, 1],
+  // Darkened (owner: "too happy/peppy"): the old rising D-minor arpeggio read like
+  // a fanfare. This is a HEAVY DESCENT — lower register, longer notes, the phrygian
+  // Eb grinding down onto the tonic — dread, not heroism. The driving bass + drums
+  // carry the combat energy; the lead broods over them.
+  // Bars 1-2: the descent, Eb b2 leaning onto D.
+  ['D4', 1], ['C4', 0.5], ['Bb3', 0.5], ['A3', 2], ['Eb4', 1], ['D4', 2], [null, 1],
+  // Bars 3-4: lower and grieving — down to the floor at F3, a slow climb back.
+  ['A3', 1], ['Bb3', 0.5], ['A3', 0.5], ['F3', 2], ['G3', 1], ['A3', 2], [null, 1],
+  // Bars 5-6: a strained climb that never reaches triumph — it sinks to the low tonic.
+  ['D4', 1], ['E4', 0.5], ['F4', 0.5], ['G4', 1], ['F4', 0.5], ['E4', 0.5], ['D4', 1], ['A3', 1], [null, 2],
 ]);
 
 const BROOD_STAB_CHORDS = [
@@ -2122,8 +2163,10 @@ const BROOD_CORE_DEF: CombatCoreDef = {
   bpm: 132,
   rootMidi: midi('D2'),
   drone: (root) => [
-    { hz: midiHz(root - 12), type: 'sawtooth', level: 0.05 },
-    { hz: midiHz(root - 12) * 1.006, type: 'sawtooth', level: 0.05 },
+    // Triangle warmth carries the drone, a reduced sawtooth keeps an edge of grit —
+    // the buzzy brass "horn" turned grim/warm (owner liked these synths).
+    { hz: midiHz(root - 12), type: 'triangle', level: 0.055 },
+    { hz: midiHz(root - 12) * 1.006, type: 'sawtooth', level: 0.03 },
     { hz: midiHz(root - 5), type: 'sine', level: 0.04 },
   ],
   droneLowpass: 330,
@@ -2192,7 +2235,8 @@ const BROOD_CORE_DEF: CombatCoreDef = {
             ['D5', 0.25], ['F5', 0.25], ['Bb5', 0.25], ['F5', 0.25],
           ]),
           t0 + bar * barS, beatS,
-          { level: 0.032, type: 'square', sustain: 0.5, semitones: semi },
+          // Dimmed (owner: less peppy) — a faint ghost, not a bright sparkle.
+          { level: 0.016, type: 'square', sustain: 0.5, semitones: semi },
         );
       }
     }
@@ -2229,8 +2273,9 @@ const STALK_CORE_DEF: CombatCoreDef = {
   bpm: 120,
   rootMidi: midi('A2'),
   drone: (root) => [
-    { hz: midiHz(root - 12), type: 'sawtooth', level: 0.045 },
-    { hz: midiHz(root - 11), type: 'sawtooth', level: 0.035 },
+    // Triangle warmth + a faint dissonant sawtooth for unease (the liked synths).
+    { hz: midiHz(root - 12), type: 'triangle', level: 0.05 },
+    { hz: midiHz(root - 11), type: 'sawtooth', level: 0.022 },
     { hz: midiHz(root), type: 'sine', level: 0.03 },
   ],
   droneLowpass: 380,
@@ -2295,8 +2340,9 @@ const SURGE_CORE_DEF: CombatCoreDef = {
   bpm: 132,
   rootMidi: midi('E2'),
   drone: (root) => [
-    { hz: midiHz(root - 12), type: 'sawtooth', level: 0.045 },
-    { hz: midiHz(root - 12) * 1.007, type: 'sawtooth', level: 0.045 },
+    // Triangle warmth carries it, reduced sawtooth keeps an edge (the liked synths).
+    { hz: midiHz(root - 12), type: 'triangle', level: 0.05 },
+    { hz: midiHz(root - 12) * 1.007, type: 'sawtooth', level: 0.028 },
     { hz: midiHz(root + 7 - 12), type: 'sine', level: 0.03 },
   ],
   droneLowpass: 420,
