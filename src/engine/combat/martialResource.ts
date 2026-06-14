@@ -74,8 +74,14 @@ export function isMartialClass(character: Readonly<Character>): boolean {
  */
 export function martialPoolMax(character: Readonly<Character>): number {
   if (!isMartialClass(character)) return 0;
-  // Battle Master Tactical Reserve (L10): one deeper point of Resolve.
-  return MARTIAL_POOL_MAX + (characterHasMechanic(character as Character, 'tactical-reserve') ? 1 : 0);
+  // Battle Master Tactical Reserve (L10): one deeper point of Resolve. The
+  // Grove's martial node (permanentBonuses.martialPool) deepens the well further.
+  const grove = character.permanentBonuses?.martialPool ?? 0;
+  return (
+    MARTIAL_POOL_MAX +
+    (characterHasMechanic(character as Character, 'tactical-reserve') ? 1 : 0) +
+    grove
+  );
 }
 
 /**

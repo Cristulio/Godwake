@@ -501,17 +501,27 @@ describe('rollBlessingOptions — real pool', () => {
     }
   });
 
-  it('ships exactly two crit-range blessings (crit tops out at +2 from blessings)', async () => {
+  it('ships exactly two UNCONDITIONAL crit-range blessings (always-on crit tops out at +2)', async () => {
     const { listBlessings } = await import('../../content/blessings');
-    const critBlessings = listBlessings().filter((b) => {
-      const m = b.modifiers;
-      return (
-        m.critRangeBonus !== undefined ||
-        m.critRangeBonusWhileFull !== undefined ||
-        m.critRangeBonusWhileBloodied !== undefined
-      );
-    });
-    expect(critBlessings.length).toBe(2);
+    const unconditionalCrit = listBlessings().filter(
+      (b) => b.modifiers.critRangeBonus !== undefined,
+    );
+    expect(unconditionalCrit.length).toBe(2);
+  });
+
+  it('conditional crit-range blessings are mutually exclusive (only one HP state at a time)', async () => {
+    const { listBlessings } = await import('../../content/blessings');
+    // The full-HP and bloodied crit blessings each ship once; since a soul is
+    // never simultaneously at full HP and bloodied, the conditional crit bonus
+    // contributed in any single combat state is at most +1 from this pair.
+    const fullCrit = listBlessings().filter(
+      (b) => b.modifiers.critRangeBonusWhileFull !== undefined,
+    );
+    const bloodiedCrit = listBlessings().filter(
+      (b) => b.modifiers.critRangeBonusWhileBloodied !== undefined,
+    );
+    expect(fullCrit.length).toBe(1);
+    expect(bloodiedCrit.length).toBe(1);
   });
 });
 
