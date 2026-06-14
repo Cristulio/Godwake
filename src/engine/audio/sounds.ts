@@ -1462,7 +1462,7 @@ function drumBarAt(
 }
 
 // ---------------------------------------------------------------------------
-// Continuous fixtures: echo, drones, wind. Built once per theme in `setup`,
+// Continuous fixtures: echo, drones. Built once per theme in `setup`,
 // torn down by the returned stop.
 // ---------------------------------------------------------------------------
 
@@ -1600,43 +1600,6 @@ function makeDrone(
         } catch {
           /* ignore */
         }
-      }
-    },
-  };
-}
-
-/** Looped filtered-noise wind with a slow swell. */
-function makeWind(
-  ctx: AudioContext,
-  out: AudioNode,
-  centerHz: number,
-  level: number,
-): Fixture {
-  const wind = ctx.createBufferSource();
-  wind.buffer = noiseBuffer(ctx, 4000);
-  wind.loop = true;
-  const f = ctx.createBiquadFilter();
-  f.type = 'bandpass';
-  f.frequency.value = centerHz;
-  f.Q.value = 0.6;
-  const g = ctx.createGain();
-  g.gain.value = level;
-  const lfo = ctx.createOscillator();
-  lfo.type = 'sine';
-  lfo.frequency.value = 0.07;
-  const lg = ctx.createGain();
-  lg.gain.value = level * 0.4;
-  lfo.connect(lg).connect(g.gain);
-  lfo.start();
-  wind.connect(f).connect(g).connect(out);
-  wind.start();
-  return {
-    stop: () => {
-      try {
-        wind.stop();
-        lfo.stop();
-      } catch {
-        /* ignore */
       }
     },
   };
@@ -1868,7 +1831,7 @@ const HUB_SPEC: SongSpec = {
       },
     };
   },
-  block: (ctx, out, t0, blockIdx) => {
+  block: (ctx, out, t0) => {
     const beatS = 60 / 84;
     const barS = 4 * beatS;
     // Pads + bass walk the Am–F–Dm–E wheel; the E bar's bass lifts to G#.
@@ -1915,18 +1878,21 @@ const HUB_SPEC: SongSpec = {
       sustain: 0.95,
       vibrato: { hz: 5, cents: 12, after: 0.2 },
     });
-    // Fire crackles, scattered through the block.
+    // Fire crackles, scattered through the block. Dulled (highpass 1800→700) and
+    // quietened (~half) so their echo reads as soft warm pops, not the ticky
+    // "delayed hi-hat" the owner flagged (the bright transient + echo tail was the
+    // culprit once the drum hat was removed). Fewer of them, too.
     const blockS = 16 * barS;
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       const t = t0 + Math.random() * blockS;
       const src = ctx.createBufferSource();
       src.buffer = noiseBuffer(ctx, 30 + Math.random() * 40);
       const f = ctx.createBiquadFilter();
       f.type = 'highpass';
-      f.frequency.value = 1800;
+      f.frequency.value = 700;
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.09 + Math.random() * 0.06, t + 0.005);
+      g.gain.linearRampToValueAtTime(0.045 + Math.random() * 0.025, t + 0.005);
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05 + Math.random() * 0.05);
       src.connect(f).connect(g).connect(out);
       src.start(t);
@@ -2159,7 +2125,9 @@ const BROOD_STAB_CHORDS = [
 ];
 
 const BROOD_CORE_DEF: CombatCoreDef = {
-  bpm: 132,
+  // Slowed 132→110 (owner: combat must feel "could die at any moment", not peppy).
+  // The frantic action tempo was half the problem; a slower pulse breeds dread.
+  bpm: 110,
   rootMidi: midi('D2'),
   drone: (root) => [
     // Triangle warmth carries the drone, a reduced sawtooth keeps an edge of grit —
@@ -2169,8 +2137,10 @@ const BROOD_CORE_DEF: CombatCoreDef = {
     { hz: midiHz(root - 5), type: 'sine', level: 0.04 },
   ],
   droneLowpass: 330,
-  drums: { verse: 'k.h.s.h.k.h.s.h.', fill: 'k.h.s.h.k.h.ssss' },
-  drumLevel: 1,
+  // Hat-less heavy pulse (owner hates the perky hi-hats; the steady kick-hat-snare
+  // backbeat read as "action/peppy"). Just a slow kick+snare tread = ominous, spacious.
+  drums: { verse: 'k.......s.......', fill: 'k.......s...k.s.' },
+  drumLevel: 0.92,
   block: (ctx, out, t0, blockIdx, beatS, semi, swing, drums, drumLevel) => {
     const barS = 4 * beatS;
     for (let bar = 0; bar < 8; bar++) {
