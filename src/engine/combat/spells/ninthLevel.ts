@@ -12,6 +12,12 @@ import {
   APOTHEOSIS_TEMP_HP,
 } from '../apotheosis';
 import { SHAPE_CHANGE_ROUNDS, SHAPE_CHANGE_TEMP_HP } from '../shapeChange';
+import {
+  BEAR_CLAW_ATTACKS,
+  BEAR_FORM_AC_BONUS,
+  BEAR_FORM_ROUNDS,
+  BEAR_FORM_TEMP_HP,
+} from '../bearForm';
 import { TIME_STOP_EXTRA_TURNS } from '../timeStop';
 import {
   type CastResult,
@@ -121,6 +127,43 @@ export function castShapeChange(
       name: nextCharacter.name,
       temp: SHAPE_CHANGE_TEMP_HP,
       rounds: SHAPE_CHANGE_ROUNDS,
+    }),
+  });
+  nextState = attachSpellEffect(nextState, 'rage', 'player');
+  return { state: nextState, character: nextCharacter, cast: true };
+}
+
+/**
+ * Avatar of the Wilds → Great Bear (9th) — the druid's transform capstone, the
+ * tankier counterpart to the wizard's Shape Change. The druid rises as a primal
+ * bear: a wall of temporary hit points (taken as the max of any existing pool —
+ * the tempHp take-max rule), +{@link BEAR_FORM_AC_BONUS} AC, and
+ * {@link BEAR_CLAW_ATTACKS} heavy claw strikes per Attack for
+ * {@link BEAR_FORM_ROUNDS} rounds. An upgraded Wild Shape that stands above the
+ * whole beast ladder. The form reads in playerAttack (attack count + the +3/+3
+ * claw bonus + the weapon swap), computeAC (AC), and decrements in turn.ts. A
+ * self-cast: no target.
+ */
+export function castGreatBear(
+  character: Readonly<Character>,
+  state: CombatState,
+): CastResult {
+  let nextCharacter: Character = consumeSlot(character, 9);
+  nextCharacter = patchResources(nextCharacter, {
+    bearFormRoundsRemaining: BEAR_FORM_ROUNDS,
+  });
+  const temp = Math.max(nextCharacter.hp.temp, BEAR_FORM_TEMP_HP);
+  nextCharacter = { ...nextCharacter, hp: { ...nextCharacter.hp, temp } };
+  nextCharacter = markActionUsed(nextCharacter);
+
+  let nextState: CombatState = appendLog(state, {
+    id: nextLogId(state),
+    kind: 'narration',
+    text: t('combat.log.greatBear', {
+      name: nextCharacter.name,
+      temp: BEAR_FORM_TEMP_HP,
+      ac: BEAR_FORM_AC_BONUS,
+      rounds: BEAR_FORM_ROUNDS,
     }),
   });
   nextState = attachSpellEffect(nextState, 'rage', 'player');

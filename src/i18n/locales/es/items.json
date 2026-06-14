@@ -85,6 +85,10 @@
     "name": "Garras de Dragón",
     "description": "Garras tan largas como espadas —las armas naturales del dragón en que te has convertido."
   },
+  "worldbear-claws": {
+    "name": "Garras del Gran Oso",
+    "description": "Zarpas del tamaño de escudos, garras como ganchos de siega —los brazos del Gran Oso en que te has convertido."
+  },
   "monk-fists": {
     "name": "Puños",
     "description": "La mano vacía —la única arma del monje, y la que nunca lo abandona."

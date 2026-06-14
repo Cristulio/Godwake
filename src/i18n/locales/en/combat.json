@@ -328,6 +328,8 @@
     "timeStopTurn": "Time hangs frozen — {name} moves again while the world holds still. ({n} frozen turns left)",
     "shapeChange": "{name}'s body swells and scales over into a dragon — {temp} temp HP and three rending claws, for {rounds} rounds.",
     "shapeChangeFade": "The dragon's shape sloughs away — {name} is flesh again.",
+    "greatBear": "{name} pours the wild through whole and rises as the Great Bear — {temp} temp HP, +{ac} AC, and twin mauling claws, for {rounds} rounds.",
+    "greatBearFade": "The Great Bear's shape settles away — {name} is flesh again.",
     "ninthDrain": "{name} speaks {target} half-out of the world — {dealt} necrotic as its form buckles.",
     "ninthBindRoll": "{name} CON save vs the binding{resolute}: d20{mod} = {total} vs DC {dc} — {result}.",
     "ninthBindParalyze": "{name} is remade into something helpless — paralyzed for 2 rounds.",

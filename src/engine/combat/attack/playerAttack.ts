@@ -44,6 +44,13 @@ import {
   isDragonForm,
 } from '../shapeChange';
 import {
+  BEAR_CLAW_ATTACKS,
+  BEAR_CLAW_DAMAGE_BONUS,
+  BEAR_CLAW_HIT_BONUS,
+  BEAR_CLAW_WEAPON_ID,
+  isBearForm,
+} from '../bearForm';
+import {
   monkKiSaveDC,
   monkFightsUnarmed,
   monkKitActive,
@@ -214,6 +221,7 @@ function targetAC(target: Combatant, character: Readonly<Character>): number {
  */
 export function attackWeaponId(character: Readonly<Character>): string | undefined {
   if (isDragonForm(character)) return DRAGON_CLAW_WEAPON_ID;
+  if (isBearForm(character)) return BEAR_CLAW_WEAPON_ID;
   if (isWildShaped(character)) return beastWeaponId(character);
   if (character.classId === 'monk' && monkFightsUnarmed(character)) {
     return martialArtsWeaponId(character);
@@ -414,6 +422,8 @@ function resolveSwing(
   // Shape Change (dragon form): the dragon's claws strike like a +3 enchanted
   // weapon — flat to-hit here, flat damage in the hit block.
   if (isDragonForm(nextCharacter)) attackBonus += DRAGON_CLAW_HIT_BONUS;
+  // Avatar of the Wilds (Great Bear): the bear's claws bite like a +3 weapon.
+  if (isBearForm(nextCharacter)) attackBonus += BEAR_CLAW_HIT_BONUS;
   // Druid Primal Strike (L6): the shapeshifted beast's claws bite past hide and
   // ward — a flat to-hit edge on every form attack (damage half in the hit block).
   if (isWildShaped(nextCharacter) && characterHasMechanic(nextCharacter, 'primal-strike')) {
@@ -787,6 +797,11 @@ function resolveSwing(
     if (isDragonForm(nextCharacter)) {
       bonusDamage += DRAGON_CLAW_DAMAGE_BONUS;
       onTypeParts.push({ amount: DRAGON_CLAW_DAMAGE_BONUS, label: 'dragon' });
+    }
+    // Avatar of the Wilds (Great Bear): each paw rends for the +3 primal edge.
+    if (isBearForm(nextCharacter)) {
+      bonusDamage += BEAR_CLAW_DAMAGE_BONUS;
+      onTypeParts.push({ amount: BEAR_CLAW_DAMAGE_BONUS, label: 'bear' });
     }
     // Druid Primal Strike (L6): each claw bites deeper — nothing shrugs off the predator.
     if (isWildShaped(nextCharacter) && characterHasMechanic(nextCharacter, 'primal-strike')) {
@@ -1542,6 +1557,8 @@ export function maxAttacksPerAction(character: Readonly<Character>): number {
   // Shape Change (dragon form): three claw strikes per Attack, ahead of any
   // class extra-attack check — the form's own multiattack.
   if (isDragonForm(character)) return DRAGON_CLAW_ATTACKS;
+  // Avatar of the Wilds (Great Bear): the druid mauls with twin claws each Attack.
+  if (isBearForm(character)) return BEAR_CLAW_ATTACKS;
   if (!characterHasMechanic(character, 'extra-attack')) return 1;
   const mainHand = character.equipped.mainHand;
   if (mainHand) {

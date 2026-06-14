@@ -137,6 +137,15 @@ export interface ClassResources {
    */
   dragonFormRoundsRemaining?: number;
   /**
+   * Druid: rounds the Avatar of the Wilds (Great Bear) form holds (9th-level
+   * capstone). While > 0 the druid is a primal bear — it makes
+   * {@link BEAR_CLAW_ATTACKS} claw strikes per Attack with the worldbear-claws
+   * natural weapon (+3/+3) and wears thick hide (+AC). Decrements at the start of
+   * each player turn; reverts (temp HP persists) when it hits 0. Reset to 0 at
+   * combat start. Distinct from the shared `ascendantRoundsRemaining` buff.
+   */
+  bearFormRoundsRemaining?: number;
+  /**
    * Barbarian: rounds the current Rage holds. While > 0 the barbarian is
    * raging (physical-damage resistance + bonus melee damage). Decrements at the
    * start of each player turn; reset to 0 at combat start.

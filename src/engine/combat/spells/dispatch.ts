@@ -32,7 +32,13 @@ import {
   castWither,
 } from './highLevelStrikes';
 import { castExsanguinate, castVampiricTouch } from './lifeDrain';
-import { castApotheosis, castShapeChange, castTimeStop, castUnmake } from './ninthLevel';
+import {
+  castApotheosis,
+  castGreatBear,
+  castShapeChange,
+  castTimeStop,
+  castUnmake,
+} from './ninthLevel';
 import { castPowerWordKill } from './powerWordKill';
 import { castRegrowth } from './regrowth';
 import { castEntangle } from './entangle';
@@ -193,6 +199,8 @@ function runCast(ctx: CastSpellContext): CastResult {
       return castTimeStop(character, state);
     case 'shape-change':
       return castShapeChange(character, state);
+    case 'great-bear':
+      return castGreatBear(character, state);
     // Druid signature workings.
     case 'regrowth':
       return castRegrowth(cc);

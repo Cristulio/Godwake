@@ -147,7 +147,7 @@ export const DRUID: Class = ClassSchema.parse({
         id: 'ninth-circle-workings',
         name: 'Ninth-Circle Workings',
         description:
-          'The deepest working of all: the Avatar of the Wilds. You let the wild pour through you whole and stand as something primeval — 30 temporary hit points, +2 AC, and every strike, claw or spell, biting far deeper.',
+          'The deepest working of all: the Avatar of the Wilds. You rise as the Great Bear — a Wild Shape past every beast you have worn — 90 temporary hit points, +3 AC, and two heavy maul-strikes each turn that hit and harm off your Wisdom. An upgraded shapeshift, the druid answer to the wizard becoming a dragon.',
       },
     ],
     '19': [
