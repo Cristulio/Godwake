@@ -314,6 +314,17 @@ const UNERRING: Affix = AffixSchema.parse({
   modifiers: { attackBonus: 1 },
 });
 
+// Dual-wield reward: dead weight unless you fight with two weapons (the off-hand
+// follow-swing is the only thing it touches). The build-defining accessory for a
+// dual-wielder — and the affix-relevance tagging dims it for everyone else.
+const PAIRED: Affix = AffixSchema.parse({
+  id: 'paired',
+  namePart: { kind: 'suffix', word: 'of the Twin Blade' },
+  effect: '+3 damage on each off-hand swing (dual wield only).',
+  appliesTo: ['accessory'],
+  modifiers: { offHandDamageBonus: 3 },
+});
+
 export const ALL_AFFIXES: Affix[] = [
   KEEN,
   CRUEL,
@@ -347,6 +358,7 @@ export const ALL_AFFIXES: Affix[] = [
   VIGOROUS,
   SAVAGE,
   UNERRING,
+  PAIRED,
 ];
 
 const AFFIX_BY_ID: Map<string, Affix> = new Map(ALL_AFFIXES.map((a) => [a.id, a]));

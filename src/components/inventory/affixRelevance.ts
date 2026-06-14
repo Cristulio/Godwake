@@ -31,6 +31,7 @@ const MODIFIER_CAMP: Record<keyof AffixModifiers, ModifierCamp> = {
   markDamageBonus: 'weapon',
   sneakDamageBonus: 'weapon',
   followupDamageBonus: 'weapon',
+  offHandDamageBonus: 'weapon',
   // Universal — never dim. Defensive / sustain / utility.
   acBonus: 'universal',
   acBonusWhileFull: 'universal',

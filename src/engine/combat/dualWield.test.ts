@@ -571,3 +571,49 @@ describe('ranger Blade Dancer — the two-blade conclave', () => {
     expect(damageLineAfter(pair.state, pair.mainLine)!.text).not.toContain('rend');
   });
 });
+
+// ─── dual-wield gear depth: the "of the Twin Blade" off-hand-reward affix ─────
+
+describe('dual wield — Paired affix (off-hand-reward gear)', () => {
+  function withPairedAmulet(c: Character): Character {
+    const amulet: ItemRef = {
+      itemId: 'jade-amulet',
+      rolled: {
+        baseId: 'jade-amulet',
+        rarity: 'blue',
+        affixes: ['paired'],
+        name: 'Jade Amulet of the Twin Blade',
+      },
+    };
+    return { ...c, equipped: { ...c.equipped, amulet } };
+  }
+
+  it('adds its bite to the OFF-HAND follow only — never the main swing', () => {
+    const pair = findOpeningPair(
+      () => withPairedAmulet(makeSchooled('fighter', 'battle-master', 3, 'longsword', 'shortsword')),
+      { mainHit: true, offHit: true },
+      { toughenTo: 200 },
+    );
+    // The label resolves to "off-hand" in the breakdown.
+    expect(damageLineAfter(pair.state, pair.offLine)!.text).toContain('off-hand');
+    expect(damageLineAfter(pair.state, pair.mainLine)!.text).not.toContain('off-hand');
+  });
+
+  it('does nothing for a single-weapon wielder (no off-hand follow to pay)', () => {
+    _resetMonsterInstanceCounter();
+    const roller = createDiceRoller(7);
+    const character = withPairedAmulet(
+      makeSchooled('fighter', 'champion', 3, 'longsword', null),
+    );
+    const init = createCombat({ roller, character, monsters: [{ def: getMonster('goblin'), displayName: 'Goblin A' }] });
+    const state = toughen(init.state, monsterByName(init.state, 'Goblin A').id, 200);
+    const r = playerAttack(
+      { roller, character: init.character, state },
+      monsterByName(state, 'Goblin A').id,
+      'longsword',
+    );
+    // No off-hand follow at all → the affix pays nothing, no "off-hand" line.
+    expect(offhandLine(r.state)).toBeUndefined();
+    expect(r.state.log.some((l) => l.kind === 'damage' && l.text.includes('off-hand'))).toBe(false);
+  });
+});
