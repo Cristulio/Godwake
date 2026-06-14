@@ -117,6 +117,37 @@
   "oathbound-belt": { "name": "Cinturón del Juramentado", "effect": "Gana 5 PG temporales al inicio de cada combate" },
   "oathbound-sabatons": { "name": "Escarpes del Juramentado", "effect": "+1 a la CA" },
 
+  "arcanist": { "name": "Estudio del Arcanista", "flavor": "Los focos de un erudito en activo: afilan el conjuro y blindan el cuerpo que lo lanza." },
+  "arcanist.bonus": {
+    "2": "2 piezas: +1 a la CD de conjuros",
+    "4": "4 piezas: +3 de daño de conjuro y +1 a las tiradas de ataque de conjuro"
+  },
+  "arcanist-circlet": { "name": "Diadema del Arcanista", "effect": "+2 de daño de conjuro" },
+  "arcanist-pendant": { "name": "Colgante del Arcanista", "effect": "+1 a la CD de conjuros" },
+  "arcanist-ring": { "name": "Anillo del Arcanista", "effect": "+1 a las tiradas de ataque de conjuro" },
+  "arcanist-sash": { "name": "Faja del Arcanista", "effect": "Gana 4 PG temporales al inicio de cada combate" },
+
+  "greenmantle": { "name": "Vestiduras del Manto Verde", "flavor": "Zarza y raíz vivas hechas regalía: lo silvestre presta su fuerza y su sanación." },
+  "greenmantle.bonus": {
+    "2": "2 piezas: +5 PG temporales por combate",
+    "3": "3 piezas: +1 a la CD de conjuros",
+    "5": "5 piezas: +3 de daño de conjuro y regenera 2 PG por turno"
+  },
+  "greenmantle-crown": { "name": "Corona del Manto Verde", "effect": "+2 de daño de conjuro" },
+  "greenmantle-charm": { "name": "Talismán del Manto Verde", "effect": "Regenera 1 PG por turno" },
+  "greenmantle-ring": { "name": "Anillo del Manto Verde", "effect": "+1 a la CD de conjuros" },
+  "greenmantle-cord": { "name": "Cordón del Manto Verde", "effect": "Gana 5 PG temporales al inicio de cada combate" },
+  "greenmantle-boots": { "name": "Botas del Manto Verde", "effect": "Cúrate el 3% del daño que inflijas" },
+
+  "troubadour": { "name": "Atuendo del Trovador", "flavor": "El equipo de un juglar errante: cada verso hiriente clava más hondo y alimenta un poco al que canta." },
+  "troubadour.bonus": {
+    "2": "2 piezas: +1 a la CD de conjuros",
+    "3": "3 piezas: +3 de daño de conjuro y cúrate el 4% del daño de tus conjuros"
+  },
+  "troubadour-cap": { "name": "Gorro del Trovador", "effect": "+2 de daño de conjuro" },
+  "troubadour-medallion": { "name": "Medallón del Trovador", "effect": "+1 a la CD de conjuros" },
+  "troubadour-ring": { "name": "Anillo del Trovador", "effect": "Cúrate el 4% del daño de tus conjuros" },
+
   "warsong": { "name": "Panoplia del Canto de Guerra", "flavor": "Las galas de un caudillo, forjadas para quienes encabezan la carga." },
   "warsong.bonus": {
     "2": "2 piezas: los críticos aciertan con 19-20, +2 de daño de seguimiento"

@@ -374,6 +374,84 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'paladin',
   },
 
+  // --- Arcanist's Study (Wizard, 4-piece — spell power) --------------------
+  {
+    id: 'arcanist-circlet', setId: 'arcanist', name: 'Arcanist Circlet', slot: 'helm',
+    flavor: 'A thin silver circlet that keeps the mind cold and the working precise.',
+    effects: { spellDamageBonus: 2 }, effectLine: '+2 spell damage',
+    classGate: 'wizard',
+  },
+  {
+    id: 'arcanist-pendant', setId: 'arcanist', name: 'Arcanist Pendant', slot: 'amulet',
+    flavor: 'A focus-crystal pendant that makes a working harder to shrug off.',
+    effects: { spellDcBonus: 1 }, effectLine: '+1 spell save DC',
+    classGate: 'wizard',
+  },
+  {
+    id: 'arcanist-ring', setId: 'arcanist', name: 'Arcanist Ring', slot: 'ring1',
+    flavor: 'A scholar’s signet that steadies the hand that aims the spell.',
+    effects: { spellAttackBonus: 1 }, effectLine: '+1 to spell attack rolls',
+    classGate: 'wizard',
+  },
+  {
+    id: 'arcanist-sash', setId: 'arcanist', name: 'Arcanist Sash', slot: 'belt',
+    flavor: 'A rune-stitched sash that wards the body while the mind is elsewhere.',
+    effects: { tempHpPerCombat: 4 }, effectLine: 'Gain 4 temporary HP at the start of each fight',
+    classGate: 'wizard',
+  },
+
+  // --- Greenmantle (Druid, 5-piece — nature caster/sustain) ----------------
+  {
+    id: 'greenmantle-crown', setId: 'greenmantle', name: 'Greenmantle Crown', slot: 'helm',
+    flavor: 'A crown of living briar that answers when the wild is called.',
+    effects: { spellDamageBonus: 2 }, effectLine: '+2 spell damage',
+    classGate: 'druid',
+  },
+  {
+    id: 'greenmantle-charm', setId: 'greenmantle', name: 'Greenmantle Charm', slot: 'amulet',
+    flavor: 'A seed-pod charm that knits the bearer whole the way the forest mends.',
+    effects: { regenPerTurn: 1 }, effectLine: 'Regenerate 1 HP each turn',
+    classGate: 'druid',
+  },
+  {
+    id: 'greenmantle-ring', setId: 'greenmantle', name: 'Greenmantle Ring', slot: 'ring1',
+    flavor: 'A ring of woven root that lends the wild’s call a harder edge.',
+    effects: { spellDcBonus: 1 }, effectLine: '+1 spell save DC',
+    classGate: 'druid',
+  },
+  {
+    id: 'greenmantle-cord', setId: 'greenmantle', name: 'Greenmantle Cord', slot: 'belt',
+    flavor: 'A girdle of green vine that thickens the hide before the first blow.',
+    effects: { tempHpPerCombat: 5 }, effectLine: 'Gain 5 temporary HP at the start of each fight',
+    classGate: 'druid',
+  },
+  {
+    id: 'greenmantle-boots', setId: 'greenmantle', name: 'Greenmantle Boots', slot: 'boots',
+    flavor: 'Bark-soled boots that draw a little life up from the ground with each step.',
+    effects: { lifestealPct: 3 }, effectLine: 'Heal 3% of the damage you deal',
+    classGate: 'druid',
+  },
+
+  // --- Troubadour's Motley (Bard, 3-piece — song & sustain) ----------------
+  {
+    id: 'troubadour-cap', setId: 'troubadour', name: 'Troubadour Cap', slot: 'helm',
+    flavor: 'A feathered cap that makes every cutting verse land a little sharper.',
+    effects: { spellDamageBonus: 2 }, effectLine: '+2 spell damage',
+    classGate: 'bard',
+  },
+  {
+    id: 'troubadour-medallion', setId: 'troubadour', name: 'Troubadour Medallion', slot: 'amulet',
+    flavor: 'A guild medallion that makes a mocking working harder to ignore.',
+    effects: { spellDcBonus: 1 }, effectLine: '+1 spell save DC',
+    classGate: 'bard',
+  },
+  {
+    id: 'troubadour-ring', setId: 'troubadour', name: 'Troubadour Ring', slot: 'ring1',
+    flavor: 'A ring that turns a little of the song’s bite back into the singer.',
+    effects: { spellLifestealPct: 4 }, effectLine: 'Heal 4% of the damage your spells deal',
+    classGate: 'bard',
+  },
+
   // --- Warsong (Fighter-bound) ---------------------------------------------
   {
     id: 'warsong-gauntlet', setId: 'warsong', name: 'Warsong Gauntlet', slot: 'belt',
@@ -747,6 +825,40 @@ export const GEAR_SETS: GearSet[] = [
       { piecesRequired: 2, label: '2-piece: +6 temporary HP each fight', bonuses: { tempHpPerCombat: 6 } },
       { piecesRequired: 3, label: '3-piece: +2 weapon damage on every hit', bonuses: { damageBonus: 2 } },
       { piecesRequired: 5, label: '5-piece: +2 AC and heal 5% of the damage you deal', bonuses: { acBonus: 2, lifestealPct: 5 } },
+    ],
+  },
+  {
+    id: 'arcanist',
+    name: "Arcanist's Study",
+    flavor: 'A working scholar’s focuses — they sharpen the spell and steel the body that casts it.',
+    classGate: 'wizard',
+    pieceIds: ['arcanist-circlet', 'arcanist-pendant', 'arcanist-ring', 'arcanist-sash'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 spell save DC', bonuses: { spellDcBonus: 1 } },
+      { piecesRequired: 4, label: '4-piece: +3 spell damage and +1 to spell attack rolls', bonuses: { spellDamageBonus: 3, spellAttackBonus: 1 } },
+    ],
+  },
+  {
+    id: 'greenmantle',
+    name: 'Greenmantle Vestments',
+    flavor: 'Living briar and root grown into regalia — the wild lends its strength and its mending.',
+    classGate: 'druid',
+    pieceIds: ['greenmantle-crown', 'greenmantle-charm', 'greenmantle-ring', 'greenmantle-cord', 'greenmantle-boots'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +5 temporary HP each fight', bonuses: { tempHpPerCombat: 5 } },
+      { piecesRequired: 3, label: '3-piece: +1 spell save DC', bonuses: { spellDcBonus: 1 } },
+      { piecesRequired: 5, label: '5-piece: +3 spell damage and regenerate 2 HP each turn', bonuses: { spellDamageBonus: 3, regenPerTurn: 2 } },
+    ],
+  },
+  {
+    id: 'troubadour',
+    name: "Troubadour's Motley",
+    flavor: 'A wandering player’s kit — every cutting verse lands sharper and feeds the singer a little.',
+    classGate: 'bard',
+    pieceIds: ['troubadour-cap', 'troubadour-medallion', 'troubadour-ring'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 spell save DC', bonuses: { spellDcBonus: 1 } },
+      { piecesRequired: 3, label: '3-piece: +3 spell damage and heal 4% of the damage your spells deal', bonuses: { spellDamageBonus: 3, spellLifestealPct: 4 } },
     ],
   },
   {

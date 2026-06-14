@@ -150,6 +150,24 @@ export const SET_BASE_ITEMS: Item[] = [
   accessory({ id: 'oathbound-belt', name: 'Oathbound Belt', accessorySlot: 'belt', cost: 240 }),
   accessory({ id: 'oathbound-sabatons', name: 'Oathbound Sabatons', accessorySlot: 'boots', cost: 240 }),
 
+  // --- Arcanist's Study (wizard, 4-piece accessories) ----------------------
+  accessory({ id: 'arcanist-circlet', name: 'Arcanist Circlet', accessorySlot: 'helm', cost: 240 }),
+  accessory({ id: 'arcanist-pendant', name: 'Arcanist Pendant', accessorySlot: 'amulet', cost: 240 }),
+  accessory({ id: 'arcanist-ring', name: 'Arcanist Ring', accessorySlot: 'ring', cost: 240 }),
+  accessory({ id: 'arcanist-sash', name: 'Arcanist Sash', accessorySlot: 'belt', cost: 240 }),
+
+  // --- Greenmantle (druid, 5-piece accessories) ----------------------------
+  accessory({ id: 'greenmantle-crown', name: 'Greenmantle Crown', accessorySlot: 'helm', cost: 240 }),
+  accessory({ id: 'greenmantle-charm', name: 'Greenmantle Charm', accessorySlot: 'amulet', cost: 240 }),
+  accessory({ id: 'greenmantle-ring', name: 'Greenmantle Ring', accessorySlot: 'ring', cost: 240 }),
+  accessory({ id: 'greenmantle-cord', name: 'Greenmantle Cord', accessorySlot: 'belt', cost: 240 }),
+  accessory({ id: 'greenmantle-boots', name: 'Greenmantle Boots', accessorySlot: 'boots', cost: 240 }),
+
+  // --- Troubadour's Motley (bard, 3-piece accessories) ---------------------
+  accessory({ id: 'troubadour-cap', name: 'Troubadour Cap', accessorySlot: 'helm', cost: 220 }),
+  accessory({ id: 'troubadour-medallion', name: 'Troubadour Medallion', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'troubadour-ring', name: 'Troubadour Ring', accessorySlot: 'ring', cost: 220 }),
+
   // --- Warsong (fighter, accessories) --------------------------------------
   accessory({ id: 'warsong-gauntlet', name: 'Warsong Gauntlet', accessorySlot: 'belt', cost: 240 }),
   accessory({ id: 'warsong-crest', name: 'Warsong Crest', accessorySlot: 'helm', cost: 240 }),

@@ -518,6 +518,42 @@
   "oathbound-sabatons": {
     "name": "Escarpes del Juramentado"
   },
+  "arcanist-circlet": {
+    "name": "Diadema del Arcanista"
+  },
+  "arcanist-pendant": {
+    "name": "Colgante del Arcanista"
+  },
+  "arcanist-ring": {
+    "name": "Anillo del Arcanista"
+  },
+  "arcanist-sash": {
+    "name": "Faja del Arcanista"
+  },
+  "greenmantle-crown": {
+    "name": "Corona del Manto Verde"
+  },
+  "greenmantle-charm": {
+    "name": "Talismán del Manto Verde"
+  },
+  "greenmantle-ring": {
+    "name": "Anillo del Manto Verde"
+  },
+  "greenmantle-cord": {
+    "name": "Cordón del Manto Verde"
+  },
+  "greenmantle-boots": {
+    "name": "Botas del Manto Verde"
+  },
+  "troubadour-cap": {
+    "name": "Gorro del Trovador"
+  },
+  "troubadour-medallion": {
+    "name": "Medallón del Trovador"
+  },
+  "troubadour-ring": {
+    "name": "Anillo del Trovador"
+  },
   "warsong-gauntlet": {
     "name": "Guantelete del Canto de Guerra"
   },
