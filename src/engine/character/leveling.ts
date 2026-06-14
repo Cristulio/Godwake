@@ -1,7 +1,7 @@
 import type { Character } from '../../types/character';
 import type { AbilityName, AbilityScores } from '../../types/abilities';
 import { abilityModifier } from '../../types/abilities';
-import { effectiveAbilityScores } from './derived';
+import { effectiveAbilityScores, characterHasMechanic } from './derived';
 import { getClass } from '../../content/classes';
 import { getRace } from '../../content/races';
 import { casterSpellSlots } from './actions';
@@ -88,6 +88,24 @@ export function hpGainForLevelUp(character: Character): number {
 }
 
 /**
+ * The off-hand weapon handed to a dual-wield school the moment it gains the
+ * `dual-wielder` mechanic (its subclass-pick level). The weapon used to ride in
+ * the starting bag from L1 — clutter until the school was both reached AND
+ * chosen — so it now appears exactly when it becomes usable. Keyed by subclass
+ * id so each school gets its own off-hand: the light-blade schools (Battle
+ * Master, Thief) take a dagger, the bow→blades ranger (Blade Dancer) a second
+ * shortsword to complete its pair, and the barbarian's Berserker (whose Twin
+ * Fury feature carries the mechanic) its SECOND great weapon. Same item the kit
+ * shipped before; this only changes WHEN it lands, never the balance.
+ */
+const DUAL_WIELD_OFFHAND_GRANT: Partial<Record<string, string>> = {
+  'battle-master': 'dagger',
+  thief: 'dagger',
+  'blade-dancer': 'shortsword',
+  berserker: 'greataxe',
+};
+
+/**
  * Apply one level-up to a character. Advances level by 1, increases max HP
  * (and current HP by the same delta — feels good to heal-on-level), bumps
  * hit dice, refreshes class resources that scale with level (Action Surge).
@@ -143,10 +161,26 @@ export function applyLevelUp(character: Character): Character {
     resources.spellSlots = refilledSlots;
   }
 
+  // Hand the dual-wield off-hand weapon at the level its school grants the
+  // ability — not from the starting bag. Fire only on the level-up that newly
+  // crosses the `dual-wielder` threshold (the resolved subclass at newLevel has
+  // it, the character at its old level did not), so it lands once and tracks
+  // whichever school was actually chosen.
+  let inventory = character.inventory;
+  const offHandId = subclassId ? DUAL_WIELD_OFFHAND_GRANT[subclassId] : undefined;
+  if (
+    offHandId &&
+    characterHasMechanic({ ...character, level: newLevel, subclassId }, 'dual-wielder') &&
+    !characterHasMechanic(character, 'dual-wielder')
+  ) {
+    inventory = [...inventory, { itemId: offHandId }];
+  }
+
   return {
     ...character,
     level: newLevel,
     subclassId,
+    inventory,
     hp: {
       max: newMaxHp,
       current: character.hp.current + hpDelta,

@@ -23,6 +23,9 @@ interface StartingKit {
 function startingKitFor(classId: ClassId): StartingKit {
   switch (classId) {
     case 'fighter': {
+      // No spare dagger: the off-hand blade is the Battle Master's dual-wield
+      // weapon, granted when that school is chosen at L2 (see DUAL_WIELD_OFFHAND_GRANT),
+      // not clutter carried from the start.
       const longsword: ItemRef = { itemId: 'longsword' };
       const leatherArmor: ItemRef = { itemId: 'leather-armor' };
       const shield: ItemRef = { itemId: 'shield' };
@@ -31,7 +34,6 @@ function startingKitFor(classId: ClassId): StartingKit {
           longsword,
           leatherArmor,
           shield,
-          { itemId: 'dagger' },
           { itemId: 'potion-of-healing' },
           { itemId: 'potion-of-healing' },
         ],
@@ -44,12 +46,14 @@ function startingKitFor(classId: ClassId): StartingKit {
       };
     }
     case 'rogue': {
+      // The shortbow stays (the ranged backup any rogue uses); the off-hand
+      // dagger does not — it's the Thief's Second Knife, granted when that
+      // school lands at L3 (DUAL_WIELD_OFFHAND_GRANT), not a starting spare.
       const rapier: ItemRef = { itemId: 'rapier' };
       const leatherArmor: ItemRef = { itemId: 'leather-armor' };
       return {
         inventory: [
           rapier,
-          { itemId: 'dagger' },
           { itemId: 'shortbow' },
           leatherArmor,
           { itemId: 'potion-of-healing' },

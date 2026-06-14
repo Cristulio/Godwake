@@ -321,3 +321,54 @@ describe('high-level martial feature grants', () => {
     expect(characterHasMechanic(charAt('fighter', 8), 'weapon-mastery')).toBe(false);
   });
 });
+
+describe('dual-wield off-hand granted on unlock (not from the starting bag)', () => {
+  const countOf = (c: Character, itemId: string) =>
+    c.inventory.filter((r) => r.itemId === itemId).length;
+
+  // class · the dual-wield school · the level it unlocks · the off-hand granted
+  const cases: Array<[ClassId, string, number, string]> = [
+    ['fighter', 'battle-master', 2, 'dagger'],
+    ['rogue', 'thief', 3, 'dagger'],
+    ['ranger', 'blade-dancer', 3, 'shortsword'],
+    ['barbarian', 'berserker', 3, 'greataxe'],
+  ];
+
+  for (const [classId, subclassId, unlockLevel, offHand] of cases) {
+    it(`${classId} (${subclassId}) gains a ${offHand} exactly at L${unlockLevel}`, () => {
+      // Sit one level below the unlock with the school already chosen, with a
+      // clean bag, then take the level-up that crosses the threshold.
+      const base = { ...charAt(classId, unlockLevel - 1), subclassId, inventory: [] };
+      expect(characterHasMechanic(base, 'dual-wielder')).toBe(false);
+      expect(countOf(base, offHand)).toBe(0);
+
+      const unlocked = applyLevelUp(base);
+      expect(unlocked.level).toBe(unlockLevel);
+      expect(characterHasMechanic(unlocked, 'dual-wielder')).toBe(true);
+      expect(countOf(unlocked, offHand)).toBe(1);
+    });
+
+    it(`${classId} (${subclassId}) does not double-grant the ${offHand} on the next level`, () => {
+      const base = { ...charAt(classId, unlockLevel - 1), subclassId, inventory: [] };
+      const unlocked = applyLevelUp(base);
+      const after = applyLevelUp(unlocked);
+      expect(countOf(after, offHand)).toBe(1);
+    });
+  }
+
+  it('a non-dual-wield school of the same class is never handed the off-hand', () => {
+    // Champion is the fighter's L2 auto-pick and has no dual-wielder mechanic.
+    const champ = { ...charAt('fighter', 1), subclassId: 'champion', inventory: [] };
+    const l2 = applyLevelUp(champ);
+    expect(characterHasMechanic(l2, 'dual-wielder')).toBe(false);
+    expect(l2.inventory.some((r) => r.itemId === 'dagger')).toBe(false);
+  });
+
+  it('levels below the unlock do not grant the off-hand early', () => {
+    // Blade Dancer unlocks at L3 — the L1→L2 step must hand nothing.
+    const ranger = { ...charAt('ranger', 1), subclassId: 'blade-dancer', inventory: [] };
+    const l2 = applyLevelUp(ranger);
+    expect(l2.level).toBe(2);
+    expect(l2.inventory.some((r) => r.itemId === 'shortsword')).toBe(false);
+  });
+});

@@ -48,7 +48,7 @@ describe('starting kits — safety-net baseline', () => {
     expect(potions.length).toBe(3);
   });
 
-  it('Rogue starts with 2 potions of healing, rapier equipped, dagger + shortbow in pack', () => {
+  it('Rogue starts with 2 potions of healing, rapier equipped, shortbow in pack — no spare dagger', () => {
     const c = buildPlayerCharacter({
       name: 'Sneak',
       raceId: 'human',
@@ -58,9 +58,24 @@ describe('starting kits — safety-net baseline', () => {
     const potions = c.inventory.filter((i) => i.itemId === 'potion-of-healing');
     expect(potions.length).toBe(2);
     expect(c.equipped.mainHand?.itemId).toBe('rapier');
-    expect(c.inventory.some((i) => i.itemId === 'dagger')).toBe(true);
     expect(c.inventory.some((i) => i.itemId === 'shortbow')).toBe(true);
     expect(c.inventory.some((i) => i.itemId === 'rapier')).toBe(true);
+    // The off-hand dagger is granted at the L3 Thief pick, not carried from L1.
+    expect(c.inventory.some((i) => i.itemId === 'dagger')).toBe(false);
+  });
+
+  it('dual-wield classes do not start with their off-hand weapon in the bag', () => {
+    const fighter = buildPlayerCharacter({
+      name: 'Brick',
+      raceId: 'human',
+      classId: 'fighter',
+      baseAbilityScores: baseScores(),
+    });
+    // Fighter's dual-wield off-hand (Battle Master's light blade) is not in the
+    // starting bag; the only blade is the equipped longsword main-hand.
+    expect(fighter.inventory.some((i) => i.itemId === 'dagger')).toBe(false);
+    expect(fighter.level).toBe(1);
+    expect(characterHasMechanic(fighter, 'dual-wielder')).toBe(false);
   });
 });
 
