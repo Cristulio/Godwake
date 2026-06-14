@@ -95,6 +95,99 @@ export const SET_PIECES: SetPiece[] = [
     effects: { lifestealPct: 5 }, effectLine: 'Heal 5% of the damage you deal',
   },
 
+  // --- Wayfarer's Kit (universal, 3-piece — the light all-rounder) ----------
+  {
+    id: 'wayfarer-charm', setId: 'wayfarer', name: 'Wayfarer Charm', slot: 'amulet',
+    flavor: 'A traveller’s luck-token, worn smooth on a thousand roads.',
+    effects: { damageBonus: 1 }, effectLine: '+1 weapon damage on every hit',
+  },
+  {
+    id: 'wayfarer-belt', setId: 'wayfarer', name: 'Wayfarer Belt', slot: 'belt',
+    flavor: 'A broad belt of cracked leather, every notch a province crossed.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+  },
+  {
+    id: 'wayfarer-treads', setId: 'wayfarer', name: 'Wayfarer Treads', slot: 'boots',
+    flavor: 'Boots resoled too many times to count, sure on any ground.',
+    effects: { attackBonus: 1 }, effectLine: '+1 to attack rolls',
+  },
+
+  // --- Lanternkeeper's Watch (universal, 4-piece — defensive sustain) -------
+  {
+    id: 'lanternkeeper-helm', setId: 'lanternkeeper', name: 'Lanternkeeper Helm', slot: 'helm',
+    flavor: 'A hooded helm with a shuttered lamp at the brow — the last light on the wall.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+  },
+  {
+    id: 'lanternkeeper-charm', setId: 'lanternkeeper', name: 'Lanternkeeper Charm', slot: 'amulet',
+    flavor: 'A glass-bead amulet that holds a coal-glow long after the fire is out.',
+    effects: { tempHpPerCombat: 5 }, effectLine: 'Gain 5 temporary HP at the start of each fight',
+  },
+  {
+    id: 'lanternkeeper-signet', setId: 'lanternkeeper', name: 'Lanternkeeper Signet', slot: 'ring1',
+    flavor: 'A watch-captain’s signet; those who wear it mend slow but never stop.',
+    effects: { regenPerTurn: 1 }, effectLine: 'Regenerate 1 HP each turn',
+  },
+  {
+    id: 'lanternkeeper-cord', setId: 'lanternkeeper', name: 'Lanternkeeper Cord', slot: 'belt',
+    flavor: 'A knotted watch-cord that cinches tighter as the night turns against you.',
+    effects: { acBonusWhileBloodied: 2 }, effectLine: '+2 AC while bloodied',
+  },
+
+  // --- Gravewright's Due (universal, 4-piece — vampiric attrition) ----------
+  {
+    id: 'gravewright-locket', setId: 'gravewright', name: 'Gravewright Locket', slot: 'amulet',
+    flavor: 'A grave-digger’s locket of bone-ash; what you spill, it gathers back.',
+    effects: { lifestealPct: 4 }, effectLine: 'Heal 4% of the damage you deal',
+  },
+  {
+    id: 'gravewright-band', setId: 'gravewright', name: 'Gravewright Band', slot: 'ring1',
+    flavor: 'An iron band notched like a saw — its wounds are slow to close.',
+    effects: { bleedDamage: 3 }, effectLine: 'Your blows rend for +3 bleed damage',
+  },
+  {
+    id: 'gravewright-seal', setId: 'gravewright', name: 'Gravewright Seal', slot: 'ring2',
+    flavor: 'A black wax seal pressed with a spade-and-skull; the dead pay their tithe.',
+    effects: { lifestealPct: 3 }, effectLine: 'Heal 3% of the damage you deal',
+  },
+  {
+    id: 'gravewright-girdle', setId: 'gravewright', name: 'Gravewright Girdle', slot: 'belt',
+    flavor: 'A girdle hung with grave-iron tools, each one heavier than it looks.',
+    effects: { damageBonus: 2 }, effectLine: '+2 weapon damage on every hit',
+  },
+
+  // --- Pilgrim's Reliquary (universal, 6-piece — the GRAND trinket set) -----
+  {
+    id: 'pilgrim-circlet', setId: 'pilgrim', name: 'Pilgrim Circlet', slot: 'helm',
+    flavor: 'A thin band of pilgrim-iron, blessed at shrines whose names are lost.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+  },
+  {
+    id: 'pilgrim-reliquary', setId: 'pilgrim', name: 'Pilgrim Reliquary', slot: 'amulet',
+    flavor: 'A locket-shrine of a dozen saints, each owed a little of your road.',
+    effects: { tempHpPerCombat: 4 }, effectLine: 'Gain 4 temporary HP at the start of each fight',
+  },
+  {
+    id: 'pilgrim-ring-road', setId: 'pilgrim', name: 'Pilgrim Ring of the Road', slot: 'ring1',
+    flavor: 'A vow-ring sworn at the setting out: to walk until the work is done.',
+    effects: { attackBonus: 1 }, effectLine: '+1 to attack rolls',
+  },
+  {
+    id: 'pilgrim-ring-vow', setId: 'pilgrim', name: 'Pilgrim Ring of the Vow', slot: 'ring2',
+    flavor: 'A vow-ring sworn at the journey’s turning: to strike true at the end of it.',
+    effects: { damageBonus: 1 }, effectLine: '+1 weapon damage on every hit',
+  },
+  {
+    id: 'pilgrim-cincture', setId: 'pilgrim', name: 'Pilgrim Cincture', slot: 'belt',
+    flavor: 'A rope cincture knotted once for each shrine; the bound soul mends as it walks.',
+    effects: { lifestealPct: 3 }, effectLine: 'Heal 3% of the damage you deal',
+  },
+  {
+    id: 'pilgrim-sandals', setId: 'pilgrim', name: 'Pilgrim Sandals', slot: 'boots',
+    flavor: 'Sandals worn to the thickness of a prayer, and still they carry you.',
+    effects: { acBonus: 1 }, effectLine: '+1 AC',
+  },
+
   // --- Warsong (Fighter-bound) ---------------------------------------------
   {
     id: 'warsong-gauntlet', setId: 'warsong', name: 'Warsong Gauntlet', slot: 'belt',
@@ -345,6 +438,54 @@ export const GEAR_SETS: GearSet[] = [
     bonuses: [
       { piecesRequired: 2, label: '2-piece: +4 temporary HP each fight', bonuses: { tempHpPerCombat: 4 } },
       { piecesRequired: 3, label: '3-piece: heal 5% of the damage you deal', bonuses: { lifestealPct: 5 } },
+    ],
+  },
+  {
+    id: 'wayfarer',
+    name: "Wayfarer's Kit",
+    flavor: 'The road-worn gear of those who walk every province and outlast them all.',
+    pieceIds: ['wayfarer-charm', 'wayfarer-belt', 'wayfarer-treads'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 to attack rolls', bonuses: { attackBonus: 1 } },
+      { piecesRequired: 3, label: '3-piece: +2 weapon damage and +1 AC', bonuses: { damageBonus: 2, acBonus: 1 } },
+    ],
+  },
+  {
+    id: 'lanternkeeper',
+    name: "Lanternkeeper's Watch",
+    flavor: 'The kit of the night-watch who held the wall until dawn, and held it again.',
+    pieceIds: ['lanternkeeper-helm', 'lanternkeeper-charm', 'lanternkeeper-signet', 'lanternkeeper-cord'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +6 temporary HP each fight', bonuses: { tempHpPerCombat: 6 } },
+      { piecesRequired: 4, label: '4-piece: +2 AC and regenerate 2 HP each turn', bonuses: { acBonus: 2, regenPerTurn: 2 } },
+    ],
+  },
+  {
+    id: 'gravewright',
+    name: "Gravewright's Due",
+    flavor: 'A grave-tender’s tools — what the field spills, they gather quietly back.',
+    pieceIds: ['gravewright-locket', 'gravewright-band', 'gravewright-seal', 'gravewright-girdle'],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: heal 4% of the damage you deal', bonuses: { lifestealPct: 4 } },
+      { piecesRequired: 4, label: '4-piece: +4 bleed damage and heal 5% more', bonuses: { bleedDamage: 4, lifestealPct: 5 } },
+    ],
+  },
+  {
+    id: 'pilgrim',
+    name: "Pilgrim's Reliquary",
+    flavor: 'A full reliquary gathered shrine by shrine — the complete pilgrimage made armour.',
+    pieceIds: [
+      'pilgrim-circlet', 'pilgrim-reliquary', 'pilgrim-ring-road',
+      'pilgrim-ring-vow', 'pilgrim-cincture', 'pilgrim-sandals',
+    ],
+    bonuses: [
+      { piecesRequired: 2, label: '2-piece: +1 AC', bonuses: { acBonus: 1 } },
+      { piecesRequired: 4, label: '4-piece: +2 weapon damage and +1 to attack rolls', bonuses: { damageBonus: 2, attackBonus: 1 } },
+      {
+        piecesRequired: 6,
+        label: '6-piece: +10 temporary HP each fight, critical hits land on 19–20, and heal 5% of the damage you deal',
+        bonuses: { tempHpPerCombat: 10, critRangeBonus: 1, lifestealPct: 5 },
+      },
     ],
   },
   {

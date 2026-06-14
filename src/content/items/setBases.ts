@@ -74,6 +74,31 @@ export const SET_BASE_ITEMS: Item[] = [
   accessory({ id: 'vigil-mantle', name: 'Vigil Mantle', accessorySlot: 'amulet', cost: 220 }),
   accessory({ id: 'vigil-heart', name: 'Vigil Heart', accessorySlot: 'ring', cost: 220 }),
 
+  // --- Wayfarer's Kit (universal, 3-piece) ---------------------------------
+  accessory({ id: 'wayfarer-charm', name: 'Wayfarer Charm', accessorySlot: 'amulet', cost: 200 }),
+  accessory({ id: 'wayfarer-belt', name: 'Wayfarer Belt', accessorySlot: 'belt', cost: 200 }),
+  accessory({ id: 'wayfarer-treads', name: 'Wayfarer Treads', accessorySlot: 'boots', cost: 200 }),
+
+  // --- Lanternkeeper's Watch (universal, 4-piece) --------------------------
+  accessory({ id: 'lanternkeeper-helm', name: 'Lanternkeeper Helm', accessorySlot: 'helm', cost: 220 }),
+  accessory({ id: 'lanternkeeper-charm', name: 'Lanternkeeper Charm', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'lanternkeeper-signet', name: 'Lanternkeeper Signet', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'lanternkeeper-cord', name: 'Lanternkeeper Cord', accessorySlot: 'belt', cost: 220 }),
+
+  // --- Gravewright's Due (universal, 4-piece) ------------------------------
+  accessory({ id: 'gravewright-locket', name: 'Gravewright Locket', accessorySlot: 'amulet', cost: 220 }),
+  accessory({ id: 'gravewright-band', name: 'Gravewright Band', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'gravewright-seal', name: 'Gravewright Seal', accessorySlot: 'ring', cost: 220 }),
+  accessory({ id: 'gravewright-girdle', name: 'Gravewright Girdle', accessorySlot: 'belt', cost: 220 }),
+
+  // --- Pilgrim's Reliquary (universal, 6-piece) ----------------------------
+  accessory({ id: 'pilgrim-circlet', name: 'Pilgrim Circlet', accessorySlot: 'helm', cost: 240 }),
+  accessory({ id: 'pilgrim-reliquary', name: 'Pilgrim Reliquary', accessorySlot: 'amulet', cost: 240 }),
+  accessory({ id: 'pilgrim-ring-road', name: 'Pilgrim Ring of the Road', accessorySlot: 'ring', cost: 240 }),
+  accessory({ id: 'pilgrim-ring-vow', name: 'Pilgrim Ring of the Vow', accessorySlot: 'ring', cost: 240 }),
+  accessory({ id: 'pilgrim-cincture', name: 'Pilgrim Cincture', accessorySlot: 'belt', cost: 240 }),
+  accessory({ id: 'pilgrim-sandals', name: 'Pilgrim Sandals', accessorySlot: 'boots', cost: 240 }),
+
   // --- Warsong (fighter, accessories) --------------------------------------
   accessory({ id: 'warsong-gauntlet', name: 'Warsong Gauntlet', accessorySlot: 'belt', cost: 240 }),
   accessory({ id: 'warsong-crest', name: 'Warsong Crest', accessorySlot: 'helm', cost: 240 }),

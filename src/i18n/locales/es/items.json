@@ -380,6 +380,57 @@
   "vigil-heart": {
     "name": "Corazón de la Vigilia"
   },
+  "wayfarer-charm": {
+    "name": "Amuleto del Caminante"
+  },
+  "wayfarer-belt": {
+    "name": "Cinto del Caminante"
+  },
+  "wayfarer-treads": {
+    "name": "Botas del Caminante"
+  },
+  "lanternkeeper-helm": {
+    "name": "Yelmo del Farolero"
+  },
+  "lanternkeeper-charm": {
+    "name": "Amuleto del Farolero"
+  },
+  "lanternkeeper-signet": {
+    "name": "Sello del Farolero"
+  },
+  "lanternkeeper-cord": {
+    "name": "Cordón del Farolero"
+  },
+  "gravewright-locket": {
+    "name": "Guardapelo del Sepulturero"
+  },
+  "gravewright-band": {
+    "name": "Anillo del Sepulturero"
+  },
+  "gravewright-seal": {
+    "name": "Sello del Sepulturero"
+  },
+  "gravewright-girdle": {
+    "name": "Faja del Sepulturero"
+  },
+  "pilgrim-circlet": {
+    "name": "Diadema del Peregrino"
+  },
+  "pilgrim-reliquary": {
+    "name": "Relicario del Peregrino"
+  },
+  "pilgrim-ring-road": {
+    "name": "Anillo del Peregrino: el Camino"
+  },
+  "pilgrim-ring-vow": {
+    "name": "Anillo del Peregrino: el Voto"
+  },
+  "pilgrim-cincture": {
+    "name": "Ceñidor del Peregrino"
+  },
+  "pilgrim-sandals": {
+    "name": "Sandalias del Peregrino"
+  },
   "warsong-gauntlet": {
     "name": "Guantelete del Canto de Guerra"
   },
