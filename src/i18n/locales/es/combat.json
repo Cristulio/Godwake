@@ -103,6 +103,15 @@
       "restrained": "apresado",
       "weakened": "debilitado"
     },
+    "effect": {
+      "paralyzed": "Pierdes tu turno — salva cada ronda para liberarte — y los atacantes te golpean con ventaja.",
+      "blinded": "Tus ataques se tiran con desventaja, y los atacantes te golpean con ventaja.",
+      "poisoned": "Tus ataques se tiran con desventaja.",
+      "frightened": "Tus ataques se tiran con desventaja.",
+      "restrained": "Tus ataques se tiran con desventaja, y los atacantes te golpean con ventaja.",
+      "weakened": "Tus golpes caen más flojos — cada impacto inflige menos daño.",
+      "default": "Una maldición te aferra."
+    },
     "end": {
       "poisoned": "se sacude el veneno",
       "frightened": "se serena — el miedo pasa",
