@@ -38,6 +38,8 @@ export interface BatchVfxEntry {
   element?: SpellElement;
   outcome?: 'landed' | 'resisted';
   damage?: number;
+  /** Green heal number floated on the target — spell-vamp / sustain heals. */
+  heal?: number;
 }
 
 /**

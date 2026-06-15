@@ -363,6 +363,13 @@ export interface SpellEffectEvent {
    */
   damage?: number;
   /**
+   * Heal amount floated on the TARGET sprite as a green heal number — for
+   * spell-vamp / sustain heals whose HP gain wouldn't otherwise float reliably
+   * (an AoE commit can advance the sprite's prevHp without the hpDelta path ever
+   * floating the gain). Target is the healed combatant (usually 'player').
+   */
+  heal?: number;
+  /**
    * Damage element for the shape kinds (`spell-bolt` / `spell-burst` /
    * `spell-fork` / `spell-drain`) — picks the colour ramp + particle style.
    * Absent for non-elemental effects (weapon swings, buffs, control), which

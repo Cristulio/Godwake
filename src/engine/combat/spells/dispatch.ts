@@ -3,7 +3,7 @@ import { appendLog, markPlayerLog } from '../log';
 import { characterAffixMods } from '../../items/affixMods';
 import { t } from '../../../i18n';
 import type { CombatState } from '../../../types/combat';
-import { type CastResult, type CastSpellContext, canCastSpell, nextLogId, necromancyLifestealPct } from './helpers';
+import { type CastResult, type CastSpellContext, attachSpellEffects, canCastSpell, nextLogId, necromancyLifestealPct } from './helpers';
 import { castFireBolt } from './fireBolt';
 import { castMagicMissile } from './magicMissile';
 import { castBurningHands } from './burningHands';
@@ -104,14 +104,23 @@ function applySpellLifesteal(result: CastResult, hpBefore: Map<string, number>):
 
   const healed = Math.max(1, Math.floor((dealt * pct) / 100));
   const hpNow = Math.min(character.hp.max, character.hp.current + healed);
-  const state = appendLog(result.state, {
+  const restored = hpNow - character.hp.current;
+  const logged = appendLog(result.state, {
     id: nextLogId(result.state),
     kind: 'system',
     text: t('combat.log.spellLifesteal', {
       name: character.name,
-      amount: hpNow - character.hp.current,
+      amount: restored,
     }),
   });
+  // The damage cast already set spellEffectEvent (its own number/look on the
+  // foe), so the heal rides the additive batch channel rather than clobbering
+  // it — the vamp heal's HP gain wouldn't otherwise float reliably (an AoE
+  // commit can advance the player sprite's prevHp before the hpDelta path floats
+  // it). One explicit green heal number on the player, the foe's float intact.
+  const state = attachSpellEffects(logged, [
+    { kind: 'sustain-heal', attackerId: 'player', targetId: 'player', heal: restored },
+  ]);
   return {
     state,
     character: { ...character, hp: { ...character.hp, current: hpNow } },
