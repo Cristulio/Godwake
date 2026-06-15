@@ -661,8 +661,13 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
             ) : isWildShaped(props.character) ? (
               // Wild Shape swaps the druid's battlefield form for a beast
               // silhouette — purely visual; reverts when the form spends out
-              // (wildShapeRoundsRemaining → 0 on turn/createCombat reset).
-              <BeastPortrait className="w-full h-auto" />
+              // (wildShapeRoundsRemaining → 0 on turn/createCombat reset). The
+              // form escalates with the druid: Greater Wild Shape (level 10+)
+              // wears the dire bear-beast; below that, the leaner young bear.
+              <BeastPortrait
+                variant={props.character.level >= 10 ? 'dire' : 'young'}
+                className="w-full h-auto"
+              />
             ) : (
               <PlayerPortrait
                 classId={props.character.classId}
