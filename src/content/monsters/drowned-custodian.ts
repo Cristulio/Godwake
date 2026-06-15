@@ -45,7 +45,10 @@ export const DROWNED_CUSTODIAN: Monster = MonsterSchema.parse({
       kind: 'sustain',
       name: 'Drink the Deep Back',
       target: 'self',
-      heal: '3d8',
+      // 210-HP boss whose whole identity is a self-heal you must out-race; 3d8
+      // (~13, ~6% of max) was negligible and rolled an embarrassing 8. 4d8+12
+      // (~30 avg, floor 16) makes each draught a real chunk to claw back past.
+      heal: '4d8+12',
       cooldownRounds: 6,
       description:
         'The black water it drowned this place with has never once left; at need it simply takes some back, drawing the deep up through itself, and the wounds you opened close over like a page sinking — there was never a tear there, the water says, there was only ever the deep, keeping its own.',
