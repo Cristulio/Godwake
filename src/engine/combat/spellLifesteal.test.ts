@@ -262,6 +262,123 @@ describe('Soulthirst — stacks on top of Life Drain’s inherent heal', () => {
   });
 });
 
+describe('Soulthirst — emits an explicit heal-number event on the player', () => {
+  beforeEach(() => _resetMonsterInstanceCounter());
+
+  function playerHealEvents(state: CombatState) {
+    return (state.spellEffectEvents ?? []).filter(
+      (e) => e.targetId === 'player' && (e.heal ?? 0) > 0,
+    );
+  }
+
+  it('AoE vamp across multiple foes leaves exactly one player heal event = HP restored', () => {
+    const roller = createDiceRoller(11);
+    const wiz = makeWizard({
+      legendaryEffects: [{ spellLifestealPct: 100 }],
+      equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+    });
+    const init = createCombat({
+      roller,
+      character: wiz,
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('goblin') }],
+    });
+    const w = { ...init.character, hp: { ...init.character.hp, current: 1, max: 500 } };
+
+    const result = castSpell({
+      roller,
+      character: w,
+      state: init.state,
+      spellId: 'burning-hands',
+      targetId: firstMonsterId(init.state),
+    });
+    expect(result.cast).toBe(true);
+
+    const restored = result.character.hp.current - 1;
+    expect(restored).toBeGreaterThan(0);
+    const heals = playerHealEvents(result.state);
+    expect(heals).toHaveLength(1);
+    expect(heals[0]!.heal).toBe(restored);
+    expect(heals[0]!.kind).toBe('sustain-heal');
+  });
+
+  it('single-target vamp emits exactly one heal event (not two) and keeps the foe damage float', () => {
+    const roller = createDiceRoller(7);
+    const init = createCombat({
+      roller,
+      character: makeWizard(),
+      monsters: [{ def: getMonster('goblin') }],
+    });
+    const target = firstMonsterId(init.state);
+    const w = { ...init.character, hp: { ...init.character.hp, current: 1 } };
+
+    const result = castSpell({
+      roller,
+      character: w,
+      state: init.state,
+      spellId: 'magic-missile',
+      targetId: target,
+    });
+    expect(result.cast).toBe(true);
+
+    const restored = result.character.hp.current - 1;
+    expect(restored).toBeGreaterThan(0);
+    const heals = playerHealEvents(result.state);
+    expect(heals).toHaveLength(1);
+    expect(heals[0]!.heal).toBe(restored);
+    // The damage cast's own single event is preserved (its number floats on the foe).
+    expect(result.state.spellEffectEvent?.targetId).toBe(target);
+    expect(result.state.spellEffectEvent?.damage).toBeGreaterThan(0);
+  });
+
+  it('without spell-vamp the cast leaves no player heal event', () => {
+    const roller = createDiceRoller(7);
+    const bare = makeWizard({
+      equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+    });
+    const init = createCombat({ roller, character: bare, monsters: [{ def: getMonster('goblin') }] });
+    const w = { ...init.character, hp: { ...init.character.hp, current: 1 } };
+
+    const result = castSpell({
+      roller,
+      character: w,
+      state: init.state,
+      spellId: 'magic-missile',
+      targetId: firstMonsterId(init.state),
+    });
+    expect(result.cast).toBe(true);
+    expect(playerHealEvents(result.state)).toHaveLength(0);
+  });
+
+  it('necromancy AoE vamp also leaves one player heal event', () => {
+    const roller = createDiceRoller(11);
+    const necro = makeWizard({
+      level: 2,
+      subclassId: 'necromancy',
+      equipped: { mainHand: { itemId: 'dagger' }, offHand: null, armor: null },
+    });
+    const init = createCombat({
+      roller,
+      character: necro,
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('goblin') }],
+    });
+    const w = { ...init.character, hp: { ...init.character.hp, current: 1, max: 500 } };
+
+    const result = castSpell({
+      roller,
+      character: w,
+      state: init.state,
+      spellId: 'burning-hands',
+      targetId: firstMonsterId(init.state),
+    });
+    expect(result.cast).toBe(true);
+    const restored = result.character.hp.current - 1;
+    expect(restored).toBeGreaterThan(0);
+    const heals = playerHealEvents(result.state);
+    expect(heals).toHaveLength(1);
+    expect(heals[0]!.heal).toBe(restored);
+  });
+});
+
 describe('School of Necromancy — Grim Harvest lifesteal (no affix needed)', () => {
   beforeEach(() => _resetMonsterInstanceCounter());
 

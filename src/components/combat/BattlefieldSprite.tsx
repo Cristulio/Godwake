@@ -249,6 +249,10 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
   const lastAttackPulse = useRef(props.attackPulse);
   const lastSeenAttackId = useRef<number | undefined>(undefined);
   const lastSeenSpellEffectId = useRef<number | undefined>(undefined);
+  // The spell-vamp heal batch isn't cleared between commits (like attackEvents),
+  // so the main effect must only defer to it once — on the commit that emitted
+  // it — or a later unrelated heal (potion) would be wrongly suppressed.
+  const lastDeferredHealBatch = useRef<SpellEffectEvent[] | undefined>(undefined);
 
   // The floating combat number. Sourced from the landing attack event so it
   // shows the TRUE rolled damage (crits, affix bonuses, off-type all live in
@@ -288,6 +292,21 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
       ev.targetId === myId &&
       ev.id !== lastSeenSpellEffectId.current
     ) {
+      prevHp.current = hpCurrent;
+      if (attackId !== undefined) lastSeenAttackId.current = attackId;
+      return;
+    }
+    // A spell-vamp heal arrives as an explicit batch entry (floated by the batch
+    // effect below). Defer the hpDelta heal here so the same drink isn't floated
+    // twice — but only on the commit that emitted the batch (the batch isn't
+    // cleared afterward, so a stale entry must not suppress a later heal).
+    const healBatch = props.spellEffectEvents;
+    if (
+      healBatch &&
+      healBatch !== lastDeferredHealBatch.current &&
+      healBatch.some((e) => (e.heal ?? 0) > 0 && e.targetId === myId)
+    ) {
+      lastDeferredHealBatch.current = healBatch;
       prevHp.current = hpCurrent;
       if (attackId !== undefined) lastSeenAttackId.current = attackId;
       return;
@@ -442,19 +461,29 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
 
   // AoE control cast (Entangle): one verdict per foe arrives in this batch. Each
   // sprite floats the entry aimed at it, so every rooted (LANDED) / saved
-  // (RESISTED) foe shows its own verdict — not just the anchor. Keyed on the
-  // array identity (a fresh array per emit), mirroring the attackEvents batch.
+  // (RESISTED) foe shows its own verdict — not just the anchor. The same batch
+  // also carries the spell-vamp heal number (an explicit green heal on the
+  // player), so a multi-foe AoE drink floats reliably instead of riding the
+  // fragile hpDelta inference. Keyed on the array identity (a fresh array per
+  // emit), mirroring the attackEvents batch.
   useEffect(() => {
     const events = props.spellEffectEvents;
     if (!events || events.length === 0) return;
     const myId = props.kind === 'player' ? 'player' : props.instance.id;
-    const mine = events.filter((e) => e.targetId === myId && e.outcome);
+    const mine = events.filter(
+      (e) => e.targetId === myId && (e.outcome || (e.heal ?? 0) > 0),
+    );
     if (mine.length === 0) return;
     const timers: ReturnType<typeof setTimeout>[] = [];
     mine.forEach((e) => {
       const id = Date.now() + Math.random();
-      setDamageFloats((d) => [...d, { id, amount: 0, kind: e.outcome! }]);
-      timers.push(setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1200));
+      if (e.outcome) {
+        setDamageFloats((d) => [...d, { id, amount: 0, kind: e.outcome! }]);
+        timers.push(setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1200));
+        return;
+      }
+      setDamageFloats((d) => [...d, { id, amount: e.heal!, kind: 'heal' }]);
+      timers.push(setTimeout(() => setDamageFloats((d) => d.filter((x) => x.id !== id)), 1500));
     });
     return () => timers.forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
