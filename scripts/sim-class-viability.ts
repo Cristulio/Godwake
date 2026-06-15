@@ -38,7 +38,12 @@
  * wiring the new mechanics — report that loudly.
  *
  * Run:
- *   SOULS_PER_CLASS=150 MAX_LIVES=150 npx tsx scripts/sim-class-viability.ts
+ *   npm run sim:viability        # all 9 classes (bumped heap — see below)
+ *   CLASSES=druid,bard npm run sim:viability   # a subset
+ *
+ * Use the npm script, NOT a bare `tsx`: a full 9-class run churns ~100k delve
+ * sims and exhausts the default V8 heap ("mark-compacts near heap limit") before
+ * the last class — the script raises --max-old-space-size so the full run lands.
  *
  * Writes the curated findings to docs/sim-findings/class-viability.md.
  *
