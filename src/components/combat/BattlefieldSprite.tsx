@@ -3,6 +3,7 @@ import type { Character } from '../../types/character';
 import type { MonsterInstance, AttackEvent, SpellEffectEvent } from '../../types/combat';
 import { computeAC, isWildShaped } from '../../engine/character/derived';
 import { isDragonForm } from '../../engine/combat/shapeChange';
+import { isBearForm } from '../../engine/combat/bearForm';
 import { MonsterPortrait } from './MonsterPortrait';
 import { PlayerPortrait } from './PlayerPortrait';
 import { BeastPortrait } from './BeastPortrait';
@@ -652,6 +653,11 @@ function BattlefieldSpriteImpl(props: BattlefieldSpriteProps) {
               // the dragon's battlefield body (the wyrm sprite), not the robe.
               // Purely visual; reverts when the form's rounds run out.
               <MonsterPortrait defId="nizidramaniiyt" className="w-full h-auto" />
+            ) : isBearForm(props.character) ? (
+              // Avatar of the Wilds: the druid IS the Great Bear — wear the apex
+              // beast body (bigger/darker than a routine shift), never the robe.
+              // Takes precedence over Wild Shape; reverts when bearForm rounds end.
+              <BeastPortrait variant="great-bear" className="w-full h-auto" />
             ) : isWildShaped(props.character) ? (
               // Wild Shape swaps the druid's battlefield form for a beast
               // silhouette — purely visual; reverts when the form spends out
