@@ -518,7 +518,7 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'barbarian', ascensionExclusive: true,
   },
   {
-    id: 'bloodrage-band', setId: 'bloodrage', name: 'Bloodrage Sinew-Band', slot: 'ring1',
+    id: 'bloodrage-band', setId: 'bloodrage', name: 'Bloodrage Sinew-Band', slot: 'ring2',
     flavor: 'Braided sinew that tightens as the fury rises, lending the arm a deeper savagery.',
     effects: { rageDamageBonus: 2 }, effectLine: '+2 melee damage while Rage burns',
     classGate: 'barbarian', ascensionExclusive: true,
@@ -594,7 +594,7 @@ export const SET_PIECES: SetPiece[] = [
     classGate: 'wizard', ascensionExclusive: true,
   },
   {
-    id: 'archmagi-band', setId: 'archmagi', name: 'Band of the Archmagi', slot: 'ring1',
+    id: 'archmagi-band', setId: 'archmagi', name: 'Band of the Archmagi', slot: 'ring2',
     flavor: 'A ring of cold iron etched with a single closing sigil; the ruin it shapes runs deeper.',
     effects: { spellDamageBonus: 2 }, effectLine: '+2 spell damage',
     classGate: 'wizard', ascensionExclusive: true,

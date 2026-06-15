@@ -45,6 +45,18 @@ describe('set gear — pieces & bases', () => {
     }
   });
 
+  it('every set uses distinct slots, so the full set is actually wearable at once', () => {
+    // A set with two pieces on the same slot can never reach its top tier (only one
+    // item fits a slot), silently capping the grand sets. ring1 and ring2 are
+    // distinct slots, so a two-ring set must use both.
+    for (const set of GEAR_SETS) {
+      const slots = set.pieceIds.map((pid) => getSetPiece(pid)!.slot);
+      expect(new Set(slots).size, `${set.id} has pieces sharing a slot: ${slots.join(', ')}`).toBe(
+        slots.length,
+      );
+    }
+  });
+
   it('weapon/armour pieces carry a +N enhancement so they beat rolled purple gear', () => {
     for (const piece of SET_PIECES) {
       const item = getItem(piece.id);

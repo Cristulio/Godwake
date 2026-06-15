@@ -110,6 +110,7 @@ const PART_KEY: Record<string, string> = {
   ascendant: 'ascendant',
   dragon: 'dragon',
   primal: 'primal',
+  bear: 'bear',
   'First Cut': 'firstCut',
   'Bleed-Out': 'bleedOut',
   Fellfast: 'fellfast',
