@@ -13,7 +13,6 @@ import {
 } from '../apotheosis';
 import { SHAPE_CHANGE_ROUNDS, SHAPE_CHANGE_TEMP_HP } from '../shapeChange';
 import {
-  BEAR_CLAW_ATTACKS,
   BEAR_FORM_AC_BONUS,
   BEAR_FORM_ROUNDS,
   BEAR_FORM_TEMP_HP,
