@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 44 38"
+      shape-rendering="crispEdges"
+      preserveAspectRatio="xMidYMax meet"
+      aria-label="Wild Shape — Young Bear"
+    >
+  <!-- 44×38: a leaner, younger bear — smaller barrel, low modest hump, head
+       jutting right. Reads humbler than the dire beast: less mass, narrower
+       limbs, occupies less of the grid. Grove backlight + a few motes. -->
+  <ellipse cx="23" cy="22" rx="18" ry="13" fill="#5a8a3a" opacity="0.08" />
+  <ellipse cx="27" cy="21" rx="13" ry="10" fill="#c8954a" opacity="0.06" />
+  <ellipse cx="23" cy="36.6" rx="14" ry="1.8" fill="#000" opacity="0.42" />
+
+  <!-- ── Tail — small fur nub ── -->
+  <rect x="8" y="18" width="5" height="5" fill="#150d08" />
+  <rect x="9" y="19" width="3" height="3" fill="#33241a" />
+  <rect x="9" y="19" width="3" height="1" fill="#6e5236" />
+  <rect x="9" y="22" width="3" height="1" fill="#241812" />
+
+  <!-- ── Body barrel — slimmer mass, lit ridge, dark belly ── -->
+  <rect x="10" y="15" width="21" height="14" fill="#150d08" />
+  <rect x="11" y="16" width="19" height="12" fill="#33241a" />
+  <!-- back ridge light -->
+  <rect x="11" y="16" width="19" height="1" fill="#6e5236" />
+  <rect x="11" y="17" width="19" height="1" fill="#4f3a26" />
+  <rect x="12" y="16" width="7" height="1" fill="#8a6a40" />
+  <!-- flank shadow + belly -->
+  <rect x="11" y="16" width="2" height="9" fill="#241812" />
+  <rect x="11" y="26" width="19" height="2" fill="#1c130c" />
+  <rect x="11" y="25" width="7" height="1" fill="#241812" />
+  <!-- fur grain dither -->
+  <rect x="15" y="19" width="1" height="1" fill="#4f3a26" />
+  <rect x="19" y="21" width="1" height="1" fill="#241812" />
+  <rect x="22" y="19" width="1" height="1" fill="#4f3a26" />
+  <rect x="17" y="23" width="1" height="1" fill="#241812" />
+  <rect x="25" y="22" width="1" height="1" fill="#4f3a26" />
+
+  <!-- ── Shoulder hump — low, only a touch above the back ── -->
+  <rect x="20" y="10" width="12" height="7" fill="#150d08" />
+  <rect x="21" y="11" width="10" height="5" fill="#33241a" />
+  <rect x="21" y="11" width="10" height="1" fill="#8a6a40" />
+  <rect x="22" y="10" width="6" height="1" fill="#6e5236" />
+  <rect x="22" y="10" width="3" height="1" fill="#b88a4a" />
+  <rect x="21" y="12" width="2" height="4" fill="#241812" />
+  <rect x="30" y="11" width="1" height="5" fill="#241812" />
+  <!-- ridge tufts down the back -->
+  <polygon points="13,16 14,13 16,16" fill="#4f3a26" />
+  <polygon points="17,15 18,13 19,16" fill="#33241a" />
+
+  <!-- ── Neck + lowered head, jutting forward-right ── -->
+  <!-- rounded ear -->
+  <rect x="28" y="13" width="4" height="4" fill="#150d08" />
+  <rect x="29" y="14" width="2" height="2" fill="#33241a" />
+  <rect x="29" y="14" width="1" height="1" fill="#6e5236" />
+  <!-- skull -->
+  <rect x="29" y="15" width="9" height="9" fill="#150d08" />
+  <rect x="30" y="16" width="7" height="7" fill="#33241a" />
+  <rect x="30" y="16" width="7" height="1" fill="#6e5236" />
+  <rect x="30" y="17" width="3" height="1" fill="#4f3a26" />
+  <rect x="30" y="16" width="1" height="7" fill="#241812" />
+  <!-- brow ridge -->
+  <rect x="32" y="18" width="5" height="1" fill="#1c130c" />
+  <!-- amber eye — glow + hot core -->
+  <ellipse cx="34.5" cy="19.5" rx="2.5" ry="1.8" fill="#f4b43a" opacity="0.32" />
+  <rect x="33" y="18" width="2" height="2" fill="#0e0a06" />
+  <rect x="33" y="18" width="1" height="1" fill="#f4b43a" />
+  <rect x="33" y="18" width="1" height="1" fill="#ffe9a8" />
+
+  <!-- ── Muzzle — short, black nose ── -->
+  <rect x="37" y="18" width="5" height="6" fill="#150d08" />
+  <rect x="38" y="19" width="3" height="4" fill="#4f3a26" />
+  <rect x="38" y="19" width="3" height="1" fill="#6e5236" />
+  <rect x="38" y="19" width="2" height="1" fill="#8a6a40" />
+  <rect x="40" y="20" width="1" height="3" fill="#33241a" />
+  <!-- nose tip -->
+  <rect x="40" y="19" width="2" height="2" fill="#150d08" />
+  <rect x="40" y="19" width="1" height="1" fill="#0e0a06" />
+
+  <!-- ── Small maw — dark line, modest fangs ── -->
+  <rect x="34" y="23" width="8" height="3" fill="#150d08" />
+  <rect x="35" y="24" width="6" height="1" fill="#2a1410" />
+  <polygon points="36,23 36.5,25 37,23" fill="#e8dcc0" />
+  <polygon points="39,23 39.5,25 40,23" fill="#d8c8a0" />
+
+  <!-- ── Front legs — slim, clawed ── -->
+  <rect x="25" y="27" width="5" height="8" fill="#150d08" />
+  <rect x="26" y="28" width="3" height="6" fill="#33241a" />
+  <rect x="26" y="28" width="1" height="6" fill="#4f3a26" />
+  <rect x="31" y="27" width="5" height="8" fill="#150d08" />
+  <rect x="32" y="28" width="3" height="6" fill="#2a1d14" />
+  <rect x="32" y="28" width="1" height="6" fill="#3f2e1e" />
+  <!-- paws + claws -->
+  <rect x="24" y="33" width="6" height="3" fill="#150d08" />
+  <rect x="25" y="34" width="4" height="1" fill="#241812" />
+  <polygon points="24,35 25,37 26,35" fill="#e8dcc0" />
+  <polygon points="27,35 28,37 29,35" fill="#d8c8a0" />
+  <rect x="31" y="33" width="6" height="3" fill="#150d08" />
+  <rect x="32" y="34" width="4" height="1" fill="#1c130c" />
+  <polygon points="31,35 32,37 33,35" fill="#d8c8a0" />
+  <polygon points="34,35 35,37 36,35" fill="#e8dcc0" />
+
+  <!-- ── Hind leg — modest haunch ── -->
+  <rect x="11" y="22" width="6" height="9" fill="#150d08" />
+  <rect x="12" y="23" width="4" height="7" fill="#33241a" />
+  <rect x="12" y="23" width="4" height="1" fill="#5e4630" />
+  <rect x="12" y="23" width="1" height="7" fill="#4f3a26" />
+  <rect x="15" y="23" width="1" height="7" fill="#241812" />
+  <rect x="12" y="29" width="6" height="6" fill="#150d08" />
+  <rect x="13" y="30" width="4" height="4" fill="#2a1d14" />
+  <rect x="13" y="30" width="1" height="4" fill="#3f2e1e" />
+  <!-- second hind leg behind -->
+  <rect x="18" y="27" width="5" height="8" fill="#150d08" />
+  <rect x="19" y="28" width="3" height="6" fill="#241812" />
+  <rect x="19" y="28" width="1" height="6" fill="#33241a" />
+  <!-- hind paws + claws -->
+  <rect x="11" y="33" width="7" height="3" fill="#150d08" />
+  <rect x="12" y="34" width="5" height="1" fill="#241812" />
+  <polygon points="11,35 12,37 13,35" fill="#d8c8a0" />
+  <polygon points="14,35 15,37 16,35" fill="#e8dcc0" />
+  <rect x="18" y="33" width="6" height="3" fill="#150d08" />
+  <rect x="19" y="34" width="4" height="1" fill="#1c130c" />
+  <polygon points="19,35 20,37 21,35" fill="#d8c8a0" />
+
+  <!-- ── A few drifting grove motes (druid tie) ── -->
+  <rect x="18" y="9" width="1" height="1" fill="#8ac858" opacity="0.5" />
+  <rect x="35" y="11" width="1" height="1" fill="#a8d050" opacity="0.45" />
+  <rect x="13" y="13" width="1" height="1" fill="#5a8a3a" opacity="0.4" />
+</svg>
