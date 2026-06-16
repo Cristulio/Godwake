@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "sim:viability": "node --max-old-space-size=6144 --import tsx scripts/sim-class-viability.ts",
+    "sim:viability": "SOULS_PER_CLASS=120 MAX_LIVES=120 node --max-old-space-size=10240 --import tsx scripts/sim-class-viability.ts",
     "sim:reincarnation": "tsx scripts/sim-reincarnation-loop.ts"
   },
   "dependencies": {

@@ -38,12 +38,15 @@
  * wiring the new mechanics — report that loudly.
  *
  * Run:
- *   npm run sim:viability        # all 9 classes (bumped heap — see below)
+ *   npm run sim:viability        # all 9 classes, full-field (see below)
  *   CLASSES=druid,bard npm run sim:viability   # a subset
  *
  * Use the npm script, NOT a bare `tsx`: a full 9-class run churns ~100k delve
- * sims and exhausts the default V8 heap ("mark-compacts near heap limit") before
- * the last class — the script raises --max-old-space-size so the full run lands.
+ * sims and exhausts the default V8 heap ("mark-compacts near heap limit"). The
+ * script pins the known-good full-field config — SOULS_PER_CLASS=120 MAX_LIVES=120
+ * + --max-old-space-size=10240. (150×150 still OOMs a 16GB Mac even at high heap;
+ * 120×120 is the established full-field setting. Override the env vars for more
+ * power on a bigger box, or run CLASSES subsets.)
  *
  * Writes the curated findings to docs/sim-findings/class-viability.md.
  *
