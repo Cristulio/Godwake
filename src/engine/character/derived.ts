@@ -97,9 +97,12 @@ export function computeAC(character: Character): number {
   }
 
   // Monk Unarmored Defense: with no body armor, the guard is breath and read —
-  // AC becomes 10 + DEX + WIS. (Distinct from the Barbarian's CON-keyed version.)
+  // AC becomes 10 + DEX + WIS, plus a disciplined +2 deflection the bare stance
+  // wins by slipping blows steel never would (owner 2026-06-28: unarmoured should
+  // out-guard, not merely match, light armour). Distinct from the Barbarian's
+  // CON-keyed version, which takes no deflection.
   if (!bodyArmor && characterHasMechanic(character, 'unarmored-defense-wis')) {
-    base = 10 + dexMod + modifierFor(character, 'wis');
+    base = 10 + dexMod + modifierFor(character, 'wis') + 2;
   }
 
   if (equipped.offHand) {

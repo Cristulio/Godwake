@@ -604,7 +604,7 @@
     "flurry": "Acción adicional, 1 Ki: descarga golpes extra este turno — sigue pegando después de gastar tu acción de Ataque.",
     "patientDefense": "Acción adicional, 1 Ki: fluye en una guardia flexible — los ataques contra ti se tiran con desventaja hasta tu próximo turno.",
     "stunningStrike": "Gratis, {cost} Ki: arma un golpe aturdidor — tu próximo impacto obliga a una salvación o el objetivo pierde su próximo turno.",
-    "elementalBurst": "Acción adicional, {cost} Ki: estalla a TODOS los enemigos con fuego elemental — cada uno tira salvación de Destreza para la mitad. Tu respuesta a una multitud.",
+    "elementalBurst": "Acción adicional, {cost} Ki: estalla a TODOS los enemigos con fuego elemental — cada uno tira salvación de Destreza para la mitad y luego sigue ardiendo 2 turnos. Tu respuesta a una multitud.",
     "kitDark": "El acero aquieta las formas — el Ki solo responde a la mano vacía o a un arma del templo.",
     "wildShapeOn": "Ya llevas la bestia — garras fuera hasta que la forma se agote o se desvanezca.",
     "wildShapeEmpty": "No quedan cambios de Forma Salvaje este combate — se renuevan la próxima lucha.",

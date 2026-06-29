@@ -604,7 +604,7 @@
     "flurry": "Bonus action, 1 Ki: rain extra strikes this turn — keep hitting after your Attack action is spent.",
     "patientDefense": "Bonus action, 1 Ki: flow into a yielding guard — attacks against you roll at disadvantage until your next turn.",
     "stunningStrike": "Free, {cost} Ki: arm a staggering blow — your next hit forces a save or the target loses its next turn.",
-    "elementalBurst": "Bonus action, {cost} Ki: blast EVERY foe with elemental fire — each takes a Dexterity save for half. Your answer to a crowd.",
+    "elementalBurst": "Bonus action, {cost} Ki: blast EVERY foe with elemental fire — each takes a Dexterity save for half, then keeps burning for 2 turns. Your answer to a crowd.",
     "kitDark": "Steel stills the forms — Ki answers only the empty hand or a temple-drilled arm.",
     "wildShapeOn": "Already wearing the beast — claws out until the form spends out or fades.",
     "wildShapeEmpty": "No Wild Shape changes left this combat — they refresh next fight.",

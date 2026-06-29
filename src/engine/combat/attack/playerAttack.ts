@@ -55,7 +55,7 @@ import {
   monkFightsUnarmed,
   monkKitActive,
   martialArtsWeaponId,
-  MONK_UNARMED_DAMAGE_EDGE,
+  monkUnarmedDamageEdge,
 } from '../monk';
 import { getMonster } from '../../../content/monsters';
 import { isRangedWeapon, offHandWeaponRef, rageBrokenByArmor } from '../../character/equip';
@@ -143,10 +143,26 @@ const ASSASSINATE_BONUS_SNEAK_DICE = 2;
 
 /** Rogue Envenom (L8): the bleed a landed Sneak Attack leaves behind — a small
  *  damage-over-time that offsets the once-per-turn burst ceiling with sustain.
- *  Kept below the gear bleed affixes (3/turn × 3) so the kit doesn't overshadow
- *  the loot; folded max-of so it never weakens a stronger bleed already running. */
+ *  Kept modest (2/turn × 2) so the kit doesn't overshadow the loot; it now STACKS
+ *  onto any bleed already running (see {@link stackBleed}). */
 const ENVENOM_BLEED_PER_TURN = 2;
 const ENVENOM_BLEED_TURNS = 2;
+
+/** Bleed STACKS additively across hits and sources (owner 2026-06-28: bleed should
+ *  build into a real hemorrhage, not just refresh the strongest source), capped so
+ *  a fast multi-striker can't run it away. Duration refreshes to the longest
+ *  applied. CAP is the sim-tunable knob if a bleed build overshoots. */
+const BLEED_STACK_CAP = 20;
+function stackBleed(
+  inst: { bleedDamagePerTurn?: number; bleedTurnsRemaining?: number },
+  addDmg: number,
+  addTurns: number,
+): { bleedDamagePerTurn: number; bleedTurnsRemaining: number } {
+  return {
+    bleedDamagePerTurn: Math.min(BLEED_STACK_CAP, (inst.bleedDamagePerTurn ?? 0) + addDmg),
+    bleedTurnsRemaining: Math.max(inst.bleedTurnsRemaining ?? 0, addTurns),
+  };
+}
 
 /** Dual-wield off-hand ability-modifier share — the canonical 5e Two-Weapon
  *  Fighting style. The automatic off-hand follow-swing (Berserker / Battle
@@ -753,8 +769,9 @@ function resolveSwing(
     // bare-handed strike (each Flurry strike included); dark with ANY weapon in
     // hand.
     if (monkUnarmedStrike) {
-      bonusDamage += MONK_UNARMED_DAMAGE_EDGE;
-      onTypeParts.push({ amount: MONK_UNARMED_DAMAGE_EDGE, label: 'martial arts' });
+      const edge = monkUnarmedDamageEdge(nextCharacter);
+      bonusDamage += edge;
+      onTypeParts.push({ amount: edge, label: 'martial arts' });
     }
     // Monk Ki-Empowered Strikes (L6): channelled Ki rides every kit-bearing blow.
     if (monkKitOn && characterHasMechanic(nextCharacter, 'ki-empowered')) {
@@ -1224,8 +1241,7 @@ function resolveSwing(
               ...c,
               instance: {
                 ...c.instance,
-                bleedDamagePerTurn: Math.max(c.instance.bleedDamagePerTurn ?? 0, affixMods.bleedDamage),
-                bleedTurnsRemaining: Math.max(c.instance.bleedTurnsRemaining ?? 0, 3),
+                ...stackBleed(c.instance, affixMods.bleedDamage, 3),
               },
             };
           }),
@@ -1259,14 +1275,7 @@ function resolveSwing(
               ...c,
               instance: {
                 ...c.instance,
-                bleedDamagePerTurn: Math.max(
-                  c.instance.bleedDamagePerTurn ?? 0,
-                  ENVENOM_BLEED_PER_TURN,
-                ),
-                bleedTurnsRemaining: Math.max(
-                  c.instance.bleedTurnsRemaining ?? 0,
-                  ENVENOM_BLEED_TURNS,
-                ),
+                ...stackBleed(c.instance, ENVENOM_BLEED_PER_TURN, ENVENOM_BLEED_TURNS),
               },
             };
           }),
@@ -1295,8 +1304,7 @@ function resolveSwing(
               ...c,
               instance: {
                 ...c.instance,
-                bleedDamagePerTurn: Math.max(c.instance.bleedDamagePerTurn ?? 0, 3),
-                bleedTurnsRemaining: Math.max(c.instance.bleedTurnsRemaining ?? 0, 3),
+                ...stackBleed(c.instance, 3, 3),
               },
             };
           }),

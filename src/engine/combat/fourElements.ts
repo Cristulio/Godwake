@@ -12,7 +12,9 @@ import { getMonster } from '../../content/monsters';
 import {
   type MonkActionContext,
   ELEMENTAL_BURST_KI_COST,
+  ELEMENTAL_BURN_TURNS,
   monkElementalBurstDice,
+  monkElementalBurnPerTurn,
   monkKiSaveDC,
   monkKitActive,
 } from './monk';
@@ -50,6 +52,7 @@ export function useElementalBurst(
 
   const dc = monkKiSaveDC(character);
   const diceN = monkElementalBurstDice(character);
+  const burnPerTurn = monkElementalBurnPerTurn(character);
   let nextCharacter: Character = character;
   // A room-wide gout of fire: the AoE BURST shape + fire element so it both sounds
   // (spell_fire crackle) and looks (fire palette) right — a lone 'spell-bolt' with
@@ -83,6 +86,29 @@ export function useElementalBurst(
         halved: saved ? t('combat.log.halvedSuffix') : '',
       }),
     });
+
+    // Lingering fire — the RIDER. Even a saved foe keeps burning: an
+    // unconditional DOT for ELEMENTAL_BURN_TURNS, max-of so a fresh burst
+    // refreshes but never downgrades a stronger burn (it shares Fireball's DOT).
+    const stillAlive = nextState.combatants.some(
+      (c) => c.kind === 'monster' && c.id === foe.id && c.instance.hp.current > 0,
+    );
+    if (stillAlive && burnPerTurn > 0) {
+      nextState = {
+        ...nextState,
+        combatants: nextState.combatants.map((c) => {
+          if (c.kind !== 'monster' || c.id !== foe.id) return c;
+          return {
+            ...c,
+            instance: {
+              ...c.instance,
+              burnDamagePerTurn: Math.max(c.instance.burnDamagePerTurn ?? 0, burnPerTurn),
+              burnTurnsRemaining: Math.max(c.instance.burnTurnsRemaining ?? 0, ELEMENTAL_BURN_TURNS),
+            },
+          };
+        }),
+      };
+    }
   }
 
   nextCharacter = patchResources(nextCharacter, {

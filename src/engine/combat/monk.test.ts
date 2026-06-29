@@ -215,9 +215,9 @@ describe('Monk — Martial Arts + Ki scaling', () => {
 });
 
 describe('Monk — Unarmored Defense (DEX + WIS)', () => {
-  it('computes AC as 10 + DEX + WIS while unarmored', () => {
-    // Wood Elf preset: DEX 17 (+3), WIS 15 (+2) → 10 + 3 + 2 = 15.
-    expect(computeAC(makeMonk(1))).toBe(15);
+  it('computes AC as 10 + DEX + WIS + 2 deflection while unarmored', () => {
+    // Wood Elf preset: DEX 17 (+3), WIS 15 (+2) → 10 + 3 + 2 + 2 = 17.
+    expect(computeAC(makeMonk(1))).toBe(17);
   });
 });
 
@@ -692,6 +692,20 @@ describe('Monk — Way of the Four Elements (the ki-caster)', () => {
     const before = monsterOf(setup.state).instance.hp.current;
     const r = useElementalBurst({ character: setup.character, state: setup.state }, scriptRoller([20]));
     expect(monsterOf(r.state).instance.hp.current).toBe(before - 6); // floor(12/2)
+  });
+
+  it('Elemental Burst leaves every foe burning — the rider DOT (no save)', () => {
+    const setup = createCombat({
+      character: makeMonk(3, 'way-of-the-four-elements'),
+      monsters: [{ def: getMonster('goblin') }, { def: getMonster('goblin') }],
+    });
+    // Both foes MAKE the save (d20=20) and survive the halved blast — yet the
+    // burn clings regardless: 3/turn for 2 turns at L3.
+    const r = useElementalBurst({ character: setup.character, state: setup.state }, scriptRoller([20, 20]));
+    for (const m of monstersOf(r.state)) {
+      expect(m.instance.burnDamagePerTurn).toBe(3);
+      expect(m.instance.burnTurnsRemaining).toBe(2);
+    }
   });
 
   it('no-ops without the conclave, without Ki, or with the bonus action spent', () => {

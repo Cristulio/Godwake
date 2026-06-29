@@ -18,12 +18,17 @@ import { attachCombatVfx } from './vfx';
 import { t } from '../../i18n';
 
 /**
- * Flat per-hit damage edge a monk earns for going weaponless — the reward for
- * forgoing a weapon's bigger die, affixes, and enhancement. Rides every bare-
- * handed strike (including each Flurry strike), but goes dark the moment a monk
- * picks up ANY weapon.
+ * Per-hit damage edge a monk earns for going weaponless — the stand-in for the
+ * bigger die, rolled affixes, and +N enhancement a weapon-class stacks onto
+ * every swing. SCALES with the school so the bare hand keeps pace with the gear
+ * a wielder accrues (owner 2026-06-28: the fist should rival an armed class):
+ * +3 → +4 (L5) → +5 (L11) → +6 (L17). Rides every bare-handed strike (each
+ * Flurry strike included), but goes dark the moment a monk picks up ANY weapon.
  */
-export const MONK_UNARMED_DAMAGE_EDGE = 2;
+export function monkUnarmedDamageEdge(character: Readonly<Character>): number {
+  const lvl = character.level;
+  return lvl >= 17 ? 6 : lvl >= 11 ? 5 : lvl >= 5 ? 4 : 3;
+}
 
 /**
  * The virtual unarmed-strike profiles the engine swaps in at each Martial Arts
@@ -251,5 +256,22 @@ export const ELEMENTAL_BURST_KI_COST = 1;
 export function monkElementalBurstDice(character: Readonly<Character>): number {
   const lvl = character.level;
   const base = lvl >= 17 ? 6 : lvl >= 11 ? 5 : lvl >= 5 ? 4 : 3;
+  return base + (characterHasMechanic(character as Character, 'elemental-mastery') ? 1 : 0);
+}
+
+/** Turns the Elemental Burst's lingering fire ticks for (the turn.ts burn DOT). */
+export const ELEMENTAL_BURN_TURNS = 2;
+
+/**
+ * The burn the Elemental Burst leaves on every foe it touches — the RIDER that
+ * makes the blast land beyond its one-shot, save-halved damage (owner 2026-06-28:
+ * the burst felt flat). UNCONDITIONAL once applied (no save), it ticks
+ * {@link ELEMENTAL_BURN_TURNS} turns in turn.ts, so even the bot's focus-fire
+ * can't waste it — the whole rank keeps burning. Climbs with the school:
+ * 3 → 4 (L5) → 5 (L11), +1 at Elemental Mastery (L10).
+ */
+export function monkElementalBurnPerTurn(character: Readonly<Character>): number {
+  const lvl = character.level;
+  const base = lvl >= 11 ? 5 : lvl >= 5 ? 4 : 3;
   return base + (characterHasMechanic(character as Character, 'elemental-mastery') ? 1 : 0);
 }

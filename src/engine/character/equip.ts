@@ -8,7 +8,7 @@ import { effectiveAbilityScores, characterHasMechanic } from './derived';
 import {
   isUnarmedStrikeId,
   martialArtsWeaponId,
-  MONK_UNARMED_DAMAGE_EDGE,
+  monkUnarmedDamageEdge,
 } from '../combat/monk';
 import { t, getLocalized } from '../../i18n';
 
@@ -264,7 +264,7 @@ export function itemEquipNote(character: Character, item: Item): string | null {
   if (item.kind === 'weapon' && character.classId === 'monk') {
     const fists = getItem(martialArtsWeaponId(character));
     const die = fists.kind === 'weapon' ? fists.damage : '1d6';
-    const params = { die, edge: MONK_UNARMED_DAMAGE_EDGE };
+    const params = { die, edge: monkUnarmedDamageEdge(character) };
     return item.monkWeapon === true
       ? t('equip.monkWeaponKeepsKit', params)
       : t('equip.monkWeaponStillsKit', params);
