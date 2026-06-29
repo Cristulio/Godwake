@@ -14,7 +14,7 @@ import {
   itemEquipNote,
   equippedRefsForItemSlot,
 } from '../../engine/character/equip';
-import { martialArtsWeaponId, MONK_UNARMED_DAMAGE_EDGE } from '../../engine/combat/monk';
+import { martialArtsWeaponId, monkUnarmedDamageEdge } from '../../engine/combat/monk';
 import { rolledItemCost } from '../../engine/items/rollItem';
 import type { Item, ItemRef } from '../../schemas/item';
 import { ItemIcon } from './ItemIcon';
@@ -562,7 +562,7 @@ function UnarmedHand({ character }: { character: Character }) {
           {t('screens.inventory.unarmedName')}
         </div>
         <div className="text-[var(--color-text-secondary)] text-[10px] uppercase tracking-widest font-mono mt-0.5">
-          {t('screens.inventory.unarmedLine', { die, edge: MONK_UNARMED_DAMAGE_EDGE })}
+          {t('screens.inventory.unarmedLine', { die, edge: monkUnarmedDamageEdge(character) })}
         </div>
       </div>
     </div>

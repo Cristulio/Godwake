@@ -27,7 +27,7 @@ export const MONK: Class = ClassSchema.parse({
         id: 'unarmored-defense-monk',
         name: 'Unarmored Defense',
         description:
-          'Worn light and read close — with no armour your guard is breath and instinct: AC becomes 10 + your Dexterity + your Wisdom. Steel would only cost you the stance.',
+          'Worn light and read close — with no armour your guard is breath and instinct: AC becomes 10 + your Dexterity + your Wisdom, and a +2 deflection the bare stance wins by slipping what steel would only catch. Armour would only cost you the stance.',
         mechanicKey: 'unarmored-defense-wis',
       },
       {
@@ -254,7 +254,7 @@ export const MONK: Class = ClassSchema.parse({
       bottomLine: {
         archetype: 'Elementalist',
         levers: [
-          'Elemental Burst (bonus action, 1 Ki): every foe takes a blast of elemental fire — Dexterity save for half.',
+          'Elemental Burst (bonus action, 1 Ki): every foe takes a blast of elemental fire — Dexterity save for half — and is left burning for two turns after.',
           'It competes with Flurry for the bonus action and the Ki — single-target deluge OR room-wide blast.',
           'L10: the burst deepens by a die, and the elements answer harder.',
         ],
@@ -265,7 +265,7 @@ export const MONK: Class = ClassSchema.parse({
             id: 'elemental-burst',
             name: 'Monastic Tradition: Four Elements',
             description:
-              'You learn to spend Ki not on the fist but on the element behind it. As a bonus action you loose an Elemental Burst — a gout of conjured fire across the whole field, every enemy rolling a Dexterity save against your Ki or burning for it (half on a save). It is the deluge turned outward: where Flurry pours blows into one foe, the Burst answers the entire room. The monk who finally has an answer to a crowd.',
+              'You learn to spend Ki not on the fist but on the element behind it. As a bonus action you loose an Elemental Burst — a gout of conjured fire across the whole field, every enemy rolling a Dexterity save against your Ki or burning for it (half on a save) — and the conjured fire clings, searing them again over the next two turns whether they dodged the brunt or not. It is the deluge turned outward: where Flurry pours blows into one foe, the Burst answers the entire room. The monk who finally has an answer to a crowd.',
             mechanicKey: 'elemental-burst',
           },
         ],
