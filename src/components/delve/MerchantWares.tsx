@@ -9,7 +9,7 @@ import { itemEquipNote, equipDenialReason, equippedRefsForItemSlot } from '../..
 import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { ItemTooltip } from '../inventory/ItemTooltip';
-import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel, twoHandedPremiumLine } from '../inventory/itemDisplay';
+import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel, twoHandedPremiumLine, twoHandedScaledTag } from '../inventory/itemDisplay';
 import { affixRelevanceById, enhancementRelevanceFor } from '../inventory/affixRelevance';
 import type { GearStock, LegendaryOffer } from './shopStock';
 import { useT } from '../../i18n/useT';
@@ -145,6 +145,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
           })()}
           {(rolled?.affixes ?? []).map((id) => {
             const rel = affixRelevanceById(id, character);
+            const scaled = twoHandedScaledTag(id, base);
             return (
               <div
                 key={id}
@@ -152,6 +153,7 @@ export function GearWareRow({ stock, bought, gold, onBuy, character }: GearWareR
                 style={{ color, opacity: rel.relevant ? 1 : 0.4 }}
               >
                 ◆ {localizedAffixEffect(id)}
+                {scaled && <span className="ml-1 not-italic font-mono text-[var(--color-accent-amber)]">→ {scaled}</span>}
                 {rel.tag && <RelevanceTag tag={rel.tag} />}
               </div>
             );
