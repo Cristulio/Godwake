@@ -6,9 +6,8 @@ import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { localizedItemName, localizedItemDescription, localizedAffixEffect, gearRarityLabel } from '../inventory/itemDisplay';
 import { affixRelevanceById } from '../inventory/affixRelevance';
 import { getLegendary } from '../../content/legendaries';
-import { getSetPiece, setForPiece, setProgress } from '../../content/sets';
+import { getSetPiece, setForPiece } from '../../content/sets';
 import { hasPendingLevelUp } from '../../engine/character/leveling';
-import { useMetaStore } from '../../stores/metaStore';
 import { useT } from '../../i18n/useT';
 
 export function SpoilsScreen() {
@@ -17,7 +16,6 @@ export function SpoilsScreen() {
   const character = useGameStore((s) => s.character);
   const acceptSpoils = useGameStore((s) => s.acceptSpoils);
   const goToInventory = useGameStore((s) => s.goToInventory);
-  const ownedSetPieces = useMetaStore((s) => s.ownedSetPieces);
 
   if (!lastLoot) return null;
 
@@ -26,7 +24,7 @@ export function SpoilsScreen() {
   const hasItems =
     lastLoot.items.length > 0 ||
     lastLoot.bankedLegendaryId != null ||
-    lastLoot.bankedSetPieceId != null;
+    lastLoot.foundSetPieceId != null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden animate-fade-in-slow">
@@ -171,26 +169,19 @@ export function SpoilsScreen() {
           );
         })()}
 
-        {/* Set piece banked */}
-        {lastLoot.bankedSetPieceId && (() => {
-          const id = lastLoot.bankedSetPieceId;
+        {/* Set piece found — its set is now unlocked (buyable in shops) */}
+        {lastLoot.foundSetPieceId && (() => {
+          const id = lastLoot.foundSetPieceId;
           const piece = getSetPiece(id);
           const set = setForPiece(id);
-          const slotKey = piece ? (piece.slot === 'ring1' || piece.slot === 'ring2' ? 'ring' : piece.slot) : '';
-          const have = set ? setProgress(set, ownedSetPieces) : 0;
           return (
             <div className="bg-[var(--color-bg-panel)] border-2 px-3 py-2 animate-pop-in" style={{ borderColor: '#0fa968' }}>
               <div className="font-display text-sm uppercase tracking-wider" style={{ color: '#0fa968' }}>
                 ✦ {tc('setGear', id, 'name', piece?.name ?? '')}
               </div>
-              {set && piece && (
+              {set && (
                 <div className="text-[10px] uppercase tracking-[0.2em] mt-0.5" style={{ color: '#0fa968', opacity: 0.85 }}>
-                  {t('screens.spoils.setMeta', {
-                    set: tc('setGear', set.id, 'name', set.name),
-                    slot: t(`screens.spoils.setSlot.${slotKey}`),
-                    have,
-                    total: set.pieceIds.length,
-                  })}
+                  {t('screens.spoils.setUnlocked', { set: tc('setGear', set.id, 'name', set.name) })}
                 </div>
               )}
               {piece && (
@@ -198,21 +189,16 @@ export function SpoilsScreen() {
                   {tc('setGear', id, 'effect', piece.effectLine)}
                 </div>
               )}
-              {set?.bonuses.map((tier) => {
-                const met = have >= tier.piecesRequired;
-                return (
-                  <div
-                    key={tier.piecesRequired}
-                    className="text-[9px] leading-relaxed mt-0.5"
-                    style={{ color: met ? '#0fa968' : 'var(--color-text-dim)' }}
-                  >
-                    {met ? '◆ ' : '◇ '}
-                    {tc('setGear', `${set.id}.bonus`, String(tier.piecesRequired), tier.label)}
-                  </div>
-                );
-              })}
+              {set?.bonuses.map((tier) => (
+                <div
+                  key={tier.piecesRequired}
+                  className="text-[9px] leading-relaxed mt-0.5 text-[var(--color-text-dim)]"
+                >
+                  ◇ {tc('setGear', `${set.id}.bonus`, String(tier.piecesRequired), tier.label)}
+                </div>
+              ))}
               <div className="text-[var(--color-text-dim)] text-[9px] uppercase tracking-[0.3em] mt-1">
-                {t('screens.spoils.setPieceBanked')}
+                {t('screens.spoils.setPieceFound')}
               </div>
             </div>
           );

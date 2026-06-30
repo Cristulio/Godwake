@@ -7,7 +7,7 @@ import {
   getGearSet,
   setForPiece,
   canEquipSetPiece,
-  setPieceDropPool,
+  setDropPool,
   computeSetBonuses,
   aggregateSetEffects,
   setProgress,
@@ -122,18 +122,18 @@ describe('set gear — class gate & drop pool', () => {
     expect(canEquipSetPiece('nonexistent', 'fighter')).toBe(false);
   });
 
-  it('the drop pool offers universal + own-class pieces and gates the NG+ exclusive sets', () => {
-    const normalFighter = setPieceDropPool('fighter', false);
+  it('the drop pool offers universal + own-class SETS and gates the NG+ exclusive sets', () => {
+    const normalFighter = setDropPool('fighter', false).map((s) => s.id);
     // First-chain starter sets drop on a normal run.
-    expect(normalFighter).toContain('vigil-helm');
-    expect(normalFighter).toContain('warsong-crest');
+    expect(normalFighter).toContain('vigil'); // universal
+    expect(normalFighter).toContain('warsong'); // fighter-bound
     // Ascension-exclusive sets do not, on a normal run.
-    expect(normalFighter).not.toContain('ironclad-helm');
-    expect(normalFighter).not.toContain('revenant-heart');
+    expect(normalFighter).not.toContain('ironclad');
+    expect(normalFighter).not.toContain('revenant');
 
-    const ngFighter = setPieceDropPool('fighter', true);
-    expect(ngFighter).toContain('ironclad-helm'); // fighter's own NG+ set
-    expect(ngFighter).not.toContain('archmagi-orb'); // another class's bound set
-    expect(ngFighter).toContain('revenant-heart'); // universal NG+ set
+    const ngFighter = setDropPool('fighter', true).map((s) => s.id);
+    expect(ngFighter).toContain('ironclad'); // fighter's own NG+ set
+    expect(ngFighter).not.toContain('archmagi'); // another class's bound set
+    expect(ngFighter).toContain('revenant'); // universal NG+ set
   });
 });

@@ -16,9 +16,9 @@ import {
   type RelicSlot,
 } from '../content/legendaries';
 import {
-  SET_PIECE_ORDER,
-  setPieceDropPool,
-  getSetPiece,
+  GEAR_SETS,
+  setDropPool,
+  canEquipSetPiece,
 } from '../content/sets';
 import { unlockedRelicSlots } from '../engine/progression/unlocks';
 
@@ -128,14 +128,14 @@ interface MetaStoreState {
    */
   equippedRelics: Partial<Record<RelicSlot, string>>;
   /**
-   * SET-gear pieces the soul has earned (cross-delve persistent loot,
-   * content/sets.ts). Account level — survives reincarnation, reset only on New
-   * Game. Banked from elite/boss drops; re-injected into the backpack each life
-   * (delveStore.gearResetToKit) as real, equippable gear — there is no hub
-   * loadout. The player equips them through the normal inventory; set bonuses
-   * compute live from the worn pieces (engine/items/setGear.equippedSetMods).
+   * SET ids the soul has UNLOCKED (content/sets.ts). Account level — survives
+   * reincarnation, reset only on New Game. A set unlocks the first time the
+   * player finds ANY of its pieces (grantSetPieceDrop); from then on its pieces
+   * appear FOR SALE in shops (shopStock.rollSetPieceStock). The unlock is the
+   * only PERSISTENT part of set gear — the pieces themselves are run-scoped loot
+   * (found or bought into the run inventory, wiped each descent like rolled gear).
    */
-  ownedSetPieces: string[];
+  unlockedSets: string[];
   /**
    * Whether the soul has cleared the whole chain (felled Maevra) at least once.
    * Set the first time the final chapter is cleared. Gates the one-time
@@ -260,14 +260,13 @@ interface MetaStoreState {
    */
   applyRelicLoadout: () => void;
   /**
-   * Bank a RANDOM un-owned SET piece (the elite/boss drop path). Drops can be any
-   * class's piece — off-class pieces are stashed until the player runs that class.
-   * `allowExclusive` folds in the Ascension-exclusive (NG+) pieces. Returns the
-   * banked id, or null when none remain.
+   * The unlock-on-find drop (elite/boss path). Picks a class-legal set — biased
+   * toward one the soul hasn't unlocked yet — marks it permanently UNLOCKED
+   * (unlockedSets), and returns one of its class-legal piece ids for the caller to
+   * surface into the RUN inventory this life. `allowExclusive` folds in the
+   * Ascension-exclusive (NG+) sets. Returns null when no eligible set exists.
    */
   grantSetPieceDrop: (allowExclusive: boolean) => string | null;
-  /** Bank a SPECIFIC set piece by id. Returns whether it banked (real + un-owned). */
-  bankSetPiece: (id: string) => boolean;
   /**
    * Mark the whole chain cleared (felled Maevra). Set once the Throne-of-the Slain God
    * ending capstone has played; idempotent. Unlocks the title's New Game+ entry.
@@ -321,7 +320,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   seenTutorials: [],
   ownedLegendaries: [],
   equippedRelics: {},
-  ownedSetPieces: [],
+  unlockedSets: [],
   gameCompleted: false,
   selectedAscension: 0,
   newGamePlusActive: false,
@@ -538,26 +537,28 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
   },
 
   grantSetPieceDrop: (allowExclusive) => {
-    const owned = get().ownedSetPieces;
     const classId = useCharacterStore.getState().character?.classId;
-    // Drops can yield ANY class's piece; off-class ones are stashed until the
-    // player runs that class. Pull from the current class's pool when known so a
-    // run is biased toward usable pieces, else the whole pool.
-    const pool = (classId
-      ? setPieceDropPool(classId, allowExclusive)
-      : SET_PIECE_ORDER.filter((id) => allowExclusive || !getSetPiece(id)?.ascensionExclusive)
-    ).filter((id) => !owned.includes(id));
+    const unlocked = get().unlockedSets;
+    // Drop pool = the sets this class can earn (universal + own-class bound, NG+
+    // folded in when allowed). With no worn class yet, fall back to the universal
+    // + exclusive-gated roster.
+    const pool = classId
+      ? setDropPool(classId, allowExclusive)
+      : GEAR_SETS.filter((s) => allowExclusive || !s.ascensionExclusive);
     if (pool.length === 0) return null;
-    const pick = pool[(getActiveRoller().roll('1d100').total - 1) % pool.length];
-    set({ ownedSetPieces: [...owned, pick] });
-    return pick;
-  },
-
-  bankSetPiece: (id) => {
-    const owned = get().ownedSetPieces;
-    if (owned.includes(id) || !SET_PIECE_ORDER.includes(id)) return false;
-    set({ ownedSetPieces: [...owned, id] });
-    return true;
+    // Bias toward a set the soul hasn't unlocked yet — that first piece is the
+    // headline drop that opens the whole set for purchase. Fall back to the full
+    // pool so an already-complete collection still hands over a usable piece.
+    const locked = pool.filter((s) => !unlocked.includes(s.id));
+    const choices = locked.length > 0 ? locked : pool;
+    const roller = getActiveRoller();
+    const picked = choices[(roller.roll('1d100').total - 1) % choices.length];
+    // Permanently unlock the set (idempotent on a re-find of an unlocked one).
+    if (!unlocked.includes(picked.id)) set({ unlockedSets: [...unlocked, picked.id] });
+    // Hand the player one class-legal piece of that set to wear THIS run.
+    const pieceIds = picked.pieceIds.filter((id) => !classId || canEquipSetPiece(id, classId));
+    const fromIds = pieceIds.length > 0 ? pieceIds : picked.pieceIds;
+    return fromIds[(roller.roll('1d100').total - 1) % fromIds.length];
   },
 
   markGameCompleted: () =>
@@ -623,7 +624,7 @@ export const useMetaStore = create<MetaStoreState>()((set, get) => ({
       seenTutorials: [],
       ownedLegendaries: [],
       equippedRelics: {},
-      ownedSetPieces: [],
+      unlockedSets: [],
       gameCompleted: false,
       selectedAscension: 0,
       newGamePlusActive: false,

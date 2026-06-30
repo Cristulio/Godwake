@@ -27,7 +27,7 @@ function snapshot(): AchievementContext {
     ascensionUnlocked: m.ascensionUnlocked,
     throneCompleted: m.throneCompleted,
     ownedLegendaries: m.ownedLegendaries,
-    ownedSetPieces: m.ownedSetPieces,
+    unlockedSets: m.unlockedSets,
     discoveredMonsters: m.discoveredMonsters,
     seenDialogueBeats: m.seenDialogueBeats,
     monsterKilledBy: m.monsterKilledBy,

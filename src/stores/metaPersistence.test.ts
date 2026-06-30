@@ -126,16 +126,16 @@ describe('legendaries survive a character swap (account-level, soul-carried)', (
     expect(after.legendaryEffects).toHaveLength(2);
   });
 
-  it('keeps the whole banked SET collection across a class swap', () => {
-    // Set gear lives in the backpack now: a swap doesn't drop the collection, it's
-    // re-injected (class-filtered) into each new life's pack at descent.
+  it('keeps the SET-unlock ledger across a class swap', () => {
+    // Set unlocks are permanent and class-agnostic: a body swap never drops them
+    // (the pieces themselves are run-scoped loot, re-bought each life).
     useCharacterStore.setState({ character: makeFighter({ renown: 1000 }) });
-    useMetaStore.setState({ ownedSetPieces: ['warsong-gauntlet', 'vigil-heart'] });
+    useMetaStore.setState({ unlockedSets: ['warsong', 'vigil'] });
 
     useGameStore.getState().selectCharacter('wizard');
 
     const meta = useMetaStore.getState();
-    expect(meta.ownedSetPieces).toEqual(['warsong-gauntlet', 'vigil-heart']);
+    expect(meta.unlockedSets).toEqual(['warsong', 'vigil']);
   });
 });
 

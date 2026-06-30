@@ -4,14 +4,14 @@ import { aggregateSetEffects, type SetPiece } from '../../content/sets';
 import { EQUIP_SLOTS } from '../character/equip';
 
 /**
- * The ItemRef a banked set piece materialises into. It is a REAL loot instance
+ * The ItemRef a set piece materialises into. It is a REAL loot instance
  * (rarity 'set'): its base stats resolve through `getItem(piece.id)`, it carries
  * the guaranteed `+N` enhancement, and it is tagged with `setId` so the engine can
  * count how many pieces of a set are worn. The piece's signature effect payload
  * folds separately (equippedSetMods) so it is never double-counted by the affix
  * roll. Set pieces live in the NORMAL backpack and equip through the normal slot
- * flow — they are kept across lives by re-materialising the soul's owned pieces
- * each descent (delveStore.gearResetToKit), not by a hub loadout.
+ * flow. They are RUN-scoped loot (found via a drop or bought in a shop, wiped each
+ * descent like rolled gear); only the SET UNLOCK persists (metaStore.unlockedSets).
  */
 export function setPieceRef(piece: SetPiece): ItemRef {
   return {
@@ -27,17 +27,17 @@ export function setPieceRef(piece: SetPiece): ItemRef {
   };
 }
 
-/** Whether a carried ref is a SET piece (emerald, persistent). */
+/** Whether a carried ref is a SET piece (emerald, run-scoped loot). */
 export function isSetPieceRef(ref: ItemRef | null | undefined): boolean {
   return ref?.rolled?.rarity === 'set';
 }
 
 /**
- * Append the soul's banked set pieces into the backpack as real, equippable loot
- * (NOT auto-equipped — the player equips them through the normal inventory). Pure;
- * `pieces` is the pre-filtered set the caller deems class-legal. Used at descent /
- * reincarnation so persistent set gear resurfaces every life while rolled loot
- * does not (delveStore.gearResetToKit).
+ * Append set pieces into the backpack as real, equippable loot (NOT auto-equipped
+ * — the player equips them through the normal inventory). Pure; `pieces` is the
+ * pre-filtered set the caller deems class-legal. Used to surface a JUST-FOUND
+ * piece into the live run this life (delveStore.resolveRoomVictory) — set pieces
+ * are run-scoped now, so nothing re-injects them at descent.
  */
 export function injectSetPieces(character: Character, pieces: SetPiece[]): Character {
   if (pieces.length === 0) return character;

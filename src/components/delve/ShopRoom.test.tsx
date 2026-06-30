@@ -46,7 +46,9 @@ describe('ShopRoom — merchant node', () => {
     // bought item from one test never leaks into the next.
     useCharacterStore.setState({ character: makeRichFighter(), saveSeed: null });
     useDelveStore.setState({ delve: null, purchasedShopKeys: {} });
-    useGameStore.setState({ delve: null, combat: null });
+    // unlockedSets drives the set-gear rack (the component reads the facade). Reset
+    // it so a set unlocked in one test never leaks its rack into the next.
+    useGameStore.setState({ delve: null, combat: null, unlockedSets: [] });
   });
 
   it('lists the chapter-tiered draughts and rolled arms, and lets the player buy', () => {
@@ -80,10 +82,10 @@ describe('ShopRoom — merchant node', () => {
     expect(screen.getAllByRole('button', { name: /sold/i }).length).toBeGreaterThan(0);
   });
 
-  it('never lists persistent SET gear as sellable (banked to the soul)', () => {
-    // A banked set piece (vigil-helm, kind=accessory) plus a plain weapon so the
-    // sell section renders. Without the filter the set piece would show — it
-    // qualifies by kind — so its absence proves the exclusion, not an empty list.
+  it('lists a found SET piece as sellable (run-scoped loot now)', () => {
+    // A found set piece (vigil-helm, kind=accessory) plus a plain weapon. Vigil is
+    // NOT unlocked here, so the buy rack is empty — the only place "Vigil Helm" can
+    // appear is the sell list, proving set gear is now sellable.
     const base = useCharacterStore.getState().character!;
     useCharacterStore.setState({
       character: {
@@ -94,10 +96,21 @@ describe('ShopRoom — merchant node', () => {
 
     render(<ShopRoom room={shopRoom} onContinue={() => {}} />);
 
-    // The sell section rendered (the plain weapon is sellable)...
+    // The sell section rendered, and the set piece is offered for sale.
     expect(screen.getByText(/Sell from your Pack/i)).toBeInTheDocument();
-    // ...but the set piece is not offered for sale anywhere.
-    expect(screen.queryByText(/Vigil Helm/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/Vigil Helm/i)).toBeInTheDocument();
+  });
+
+  it('stocks pieces of an unlocked, chapter-eligible set and gates a too-deep set out', () => {
+    // Vigil (3-piece) surfaces from chapter 1; Warlord (9-piece) only deep (ch9+).
+    // The shop room is chapter 2, so vigil pieces appear and warlord is gated out.
+    useGameStore.setState({ unlockedSets: ['vigil', 'warlord'] });
+
+    render(<ShopRoom room={shopRoom} onContinue={() => {}} />);
+
+    expect(screen.getByText(/Set Gear/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Vigil/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/Warlord/i)).not.toBeInTheDocument();
   });
 
   it('starts a different shop room with a fresh, un-sold rack (no cross-shop bleed)', () => {

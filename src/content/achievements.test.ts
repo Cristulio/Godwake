@@ -8,7 +8,7 @@ import {
 } from './achievements';
 import { listMonsters } from './monsters';
 import { LEGENDARY_ORDER } from './legendaries';
-import { SET_PIECE_ORDER } from './sets';
+import { GEAR_SETS } from './sets';
 import { LORE_BEATS } from './loreBeats';
 import { listClasses } from './classes';
 
@@ -21,7 +21,7 @@ function zeroCtx(): AchievementContext {
     ascensionUnlocked: 0,
     throneCompleted: false,
     ownedLegendaries: [],
-    ownedSetPieces: [],
+    unlockedSets: [],
     discoveredMonsters: [],
     seenDialogueBeats: [],
     monsterKilledBy: {},
@@ -47,7 +47,7 @@ function maxedCtx(): AchievementContext {
     ascensionUnlocked: 6,
     throneCompleted: true,
     ownedLegendaries: [...LEGENDARY_ORDER],
-    ownedSetPieces: [...SET_PIECE_ORDER],
+    unlockedSets: GEAR_SETS.map((s) => s.id),
     discoveredMonsters: listMonsters().map((m) => m.id),
     seenDialogueBeats: LORE_BEATS.map((b) => b.id),
     monsterKilledBy: { goblin: 1 },

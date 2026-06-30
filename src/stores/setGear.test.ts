@@ -8,7 +8,7 @@ import { buildPlayerCharacter, presetCreationInput } from '../engine/character/d
 import { injectSetPieces, rollItem } from '../engine/items';
 import { characterAffixMods } from '../engine/items/affixMods';
 import { equipItem, slotForItem } from '../engine/character/equip';
-import { getSetPiece } from '../content/sets';
+import { getSetPiece, setForPiece, canEquipSetPiece } from '../content/sets';
 import { getItem } from '../content/items';
 import { setActiveRoller, getActiveRoller } from '../engine/dice';
 import type { Character } from '../types/character';
@@ -39,7 +39,7 @@ beforeEach(() => {
   useDelveStore.setState({ delve: null });
   useCombatStore.setState({ combat: null });
   useScreenStore.setState({ tutorialQueue: [], hubUnlockQueue: [] });
-  useMetaStore.setState({ ownedSetPieces: [] });
+  useMetaStore.setState({ unlockedSets: [] });
 });
 
 describe('injectSetPieces (real backpack loot)', () => {
@@ -79,38 +79,53 @@ describe('set gear equips and its bonuses fold live', () => {
   });
 });
 
-describe('set gear persists in the backpack across the wheel', () => {
-  it('a banked piece is re-injected into the pack on every descent', () => {
-    useMetaStore.setState({ ownedSetPieces: ['vigil-heart'] });
-    useDelveStore.getState().startDelve(godwakeDelve());
-    let ch = useCharacterStore.getState().character!;
-    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
+describe('set gear is run-scoped; only the set UNLOCK persists', () => {
+  it('a found set piece is wiped on the next descent (reset to the class kit)', () => {
+    // A piece found into the run pack (the drop / buy path materialises it here).
+    const seeded = injectSetPieces(buildPlayerCharacter(presetCreationInput('fighter')), [
+      getSetPiece('vigil-heart')!,
+    ]);
+    useCharacterStore.setState({ character: seeded });
+    expect(seeded.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
 
-    // A fresh descent rebuilds the kit; the banked piece re-appears in the pack.
+    // A fresh descent rebuilds the kit — set pieces no longer re-inject.
     useDelveStore.getState().startDelve(godwakeDelve());
-    ch = useCharacterStore.getState().character!;
-    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
-    expect(useMetaStore.getState().ownedSetPieces).toContain('vigil-heart');
+    const ch = useCharacterStore.getState().character!;
+    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(false);
+    // Kit restored: a fighter descends with the longsword.
+    expect(ch.inventory.some((r) => r.itemId === 'longsword')).toBe(true);
   });
 
-  it('only injects pieces the worn class can equip', () => {
-    useMetaStore.setState({ ownedSetPieces: ['warsong-crest', 'vigil-heart'] });
-    // Worn class is a wizard — the fighter-bound warsong piece stays banked but
-    // out of the pack; the universal vigil piece surfaces.
+  it('finding a set piece permanently unlocks its set (survives the wheel)', () => {
+    const pieceId = useMetaStore.getState().grantSetPieceDrop(false);
+    expect(pieceId).not.toBeNull();
+    const set = setForPiece(pieceId!);
+    expect(set).toBeDefined();
+    expect(useMetaStore.getState().unlockedSets).toContain(set!.id);
+
+    // The unlock persists across a descent (the piece does not).
+    useDelveStore.getState().startDelve(godwakeDelve());
+    expect(useMetaStore.getState().unlockedSets).toContain(set!.id);
+  });
+
+  it('only drops a piece the worn class can equip', () => {
     useCharacterStore.setState({ character: buildPlayerCharacter(presetCreationInput('wizard')) });
-    useDelveStore.getState().startDelve(godwakeDelve());
-    const ch = useCharacterStore.getState().character!;
-    expect(ch.inventory.some((r) => r.itemId === 'warsong-crest')).toBe(false);
-    expect(ch.inventory.some((r) => r.itemId === 'vigil-heart')).toBe(true);
+    const pieceId = useMetaStore.getState().grantSetPieceDrop(false);
+    expect(pieceId).not.toBeNull();
+    expect(canEquipSetPiece(pieceId!, 'wizard')).toBe(true);
   });
 
-  it('cannot be sold out of the pack mid-run', () => {
-    useMetaStore.setState({ ownedSetPieces: ['vigil-heart'] });
-    useDelveStore.getState().startDelve(godwakeDelve());
-    const ch = useCharacterStore.getState().character!;
-    const idx = ch.inventory.findIndex((r) => r.itemId === 'vigil-heart');
+  it('a set piece can be sold from the pack (run-scoped loot now)', () => {
+    const seeded = injectSetPieces(buildPlayerCharacter(presetCreationInput('fighter')), [
+      getSetPiece('vigil-heart')!,
+    ]);
+    useCharacterStore.setState({ character: seeded });
+    const idx = seeded.inventory.findIndex((r) => r.itemId === 'vigil-heart');
     expect(idx).toBeGreaterThanOrEqual(0);
-    expect(useDelveStore.getState().sellItem(idx).ok).toBe(false);
+    expect(useDelveStore.getState().sellItem(idx).ok).toBe(true);
+    expect(
+      useCharacterStore.getState().character!.inventory.some((r) => r.itemId === 'vigil-heart'),
+    ).toBe(false);
   });
 });
 

@@ -11,11 +11,13 @@ import { isSetPieceRef } from '../../engine/items';
 import {
   consumableStockForChapter,
   rollGearStock,
+  rollSetPieceStock,
   rollLegendaryOffer,
   sellValue,
   type GearStock,
+  type SetPieceStock,
 } from './shopStock';
-import { GearWareRow, ConsumableWareRow, LegendaryWareRow, SellWareRow } from './MerchantWares';
+import { GearWareRow, SetPieceWareRow, ConsumableWareRow, LegendaryWareRow, SellWareRow } from './MerchantWares';
 import { useT } from '../../i18n/useT';
 
 interface ShopRoomProps {
@@ -27,8 +29,10 @@ interface ShopRoomProps {
  * A merchant node on the route map: a standalone buy screen. Draughts come from
  * the fixed depth-scaled stock; the ARMS rack is Diablo-style rolled gear
  * — class-legal bases with rolled affixes, rarity-coloured and priced by rarity
- * (the gold sink). Stock is deterministic per visit (seeded by the room id), so
- * re-renders don't reroll. Keep the coin-lender's diegetic voice.
+ * (the gold sink). The SET GEAR rack offers pieces of UNLOCKED sets the class can
+ * wear, chapter-gated by set power — the buy half of the unlock→buy→sell economy.
+ * Stock is deterministic per visit (seeded by the room id), so re-renders don't
+ * reroll. Keep the coin-lender's diegetic voice.
  */
 export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   useEffect(() => {
@@ -49,6 +53,7 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
   // array every render and spins zustand into an infinite update loop.
   const recentlySold = useGameStore((s) => s.delve?.recentlySold);
   const ownedLegendaries = useGameStore((s) => s.ownedLegendaries);
+  const unlockedSets = useGameStore((s) => s.unlockedSets);
   const goToInventory = useGameStore((s) => s.goToInventory);
   const [message, setMessage] = useState<string | null>(null);
   // Sold-state lives in delveStore so a bought ware stays gone when the player
@@ -88,6 +93,14 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     [room.id, chapter, classId, ascensionLevel, ownedLegendaries.length],
   );
 
+  // Dedicated set-piece slots: pieces of UNLOCKED sets this class can wear, gated
+  // by chapter (stronger sets surface deeper). Rolled owned-blind; pieces already
+  // carried or bought are hidden at render so the rack never offers a useless dup.
+  const setStock = useMemo<SetPieceStock[]>(
+    () => (classId ? rollSetPieceStock(room.id, chapter, classId, unlockedSets) : []),
+    [room.id, chapter, classId, unlockedSets],
+  );
+
   if (!character) return null;
   const gold = character.goldInPocket;
   // Resolve worn items by inventory index (not object identity), so equipped
@@ -98,12 +111,20 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     .map((ref, idx) => ({ ref, idx }))
     .filter(({ ref, idx }) => {
       if (equippedIdx.has(idx)) return false;
-      // Persistent SET gear is banked to the soul, never sold — keep it out of the
-      // sell list entirely (the sell action also refuses it as a backstop).
-      if (isSetPieceRef(ref)) return false;
+      // Set pieces are run-scoped loot now — sellable like rolled gear.
       const kind = getItem(ref.itemId).kind;
       return kind === 'weapon' || kind === 'armor' || kind === 'accessory';
     });
+  // Set pieces already in the pack — hide their shop slot so the rack never offers
+  // a useless duplicate (set bonuses count distinct slots).
+  const carriedSetPieceIds = new Set(
+    character.inventory.filter(isSetPieceRef).map((r) => r.itemId),
+  );
+  // A set slot drops off the rack once carried OR bought (the buyback stack is the
+  // re-acquire path within a visit, exactly like the arms rack).
+  const visibleSetStock = setStock.filter(
+    (s) => !carriedSetPieceIds.has(s.pieceId) && !isBought(`set-${s.pieceId}`),
+  );
   const showLegendary =
     legendaryOffer != null &&
     !isBought('legendary') &&
@@ -124,6 +145,19 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
     const r = purchaseRolledGear(stock.ref, stock.cost);
     if (r.ok) {
       recordShopPurchase(room.id, key);
+      setMessage(t('ui.shop.addedToPack', { name: localizedItemName(stock.ref) || t('ui.shop.itemFallback') }));
+      playSfx('ui_click');
+    } else {
+      setMessage(r.reason ?? t('ui.shop.cannotPurchase'));
+    }
+  }
+
+  function buySetPiece(stock: SetPieceStock) {
+    // Set pieces ride the same run-inventory buy path as rolled gear (the set is
+    // already unlocked); the piece is run-scoped loot, re-bought each life.
+    const r = purchaseRolledGear(stock.ref, stock.cost);
+    if (r.ok) {
+      recordShopPurchase(room.id, `set-${stock.pieceId}`);
       setMessage(t('ui.shop.addedToPack', { name: localizedItemName(stock.ref) || t('ui.shop.itemFallback') }));
       playSfx('ui_click');
     } else {
@@ -215,6 +249,26 @@ export function ShopRoom({ room, onContinue }: ShopRoomProps) {
                 />
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {visibleSetStock.length > 0 && (
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.3em] mb-2" style={{ color: '#0fa968' }}>
+            ✦ {t('ui.shop.setGear')}
+          </div>
+          <div className="grid gap-3">
+            {visibleSetStock.map((stock) => (
+              <SetPieceWareRow
+                key={`set-${stock.pieceId}`}
+                stock={stock}
+                bought={false}
+                gold={gold}
+                onBuy={() => buySetPiece(stock)}
+                character={character}
+              />
+            ))}
           </div>
         </div>
       )}

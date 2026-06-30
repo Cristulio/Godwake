@@ -200,8 +200,42 @@ describe('migrateV1ToV2', () => {
 });
 
 describe('SAVE_VERSION', () => {
-  it('is 21', () => {
-    expect(SAVE_VERSION).toBe(21);
+  it('is 22', () => {
+    expect(SAVE_VERSION).toBe(22);
+  });
+});
+
+describe('migrateV1ToV2 — v21 → v22 set-gear unlock economy', () => {
+  it('grandfathers ownedSetPieces (piece ids) into unlockedSets (set ids)', () => {
+    const v = migrateV1ToV2({
+      unlockedUpgrades: {},
+      ownedSetPieces: ['vigil-helm', 'vigil-heart', 'warsong-gauntlet'],
+    });
+    // Distinct sets the owned pieces belonged to, no duplicate from the two vigil pieces.
+    expect([...v.unlockedSets].sort()).toEqual(['vigil', 'warsong']);
+    // The old piece collection is dropped — pieces are run-scoped loot now.
+    expect('ownedSetPieces' in v).toBe(false);
+  });
+
+  it('preserves an already-present unlockedSets and unions it with grandfathered pieces', () => {
+    const v = migrateV1ToV2({
+      unlockedUpgrades: {},
+      unlockedSets: ['pilgrim'],
+      ownedSetPieces: ['vigil-helm'],
+    });
+    expect([...v.unlockedSets].sort()).toEqual(['pilgrim', 'vigil']);
+  });
+
+  it('defaults unlockedSets to [] when neither field is present', () => {
+    expect(migrateV1ToV2({ unlockedUpgrades: {} }).unlockedSets).toEqual([]);
+  });
+
+  it('ignores unknown/renamed piece ids when grandfathering', () => {
+    const v = migrateV1ToV2({
+      unlockedUpgrades: {},
+      ownedSetPieces: ['__dead-piece__', 'vigil-helm'],
+    });
+    expect(v.unlockedSets).toEqual(['vigil']);
   });
 });
 

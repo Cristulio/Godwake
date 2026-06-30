@@ -305,18 +305,8 @@
     "acceptLevelUp": "Accept · Level Up →",
     "accept": "Accept →",
     "openPack": "◆ Open Pack Instead",
-    "setPieceBanked": "Bound to your soul — it's in your pack to equip now, and returns each life",
-    "setMeta": "{set} · {slot} · {have}/{total}",
-    "setSlot": {
-      "mainHand": "Weapon",
-      "offHand": "Off-hand",
-      "armor": "Armor",
-      "helm": "Helm",
-      "amulet": "Amulet",
-      "ring": "Ring",
-      "belt": "Belt",
-      "boots": "Boots"
-    }
+    "setUnlocked": "◆ {set} unlocked — its pieces now sell in shops",
+    "setPieceFound": "In your pack to equip this run — re-buy the set from shops each life"
   },
   "unlockTutorial": {
     "eyebrow": "◆ New — Unlocked",
