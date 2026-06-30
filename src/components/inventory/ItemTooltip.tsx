@@ -12,6 +12,7 @@ import {
   localizedDamageType,
   weaponPropertyLabel,
   twoHandedPremiumLine,
+  twoHandedScaledTag,
 } from './itemDisplay';
 import { affixRelevanceById } from './affixRelevance';
 import { useGameStore } from '../../stores/gameStore';
@@ -91,6 +92,7 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
               /* unknown affix id — show the raw id */
             }
             const rel = affixRelevanceById(id, character);
+            const scaled = twoHandedScaledTag(id, item);
             return (
               <div
                 key={id}
@@ -98,6 +100,9 @@ export function ItemTooltip({ item, hint, rolled, rolledCost, equipWarning }: It
                 style={{ color: GEAR_RARITY_COLOR[rolled.rarity], opacity: rel.relevant ? 1 : 0.4 }}
               >
                 ◆ {effect}
+                {scaled && (
+                  <span className="ml-1 font-mono not-italic text-[var(--color-accent-amber)]">→ {scaled}</span>
+                )}
                 {rel.tag && (
                   <span className="ml-1 not-italic text-[9px] uppercase tracking-wider text-[var(--color-text-dim)]">
                     ({rel.tag})

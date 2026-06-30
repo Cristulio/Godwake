@@ -194,7 +194,7 @@
     "twoH": "2m",
     "oneHanded": "A una mano",
     "twoHanded": "A dos manos",
-    "twoHandedPremium": "Empuñadura a dos manos — cada encantamiento de arriba ya golpea un {pct}% más fuerte en tus manos.",
+    "twoHandedPremium": "Empuñadura a dos manos — el valor tras → es lo que cada encantamiento golpea de verdad, un {pct}% más que con una mano.",
     "versatileHands": "Versátil ({dice} a dos manos)",
     "acShield": "escudo +{n} CA",
     "robeNoAc": "túnica · sin CA",

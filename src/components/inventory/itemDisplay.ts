@@ -4,7 +4,7 @@ import type { Rarity } from '../../schemas/ids';
 import { t, getLocalized } from '../../i18n';
 import { getItem, getAffix } from '../../content/items';
 import { affixDominance } from '../../engine/items/rollItem';
-import { isTwoHandedPremiumBase, TWO_HANDED_AFFIX_SCALE } from '../../engine/items/twoHandedPremium';
+import { isTwoHandedPremiumBase, TWO_HANDED_AFFIX_SCALE, scaleAffixMagnitude } from '../../engine/items/twoHandedPremium';
 
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -129,6 +129,49 @@ export function twoHandedPremiumLine(item: Item, rolled?: RolledItem): string | 
   return t('screens.itemDisplay.twoHandedPremium', {
     pct: Math.round((TWO_HANDED_AFFIX_SCALE - 1) * 100),
   });
+}
+
+// How each scaled affix modifier renders as the "→ X" tag: a leading "+", a bare
+// number (the prose already reads "deal N" / "heal N"), a percent, or — for crit
+// range — the widened floor (critRangeBonus 2 → "18–20").
+const SCALED_TAG_FMT: Record<string, 'plus' | 'bare' | 'pct' | 'crit'> = {
+  damageBonus: 'plus', attackBonus: 'plus', spellDamageBonus: 'plus',
+  spellAttackBonus: 'plus', spellDcBonus: 'plus', rageDamageBonus: 'plus',
+  markDamageBonus: 'plus', sneakDamageBonus: 'plus', followupDamageBonus: 'plus',
+  offHandDamageBonus: 'plus', bonusSpellSlotsL1: 'plus',
+  bleedDamage: 'bare', regenPerTurn: 'bare',
+  lifestealPct: 'pct', spellLifestealPct: 'pct',
+  critRangeBonus: 'crit',
+};
+
+/**
+ * The amplified value a single affix actually strikes for on a true two-hander —
+ * the "→ X" tag rendered after its effect line so the displayed (one-hand) number
+ * isn't the lie. Reads the affix's dominant numeric modifier, scales it the way
+ * combat does ({@link scaleAffixMagnitude} × {@link TWO_HANDED_AFFIX_SCALE}), and
+ * formats per channel. Null off a two-hander, or when the scale changes nothing.
+ */
+export function twoHandedScaledTag(affixId: string, item: Item): string | null {
+  if (!isTwoHandedPremiumBase(item)) return null;
+  let mods: Record<string, number | undefined>;
+  try {
+    mods = getAffix(affixId).modifiers as Record<string, number | undefined>;
+  } catch {
+    return null;
+  }
+  for (const key of Object.keys(SCALED_TAG_FMT)) {
+    const base = mods[key];
+    if (!base || base <= 0) continue;
+    const scaled = scaleAffixMagnitude(base, TWO_HANDED_AFFIX_SCALE);
+    if (scaled <= base) return null;
+    switch (SCALED_TAG_FMT[key]) {
+      case 'pct': return `${scaled}%`;
+      case 'crit': return `${20 - scaled}–20`;
+      case 'bare': return `${scaled}`;
+      default: return `+${scaled}`;
+    }
+  }
+  return null;
 }
 
 /**
