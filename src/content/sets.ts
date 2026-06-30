@@ -3,14 +3,16 @@ import type { ClassId } from '../schemas/ids';
 import type { EquipSlot } from '../engine/character/equip';
 
 /**
- * Persistent SET GEAR (Diablo II style). A set piece is a real EQUIPPABLE SLOT
- * item — a weapon, armour, or accessory (base stats live in
- * content/items/setBases.ts) — that the soul banks cross-delve and re-equips at
- * the hub, where it REPLACES whatever rolled item sits in that slot. Each piece
- * is stronger than the best rolled (purple) gear for its slot: it carries a
- * guaranteed effect payload PLUS a flat `+N` enhancement (weapons/armour).
- * Equipping multiple pieces of one set grants PARTIAL, SCALING set bonuses
- * (2-piece, 3-piece…) layered ON TOP of the pieces' own slot stats.
+ * SET GEAR (Diablo II style). A set piece is a real EQUIPPABLE SLOT item — a
+ * weapon, armour, or accessory (base stats live in content/items/setBases.ts).
+ * Finding any piece of a set permanently UNLOCKS that set
+ * (metaStore.unlockedSets); from then on its pieces appear FOR SALE in shops.
+ * The pieces themselves are RUN-scoped — a found or bought piece lives in the run
+ * inventory and is wiped on death/descent like rolled loot — so the unlock
+ * persists forever but the kit is rebuilt (re-bought) each life. Each piece
+ * carries a guaranteed effect payload PLUS a flat `+N` enhancement
+ * (weapons/armour). Equipping multiple pieces of one set grants PARTIAL, SCALING
+ * set bonuses (2-piece, 3-piece…) layered ON TOP of the pieces' own slot stats.
  *
  * This is the slot-gear layer. Legendaries (content/legendaries.ts) are the
  * separate effect-only boon layer. A class-bound set only DROPS for (and themes
@@ -1029,14 +1031,15 @@ export function canEquipSetPiece(id: string, classId: ClassId): boolean {
 }
 
 /**
- * Set piece ids appropriate to DROP for a given class: every universal piece
- * plus that class's own bound pieces, with the Ascension-exclusive (New Game+)
- * pieces folded in only when `allowExclusive`.
+ * Sets a class can EARN pieces of: every universal set plus that class's own
+ * bound sets, with the Ascension-exclusive (New Game+) sets folded in only when
+ * `allowExclusive`. The unlock-on-find drop (metaStore.grantSetPieceDrop) picks
+ * a set from here, marks it unlocked, and hands over one of its class-legal pieces.
  */
-export function setPieceDropPool(classId: ClassId, allowExclusive: boolean): string[] {
-  return SET_PIECES.filter(
-    (p) => (!p.classGate || p.classGate === classId) && (allowExclusive || !p.ascensionExclusive),
-  ).map((p) => p.id);
+export function setDropPool(classId: ClassId, allowExclusive: boolean): GearSet[] {
+  return GEAR_SETS.filter(
+    (s) => (!s.classGate || s.classGate === classId) && (allowExclusive || !s.ascensionExclusive),
+  );
 }
 
 /**

@@ -22,7 +22,7 @@ import { ItemTooltip } from './ItemTooltip';
 import { TouchTooltip } from '../ui/TouchTooltip';
 import { GEAR_RARITY_COLOR } from './rarity';
 import { baseStatLine, localizedItemName } from './itemDisplay';
-import { GEAR_SETS, getGearSet, setSize, setProgress } from '../../content/sets';
+import { GEAR_SETS, setSize, setProgress } from '../../content/sets';
 import { equippedSetIds } from '../../engine/items';
 import type { Character } from '../../types/character';
 import { useT } from '../../i18n/useT';
@@ -43,7 +43,7 @@ const SLOTS: EquipSlot[] = [
 ];
 
 export function InventoryScreen() {
-  const { t, tc } = useT();
+  const { t } = useT();
   const character = useGameStore((s) => s.character);
   const delve = useGameStore((s) => s.delve);
   const goToHub = useGameStore((s) => s.goToHub);
@@ -58,16 +58,6 @@ export function InventoryScreen() {
   const [dragInvalidSlot, setDragInvalidSlot] = useState<EquipSlot | null>(null);
   const [dragOverList, setDragOverList] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  // Set pieces collapse under a per-set header in the bag; expanded set ids are
-  // tracked here (collapsed by default so a growing collection stays tidy).
-  const [expandedSets, setExpandedSets] = useState<Set<string>>(new Set());
-  const toggleSet = (setId: string) =>
-    setExpandedSets((prev) => {
-      const next = new Set(prev);
-      if (next.has(setId)) next.delete(setId);
-      else next.add(setId);
-      return next;
-    });
   // A tall tooltip (an epic with many affixes) anchored to a near-bottom row
   // used to run off the viewport, spawn a page scrollbar, reflow the list, and
   // re-fire the row's hover → an endless jitter. Anchor to whichever vertical
@@ -360,33 +350,12 @@ export function InventoryScreen() {
             </div>
           )}
 
-          {groups.map((g) => {
-            const set = g.setId ? getGearSet(g.setId) : undefined;
-            const expanded = !g.setId || expandedSets.has(g.setId);
-            return (
+          {groups.map((g) => (
             <div key={g.key} className="mb-4 last:mb-0">
-              {set ? (
-                <button
-                  type="button"
-                  onClick={() => toggleSet(set.id)}
-                  aria-expanded={expanded}
-                  className="w-full font-display text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2 hover:opacity-90"
-                  style={{ color: GEAR_RARITY_COLOR.set }}
-                >
-                  <span className="w-3 text-[0.85em]">{expanded ? '▾' : '▸'}</span>
-                  <span>◆</span>
-                  <span>{tc('setGear', set.id, 'name', set.name)}</span>
-                  <span className="ml-auto font-mono normal-case tracking-normal opacity-80">
-                    {g.entries.length}/{setSize(set)}
-                  </span>
-                </button>
-              ) : (
-                <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
-                  <span className="text-[var(--color-accent-gold)]/60">◆</span>
-                  {t(`screens.inventory.group.${g.key}`)}
-                </div>
-              )}
-              {expanded && (
+              <div className="font-display text-[var(--color-text-dim)] text-[10px] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
+                <span className="text-[var(--color-accent-gold)]/60">◆</span>
+                {t(`screens.inventory.group.${g.key}`)}
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {g.entries.map(({ ref, idx, item, stackCount }) => {
                   const slot = slotForItem(item.id);
@@ -519,10 +488,8 @@ export function InventoryScreen() {
                   );
                 })}
               </div>
-              )}
             </div>
-            );
-          })}
+          ))}
         </div>
         <div className="mt-4 pt-3 border-t border-[var(--color-border-dim)] text-[10px] text-[var(--color-text-dim)] uppercase tracking-widest text-center font-mono">
           {t('screens.inventory.footer')}
@@ -630,34 +597,24 @@ interface InventoryEntry {
 }
 
 interface InventoryGroup {
-  /** Category key ('weapons'…) for a normal group, or `set:<id>` for a set group. */
+  /** Category key ('weapons', 'armor', 'accessories', 'consumables', 'other'). */
   key: string;
-  /** Present => a collapsible per-set group (its pieces collapse under a header). */
-  setId?: string;
   entries: InventoryEntry[];
 }
 
 function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
   // Stack consumables by id (visible as ×N); keep weapons/armor/accessories as
   // discrete rows so the player can equip a specific instance. Set pieces are
-  // pulled out into per-set collapsible groups so a growing collection never
-  // buries the rest of the bag.
+  // run-scoped loot now, so they sit in the normal category groups by kind (a set
+  // accessory under Accessories, a set weapon under Weapons) — no special bucket.
   const weapons: InventoryEntry[] = [];
   const armor: InventoryEntry[] = [];
   const accessories: InventoryEntry[] = [];
   const consumables = new Map<string, InventoryEntry>();
   const other: InventoryEntry[] = [];
-  const setBuckets = new Map<string, InventoryEntry[]>();
 
   inventory.forEach((ref, idx) => {
     const item = getItem(ref.itemId);
-    const setId = ref.rolled?.setId;
-    if (setId) {
-      const bucket = setBuckets.get(setId) ?? [];
-      bucket.push({ ref, idx, item, stackCount: 1 });
-      setBuckets.set(setId, bucket);
-      return;
-    }
     if (item.kind === 'weapon') {
       weapons.push({ ref, idx, item, stackCount: 1 });
     } else if (item.kind === 'armor') {
@@ -677,11 +634,6 @@ function groupInventory(inventory: ItemRef[]): InventoryGroup[] {
   });
 
   const result: InventoryGroup[] = [];
-  // Set groups first, in canonical GEAR_SETS order so the bag layout is stable.
-  for (const set of GEAR_SETS) {
-    const entries = setBuckets.get(set.id);
-    if (entries?.length) result.push({ key: `set:${set.id}`, setId: set.id, entries });
-  }
   if (weapons.length) result.push({ key: 'weapons', entries: weapons });
   if (armor.length) result.push({ key: 'armor', entries: armor });
   if (accessories.length) result.push({ key: 'accessories', entries: accessories });

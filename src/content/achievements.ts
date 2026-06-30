@@ -58,7 +58,8 @@ export interface AchievementContext {
   ascensionUnlocked: number;
   throneCompleted: boolean;
   ownedLegendaries: readonly string[];
-  ownedSetPieces: readonly string[];
+  /** SET ids the soul has UNLOCKED (find any piece → whole set unlocks). */
+  unlockedSets: readonly string[];
   discoveredMonsters: readonly string[];
   seenDialogueBeats: readonly string[];
   monsterKilledBy: Readonly<Record<string, number>>;
@@ -102,10 +103,6 @@ function clearedWith(ctx: AchievementContext, classId: string, min = 1): boolean
 
 function ownsAll(owned: readonly string[], full: readonly string[]): boolean {
   return full.every((id) => owned.includes(id));
-}
-
-function setComplete(ctx: AchievementContext, set: { pieceIds: string[] }): boolean {
-  return set.pieceIds.every((id) => ctx.ownedSetPieces.includes(id));
 }
 
 /**
@@ -191,9 +188,9 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'a-matched-thread',
     name: 'A Matched Thread',
-    description: 'Recover your first piece of a great set.',
+    description: 'Recover your first piece of a great set and unlock it.',
     category: 'progression',
-    criteria: (c) => c.ownedSetPieces.length >= 1,
+    criteria: (c) => c.unlockedSets.length >= 1,
   },
   {
     id: 'into-deeper-dark',
@@ -348,10 +345,10 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'matched',
     name: 'Matched',
-    description: 'Gather every piece of a single great set.',
+    description: 'Unlock three great sets across your lives.',
     category: 'quirky',
     hidden: true,
-    criteria: (c) => GEAR_SETS.some((s) => setComplete(c, s)),
+    criteria: (c) => c.unlockedSets.length >= 3,
   },
   {
     id: 'the-wheel-grinds-on',
@@ -396,9 +393,9 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'every-set',
     name: 'Every Set',
-    description: 'Complete every great set, thread for matching thread.',
+    description: 'Unlock every great set, thread for matching thread.',
     category: 'completionist',
-    criteria: (c) => GEAR_SETS.every((s) => setComplete(c, s)),
+    criteria: (c) => ownsAll(c.unlockedSets, GEAR_SETS.map((s) => s.id)),
   },
   {
     id: 'every-soul',

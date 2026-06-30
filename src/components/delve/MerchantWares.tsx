@@ -5,13 +5,14 @@ import type { Character } from '../../types/character';
 import { Button } from '../ui/Button';
 import { getItem } from '../../content/items';
 import { getLegendary } from '../../content/legendaries';
+import { getSetPiece, setForPiece } from '../../content/sets';
 import { itemEquipNote, equipDenialReason, equippedRefsForItemSlot } from '../../engine/character/equip';
 import { rolledItemCost } from '../../engine/items';
 import { GEAR_RARITY_COLOR } from '../inventory/rarity';
 import { ItemTooltip } from '../inventory/ItemTooltip';
 import { baseStatLine, enhancementLine, itemTypeLabel, localizedItemName, localizedAffixEffect, gearRarityLabel, twoHandedPremiumLine, twoHandedScaledTag } from '../inventory/itemDisplay';
 import { affixRelevanceById, enhancementRelevanceFor } from '../inventory/affixRelevance';
-import type { GearStock, LegendaryOffer } from './shopStock';
+import type { GearStock, LegendaryOffer, SetPieceStock } from './shopStock';
 import { useT } from '../../i18n/useT';
 
 type TFn = (key: string, params?: Record<string, string | number>) => string;
@@ -235,6 +236,79 @@ export function LegendaryWareRow({ offer, bought, gold, onBuy }: LegendaryWareRo
           onClick={onBuy}
         >
           {bought ? t('delve.wares.bound') : tooDear ? t('delve.wares.needMore', { n: offer.cost - gold }) : t('delve.wares.acquire')}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+interface SetPieceWareRowProps {
+  stock: SetPieceStock;
+  bought: boolean;
+  gold: number;
+  onBuy: () => void;
+  /** Viewing character — drives the (rare) stat-gate caveat on a set armour piece. */
+  character?: Character;
+}
+
+/**
+ * One set-piece shop slot: emerald-framed, showing the piece's signature effect
+ * and which set it belongs to. The set is already UNLOCKED (that's why it's on
+ * sale); buying drops the piece into the run pack as run-scoped loot, re-bought
+ * each life. Stock is class-legal, so it's always wearable barring a stat gate.
+ */
+export function SetPieceWareRow({ stock, bought, gold, onBuy, character }: SetPieceWareRowProps) {
+  const { t, tc } = useT();
+  const piece = getSetPiece(stock.pieceId);
+  const set = setForPiece(stock.pieceId);
+  const base = getItem(stock.ref.itemId);
+  const color = GEAR_RARITY_COLOR.set;
+  const tooDear = gold < stock.cost;
+  const enh = stock.ref.rolled?.enhancement ?? 0;
+  const warning = character ? itemEquipNote(character, base) : null;
+  const denial = character ? equipDenialReason(character, stock.ref.itemId) : null;
+  return (
+    <div
+      className="border-2 p-3 flex items-center gap-3"
+      style={{ borderColor: bought ? 'var(--color-border-dim)' : color, opacity: bought ? 0.5 : 1 }}
+    >
+      <div className="flex-1 min-w-0">
+        <div className="text-sm uppercase tracking-wider" style={{ color }}>
+          ✦ {tc('setGear', stock.pieceId, 'name', piece?.name ?? localizedItemName(stock.ref))}
+        </div>
+        <div className="text-[var(--color-text-dim)] text-[10px] uppercase tracking-widest mt-0.5">
+          {set ? tc('setGear', set.id, 'name', set.name) : ''} · {itemTypeLabel(base)}
+        </div>
+        {base.kind !== 'accessory' && (
+          <div className="text-[var(--color-text-secondary)] text-[11px] uppercase tracking-widest font-mono mt-0.5">
+            {baseStatLine(base)}
+          </div>
+        )}
+        {piece && (
+          <div className="text-[11px] italic leading-snug mt-1" style={{ color }}>
+            ◆ {tc('setGear', stock.pieceId, 'effect', piece.effectLine)}
+          </div>
+        )}
+        {!!enh && enhancementLine(base, enh) && (
+          <div className="text-[11px] italic leading-snug" style={{ color }}>
+            ◆ {enhancementLine(base, enh)}
+          </div>
+        )}
+        {warning && (
+          <div className="text-[var(--color-accent-amber)] text-[10px] leading-snug mt-1">⚠ {warning}</div>
+        )}
+        {denial && (
+          <div className="text-[var(--color-accent-blood)] text-[10px] leading-snug mt-1">✕ {denial}</div>
+        )}
+      </div>
+      <div className="text-right shrink-0">
+        <div className="text-[var(--color-accent-gold)] text-sm">{t('delve.wares.priceGp', { n: stock.cost })}</div>
+        <Button
+          variant={bought || tooDear ? 'secondary' : 'primary'}
+          disabled={bought || tooDear}
+          onClick={onBuy}
+        >
+          {bought ? t('delve.wares.sold') : tooDear ? t('delve.wares.needMore', { n: stock.cost - gold }) : t('delve.wares.buy')}
         </Button>
       </div>
     </div>

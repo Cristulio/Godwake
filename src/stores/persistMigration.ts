@@ -5,6 +5,7 @@ import { getAffix } from '../content/items';
 import { isUnarmedStrikeId } from '../engine/combat/monk';
 import { getBlessing } from '../content/blessings';
 import { getQuirk } from '../content/quirks';
+import { setForPiece } from '../content/sets';
 import type { RelicSlot } from '../content/legendaries';
 
 /**
@@ -103,8 +104,13 @@ import type { RelicSlot } from '../content/legendaries';
  *             through the normal slots — the hub set loadout is gone, so
  *             `equippedSetPieces` is dropped from the snapshot. `ownedSetPieces`
  *             (the banked collection) stays. No back-port (saves disposable).
+ *  v21 → v22: SET gear became an unlock→buy→sell economy (set-gear-foundation).
+ *             Pieces are RUN-scoped now (wiped each descent like rolled gear);
+ *             only the SET UNLOCK persists. `ownedSetPieces` (banked piece ids) is
+ *             replaced by `unlockedSets` (set ids) — every set the player owned a
+ *             piece of is grandfathered in as unlocked, so no progress is lost.
  */
-export const SAVE_VERSION = 21;
+export const SAVE_VERSION = 22;
 
 /**
  * Convert legacy `string[]` of owned upgrade ids → the rank-aware
@@ -288,7 +294,7 @@ export interface MigratedSnapshot {
   knownNpcs: string[];
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
-  ownedSetPieces: string[];
+  unlockedSets: string[];
   seenDialogueBeats: string[];
   seenTutorials: string[];
   delveCount: number;
@@ -419,11 +425,24 @@ export function migrateV1ToV2(input: Record<string, unknown>): MigratedSnapshot 
     state.equippedRelics = {};
   }
 
-  // v19 → v20 / v21: persistent SET gear. Old saves own no pieces; the banked
-  // collection is preserved. The v20 hub `equippedSetPieces` loadout is gone
-  // (v21 moved set gear into the backpack) — drop any stored value.
-  if (!Array.isArray(state.ownedSetPieces)) {
-    state.ownedSetPieces = [];
+  // v21 → v22: SET gear became unlock→buy→sell. The permanent thing is now the
+  // SET UNLOCK (`unlockedSets`), not the banked pieces. Grandfather every set the
+  // player owned a piece of into the unlocked list so no progress is lost, then
+  // drop the old `ownedSetPieces` (pieces are run-scoped loot now). The v20 hub
+  // `equippedSetPieces` loadout was already gone in v21 — drop any stored value.
+  {
+    const unlocked = new Set(
+      Array.isArray(state.unlockedSets) ? (state.unlockedSets as string[]) : [],
+    );
+    const ownedPieces = Array.isArray(state.ownedSetPieces)
+      ? (state.ownedSetPieces as string[])
+      : [];
+    for (const pieceId of ownedPieces) {
+      const set = setForPiece(pieceId);
+      if (set) unlocked.add(set.id);
+    }
+    state.unlockedSets = [...unlocked];
+    delete state.ownedSetPieces;
   }
   delete state.equippedSetPieces;
 

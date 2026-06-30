@@ -18,7 +18,7 @@ import type { ItemRef } from '../schemas/item';
 import { type UnlockedUpgrades } from '../engine/character/upgrades';
 import { type EquipSlot } from '../engine/character/equip';
 import { useCharacterStore } from './characterStore';
-import { useDelveStore, withOwnedSetPieces, type LootSummary } from './delveStore';
+import { useDelveStore, type LootSummary } from './delveStore';
 import { useCombatStore } from './combatStore';
 import { useMetaStore, type UpgradePurchaseError } from './metaStore';
 import { useScreenStore, type Screen } from './screenStore';
@@ -165,7 +165,7 @@ interface GameState {
   originClass: ClassId | null;
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
-  ownedSetPieces: string[];
+  unlockedSets: string[];
   gameCompleted: boolean;
   selectedAscension: number;
   newGamePlusActive: boolean;
@@ -329,7 +329,7 @@ interface PersistedSnapshot {
   originClass: ClassId | null;
   ownedLegendaries: string[];
   equippedRelics: Partial<Record<RelicSlot, string>>;
-  ownedSetPieces: string[];
+  unlockedSets: string[];
   gameCompleted: boolean;
   selectedAscension: number;
   newGamePlusActive: boolean;
@@ -397,7 +397,7 @@ function gatherSnapshot(screenOverride?: Screen): PersistedSnapshot {
     originClass: meta.originClass,
     ownedLegendaries: meta.ownedLegendaries,
     equippedRelics: meta.equippedRelics,
-    ownedSetPieces: meta.ownedSetPieces,
+    unlockedSets: meta.unlockedSets,
     gameCompleted: meta.gameCompleted,
     selectedAscension: meta.selectedAscension,
     newGamePlusActive: meta.newGamePlusActive,
@@ -520,7 +520,7 @@ function scatterSnapshot(s: PersistedSnapshot) {
       s.equippedRelics && typeof s.equippedRelics === 'object' && !Array.isArray(s.equippedRelics)
         ? (s.equippedRelics as Partial<Record<RelicSlot, string>>)
         : {},
-    ownedSetPieces: Array.isArray(s.ownedSetPieces) ? s.ownedSetPieces : [],
+    unlockedSets: Array.isArray(s.unlockedSets) ? s.unlockedSets : [],
     // Recovery: a save whose deepest run cleared the BASE chain (Velnaris, Ch11)
     // but never flipped gameCompleted — e.g. an older build whose lazy ending
     // screen crashed before recording it — has beaten the base game. Restore the
@@ -638,9 +638,9 @@ function adoptSoul(classId: ClassId) {
   const soul = charSlice.character;
   const fresh = buildPlayerCharacter(presetCreationInput(classId));
   const body = soul ? carrySoulProgress(fresh, soul) : fresh;
-  // Surface the soul's banked set pieces in the hub backpack now — descent's
-  // gearResetToKit re-injects them, but the player needs to see/equip them first.
-  charSlice.setCharacter(withOwnedSetPieces(body));
+  // Set pieces no longer surface at the hub — they're run-scoped loot, re-bought
+  // each life from shops (the unlock is what persists). Just adopt the body.
+  charSlice.setCharacter(body);
   // Class-bound relics the new body can't wield drop; the effect payloads re-bake.
   useMetaStore.getState().applyRelicLoadout();
 }
@@ -741,7 +741,7 @@ export const useGameStore = create<GameState>()(
           druidGroveUnlocked: m.druidGroveUnlocked,
           ownedLegendaries: m.ownedLegendaries,
           equippedRelics: m.equippedRelics,
-          ownedSetPieces: m.ownedSetPieces,
+          unlockedSets: m.unlockedSets,
           gameCompleted: m.gameCompleted,
           selectedAscension: m.selectedAscension,
           newGamePlusActive: m.newGamePlusActive,
@@ -806,7 +806,7 @@ export const useGameStore = create<GameState>()(
         originClass: useMetaStore.getState().originClass,
         ownedLegendaries: useMetaStore.getState().ownedLegendaries,
         equippedRelics: useMetaStore.getState().equippedRelics,
-        ownedSetPieces: useMetaStore.getState().ownedSetPieces,
+        unlockedSets: useMetaStore.getState().unlockedSets,
         gameCompleted: useMetaStore.getState().gameCompleted,
         selectedAscension: useMetaStore.getState().selectedAscension,
         newGamePlusActive: useMetaStore.getState().newGamePlusActive,
@@ -862,10 +862,6 @@ export const useGameStore = create<GameState>()(
 
         commitCharacterCreation: (input) => {
           useCharacterStore.getState().commitCharacterCreation(input);
-          // Surface banked set pieces in the hub backpack (empty on a true first
-          // creation; populated when an existing soul swaps bodies here).
-          const built = useCharacterStore.getState().character;
-          if (built) useCharacterStore.getState().setCharacter(withOwnedSetPieces(built));
           // Stamp the soul's origin starter ONCE — it anchors the relative
           // unlock ladder and rides every reincarnation (write-once setter).
           useMetaStore.getState().setOriginClass(input.classId);

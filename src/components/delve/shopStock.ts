@@ -9,9 +9,18 @@ import {
   rolledItemCost,
   maxRolledRarityForChapter,
   capRarity,
+  setPieceRef,
   type BaseKind,
 } from '../../engine/items';
 import { legendaryDropPool, getLegendary } from '../../content/legendaries';
+import {
+  getGearSet,
+  getSetPiece,
+  setForPiece,
+  setSize,
+  canEquipSetPiece,
+  type SetPiece,
+} from '../../content/sets';
 import { ascensionAscendantLoot } from '../../engine/delve/ascension';
 
 /**
@@ -180,9 +189,105 @@ function classCanShield(classId: ClassId): boolean {
 /** Fraction of an item's value the merchant pays back when buying it from you. */
 const SELL_RATE = 0.4;
 
-/** What the merchant pays for a carried item — a fraction of its rolled value. */
+/** What the merchant pays for a carried item — a fraction of its rolled value.
+ * Set pieces price by the same `rolledItemCost` (their 'set' rarity carries a 6x
+ * premium), so they sell back for well under what a shop charges for one. */
 export function sellValue(ref: ItemRef): number {
   return Math.max(1, Math.round(rolledItemCost(ref) * SELL_RATE));
+}
+
+// --- Set-piece rack (the unlock→buy half of the set economy) ----------------
+
+/**
+ * Power-gate: the earliest chapter a set's pieces appear FOR SALE, by the set's
+ * SIZE (its power rank — bigger sets hit harder, so they surface deeper in the
+ * story). A small trinket set shows from the start; the 9-piece showpiece only
+ * deep in. A single tunable mapping.
+ */
+export function setMinChapter(size: number): number {
+  if (size >= 9) return 9;
+  if (size >= 6) return 7;
+  if (size >= 5) return 5;
+  if (size >= 4) return 3;
+  return 1; // 2-3 piece sets surface from the start
+}
+
+/**
+ * Set-piece shop pricing — a real long-game gold sink, tunable in one place. The
+ * power-based `rolledItemCost` already charges the 'set' rarity premium (6x) plus
+ * the piece's `+N`; on top sits a SET-SIZE premium (bigger set = pricier pieces,
+ * the deeper chase) and a deep-run premium, so even a small-set trinket is a real
+ * splurge rather than pocket change.
+ */
+export const SET_PIECE_PRICE = {
+  perSetSize: 140,
+  perChapter: 50,
+} as const;
+
+export function setPieceCost(piece: SetPiece, chapter: number): number {
+  const set = setForPiece(piece.id);
+  const size = set ? setSize(set) : 3;
+  return (
+    rolledItemCost(setPieceRef(piece)) +
+    size * SET_PIECE_PRICE.perSetSize +
+    Math.max(0, chapter - 1) * SET_PIECE_PRICE.perChapter
+  );
+}
+
+export interface SetPieceStock {
+  ref: ItemRef;
+  pieceId: string;
+  setId: string;
+  cost: number;
+}
+
+/** Dedicated set-piece shop slots, ON TOP of the arms rack — capped so set gear
+ * never crowds out the normal wares. */
+const MAX_SET_PIECE_SLOTS = 3;
+
+/**
+ * Roll the merchant's set-piece rack: up to MAX_SET_PIECE_SLOTS pieces drawn from
+ * UNLOCKED sets (metaStore.unlockedSets) the class can wear, gated to the sets
+ * whose power rank has surfaced by this chapter (setMinChapter). Deterministic per
+ * `seed` (the room id) and OWNED-BLIND — the component hides pieces already
+ * carried or bought, so re-buying never churns the rack. Returns [] when no
+ * unlocked set has a buyable piece here yet.
+ */
+export function rollSetPieceStock(
+  seed: string,
+  chapter: number,
+  classId: ClassId,
+  unlockedSets: readonly string[],
+): SetPieceStock[] {
+  const candidates: Array<{ piece: SetPiece; setId: string }> = [];
+  for (const setId of unlockedSets) {
+    const set = getGearSet(setId);
+    if (!set) continue;
+    if (chapter < setMinChapter(setSize(set))) continue;
+    for (const pieceId of set.pieceIds) {
+      const piece = getSetPiece(pieceId);
+      if (piece && canEquipSetPiece(pieceId, classId)) candidates.push({ piece, setId });
+    }
+  }
+  if (candidates.length === 0) return [];
+  const roller = createDiceRoller(`${seed}:set-rack`);
+  const picked: Array<{ piece: SetPiece; setId: string }> = [];
+  const seen = new Set<string>();
+  const slots = Math.min(MAX_SET_PIECE_SLOTS, candidates.length);
+  let safety = 0;
+  while (picked.length < slots && safety < 64) {
+    safety += 1;
+    const cand = candidates[roller.roll('1d100').total % candidates.length];
+    if (seen.has(cand.piece.id)) continue;
+    seen.add(cand.piece.id);
+    picked.push(cand);
+  }
+  return picked.map(({ piece, setId }) => ({
+    ref: setPieceRef(piece),
+    pieceId: piece.id,
+    setId,
+    cost: setPieceCost(piece, chapter),
+  }));
 }
 
 export interface LegendaryOffer {
